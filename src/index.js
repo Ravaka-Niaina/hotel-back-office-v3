@@ -18,7 +18,7 @@ import ScrollToTop from './utils/ScrollToTop';
 import { BaseOptionChartStyle } from './components/chart/BaseOptionChartStyle';
 import Router from './config/routes/routes';
 // css
-import './template/css/fonts.css'
+import './assets/css/fonts.css'
 // ----------------------------------------------------------------------
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
