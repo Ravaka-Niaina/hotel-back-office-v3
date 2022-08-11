@@ -1,0 +1,8 @@
+.MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline{
+    
+    /* -webkit-border-radius: 5px;
+
+    -webkit-border-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 1)
+    ), to(rgba(255, 255, 255, 0.46)), color-stop(0.5, #fff), color-stop(0.5, rgba(214, 227, 243, 0.46))) 21 30 30 21 repeat repeat; */
+    border:none;
+}
