@@ -60,7 +60,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       }}
     >
       <Box>
-        <img src={`${process.env.PUBLIC_URL}/images/logowcolor.png`} alt="logo_aiolia" width={200} style={{ margin: 'auto' }} />
+        <img src={`${process.env.PUBLIC_URL}/images/logo/logowcolor.png`} alt="logo_aiolia" width={200} style={{ margin: 'auto' }} />
       </Box>
 
       <NavSection navConfig={navConfig} />
