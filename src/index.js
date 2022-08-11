@@ -6,13 +6,17 @@ import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 
 //
-import App from './App';
 import * as serviceWorker from './serviceWorker';
 import reportWebVitals from './reportWebVitals';
 
 // components
 import Wrapper from './components/context/Wrapper';
-
+// routes
+import ThemeProvider from './theme';
+// components
+import ScrollToTop from './components/ScrollToTop';
+import { BaseOptionChartStyle } from './components/chart/BaseOptionChartStyle';
+import Router from './routes';
 // ----------------------------------------------------------------------
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -21,7 +25,11 @@ root.render(
   <Wrapper>
     <HelmetProvider>
       <BrowserRouter>
-        <App />
+        <ThemeProvider>
+          <ScrollToTop />
+          <BaseOptionChartStyle />
+          <Router />
+        </ThemeProvider>
       </BrowserRouter>
     </HelmetProvider>
   </Wrapper>

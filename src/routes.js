@@ -1,28 +1,23 @@
 import { Navigate, useRoutes } from 'react-router-dom';
 // layouts
-import DashboardLayout from './layouts/dashboard';
-import LogoOnlyLayout from './layouts/LogoOnlyLayout';
+import DashboardLayout from './components/dashboardLayout';
+import Layout from './components/Layout';
 //
-
-import RatePlan from './pages/RatePlan';
-import Calendar from './pages/Calendar';
-import Promotion from './pages/Promotion';
-import TypeChambre from './pages/TypeChambre';
-import AccessRight from './pages/AccessRight';
-import User from './pages/User';
-import Login from './pages/Login';
-import VerifyCode from './pages/VerifyCode';
-import NotFound from './pages/Page404';
-import Register from './pages/Register';
-import Products from './pages/Products';
-import DashboardApp from './pages/DashboardApp';
-import TestSideBar from './pages/TestSideBar';
-import TestFormulaire from './pages/TestFormulaire';
-import HomeForm from './pages/HomeForm';
-import RapportApp from './pages/RapportApp';
-
+import RatePlan from './views/RatePlan';
+import Calendar from './views/Calendar';
+import Promotion from './views/Promotion';
+import TypeChambre from './views/TypeChambre';
+import AccessRight from './views/AccessRight';
+import User from './views/User';
+import Login from './views/Login';
+import VerifyCode from './views/VerifyCode';
+import NotFound from './views/Page404';
+import DashboardApp from './views/DashboardApp';
+import TestSideBar from './views/TestSideBar';
+import TestFormulaire from './views/TestFormulaire';
+import HomeForm from './views/HomeForm';
+import RapportApp from './views/RapportApp';
 // ----------------------------------------------------------------------
-
 export default function Router() {
   return useRoutes([
     {
@@ -36,7 +31,6 @@ export default function Router() {
         { path: 'calendar', element: <Calendar /> },
         { path: 'accessRight', element: <AccessRight /> },
         { path: 'user', element: <User /> },
-        { path: 'products', element: <Products /> },
         { path: 'promotion', element: <Promotion /> },
         { path: 'typeChambre', element: <TypeChambre /> },
       ],
@@ -47,12 +41,11 @@ export default function Router() {
     },
     {
       path: '/',
-      element: <LogoOnlyLayout />,
+      element: <Layout />,
       children: [
         { path: '/', element: <Navigate to="/login" /> },
         { path: 'login', element: <Login /> },
         { path: 'verifycode', element: <VerifyCode /> },
-        // { path: 'register', element: <Register /> },
         { path: '404', element: <NotFound /> },
         { path: '*', element: <Navigate to="/404" /> },
       ],
