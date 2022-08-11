@@ -6,7 +6,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { Card, Stack, Divider, Checkbox, MenuItem, IconButton, CardHeader, FormControlLabel } from '@mui/material';
 // components
 import Iconify from '../Iconify';
-import MenuPopover from '../MenuPopover';
+import MenuPopover from '../dashboardLayout/MenuPopover';
 
 // ----------------------------------------------------------------------
 

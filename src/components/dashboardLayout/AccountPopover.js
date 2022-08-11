@@ -5,7 +5,7 @@ import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton } from '@mui/material';
 // components
 import Logout from './Logout';
-import MenuPopover from '../MenuPopover';
+import MenuPopover from './MenuPopover';
 // mocks_
 import account from '../../_mock/account';
 

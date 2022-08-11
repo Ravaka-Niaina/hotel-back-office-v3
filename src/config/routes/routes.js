@@ -1,22 +1,22 @@
 import { Navigate, useRoutes } from 'react-router-dom';
 // layouts
-import DashboardLayout from './components/dashboardLayout';
-import Layout from './components/Layout';
+import DashboardLayout from '../../components/dashboardLayout';
+import Layout from '../../components/Layout';
 //
-import RatePlan from './views/RatePlan';
-import Calendar from './views/Calendar';
-import Promotion from './views/Promotion';
-import TypeChambre from './views/TypeChambre';
-import AccessRight from './views/AccessRight';
-import User from './views/User';
-import Login from './views/Login';
-import VerifyCode from './views/VerifyCode';
-import NotFound from './views/Page404';
-import DashboardApp from './views/DashboardApp';
-import TestSideBar from './views/TestSideBar';
-import TestFormulaire from './views/TestFormulaire';
-import HomeForm from './views/HomeForm';
-import RapportApp from './views/RapportApp';
+import RatePlan from '../../views/RatePlan';
+import Calendar from '../../views/Calendar';
+import Promotion from '../../views/Promotion';
+import TypeChambre from '../../views/TypeChambre';
+import AccessRight from '../../views/AccessRight';
+import User from '../../views/User';
+import Login from '../../views/Login';
+import VerifyCode from '../../views/VerifyCode';
+import NotFound from '../../views/Page404';
+import DashboardApp from '../../views/DashboardApp';
+import TestSideBar from '../../views/TestSideBar';
+import TestFormulaire from '../../views/TestFormulaire';
+import HomeForm from '../../views/HomeForm';
+import RapportApp from '../../views/RapportApp';
 // ----------------------------------------------------------------------
 export default function Router() {
   return useRoutes([

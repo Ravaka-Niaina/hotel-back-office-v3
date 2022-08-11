@@ -16,7 +16,6 @@ import {
 import AddPromotionDialog from '../components/promotion/AddPromotionDialog';
 import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
-import SearchNotFound from '../components/SearchNotFound';
 import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
 import CustomizedCard from '../components/CustomizedComponents/CustomizedCard';
 import TableCellStyled from '../components/CustomizedComponents/CustomizedTableCell';
@@ -216,7 +215,7 @@ const Promotion = () => {
                   <TableBody>
                     <TableRow>
                       <TableCellStyled align="center" colSpan={6} sx={{ py: 3 }}>
-                        <SearchNotFound searchQuery={filterName} />
+                        <> </>
                       </TableCellStyled>
                     </TableRow>
                   </TableBody>

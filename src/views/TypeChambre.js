@@ -19,7 +19,6 @@ import {
 import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
 
-import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar } from '../components/table';
 import RoomTypeMoreMenu from '../components/roomType/RoomTypeMoreMenu';
 import AddRoomTypeDialog from '../components/roomType/AddRoomTypeDialog';
@@ -220,7 +219,7 @@ const TypeChambre = () => {
                   <TableBody>
                     <TableRow>
                       <TableCellStyled align="center" colSpan={6} sx={{ py: 3 }}>
-                        <SearchNotFound searchQuery={filterName} />
+                        <></>
                       </TableCellStyled>
                     </TableRow>
                   </TableBody>

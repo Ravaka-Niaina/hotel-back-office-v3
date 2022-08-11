@@ -10,7 +10,7 @@ import account from '../../_mock/account';
 import useResponsive from '../../hooks/useResponsive';
 // components
 import Scrollbar from '../Scrollbar';
-import NavSection from '../NavSection';
+import NavSection from './NavSection';
 //
 import navConfig from './NavConfig';
 // ----------------------------------------------------------------------

@@ -14,7 +14,6 @@ import {
 // components
 import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
-import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar } from '../components/table';
 import UserMoreMenu from '../components/user/UserMoreMenu';
 import CustomizedCard from '../components/CustomizedComponents/CustomizedCard';
@@ -206,7 +205,7 @@ export default function User() {
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <SearchNotFound searchQuery={filterName} />
+                        <></>
                       </TableCell>
                     </TableRow>
                   </TableBody>
