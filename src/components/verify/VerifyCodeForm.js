@@ -10,7 +10,7 @@ import { Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // components
 
-import { FormProvider, RHFTextField /* RHFCheckbox */ } from '../hook-form';
+import { FormProvider, RHFTextField } from '../hook-form';
 import { verifyCode, resendCode } from '../../services/User';
 import { ThemeContext } from '../context/Wrapper';
 

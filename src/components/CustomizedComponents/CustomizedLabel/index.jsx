@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import '../../css/fonts.css';
 
 const CustomLabel = styled('span')({
   width: '300px',

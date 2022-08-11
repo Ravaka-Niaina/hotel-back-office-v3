@@ -1,9 +1,9 @@
 import React from 'react';
 import { Stack, MenuItem,FormControlLabel,RadioGroup } from '@mui/material';
-import CustomizedInput from '../template/Form/CustomizedInput';
-import CustomizedSelect from '../template/Form/CustomizedSelect';
-import CustomizedCheckbox from '../template/Form/CustomizedCheckbox';
-import CustomizedRadio from '../template/Form/CustomizedRadio';
+import CustomizedInput from '../components/CustomizedComponents/CustomizedInput';
+import CustomizedSelect from '../components/CustomizedComponents/CustomizedSelect';
+import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
+import CustomizedRadio from '../components/CustomizedComponents/CustomizedRadio';
 
 const style = {
   content: {

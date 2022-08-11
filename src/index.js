@@ -14,9 +14,11 @@ import Wrapper from './components/context/Wrapper';
 // routes
 import ThemeProvider from './theme';
 // components
-import ScrollToTop from './components/ScrollToTop';
+import ScrollToTop from './utils/ScrollToTop';
 import { BaseOptionChartStyle } from './components/chart/BaseOptionChartStyle';
 import Router from './routes';
+// css
+import './template/css/fonts.css'
 // ----------------------------------------------------------------------
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

@@ -4,10 +4,10 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { getReservationSalesReport } from '../../services/SalesReport';
-import CustomizedInput from '../../template/Form/CustomizedInput';
-import CustomizedRadio from '../../template/Form/CustomizedRadio';
-import CustomizedSelect from '../../template/Form/CustomizedSelect';
-import CustomizedButton from '../../template/Form/CustomizedButton';
+import CustomizedInput from '../CustomizedComponents/CustomizedInput';
+import CustomizedRadio from '../CustomizedComponents/CustomizedRadio';
+import CustomizedSelect from '../CustomizedComponents/CustomizedSelect';
+import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import { formatDate } from '../../services/Util';
 import { ThemeContext } from '../context/Wrapper';
 

@@ -10,9 +10,9 @@ import {
 } from '@mui/material';
 import AccessRightMoreMenu from '../components/accessRight/AccessRightMoreMenu';
 import AddAccessRightDialog from '../components/accessRight/AddAccessRightDialog';
-import CustomizedCheckbox from '../template/Form/CustomizedCheckbox';
-import CustomizedCard from '../template/Form/CustomizedCard';
-import TableCellStyled from '../template/TableCellStyled';
+import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
+import CustomizedCard from '../components/CustomizedComponents/CustomizedCard';
+import TableCellStyled from '../components/CustomizedComponents/CustomizedTableCell';
 import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
 import { ThemeContext } from '../components/context/Wrapper';

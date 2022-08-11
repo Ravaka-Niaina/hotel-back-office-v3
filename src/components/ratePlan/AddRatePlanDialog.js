@@ -5,11 +5,11 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 // import { ThemeContext } from '../context/Wrapper';
-import CustomizedInput from '../../template/Form/CustomizedInput';
-import CustomizedDialogTitle from '../../template/Form/CustomizedDialogTitle';
-import CustomizedButton from '../../template/Form/CustomizedButton';
-import CustomizedRadio from '../../template/Form/CustomizedRadio';
-import CustomizedCheckbox from '../../template/Form/CustomizedCheckbox';
+import CustomizedInput from '../CustomizedComponents/CustomizedInput';
+import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
+import CustomizedButton from '../CustomizedComponents/CustomizedButton';
+import CustomizedRadio from '../CustomizedComponents/CustomizedRadio';
+import CustomizedCheckbox from '../CustomizedComponents/CustomizedCheckbox';
 import Iconify from '../Iconify';
 import {formatDate} from '../../services/Util';
 

@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { deleteAccessRight as Delete } from '../../services/AccessRight';
 import { ThemeContext } from '../context/Wrapper';
-import CustomizedButton from '../../template/Form/CustomizedButton';
+import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 
 const DeleteAccessRightDialog = ({ reload, accessRightId }) => {
   const [open, setOpen] = useState(false);

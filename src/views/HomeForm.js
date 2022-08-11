@@ -3,10 +3,10 @@ import { Typography,MenuItem, Paper, FormControlLabel, RadioGroup, Stack } from 
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import CustomizedInput from '../template/Form/CustomizedInput';
-import CustomizedRadio from '../template/Form/CustomizedRadio';
-import CustomizedSelect from '../template/Form/CustomizedSelect';
-import CustomizedButton from '../template/Form/CustomizedButton';
+import CustomizedInput from '../components/CustomizedComponents/CustomizedInput';
+import CustomizedRadio from '../components/CustomizedComponents/CustomizedRadio';
+import CustomizedSelect from '../components/CustomizedComponents/CustomizedSelect';
+import CustomizedButton from '../components/CustomizedComponents/CustomizedButton';
 import { formatDate } from '../services/Util';
 
 const HomeForm = () => {

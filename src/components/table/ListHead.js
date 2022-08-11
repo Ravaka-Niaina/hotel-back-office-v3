@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 // material
 import { Box, TableRow, TableCell, TableHead, TableSortLabel, styled } from '@mui/material';
-import CustomizedCheckbox from '../../template/Form/CustomizedCheckbox';
+import CustomizedCheckbox from '../CustomizedComponents/CustomizedCheckbox';
 // ----------------------------------------------------------------------
 
 const visuallyHidden = {

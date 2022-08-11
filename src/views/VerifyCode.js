@@ -6,7 +6,6 @@ import { Card, Link, Container, Typography } from '@mui/material';
 import useResponsive from '../hooks/useResponsive';
 // components
 import Page from '../components/Page';
-import Logo from '../components/Logo';
 // sections
 import { VerifyCodeForm } from '../components/verify';
 
@@ -68,9 +67,7 @@ const VerifyCode = () => {
     <Page title="Login">
       <RootStyle>
         <HeaderStyle>
-          <Logo />
-
-
+          {/* <Logo /> */}
         </HeaderStyle>
 
         {mdUp && (

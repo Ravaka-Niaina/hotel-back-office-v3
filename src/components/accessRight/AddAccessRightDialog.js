@@ -5,9 +5,9 @@ import { Dialog, DialogActions, DialogContent, Button, Stack } from '@mui/materi
 
 import { createAccessRight } from '../../services/AccessRight';
 import { ThemeContext } from '../context/Wrapper';
-import CustomizedInput from '../../template/Form/CustomizedInput';
-import CustomizedDialogTitle from '../../template/Form/CustomizedDialogTitle';
-import CustomizedButton from '../../template/Form/CustomizedButton';
+import CustomizedInput from '../CustomizedComponents/CustomizedInput';
+import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
+import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import Iconify from '../Iconify';
 
 

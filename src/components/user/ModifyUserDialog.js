@@ -9,9 +9,9 @@ import {
   ListItemText,
 } from '@mui/material';
 
-import CustomizedInput from '../../template/Form/CustomizedInput';
-import CustomizedButton from '../../template/Form/CustomizedButton';
-import CustomizedDialogTitle from '../../template/Form/CustomizedDialogTitle';
+import CustomizedInput from '../CustomizedComponents/CustomizedInput';
+import CustomizedButton from '../CustomizedComponents/CustomizedButton';
+import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import { ThemeContext } from '../context/Wrapper';
 import { getUserDetails,updateUser} from '../../services/User';
 

@@ -6,8 +6,8 @@ import PropTypes from 'prop-types'
 import { useCallback, useEffect, useState, useContext } from 'react';
 import CancelIcon from '@mui/icons-material/Cancel';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
-import CustomizedDialogTitle from '../../template/Form/CustomizedDialogTitle';
-import CustomizedButton from '../../template/Form/CustomizedButton';
+import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
+import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import { ThemeContext } from '../context/Wrapper';
 
 const maxWidth = 350;

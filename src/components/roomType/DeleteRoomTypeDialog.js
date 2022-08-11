@@ -12,7 +12,7 @@ import {
   Button,
 } from '@mui/material';
 
-import CustomizedButton from '../../template/Form/CustomizedButton';
+import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import { ThemeContext } from '../context/Wrapper';
 
 const DeleteRoomTypeDialog = ({ row }) => {

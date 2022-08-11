@@ -11,7 +11,7 @@ import {
   DialogActions,
   Button,
 } from '@mui/material';
-import CustomizedButton from '../../template/Form/CustomizedButton';
+import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 
 const DeleteUserDialog = ({ row }) => {
   const [open, setOpen] = useState(false);

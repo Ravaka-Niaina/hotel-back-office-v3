@@ -7,8 +7,8 @@ import Iconify from '../Iconify';
 
 import { login } from '../../services/User';
 import { ThemeContext } from '../context/Wrapper';
-import CustomizedInput from '../../template/Form/CustomizedInput';
-import CustomizedButton from '../../template/Form/CustomizedButton';
+import CustomizedInput from '../CustomizedComponents/CustomizedInput';
+import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 //
 
 const Label = styled(Typography)({

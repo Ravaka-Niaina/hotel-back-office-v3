@@ -2,9 +2,9 @@ import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Dialog, DialogActions, DialogContent, Button, ListItemText } from '@mui/material';
 
-import CustomizedInput from '../../template/Form/CustomizedInput';
-import CustomizedButton from '../../template/Form/CustomizedButton';
-import CustomizedDialogTitle from '../../template/Form/CustomizedDialogTitle';
+import CustomizedInput from '../CustomizedComponents/CustomizedInput';
+import CustomizedButton from '../CustomizedComponents/CustomizedButton';
+import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 
 import { updateAccessRight } from '../../services/AccessRight';
 import { ThemeContext } from '../context/Wrapper';

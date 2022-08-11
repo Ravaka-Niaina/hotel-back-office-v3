@@ -5,9 +5,9 @@ import PropTypes from 'prop-types';
 import { ListItemText, Stack, Button, Dialog, DialogActions, DialogContent } from '@mui/material';
 
 // components
-import CustomizedDialogTitle from '../../template/Form/CustomizedDialogTitle';
-import CustomizedInput from '../../template/Form/CustomizedInput';
-import CustomizedButton from '../../template/Form/CustomizedButton';
+import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
+import CustomizedInput from '../CustomizedComponents/CustomizedInput';
+import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import { ThemeContext } from '../context/Wrapper';
 
 // Nesoriko leh prop row (Cedric)
