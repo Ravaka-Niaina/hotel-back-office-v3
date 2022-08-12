@@ -77,7 +77,7 @@ const RatePlan = () => {
                     <Typography sx={{ color: '#787878', fontWeight: '500' }} variant="h4" gutterBottom>
                         Plan tarifaire
                     </Typography>
-                    <AddRatePlanDialog />
+                    <AddRatePlanDialog reload={reload} />
                 </Stack>
 
                 <CustomizedCard>
@@ -118,7 +118,7 @@ const RatePlan = () => {
                                                 <TableCellStyled align="left">{nom}</TableCellStyled>
 
                                                 <TableCellStyled align="right">
-                                                    <RatePlanMoreMenu  />
+                                                    <RatePlanMoreMenu  reload={reload} ratePlanId={_id}/>
                                                 </TableCellStyled>
                                             </TableRow>
                                         );

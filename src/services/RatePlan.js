@@ -7,9 +7,29 @@ export const getRatePlanList = (payload) =>
         //     partner_id: partnerId,
         // },
 });
-export const createRatePlanRight = (payload,idToken) =>
+export const createRatePlan = (payload,idToken) =>
     axios.post(`${config.host}/planTarifaire/insert`, payload, {
         headers: {
             Authorization: idToken,
         },
 });
+
+export const updateRatePlan = (payload) =>
+    axios.post(`${config.host}/planTarifaire/update`, payload, {
+        // headers: {
+        //     Authorization: idToken,
+        // },
+});
+
+export const deleteRatePlan = (payload) =>
+    axios.post(`${config.host}/planTarifaire/suppression`, payload, {
+        // headers: {
+        //     Authorization: idToken,
+        // },
+});
+
+export const getRoomTypeAndCancelingPoliticList = () =>
+    axios.get(`${config.host}/tctarif/TPAvecPA`);
+
+export const getRatePlanDetails = (id) =>
+    axios.get(`${config.host}/planTarifaire/details/${id}`);

@@ -12,11 +12,38 @@ import {
     Button,
 } from '@mui/material';
 import { ThemeContext } from '../context/Wrapper';
+import {deleteRatePlan} from '../../services/RatePlan';
 
 const DeleteRatePlanDialog = ({reload,ratePlanId}) => {
   
     const [open, setOpen] = useState(false);
     const context = useContext(ThemeContext);
+
+    const handleClickDelete = () => {
+        const payload={
+          id:ratePlanId,
+        }
+        context.showLoader(true);
+        deleteRatePlan(payload)
+          .then((result) =>{
+            if(result.data.status === 200){
+              reload();
+              setOpen(false);
+              context.changeResultSuccessMessage('Suppression enregistré.');
+              context.showResultSuccess(true);
+            }
+            else
+            {
+              context.changeResultErrorMessage('Suppression non effectué.');
+              context.showResultError(true);
+            }
+          }).catch(() =>{
+            context.changeResultErrorMessage('Une erreur interne est servenue.');
+            context.showResultError(true);
+          }).finally(() =>{
+            context.showLoader(false);
+          });
+    };
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -41,8 +68,8 @@ const DeleteRatePlanDialog = ({reload,ratePlanId}) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Annuler</Button>
-          <Button   autoFocus>
-            OK
+          <Button   autoFocus onClick={handleClickDelete}>
+            Supprimer
           </Button>
         </DialogActions>
       </Dialog>

@@ -43,6 +43,11 @@ const CustomizedTextField = styled(TextField)({
 const CustomizedInput = (props) => { 
   const oprops={...props};
   delete oprops.label;
+  if(oprops.endAdornment)
+  {
+      oprops.InputProps={...(oprops.InputProps && {...oprops.InputProps}),'endAdornment':oprops.endAdornment};
+      delete oprops.endAdornment;
+  }
   return(
     <Stack spacing={1} direction="column">
       <CustomizedLabel label={props.label} />

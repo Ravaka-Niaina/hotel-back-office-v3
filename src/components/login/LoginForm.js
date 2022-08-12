@@ -105,7 +105,7 @@ export default function LoginForm() {
           sx={{ width: 1, fontSize: 17 }}
           type={showPassword ? 'text' : 'password'}
           name="password"
-          label={<Label>Mot de passe</Label>}
+          label='Mot de passe'
           placeholder="mot de passe"
           autoComplete="on"
           onChange={handleChange}
@@ -132,7 +132,7 @@ export default function LoginForm() {
         </Link>
       </Stack>
 
-      <CustomizedButton handleClick={handleSubmit} isFullWidth text={`Se connecter`}/>
+      <CustomizedButton onClick={handleSubmit} fullWidth text={`Se connecter`}/>
     </form>
   );
 }
