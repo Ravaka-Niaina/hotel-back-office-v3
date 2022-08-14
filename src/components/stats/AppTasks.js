@@ -7,6 +7,8 @@ import { Card, Stack, Divider, Checkbox, MenuItem, IconButton, CardHeader, FormC
 // components
 import Iconify from '../Iconify';
 import MenuPopover from '../dashboardLayout/MenuPopover';
+import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
+import {mainBackground} from '../CustomizedComponents/NeumorphismTheme';
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +26,7 @@ export default function AppTasks({ title, subheader, list, ...other }) {
   });
 
   return (
-    <Card {...other}>
+    <CustomizedPaperOutside sx={{...mainBackground}} {...other}>
       <CardHeader title={title} subheader={subheader} />
       <Controller
         name="taskCompleted"
@@ -47,7 +49,7 @@ export default function AppTasks({ title, subheader, list, ...other }) {
           );
         }}
       />
-    </Card>
+    </CustomizedPaperOutside>
   );
 }
 

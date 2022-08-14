@@ -7,6 +7,8 @@ import { Box, Card, CardHeader } from '@mui/material';
 import { fNumber } from '../../utils/formatNumber';
 // components
 import { BaseOptionChart } from '../chart';
+import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
+import {lightBackgroundToTop} from '../CustomizedComponents/NeumorphismTheme';
 
 // ----------------------------------------------------------------------
 
@@ -40,12 +42,12 @@ export default function AppConversionRates({ title, subheader, chartData, ...oth
   });
 
   return (
-    <Card {...other}>
+    <CustomizedPaperOutside  sx={{...lightBackgroundToTop}} {...other}>
       <CardHeader title={title} subheader={subheader} />
 
       <Box sx={{ mx: 3 }} dir="ltr">
         <ReactApexChart type="bar" series={[{ data: chartSeries }]} options={chartOptions} height={364} />
       </Box>
-    </Card>
+    </CustomizedPaperOutside>
   );
 }

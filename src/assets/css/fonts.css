@@ -18,3 +18,19 @@
     font-family: 'RalewayLight';
         src: local('RalewayLight'), url("../fonts/Raleway-Light.ttf") format('truetype');
 }
+@font-face {
+    font-family: 'RalewaySemiBold';
+        src: local('RalewaySemiBold'), url("../fonts/Raleway-SemiBold.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'RalewayMedium';
+        src: local('RalewayMedium'), url("../fonts/Raleway-Medium.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'RalewayHeavy';
+        src: local('RalewayHeavy'), url("../fonts/Raleway-Heavy.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'RalewayExtraBold';
+        src: local('RalewayExtraBold'), url("../fonts/Raleway-ExtraBold.ttf") format('truetype');
+}

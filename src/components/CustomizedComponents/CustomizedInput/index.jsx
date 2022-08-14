@@ -8,17 +8,18 @@ import CustomizedHelperText from '../CustomizedHelperText';
 const CustomizedTextField = styled(TextField)({
   minWidth: 50,
 
-  boxShadow: 'inset 4px 4px 14px rgba(197, 215, 238, 1) ,inset -4px -4px 9px rgba(255, 255, 255, 0.6)',
+  boxShadow: 'inset 4px 4px 10px rgba(197, 215, 238, 1),inset -2px -2px 9px rgba(255, 255, 255, 0.9) ',
   // boxShadow: " inset -4px -4px 9px  rgba(255, 255, 255, 0.6),inset 4px 4px 14px #C5D7EE",
   // background: "#E3EDF7",
   // borderImageSource: "linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%),linear-gradient(122.51deg, rgba(214, 227, 243, 0.5) 16.62%, rgba(255, 255, 255, 0.5) 56.74%)",
   borderRadius: '5px',
-  borderTop: '1px solid #FFFFFF',
-  borderBottom: '1px solid #E3EDF7',
-  borderRight: '1px solid #FFFFFF',
-  backgroundSize: '3px 100%',
-  backgroundPosition: '0 0, 100% 0',
-  backgroundRepeat: 'no­-repeat',
+  borderTop: '1px solid rgba(255,255,255,0.9)',
+  borderBottom: '1px solid rgba(255,255,255,0.4)',
+  borderLeft: '1px solid rgba(255,255,255,0.4)',
+  borderRight: '1px solid rgba(255,255,255,0.9)',
+  // backgroundSize: '3px 100%',
+  // backgroundPosition: '0 0, 100% 0',
+  // backgroundRepeat: 'no­-repeat',
   '& label.Mui-focused': {
     border: 'none',
   },
@@ -28,16 +29,13 @@ const CustomizedTextField = styled(TextField)({
 
   '& .MuiOutlinedInput-root': {
     '&.Mui-error fieldset': {
-      border: '2px solid',
-      borderColor: '#FF647C',
+      borderRadius:'4px !important',
+      borderRight: 'inherit',
+      border:'2px solid #FF858F',
     },
     '& fieldset': {
       borderColor: 'transparent',
     },
-  },
-  '&::placeholder': {
-    textOverflow: 'ellipsis !important',
-    color: 'blue !important',
   },
 });
 const CustomizedInput = (props) => { 
@@ -48,6 +46,14 @@ const CustomizedInput = (props) => {
       oprops.InputProps={...(oprops.InputProps && {...oprops.InputProps}),'endAdornment':oprops.endAdornment};
       delete oprops.endAdornment;
   }
+  const font={
+    fontFamily: 'RalewayMedium',
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: '14px',
+    lineHeight: '18px',
+  };
+  oprops.InputProps={...(oprops.InputProps && {...oprops.InputProps}),'style':font};
   return(
     <Stack spacing={1} direction="column">
       <CustomizedLabel label={props.label} />

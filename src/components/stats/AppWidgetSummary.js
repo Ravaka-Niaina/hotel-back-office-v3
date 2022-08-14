@@ -6,7 +6,7 @@ import { Card, Typography } from '@mui/material';
 import { fShortenNumber } from '../../utils/formatNumber';
 // components
 import Iconify from '../Iconify';
-
+import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
 // ----------------------------------------------------------------------
 
 const IconWrapperStyle = styled('div')(({ theme }) => ({
@@ -32,10 +32,9 @@ AppWidgetSummary.propTypes = {
 
 export default function AppWidgetSummary({ title, total, icon, color = 'primary', sx, ...other }) {
   return (
-    <Card
+    <CustomizedPaperOutside
       sx={{
         py: 5,
-        boxShadow: 0,
         textAlign: 'center',
         color: (theme) => theme.palette[color].darker,
         bgcolor: (theme) => theme.palette[color].lighter,
@@ -61,6 +60,6 @@ export default function AppWidgetSummary({ title, total, icon, color = 'primary'
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
         {title}
       </Typography>
-    </Card>
+    </CustomizedPaperOutside>
   );
 }

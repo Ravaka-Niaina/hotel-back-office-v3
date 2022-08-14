@@ -4,6 +4,8 @@ import { Card, Typography, CardHeader, CardContent } from '@mui/material';
 import { Timeline, TimelineDot, TimelineItem, TimelineContent, TimelineSeparator, TimelineConnector } from '@mui/lab';
 // utils
 import { fDateTime } from '../../utils/formatTime';
+import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
+import {lightBackgroundToTop} from '../CustomizedComponents/NeumorphismTheme';
 
 // ----------------------------------------------------------------------
 
@@ -15,7 +17,7 @@ AppOrderTimeline.propTypes = {
 
 export default function AppOrderTimeline({ title, subheader, list, ...other }) {
   return (
-    <Card {...other}>
+    <CustomizedPaperOutside sx={{...lightBackgroundToTop}} {...other}>
       <CardHeader title={title} subheader={subheader} />
 
       <CardContent
@@ -31,7 +33,7 @@ export default function AppOrderTimeline({ title, subheader, list, ...other }) {
           ))}
         </Timeline>
       </CardContent>
-    </Card>
+    </CustomizedPaperOutside>
   );
 }
 

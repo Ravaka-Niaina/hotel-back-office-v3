@@ -4,11 +4,14 @@ import CustomizedInput from '../components/CustomizedComponents/CustomizedInput'
 import CustomizedSelect from '../components/CustomizedComponents/CustomizedSelect';
 import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
 import CustomizedRadio from '../components/CustomizedComponents/CustomizedRadio';
+import CustomizedToggle from '../components/CustomizedComponents/CustomizedToggle';
+import CustomizedSwitch from '../components/CustomizedComponents/CustomizedSwitch';
 
 const style = {
   content: {
     backgroundColor: '#D6E3F3',
-    height: 700,
+    
+    height: 900,
     padding: 30,
   },
   text: {
@@ -49,6 +52,9 @@ const TestFormulaire = () => (
       <FormControlLabel value="female" control={<CustomizedRadio />} label="Female" />
       <FormControlLabel value="male" control={<CustomizedRadio />} label="Male" />
     </RadioGroup>
+    <FormControlLabel value="female" control={<CustomizedToggle defaultChecked /> } label="Activé" />
+    <FormControlLabel value="female" control={<CustomizedToggle /> } label="Désactivé" />
+    <FormControlLabel value="female" control={<CustomizedSwitch defaultChecked /> } label="Female" />
   </Stack>
   
 );

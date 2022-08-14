@@ -48,11 +48,16 @@ function NavItem({ item, active }) {
 
   const activeRootStyle = {
     fontWeight: 'fontWeightMedium',
-    borderTop: '1px solid #FFFFFF',
-    borderBottom: '1px solid #E3EDF7',
-    borderRight: '1px solid #FFFFFF',
-    boxShadow: 'inset 4px 4px 14px rgba(197, 215, 238, 1) ,inset -4px -4px 9px rgba(255, 255, 255, 0.6)',
-    };
+    boxShadow: 'inset 4px 4px 5px rgba(197, 215, 238, 1),inset -2px -2px 9px rgba(255, 255, 255, 0.9) ',
+    borderRadius: '17px',
+    borderTop: '1px solid rgba(255,255,255,0.9)',
+    borderBottom: '1px solid rgba(255,255,255,0.4)',
+    borderLeft: '1px solid rgba(255,255,255,0.4)',
+    borderRight: '1px solid rgba(255,255,255,0.9)',
+    backgroundSize: '3px 100%',
+    backgroundPosition: '0 0, 100% 0',
+    backgroundRepeat: 'no­-repeat',
+  };
 
   const activeSubStyle = {
     color: 'text.primary',

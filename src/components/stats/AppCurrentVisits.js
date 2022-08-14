@@ -8,6 +8,9 @@ import { Card, CardHeader } from '@mui/material';
 import { fNumber } from '../../utils/formatNumber';
 // components
 import { BaseOptionChart } from '../chart';
+import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
+import {lightBackgroundToTop} from '../CustomizedComponents/NeumorphismTheme';
+
 
 // ----------------------------------------------------------------------
 
@@ -67,12 +70,12 @@ export default function AppCurrentVisits({ title, subheader, chartColors, chartD
   });
 
   return (
-    <Card {...other}>
+    <CustomizedPaperOutside sx={{...lightBackgroundToTop}} {...other}>
       <CardHeader title={title} subheader={subheader} />
 
       <ChartWrapperStyle dir="ltr">
         <ReactApexChart type="pie" series={chartSeries} options={chartOptions} height={280} />
       </ChartWrapperStyle>
-    </Card>
+    </CustomizedPaperOutside>
   );
 }

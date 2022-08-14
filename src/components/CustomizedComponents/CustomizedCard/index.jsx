@@ -1,20 +1,20 @@
-import { Card } from '@mui/material';
+import { Paper } from '@mui/material';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
+import {shadowInset,cardRadius,linearBorderOutside} from '../NeumorphismTheme';
 
-const CustomizedCard = ({ children }) => (
-  <Card
-    sx={{
-      border: '1px white solid',
-      backgroundColor: '#E3EDF7',
-      color: 'white',
-      padding: 5,
-      boxShadow: 'inset 4px 4px 14px rgba(197, 215, 238, 1) ,inset -4px -4px 9px rgba(255, 255, 255, 0.6)',
-    }}
+const StyledPaperInset = styled(Paper)({
+  ...shadowInset,
+  ...cardRadius,
+});
+const CustomizedCard = (props) => (
+  <StyledPaperInset
+    {...props}
   >
-    {children}
-  </Card>
+    {props.children}
+  </StyledPaperInset>
 );
 CustomizedCard.propTypes = {
-  children: PropTypes.any,
+  
 };
 export default CustomizedCard;

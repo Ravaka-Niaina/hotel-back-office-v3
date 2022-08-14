@@ -8,6 +8,7 @@ import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import CustomizedRadio from '../CustomizedComponents/CustomizedRadio';
 import CustomizedSelect from '../CustomizedComponents/CustomizedSelect';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
+import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
 import { formatDate } from '../../services/Util';
 import { ThemeContext } from '../context/Wrapper';
 
@@ -80,8 +81,8 @@ const RapportForm = ({ setStateDataSalesReport }) => {
 
   return (
     <>
-      <Stack spacing={2}>
-        <Paper elevation={12} sx={{ width: 1, p: 5, background: '#E3EDF7' }}>
+      <Stack spacing={3}>
+        <CustomizedPaperOutside elevation={12} sx={{background:'#E3EDF7',p:5}}>
           <Typography sx={{ color: '#787878', fontWeight: '500' }} variant="h4" gutterBottom>
             Rapport prévisionnel de performance
           </Typography>
@@ -90,9 +91,9 @@ const RapportForm = ({ setStateDataSalesReport }) => {
             Vous pouvez aussi vous situer par rapport à vos concurrents directs, à votre groupe de concurrents et au
             marché en général.
           </p>
-        </Paper>
-        <Paper elevation={12} sx={{ width: 1, p: 5, background: '#E3EDF7' }}>
-          <Stack spacing={1} alignItems="flex-start">
+        </CustomizedPaperOutside>
+        <CustomizedPaperOutside elevation={12}  sx={{background:'#E3EDF7',p:5}}>
+          <Stack spacing={2} alignItems="flex-start">
             <h4>Vue:</h4>
             <RadioGroup defaultValue="jour" aria-labelledby="demo-controlled-radio-buttons-group">
               {formIntervals.map((formInterval) => (
@@ -147,7 +148,7 @@ const RapportForm = ({ setStateDataSalesReport }) => {
             </div>
             <CustomizedButton handleClick={getSalesReport} text="Obtenir rapport" sx={{ width: 0.5 }} />
           </Stack>
-        </Paper>
+        </CustomizedPaperOutside>
       </Stack>
     </>
   );

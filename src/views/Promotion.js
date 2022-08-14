@@ -155,7 +155,7 @@ const Promotion = () => {
           <AddPromotionDialog reload={reload} />
         </Stack>
 
-        <CustomizedCard>
+        <CustomizedCard sx={{background:'#E3EDF7',p:5}}>
           <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>

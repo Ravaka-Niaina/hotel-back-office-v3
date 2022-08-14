@@ -6,6 +6,9 @@ import { fToNow } from '../../utils/formatTime';
 // components
 import Iconify from '../Iconify';
 import Scrollbar from '../Scrollbar';
+import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
+import {lightBackgroundToBottom} from '../CustomizedComponents/NeumorphismTheme';
+
 
 // ----------------------------------------------------------------------
 
@@ -17,7 +20,7 @@ AppNewsUpdate.propTypes = {
 
 export default function AppNewsUpdate({ title, subheader, list, ...other }) {
   return (
-    <Card {...other}>
+    <CustomizedPaperOutside sx={{...lightBackgroundToBottom}} {...other}>
       <CardHeader title={title} subheader={subheader} />
 
       <Scrollbar>
@@ -35,7 +38,7 @@ export default function AppNewsUpdate({ title, subheader, list, ...other }) {
           View all
         </Button>
       </Box>
-    </Card>
+    </CustomizedPaperOutside>
   );
 }
 

@@ -5,6 +5,9 @@ import ReactApexChart from 'react-apexcharts';
 import { Card, CardHeader, Box } from '@mui/material';
 // components
 import { BaseOptionChart } from '../chart';
+import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
+import {lightBackgroundToTop} from '../CustomizedComponents/NeumorphismTheme';
+
 
 // ----------------------------------------------------------------------
 
@@ -36,12 +39,12 @@ export default function AppWebsiteVisits({ title, subheader, chartLabels, chartD
   });
 
   return (
-    <Card {...other}>
+    <CustomizedPaperOutside  sx={{...lightBackgroundToTop}} {...other}>
       <CardHeader title={title} subheader={subheader} />
 
       <Box sx={{ p: 3, pb: 1 }} dir="ltr">
         <ReactApexChart type="line" series={chartData} options={chartOptions} height={364} />
       </Box>
-    </Card>
+    </CustomizedPaperOutside>
   );
 }

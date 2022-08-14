@@ -6,6 +6,9 @@ import { styled } from '@mui/material/styles';
 import { Card, CardHeader } from '@mui/material';
 // components
 import { BaseOptionChart } from '../chart';
+import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
+import {lightBackgroundToTop} from '../CustomizedComponents/NeumorphismTheme';
+
 
 // ----------------------------------------------------------------------
 
@@ -57,12 +60,12 @@ export default function AppCurrentSubject({ title, subheader, chartData, chartCo
   });
 
   return (
-    <Card {...other}>
+    <CustomizedPaperOutside sx={{...lightBackgroundToTop}} {...other}>
       <CardHeader title={title} subheader={subheader} />
 
       <ChartWrapperStyle dir="ltr">
         <ReactApexChart type="radar" series={chartData} options={chartOptions} height={340} />
       </ChartWrapperStyle>
-    </Card>
+    </CustomizedPaperOutside>
   );
 }

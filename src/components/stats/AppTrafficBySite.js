@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import { Box, Card, Paper, Typography, CardHeader, CardContent } from '@mui/material';
 // utils
 import { fShortenNumber } from '../../utils/formatNumber';
+import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
+import CustomizedCard from '../CustomizedComponents/CustomizedCard';
+import {mainBackground} from '../CustomizedComponents/NeumorphismTheme';
 
 // ----------------------------------------------------------------------
 
@@ -14,7 +17,7 @@ AppTrafficBySite.propTypes = {
 
 export default function AppTrafficBySite({ title, subheader, list, ...other }) {
   return (
-    <Card {...other}>
+    <CustomizedPaperOutside sx={{...mainBackground}} {...other}>
       <CardHeader title={title} subheader={subheader} />
 
       <CardContent>
@@ -26,7 +29,7 @@ export default function AppTrafficBySite({ title, subheader, list, ...other }) {
           }}
         >
           {list.map((site) => (
-            <Paper key={site.name} variant="outlined" sx={{ py: 2.5, textAlign: 'center' }}>
+            <CustomizedCard key={site.name} variant="outlined" sx={{ background:'#E3EDF7',py: 2.5, textAlign: 'center' }}>
               <Box sx={{ mb: 0.5 }}>{site.icon}</Box>
 
               <Typography variant="h6">{fShortenNumber(site.value)}</Typography>
@@ -34,10 +37,10 @@ export default function AppTrafficBySite({ title, subheader, list, ...other }) {
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 {site.name}
               </Typography>
-            </Paper>
+            </CustomizedCard>
           ))}
         </Box>
       </CardContent>
-    </Card>
+    </CustomizedPaperOutside>
   );
 }
