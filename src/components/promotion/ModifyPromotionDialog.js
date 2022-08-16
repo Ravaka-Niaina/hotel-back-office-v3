@@ -29,6 +29,8 @@ import { Box } from '@mui/system';
 import { getListTarifAndRoom, getPromotionDetail, updatePromotion } from '../../services/Promotion';
 import { formatDate } from '../../services/Util';
 import { ThemeContext } from '../context/Wrapper';
+import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
+import Iconify from '../Iconify';
 
 const ModifyPromotionDialog = ({ row, reload }) => {
   const context = useContext(ThemeContext);
@@ -324,7 +326,9 @@ const ModifyPromotionDialog = ({ row, reload }) => {
 
   return (
     <>
-      <ListItemText onClick={handleClickOpen} primary="Modifier" primaryTypographyProps={{ variant: 'body2' }} />
+      <CustomizedIconButton variant="contained" onClick={handleClickOpen}>
+        <Iconify icon="eva:edit-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
+      </CustomizedIconButton >
       <Dialog open={open} onClose={handleClose} maxWidth={'sm'}>
         <DialogTitle>
           <Typography variant="h3" component="div" gutterBottom>

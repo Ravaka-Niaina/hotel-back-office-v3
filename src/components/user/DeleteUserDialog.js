@@ -12,6 +12,8 @@ import {
   Button,
 } from '@mui/material';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
+import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
+import Iconify from '../Iconify';
 
 const DeleteUserDialog = ({ row }) => {
   const [open, setOpen] = useState(false);
@@ -26,7 +28,9 @@ const DeleteUserDialog = ({ row }) => {
   const deleteUser = async () => {};
   return (
     <>
-      <ListItemText onClick={handleClickOpen} primary="| Supprimer" primaryTypographyProps={{ variant: 'body2' }} />
+      <CustomizedIconButton variant="contained" onClick={handleClickOpen}>
+        <Iconify icon="eva:trash-2-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
+      </CustomizedIconButton >
       <Dialog
         open={open}
         onClose={handleClose}

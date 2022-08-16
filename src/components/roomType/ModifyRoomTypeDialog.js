@@ -8,7 +8,9 @@ import { ListItemText, Stack, Button, Dialog, DialogActions, DialogContent } fro
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
+import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
 import { ThemeContext } from '../context/Wrapper';
+import Iconify from '../Iconify';
 
 // Nesoriko leh prop row (Cedric)
 const ModifyRoomTypeDialog = ({ row }) => {
@@ -68,7 +70,9 @@ const ModifyRoomTypeDialog = ({ row }) => {
 
   return (
     <>
-      <ListItemText onClick={handleClickOpen} primary="Modifier" primaryTypographyProps={{ variant: 'body2' }} />
+      <CustomizedIconButton variant="contained" onClick={handleClickOpen}>
+        <Iconify icon="eva:edit-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
+      </CustomizedIconButton >
       <Dialog open={open} onClose={handleClose} maxWidth={'xl'}>
         <CustomizedDialogTitle text={`Modifier le type de chambre " ${roomType && roomType.nom} "`} />
 

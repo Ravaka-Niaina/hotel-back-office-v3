@@ -11,9 +11,11 @@ import {
 
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
+import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import { ThemeContext } from '../context/Wrapper';
 import { getUserDetails,updateUser} from '../../services/User';
+import Iconify from '../Iconify';
 
 const ModifyUserDialog = ({ userId,reload }) => {
   const context = useContext(ThemeContext);
@@ -94,7 +96,7 @@ const ModifyUserDialog = ({ userId,reload }) => {
     newUser.backup_email && newUser.phone_number && Object.values(errors).every((x) => x === '');
     return isValid;
   };
-  const handleOpen = () => {
+  const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
@@ -139,12 +141,9 @@ const ModifyUserDialog = ({ userId,reload }) => {
   };
   return (
     <>
-      <ListItemText
-        onClick={handleOpen}
-        primary="|  Modifier"
-        primaryTypographyProps={{ variant: 'body2' }}
-        maxwidth={'sm'}
-      />
+      <CustomizedIconButton variant="contained" onClick={handleClickOpen}>
+        <Iconify icon="eva:edit-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
+      </CustomizedIconButton >
       <Dialog open={open} onClose={handleClose} maxWidth={'sm'}>
         <CustomizedDialogTitle text={`Modifier l'utilisateur "${`xxx`}"`} />
         <DialogContent style={{ backgroundColor: '#E8F0F8', paddingTop: 15, paddingRight: 20, paddingLeft: 20 }}>

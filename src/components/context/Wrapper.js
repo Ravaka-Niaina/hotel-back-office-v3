@@ -13,6 +13,7 @@ export const ThemeContext = createContext({
 });
 
 const Wrapper = ({ children }) => {
+  const [partialLoading,setPartialLoading] = useState({loading:false,identifier:''});
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [disable, setDisable] = useState(false);
@@ -61,6 +62,8 @@ const Wrapper = ({ children }) => {
   return (
     <ThemeContext.Provider
       value={{
+        partialLoading,
+        setPartialLoading,
         showLoader,
         showResultError,
         changeResultErrorMessage,

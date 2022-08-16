@@ -149,7 +149,7 @@ const Promotion = () => {
     <Page title="Promotion">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
+          <Typography sx={{ color: '#787878', fontWeight: '500' }} variant="h4" gutterBottom>
             Promotions
           </Typography>
           <AddPromotionDialog reload={reload} />

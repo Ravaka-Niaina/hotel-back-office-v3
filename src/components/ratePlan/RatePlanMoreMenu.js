@@ -17,8 +17,8 @@ const RatePlanMoreMenu = ({ reload, ratePlanId,isActif }) => {
   return (
     <>
       <Stack direction="row" spacing={2}>
-          <DeleteRatePlanDialog reload={reload} ratePlanId={ratePlanId} />
           <ModifyRatePlanDialog reload={reload} ratePlanId={ratePlanId} />
+          <DeleteRatePlanDialog reload={reload} ratePlanId={ratePlanId} />
           <RatePlanStatus reload={reload} ratePlanId={ratePlanId} isActif={isActif}/>
       </Stack>
 

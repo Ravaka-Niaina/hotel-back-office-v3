@@ -3,44 +3,50 @@ import { Link as RouterLink } from 'react-router-dom';
 
 // material
 import {
-  Typography,
   Stack,
   Divider,
   FormGroup,
-  Checkbox,
-  Radio,
   FormControl,
   FormLabel,
   RadioGroup,
   Button,
-  TextField,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   FormControlLabel,
 } from '@mui/material';
+import { Box } from '@mui/system';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 // components
-import { Box } from '@mui/system';
+import CustomizedButton from '../CustomizedComponents/CustomizedButton';
+import CustomizedCheckbox from '../CustomizedComponents/CustomizedCheckbox';
+import CustomizedRadio from '../CustomizedComponents/CustomizedRadio';
+import CustomizedInput from '../CustomizedComponents/CustomizedInput';
+import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import Iconify from '../Iconify';
 import { createPromotion, getListTarifAndRoom } from '../../services/Promotion';
 import { ThemeContext } from '../context/Wrapper';
+import { formatDate } from '../../services/Util';
 
-function formatDate(date) {
-  const allTime = date.split('/');
-  const format = [];
-  format.push(allTime[2]);
-  format.push(allTime[0]);
-  format.push(allTime[1]);
-  return format.map((e) => e).join('-');
-}
 const AddPromotionDialog = () => {
   const context = useContext(ThemeContext);
+  
   const [listTarif, setListTarif] = useState([]);
+  
   const [listRoom, setListRoom] = useState([]);
+
+  const [open, setOpen] = useState(false);
+  
+  const [errors, setErrors] = useState({});
+
+  const [specificDay, setSpecificDay] = useState(false);
+
+  const [allRatePlan, setAllRatePlan] = useState(true);
+
+  const [allRoomType, setAllRoomType] = useState(true);
+
   const [promotion, setPromotion] = useState({
     french_name: '',
     english_name: '',
@@ -104,16 +110,7 @@ const AddPromotionDialog = () => {
     };
     fetchData();
   }, []);
-  const [open, setOpen] = useState(false);
-  // const [errors, setErrors] = useState({});
-
-  const [specificDay, setSpecificDay] = useState(false);
-
-  const [allRatePlan, setAllRatePlan] = useState(true);
-
-  const [allRoomType, setAllRoomType] = useState(true);
-
-  const [disabledAddButton, setDisabledAddButton] = useState(true);
+  
 
   const handleChangeWeekDays = (k) => {
     const weekDaysTemp = promotion.week_days;
@@ -196,17 +193,61 @@ const AddPromotionDialog = () => {
 
   const handleChangeInputs3 = (e, field) => {
     const promotionTemp = promotion;
-    promotionTemp[field] = parseInt(e.target.value, 10);
+    promotionTemp[field] = e.target.value === '' ? '' : parseInt(e.target.value, 10);
     promotionTemp[field === 'first_day' ? 'last_day' : 'first_day'] = '';
     setPromotion({ ...promotionTemp });
+    validate({ [field]: e.target.value});
   };
   const handleChangeInputs2 = (e, field, field2) => {
     const promotionTemp = promotion;
     const leadTemp = { ...promotion.lead };
-    leadTemp[field2] = e.target.value !== '' ? parseInt(e.target.value,10):'';
+    leadTemp[field2] = e.target.value !== '' ? parseInt(e.target.value, 10) : '';
     promotionTemp.lead = { ...leadTemp };
     setPromotion({ ...promotionTemp });
+    validate({ lead: {[field2]: e.target.value } });
     console.log(promotion);
+  };
+
+  const validate = (fieldValues) => {
+    const temp = { ...errors };
+    if ('french_name' in fieldValues) temp.french_name = fieldValues.french_name ? '' : 'Ce champ est requis.';
+    if ('english_name' in fieldValues) temp.english_name = fieldValues.english_name ? '' : 'Ce champ est requis.';
+    if ('discount' in fieldValues) temp.discount = fieldValues.discount ? '' : 'Ce champ est requis.';
+    if ('min_stay' in fieldValues) temp.min_stay = fieldValues.min_stay ? '' : 'Ce champ est requis.';
+    if(fieldValues.lead)
+    {
+      if ('min' in fieldValues.lead && promotion.is_with_lead) temp.lead_min = fieldValues.lead.min ? '' : 'Ce champ est requis.';
+      if ('max' in fieldValues.lead && promotion.is_with_lead) temp.lead_max = fieldValues.lead.max ? '' : 'Ce champ est requis.';
+    }
+    if('last_day' in fieldValues && promotion.specific_days_of_stay) 
+    {
+      
+      temp.last_day = fieldValues.last_day  ? '' : `L'un de ces deux champs ne  doit pas être vide. `;
+      temp.first_day = fieldValues.last_day  ? '' : `L'un de ces deux champs ne  doit pas être vide. `;
+    }
+    else if ('first_day' in fieldValues && promotion.specific_days_of_stay) 
+    {
+      temp.first_day = fieldValues.first_day  ? '' : `L' un de ces deux champs ne  doit pas être vide.`;
+      temp.last_day = fieldValues.first_day  ? '' : `L' un de ces deux champs ne  doit pas être vide.`;
+    }
+    setErrors({
+      ...temp,
+    });
+
+  };
+
+  const formIsValid = (newPromotion) => {
+    const isValid = newPromotion.french_name && newPromotion.english_name && newPromotion.discount &&
+      newPromotion.min_stay && (newPromotion.lead.min || !newPromotion.is_with_lead) 
+      && (newPromotion.lead.max || !newPromotion.is_with_lead) 
+      && ((newPromotion.last_day || newPromotion.first_day) || !newPromotion.specific_days_of_stay) 
+      && Object.values(errors).every((x) => x === '');
+
+    if(isValid)
+    {
+      console.log('valid');
+    }
+    return isValid;
   };
 
   const handleChangeInputs = (e, field) => {
@@ -219,17 +260,17 @@ const AddPromotionDialog = () => {
         promotionTemp.beginning_of_reservation = '2000-1-1';
         promotionTemp.end_of_reservation = '2000-1-1';
       }
-    } else if (Number.isNaN(e.target.value)) {
-      //
-    } else if (e.target.value === 'true') {
+    }else if (e.target.value === 'true') {
       promotionTemp[field] = true;
       if (field === 'book_any_time') {
         promotionTemp.beginning_of_reservation = '';
         promotionTemp.end_of_reservation = '';
       }
     } else if (e.target.type === 'number' && e.target.value !== '') {
+      validate({ [e.target.name]: e.target.value });
       promotionTemp[field] = parseInt(e.target.value, 10);
     } else {
+      validate({ [e.target.name]: e.target.value });
       promotionTemp[field] = e.target.value;
     }
     setPromotion({ ...promotionTemp });
@@ -260,8 +301,8 @@ const AddPromotionDialog = () => {
     setAll[field](promotion[field].length === list[field].length);
   };
 
-
   const cleanPromotion = () => {
+    setErrors(false);
     setPromotion({
       french_name: '',
       english_name: '',
@@ -317,8 +358,8 @@ const AddPromotionDialog = () => {
       dernierJour: promotion.last_day,
       isLeadHour: promotion.is_lead_hour,
       lead: {
-        min: promotion.is_with_lead?promotion.lead.min:"",
-        max: promotion.is_with_lead?promotion.lead.max:"",
+        min: promotion.is_with_lead ? promotion.lead.min : '',
+        max: promotion.is_with_lead ? promotion.lead.max : '',
       },
       name: promotion.english_name,
       isRemiseEuro: promotion.is_discount_euro,
@@ -336,30 +377,36 @@ const AddPromotionDialog = () => {
   };
 
   const addPromotion = async () => {
-    const idToken = JSON.parse(localStorage.getItem('id_token'));
-    setOpen(true);
-    setDisabledAddButton(true);
-
-    context.showLoader(true);
-    createPromotion(formatPayloadToSend(), idToken)
-      .then((result) => {
-        if (result.data.status === 200) {
+    validate(promotion);
+    if(formIsValid(promotion))
+    {
+      context.showLoader(true);
+      const idToken = JSON.parse(localStorage.getItem('id_token'));
+      setOpen(true);
+      createPromotion(formatPayloadToSend(), idToken)
+        .then((result) => {
+          console.log(result);
+          if (result.data.status === 200) {
+            context.showLoader(false);
+            setOpen(false);
+            context.changeResultSuccessMessage('Enregistrement inséré avec succès');
+            context.showResultSuccess(true);
+            cleanPromotion();
+          } else if(result.data.errors){
+            context.showLoader(false);
+            const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+            const indication = result.data.errors[item];
+            const message = `${item}: ${indication}`;
+            context.changeResultErrorMessage(message);
+            context.showResultError(true);
+          }
+        })
+        .catch(() => {
           context.showLoader(false);
-          setOpen(false);
-          context.changeResultSuccessMessage('Enregistrement inséré avec succès');
-          context.showResultSuccess(true);
-          cleanPromotion();
-        } else {
-          context.showLoader(false);
-          context.changeResultErrorMessage("Une erreur s'est produite lors de l'insertion des données");
+          context.changeResultErrorMessage("Une erreur interne s'est produite");
           context.showResultError(true);
-        }
-      })
-      .catch(() => {
-        context.showLoader(false);
-        context.changeResultErrorMessage("Une erreur interne s'est produite");
-        context.showResultError(true);
-      });
+        });
+    }
   };
 
   // const validate = (fieldValues) => {
@@ -379,34 +426,29 @@ const AddPromotionDialog = () => {
 
   return (
     <>
-      <Button
+      <CustomizedButton
+        text="Ajouter"
         onClick={handleClickOpen}
         variant="contained"
         component={RouterLink}
         to="#"
         startIcon={<Iconify icon="eva:plus-fill" />}
-      >
-        Ajouter
-      </Button>
-      <Dialog open={open} onClose={handleClose} maxWidth={'sm'}>
-        <DialogTitle>
-          <Typography variant="h3" component="div" gutterBottom>
-            Ajouter une nouvelle promotion
-          </Typography>
-        </DialogTitle>
-        <DialogContent>
-          <h2>Détails de la promotion</h2>
+      />
+      <Dialog open={open} onClose={handleClose} maxWidth={'md'}>
+        <CustomizedDialogTitle text="Ajouter une nouvelle promotion" />
+        <DialogContent sx={{ backgroundColor: '#E8F0F8', pt: 20, pl: 2 }}>
+          <h3>Détails de la promotion</h3>
           <FormControl>
-            <FormLabel id="demo-controlled-radio-buttons-group">
+            <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               À quels plans tarifaires cette promotion s'appliquera-t-elle ?
             </FormLabel>
             <RadioGroup aria-labelledby="demo-controlled-radio-buttons-group" name="controlled-radio-buttons-group">
               <FormControlLabel
-                control={<Radio checked={allRatePlan} onChange={handleChangeAllRatePlan} />}
+                control={<CustomizedRadio checked={allRatePlan} onChange={handleChangeAllRatePlan} />}
                 label="Tous les plans tarifaires"
               />
               <FormControlLabel
-                control={<Radio checked={!allRatePlan} onChange={handleChangeAllRatePlan} />}
+                control={<CustomizedRadio checked={!allRatePlan} onChange={handleChangeAllRatePlan} />}
                 label="Plans tarifaires séléctionnés"
               />
             </RadioGroup>
@@ -414,31 +456,35 @@ const AddPromotionDialog = () => {
 
           <Box sx={{ pr: 5, pl: 5, pt: 2, pb: 2 }}>
             <FormGroup>
-              <FormLabel id="demo-controlled-radio-buttons-group">
+              <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
                 Veuillez sélectionnez au moins 1 plan tarifaire
               </FormLabel>
-              {listTarif.map((e) => (
-                <FormControlLabel
-                  onChange={() => handleChangeSelected(e._id, 'rate_plan')}
-                  key={e._id}
-                  control={<Checkbox checked={promotion.rate_plan.find((elem) => elem === e._id) !== undefined} />}
-                  label={e.nom}
-                />
-              ))}
+              <div style={{ columnCount: 3, }}>
+                {listTarif.map((e) => (
+                  <FormControlLabel
+                    onChange={() => handleChangeSelected(e._id, 'rate_plan')}
+                    key={e._id}
+                    control={
+                      <CustomizedCheckbox checked={promotion.rate_plan.find((elem) => elem === e._id) !== undefined} />
+                    }
+                    label={e.nom}
+                  />
+                ))}
+              </div>
             </FormGroup>
           </Box>
 
           <FormControl>
-            <FormLabel id="demo-controlled-radio-buttons-group">
+            <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               À quels hébergements cette promotion s'appliquera-t-elle ?
             </FormLabel>
             <RadioGroup aria-labelledby="demo-controlled-radio-buttons-group" name="controlled-radio-buttons-group">
               <FormControlLabel
-                control={<Radio checked={allRoomType} onChange={handleChangeAllRoomType} />}
+                control={<CustomizedRadio checked={allRoomType} onChange={handleChangeAllRoomType} />}
                 label="Tous les hébergements des plans tarifaires sélectionnés"
               />
               <FormControlLabel
-                control={<Radio checked={!allRoomType} onChange={handleChangeAllRoomType} />}
+                control={<CustomizedRadio checked={!allRoomType} onChange={handleChangeAllRoomType} />}
                 label="Hébergements sélectionnés"
               />
             </RadioGroup>
@@ -446,41 +492,50 @@ const AddPromotionDialog = () => {
 
           <Box sx={{ pr: 5, pl: 5, pt: 2, pb: 2 }}>
             <FormGroup>
-              <FormLabel id="demo-controlled-radio-buttons-group">
+              <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
                 Veuillez sélectionner au moins 1 type d'hébergement.
               </FormLabel>
-              {listRoom.map((e) => (
-                <FormControlLabel
-                  onChange={() => handleChangeSelected(e._id, 'room_type')}
-                  key={e._id}
-                  control={<Checkbox checked={promotion.room_type.find((elem) => elem === e._id) !== undefined} />}
-                  label={e.nom}
-                />
-              ))}
+              <div style={{ columnCount: 3, }}>
+                {listRoom.map((e) => (
+                  <FormControlLabel
+                    onChange={() => handleChangeSelected(e._id, 'room_type')}
+                    key={e._id}
+                    control={
+                      <CustomizedCheckbox checked={promotion.room_type.find((elem) => elem === e._id) !== undefined} />
+                    }
+                    label={e.nom}
+                  />
+                ))}
+              </div>
             </FormGroup>
           </Box>
           <Divider />
           <h4>Valeur de la promotion</h4>
           <FormControl>
-            <FormLabel id="demo-controlled-radio-buttons-group">
+            <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Veuillez sélectionnez au moins 1 plan tarifaire
             </FormLabel>
-            <FormLabel id="demo-controlled-radio-buttons-group">
+            <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Sélectionnez le type et valeur de la réduction que vous voulez appliquer
             </FormLabel>
             <Stack sx={{ p: 2 }} direction="row" spacing={3}>
-              <TextField
+              <CustomizedInput
+                name='discount'
                 type="number"
                 variant="outlined"
                 value={promotion.discount}
                 onChange={(e) => handleChangeInputs(e, 'discount')}
                 label="remise"
+                {...(errors.discount && {
+                  error: true,
+                  helpertext: errors.discount,
+                })}
               />
               <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
                 <FormControlLabel
                   value="true"
                   control={
-                    <Radio
+                    <CustomizedRadio
                       checked={promotion.is_discount_euro}
                       onChange={(e) => handleChangeInputs(e, 'is_discount_euro')}
                     />
@@ -490,7 +545,7 @@ const AddPromotionDialog = () => {
                 <FormControlLabel
                   value="false"
                   control={
-                    <Radio
+                    <CustomizedRadio
                       checked={!promotion.is_discount_euro}
                       onChange={(e) => handleChangeInputs(e, 'is_discount_euro')}
                     />
@@ -503,7 +558,7 @@ const AddPromotionDialog = () => {
 
           <h4>Dates de séjour</h4>
           <FormControl>
-            <FormLabel id="demo-controlled-radio-buttons-group">
+            <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Quand les clients peuvent-ils séjourner chez vous en bénéficiant de cette promotion ?
             </FormLabel>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -513,35 +568,41 @@ const AddPromotionDialog = () => {
                   inputFormat="dd/MM/yyyy"
                   value={new Date(promotion.start_date_of_stay)}
                   onChange={(e) => handleChangeInputs(e, 'start_date_of_stay')}
-                  renderInput={(params) => <TextField {...params} />}
+                  renderInput={(params) => <CustomizedInput {...params} />}
                 />
                 <MobileDatePicker
                   label="Date fin sejours"
                   inputFormat="dd/MM/yyyy"
                   value={new Date(promotion.end_date_of_stay)}
                   onChange={(e) => handleChangeInputs(e, 'end_date_of_stay')}
-                  renderInput={(params) => <TextField {...params} />}
+                  renderInput={(params) => <CustomizedInput {...params} />}
                 />
               </Stack>
             </LocalizationProvider>
           </FormControl>
           <h4>Période de réservation - facultatif</h4>
           <FormControl>
-            <FormLabel id="demo-controlled-radio-buttons-group">
+            <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Quand les clients peuvent-ils réserver cette promotion?
             </FormLabel>
             <RadioGroup aria-labelledby="demo-controlled-radio-buttons-group" name="controlled-radio-buttons-group">
               <FormControlLabel
                 value="true"
                 control={
-                  <Radio checked={promotion.book_any_time} onChange={(e) => handleChangeInputs(e, 'book_any_time')} />
+                  <CustomizedRadio
+                    checked={promotion.book_any_time}
+                    onChange={(e) => handleChangeInputs(e, 'book_any_time')}
+                  />
                 }
                 label="A tout moment"
               />
               <FormControlLabel
                 value="false"
                 control={
-                  <Radio checked={!promotion.book_any_time} onChange={(e) => handleChangeInputs(e, 'book_any_time')} />
+                  <CustomizedRadio
+                    checked={!promotion.book_any_time}
+                    onChange={(e) => handleChangeInputs(e, 'book_any_time')}
+                  />
                 }
                 label="Sélectionner une période"
               />
@@ -558,7 +619,7 @@ const AddPromotionDialog = () => {
                       : new Date(promotion.beginning_of_reservation)
                   }
                   onChange={(e) => handleChangeInputs(e, 'beginning_of_reservation')}
-                  renderInput={(params) => <TextField {...params} />}
+                  renderInput={(params) => <CustomizedInput {...params} />}
                 />
                 <MobileDatePicker
                   disabled={promotion.book_any_time}
@@ -566,25 +627,30 @@ const AddPromotionDialog = () => {
                   inputFormat="dd/MM/yyyy"
                   value={promotion.end_of_reservation === '' ? new Date() : new Date(promotion.end_of_reservation)}
                   onChange={(e) => handleChangeInputs(e, 'end_of_reservation')}
-                  renderInput={(params) => <TextField {...params} />}
+                  renderInput={(params) => <CustomizedInput {...params} />}
                 />
               </Stack>
             </LocalizationProvider>
           </FormControl>
           <h4>Séjour minimum</h4>
           <FormControl>
-            <FormLabel id="demo-controlled-radio-buttons-group">
+            <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Combien de temps les clients doivent-ils séjourner dans votre établissement pour bénéficier de cette
               promotion ?
             </FormLabel>
             <Stack sx={{ p: 2 }} direction="row" spacing={3}>
-              <TextField
+              <CustomizedInput
+                name='min_stay'
                 value={promotion.min_stay}
                 onChange={(e) => handleChangeInputs(e, 'min_stay')}
                 type="number"
                 id="outlined-basic"
                 label="min"
                 variant="outlined"
+                {...(errors.min_stay && {
+                  error: true,
+                  helpertext: errors.min_stay,
+                })}
               />
               <p>nuits ou plus</p>
             </Stack>
@@ -594,11 +660,14 @@ const AddPromotionDialog = () => {
             <FormControlLabel
               value={promotion.is_with_lead ? 'false' : 'true'}
               control={
-                <Checkbox onChange={(e) => handleChangeInputs(e, 'is_with_lead')} checked={promotion.is_with_lead} />
+                <CustomizedCheckbox
+                  onChange={(e) => handleChangeInputs(e, 'is_with_lead')}
+                  checked={promotion.is_with_lead}
+                />
               }
               label="Cette promotion est elle disponible uniquement pendant une plage de nombre de jour?"
             />
-            <FormLabel id="demo-controlled-radio-buttons-group">
+            <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Si oui, la question suivante se pose Combien de temps à l'avance les clients doivent-ils réserver pour
               bénéficier de cette promotion ?
             </FormLabel>
@@ -611,7 +680,7 @@ const AddPromotionDialog = () => {
                 <FormControlLabel
                   value="true"
                   control={
-                    <Radio
+                    <CustomizedRadio
                       checked={promotion.is_lead_hour}
                       onChange={(e) => handleChangeInputs(e, 'is_lead_hour')}
                       disabled={!promotion.is_with_lead}
@@ -622,7 +691,7 @@ const AddPromotionDialog = () => {
                 <FormControlLabel
                   value="false"
                   control={
-                    <Radio
+                    <CustomizedRadio
                       checked={!promotion.is_lead_hour}
                       onChange={(e) => handleChangeInputs(e, 'is_lead_hour')}
                       disabled={!promotion.is_with_lead}
@@ -631,8 +700,9 @@ const AddPromotionDialog = () => {
                   label="Day"
                 />
               </RadioGroup>
-              <Stack direction="row" spacing={3}>
-                <TextField
+              <Stack direction="row" spacing={3} alignItems='center'>
+                <CustomizedInput
+                  name='lead_min'
                   value={promotion.lead.min}
                   onChange={(e) => handleChangeInputs2(e, 'lead', 'min')}
                   type="number"
@@ -640,11 +710,16 @@ const AddPromotionDialog = () => {
                   id={promotion.is_with_lead ? 'outlined-basic' : 'filled-disabled'}
                   label="min"
                   variant={promotion.is_with_lead ? 'outlined' : 'filled'}
+                  {...(errors.lead_min && promotion.is_with_lead &&{
+                    error: true,
+                    helpertext: errors.lead_min,
+                  })}
                 />
                 <p>jours minimum</p>
               </Stack>
-              <Stack direction="row" spacing={3}>
-                <TextField
+              <Stack direction="row" spacing={3} alignItems='center'>
+                <CustomizedInput
+                  name='lead_max'
                   value={promotion.lead.max}
                   onChange={(e) => handleChangeInputs2(e, 'lead', 'max')}
                   type="number"
@@ -652,6 +727,10 @@ const AddPromotionDialog = () => {
                   id={promotion.is_with_lead ? 'outlined-basic' : 'filled-disabled'}
                   label="max"
                   variant={promotion.is_with_lead ? 'outlined' : 'filled'}
+                  {...(errors.lead_max  && promotion.is_with_lead && {
+                    error: true,
+                    helpertext: errors.lead_max,
+                  })}
                 />
                 <p>jours maximum avant l’arrivée</p>
               </Stack>
@@ -660,15 +739,21 @@ const AddPromotionDialog = () => {
 
           <h4>Nombre de jour d'attribution de la promotion</h4>
           <FormControl>
-            <FormLabel id="demo-controlled-radio-buttons-group">
+            <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Par défaut, la promotion est attribuée à tous les jours
             </FormLabel>
             <FormControlLabel
-              control={<Checkbox checked={promotion.specific_days_of_stay} onChange={handleChangeSpecificDaysOfStay} />}
+              control={
+                <CustomizedCheckbox
+                  checked={promotion.specific_days_of_stay}
+                  onChange={handleChangeSpecificDaysOfStay}
+                />
+              }
               label="Cette promotion est-elle attribuée à des jours spécifiques du séjour?"
             />
             <Stack sx={{ p: 2 }} direction="row" spacing={3}>
-              <TextField
+              <CustomizedInput
+                name='first_day'
                 value={promotion.first_day}
                 onChange={(e) => handleChangeInputs3(e, 'first_day')}
                 id={promotion.specific_days_of_stay ? 'outlined-basic' : 'filled-disabled'}
@@ -676,8 +761,13 @@ const AddPromotionDialog = () => {
                 label="Premier  jour"
                 disabled={!promotion.specific_days_of_stay}
                 variant={promotion.specific_days_of_stay ? 'outlined' : 'filled'}
+                {...(errors.first_day && promotion.specific_days_of_stay && {
+                  error: true,
+                  helpertext: errors.first_day,
+                })}
               />
-              <TextField
+              <CustomizedInput
+                name='last_day'
                 value={promotion.last_day}
                 onChange={(e) => handleChangeInputs3(e, 'last_day')}
                 id={promotion.specific_days_of_stay ? 'outlined-basic' : 'filled-disabled'}
@@ -685,11 +775,15 @@ const AddPromotionDialog = () => {
                 label="Dernier  jour"
                 disabled={!promotion.specific_days_of_stay}
                 variant={promotion.specific_days_of_stay ? 'outlined' : 'filled'}
+                {...(errors.last_day && promotion.specific_days_of_stay && {
+                  error: true,
+                  helpertext: errors.last_day,
+                })}
               />
             </Stack>
 
             <FormControlLabel
-              control={<Checkbox checked={specificDay} onChange={handleChangeSpecificDay} />}
+              control={<CustomizedCheckbox checked={specificDay} onChange={handleChangeSpecificDay} />}
               label="Cette promotion est elle attribuée à des jours spécifiques du séjour?"
             />
 
@@ -697,7 +791,12 @@ const AddPromotionDialog = () => {
               {Object.keys(promotion.week_days).map((k) => (
                 <FormControlLabel
                   key={k}
-                  control={<Checkbox onChange={() => handleChangeWeekDays(k)} checked={promotion.week_days[k] !== 0} />}
+                  control={
+                    <CustomizedCheckbox
+                      onChange={() => handleChangeWeekDays(k)}
+                      checked={promotion.week_days[k] !== 0}
+                    />
+                  }
                   label={k}
                 />
               ))}
@@ -706,22 +805,34 @@ const AddPromotionDialog = () => {
 
           <h4>Nom de la promotion</h4>
           <FormControl>
-            <FormLabel id="demo-controlled-radio-buttons-group">Comment voulez-vous nommer cette promotion ?</FormLabel>
+            <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
+              Comment voulez-vous nommer cette promotion ?
+            </FormLabel>
 
-            <Stack sx={{ p: 2 }} spacing={3}>
-              <TextField
+            <Stack sx={{ p: 2 }} direction='row' spacing={3}>
+              <CustomizedInput
+                name='french_name'
                 value={promotion.french_name}
                 onChange={(e) => handleChangeInputs(e, 'french_name')}
                 id="outlined-basic"
                 label="Nom"
                 variant="outlined"
+                {...(errors.french_name && {
+                  error: true,
+                  helpertext: errors.french_name,
+                })}
               />
-              <TextField
+              <CustomizedInput
+                name='english_name'
                 value={promotion.english_name}
                 onChange={(e) => handleChangeInputs(e, 'english_name')}
                 id="outlined-basic"
                 label="Name"
                 variant="outlined"
+                {...(errors.english_name  && {
+                  error: true,
+                  helpertext: errors.english_name,
+                })}
               />
             </Stack>
           </FormControl>
@@ -743,11 +854,9 @@ const AddPromotionDialog = () => {
             })}
           /> */}
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ backgroundColor: '#E8F0F8' }}>
           <Button onClick={handleClose}>Annuler</Button>
-          <Button disabled={!disabledAddButton} onClick={addPromotion}>
-            OK
-          </Button>
+          <CustomizedButton text='Enregistrer' onClick={addPromotion}/>
         </DialogActions>
       </Dialog>
     </>

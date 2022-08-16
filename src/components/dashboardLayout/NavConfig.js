@@ -32,11 +32,6 @@ const navConfig = [
     ],
   },
   {
-    title: "droit d'accès",
-    path: '/dashboard/accessRight',
-    icon: getIcon('eva:people-fill'),
-  },
-  {
     title: 'types de chambre',
     path: '/dashboard/typeChambre',
     icon: getIcon('bxs:hotel'),
@@ -47,12 +42,33 @@ const navConfig = [
     icon: getIcon('eva:star-fill'),
   },
   {
+    title: 'politique',
+    path: '/dashboard/politic',
+    icon: getIcon('bxs:shield-alt-2'),
+    // children: [
+
+    // ],
+  },
+  {
     title: 'utilisateurs',
     path: '/dashboard/user',
     icon: getIcon('eva:people-fill'),
     // children: [
 
     // ],
+  },
+  {
+    title: 'Hotel',
+    path: '/dashboard/hotel',
+    icon: getIcon('bxs:building-house'),
+    // children: [
+
+    // ],
+  },
+  {
+    title: "droit d'accès",
+    path: '/dashboard/accessRight',
+    icon: getIcon('bx:shield-quarter'),
   },
   {
     title: 'produits',

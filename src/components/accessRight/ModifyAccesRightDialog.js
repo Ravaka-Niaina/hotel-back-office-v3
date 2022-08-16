@@ -5,17 +5,20 @@ import { Dialog, DialogActions, DialogContent, Button, ListItemText } from '@mui
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
+import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
 
 import { updateAccessRight } from '../../services/AccessRight';
 import { ThemeContext } from '../context/Wrapper';
 
+import Iconify from '../Iconify';
+
 const ModifyAccessRightDialog = ({ reload, accessRightProp }) => {
   const [openModifyAccessRightDialog, setOpenModifyAccessRightDialog] = useState(false);
 
-  const handleOpenEditAccess = () => {
+  const handleClickOpen = () => {
     setOpenModifyAccessRightDialog(true);
   };
-  const handleCloseEditAccess = () => {
+  const handleClose = () => {
     setOpenModifyAccessRightDialog(false);
   };
   const context = useContext(ThemeContext);
@@ -80,13 +83,10 @@ const ModifyAccessRightDialog = ({ reload, accessRightProp }) => {
   };
   return (
     <>
-      <ListItemText
-        onClick={handleOpenEditAccess}
-        primary="|  Modifier"
-        primaryTypographyProps={{ variant: 'body2' }}
-        maxwidth={'sm'}
-      />
-      <Dialog open={openModifyAccessRightDialog} onClose={handleCloseEditAccess} maxwidth={'xl'}>
+      <CustomizedIconButton variant="contained" onClick={handleClickOpen}>
+        <Iconify icon="eva:edit-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
+      </CustomizedIconButton >
+      <Dialog open={openModifyAccessRightDialog}  maxwidth={'xl'}>
         <CustomizedDialogTitle text={`Modifier le droit d'accès "${accessRight.id}"`} />
         <DialogContent style={{ backgroundColor: '#E8F0F8', paddingTop: 15 }}>
           <CustomizedInput
@@ -106,7 +106,7 @@ const ModifyAccessRightDialog = ({ reload, accessRightProp }) => {
           />
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#E8F0F8' }}>
-          <Button onClick={handleCloseEditAccess} sx={{ fontSize: 12 }}>
+          <Button onClick={handleClose} sx={{ fontSize: 12 }}>
             Annuler
           </Button>
           <CustomizedButton handleClick={modifyAccessRight} text={`Valider`} />

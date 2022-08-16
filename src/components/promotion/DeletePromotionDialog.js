@@ -13,6 +13,8 @@ import {
 } from '@mui/material';
 import { deletePromotion as Delete } from '../../services/Promotion';
 import { ThemeContext } from '../context/Wrapper';
+import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
+import Iconify from '../Iconify';
 
 const DeletePromotionDialog = ({ promotionId, reload }) => {
   const [open, setOpen] = useState(false);
@@ -60,7 +62,9 @@ const DeletePromotionDialog = ({ promotionId, reload }) => {
   };
   return (
     <>
-      <ListItemText onClick={handleClickOpen} primary="Supprimer" primaryTypographyProps={{ variant: 'body2' }} />
+      <CustomizedIconButton variant="contained" onClick={handleClickOpen}>
+        <Iconify icon="eva:trash-2-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
+      </CustomizedIconButton >
       <Dialog
         open={open}
         onClose={handleClose}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState } from 'react';
 import {
     Table,
     Stack,
@@ -9,15 +9,12 @@ import {
     TableContainer,
 } from '@mui/material';
 
-import AddRatePlanDialog from '../components/ratePlan/AddRatePlanDialog';
-import RatePlanMoreMenu from '../components/ratePlan/RatePlanMoreMenu';
+import AddPoliticDialog from '../components/politic/AddPoliticDialog';
 import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
 import CustomizedCard from '../components/CustomizedComponents/CustomizedCard';
 import TableCellStyled from '../components/CustomizedComponents/CustomizedTableCell';
 import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
-import { ThemeContext } from '../components/context/Wrapper';
-import { getRatePlanList } from '../services/RatePlan';
 import { UserListHead, UserListToolbar } from '../components/table';
 
 const TABLE_HEAD = [
@@ -25,67 +22,24 @@ const TABLE_HEAD = [
     { id: 'nom', label: 'Nom', alignRight: false },
 ];
 
-const RatePlan = () => {
-    const context = useContext(ThemeContext);
-
+const Politic = () => {
+    const [politicList, setPoliticList] = useState(new Array(0));
     const order = 'asc';
     const selected = [];
     const orderBy = 'name';
     const filterName = '';
 
-    const [ratePlanList, setRatePlanList] = useState(new Array(0));
-
-    const getAllRatePlan = (noLoading) => {
-        const payload = {
-            tableName: 'tarif',
-            valuesToSearch: [],
-            fieldsToPrint: ["_id", "nom"],
-            nbContent: 100,
-            numPage: 1,
-        };
-        if(!noLoading){
-            context.showLoader(true);
-        } 
-        getRatePlanList(payload)
-            .then((fetch) => {
-                if (fetch.data.status === 200) {
-                    setRatePlanList(fetch.data.list);
-                    console.log(fetch.data.list[0]);
-                } else {
-                    context.changeResultErrorMessage('Cannot fetch data!');
-                    context.showResultError(true);
-                }
-            })
-            .catch((e) => {
-                context.changeResultErrorMessage(e.message);
-                context.showResultError(true);
-            })
-            .finally(() => {
-                context.showLoader(false);
-                context.setPartialLoading({ ...context.partialLoading, 'loading': false, 'identifier': '' });
-            });
-    };
-
-    const reload = (noLoading = false) => {
-        getAllRatePlan(noLoading);
-    };
-
-    useEffect(() => {
-        reload();
-        
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
     return (
-        <Page title="planTarifaire">
+        <Page title="Politique">
             <Container>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <Typography sx={{ color: '#787878', fontWeight: '500' }} variant="h4" gutterBottom>
-                        Plan tarifaire
+                        Politique
                     </Typography>
-                    <AddRatePlanDialog reload={reload} />
+                    <AddPoliticDialog />
                 </Stack>
 
-                <CustomizedCard sx={{background:'#E3EDF7',p:5}}>
+                <CustomizedCard sx={{ background: '#E3EDF7', p: 5 }}>
                     <UserListToolbar numSelected={selected.length} filterName={filterName} />
 
                     <Scrollbar>
@@ -95,12 +49,12 @@ const RatePlan = () => {
                                     order={order}
                                     orderBy={orderBy}
                                     headLabel={TABLE_HEAD}
-                                    rowCount={ratePlanList.length}
+                                    rowCount={politicList.length}
                                     numSelected={selected.length}
                                 />
                                 <TableBody>
-                                    {ratePlanList.map((row) => {
-                                        const { _id, nom,isActif} = row;
+                                    {politicList.map((row) => {
+                                        const { _id, nom, isActif } = row;
                                         console.log(isActif)
                                         const isItemSelected = selected.indexOf(nom) !== -1;
 
@@ -124,7 +78,7 @@ const RatePlan = () => {
                                                 <TableCellStyled align="left">{nom}</TableCellStyled>
 
                                                 <TableCellStyled align="right">
-                                                    <RatePlanMoreMenu  reload={reload} ratePlanId={_id} isActif={isActif}/>
+                                                    {/* <RatePlanMoreMenu reload={reload} ratePlanId={_id} isActif={isActif} /> */}
                                                 </TableCellStyled>
                                             </TableRow>
                                         );
@@ -137,6 +91,7 @@ const RatePlan = () => {
             </Container>
         </Page>
     );
+
 };
 
-export default RatePlan;
+export default Politic;

@@ -3,6 +3,8 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import DashboardLayout from '../../components/dashboardLayout';
 import Layout from '../../components/Layout';
 //
+import Politic from '../../views/Politic';
+import Hotel from '../../views/Hotel';
 import RatePlan from '../../views/RatePlan';
 import Calendar from '../../views/Calendar';
 import Promotion from '../../views/Promotion';
@@ -33,6 +35,10 @@ export default function Router() {
         { path: 'user', element: <User /> },
         { path: 'promotion', element: <Promotion /> },
         { path: 'typeChambre', element: <TypeChambre /> },
+        { path: 'politic', element: <Politic /> },
+        { path: 'hotel', element: <Hotel /> },
+
+
       ],
     },
     {

@@ -142,7 +142,7 @@ const AddRatePlanDialog = ({reload}) => {
                     if (result.data.status === 200) {
                         setOpen(false);
                         reload();
-                        context.changeResultSuccessMessage('Enregistrement effctué');
+                        context.changeResultSuccessMessage('Enregistrement effectué');
                         context.showResultSuccess(true);
                     }
                     else if (result.data.message) {
@@ -157,8 +157,6 @@ const AddRatePlanDialog = ({reload}) => {
                         context.changeResultErrorMessage(message);
                         context.showResultError(true);
                     }
-                    
-
                 }).catch(() => {
                     context.changeResultErrorMessage('Enregistrement non effectué');
                     context.showResultError(true);

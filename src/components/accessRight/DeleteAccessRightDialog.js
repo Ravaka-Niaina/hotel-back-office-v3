@@ -11,9 +11,13 @@ import {
   DialogActions,
   Button,
 } from '@mui/material';
+
+
 import { deleteAccessRight as Delete } from '../../services/AccessRight';
 import { ThemeContext } from '../context/Wrapper';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
+import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
+import Iconify from '../Iconify'; 
 
 const DeleteAccessRightDialog = ({ reload, accessRightId }) => {
   const [open, setOpen] = useState(false);
@@ -61,7 +65,9 @@ const DeleteAccessRightDialog = ({ reload, accessRightId }) => {
   };
   return (
     <>
-      <ListItemText onClick={handleClickOpen} primary="| Supprimer" primaryTypographyProps={{ variant: 'body2' }} />
+      <CustomizedIconButton variant="contained" onClick={handleClickOpen}>
+        <Iconify icon="eva:trash-2-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
+      </CustomizedIconButton >
       <Dialog
         open={open}
         onClose={handleClose}
