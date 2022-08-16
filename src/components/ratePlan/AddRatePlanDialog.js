@@ -147,15 +147,17 @@ const AddRatePlanDialog = ({reload}) => {
                     }
                     else if (result.data.message) {
                         message = result.data.message;
+                        context.changeResultErrorMessage(message);
+                        context.showResultError(true);
                     }
                     else if (result.data.errors) {
                         const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
                         const indication = result.data.errors[item];
-                        
                         message = `${item}: ${indication}`;
+                        context.changeResultErrorMessage(message);
+                        context.showResultError(true);
                     }
-                    context.changeResultErrorMessage(message);
-                    context.showResultError(true);
+                    
 
                 }).catch(() => {
                     context.changeResultErrorMessage('Enregistrement non effectué');

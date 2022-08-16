@@ -9,9 +9,12 @@ import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedRadio from '../CustomizedComponents/CustomizedRadio';
 import CustomizedCheckbox from '../CustomizedComponents/CustomizedCheckbox';
+import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
+import Iconify from '../Iconify';
 import {ThemeContext} from '../context/Wrapper'; 
 import { formatDate } from '../../services/Util';
 import { getRoomTypeAndCancelingPoliticList,getRatePlanDetails,updateRatePlan } from '../../services/RatePlan';
+
 
 const ModifyRatePlanDialog = ({reload,ratePlanId}) => {
 
@@ -222,12 +225,9 @@ const ModifyRatePlanDialog = ({reload,ratePlanId}) => {
     };
     return (
         <>
-            <ListItemText
-                onClick={handleClickOpen}
-                primary="|  Modifier"
-                primaryTypographyProps={{ variant: 'body2' }}
-                maxwidth={'sm'}
-            />
+            <CustomizedIconButton variant="contained" onClick={handleClickOpen}>
+                <Iconify icon="eva:edit-fill" width={20} height={20} color="rgba(140, 159, 177, 1)"/>
+            </CustomizedIconButton >
             <Dialog open={open} onClose={handleClose} maxWidth={'md'}>
                 <CustomizedDialogTitle text="Modifier le plan tarifaire" />
                 <DialogContent sx={{ backgroundColor: '#E8F0F8', pt: 20, pr: 2, pl: 2 }}>

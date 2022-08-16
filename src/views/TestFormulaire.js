@@ -1,5 +1,5 @@
 import React from 'react';
-import { Stack, MenuItem,FormControlLabel,RadioGroup } from '@mui/material';
+import { Stack, MenuItem,FormControlLabel,RadioGroup,Switch } from '@mui/material';
 import CustomizedInput from '../components/CustomizedComponents/CustomizedInput';
 import CustomizedSelect from '../components/CustomizedComponents/CustomizedSelect';
 import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
@@ -26,37 +26,40 @@ const style = {
   },
 };
 
-const TestFormulaire = () => (
-  <Stack sx={style.content} spacing={3}>
-    <span style={style.text}>Text fields</span>
+const TestFormulaire = () => {
 
-    {/* <CustomizedInput/> */}
+  const [disabled,setDisabled]= React.useState(false);
+  return (
+    <Stack sx={style.content} spacing={3}>
+      <span style={style.text}>Text fields</span>
 
-    <CustomizedInput placeholder="Test" variant="outlined" />
-    <CustomizedSelect placeholder="Test" variant="outlined">
-      <MenuItem disabled value="">
-        <em>Placeholder</em>
-      </MenuItem>
-      <MenuItem selected value={10}>
-        Ten
-      </MenuItem>
-      <MenuItem value={20}>Twenty</MenuItem>
-      <MenuItem value={30}>Thirty</MenuItem>
-    </CustomizedSelect>
-    <CustomizedCheckbox defaultChecked />
-    <RadioGroup
-      defaultValue="female"
-      aria-labelledby="demo-customized-radios"
-      name="customized-radios"
-    >
-      <FormControlLabel value="female" control={<CustomizedRadio />} label="Female" />
-      <FormControlLabel value="male" control={<CustomizedRadio />} label="Male" />
-    </RadioGroup>
-    <FormControlLabel value="female" control={<CustomizedToggle defaultChecked /> } label="Activé" />
-    <FormControlLabel value="female" control={<CustomizedToggle /> } label="Désactivé" />
-    <FormControlLabel value="female" control={<CustomizedSwitch defaultChecked /> } label="Female" />
-  </Stack>
-  
-);
+      {/* <CustomizedInput/> */}
+
+      <CustomizedInput placeholder="Test" variant="outlined" />
+      <CustomizedSelect placeholder="Test" variant="outlined">
+        <MenuItem disabled value="">
+          <em>Placeholder</em>
+        </MenuItem>
+        <MenuItem selected value={10}>
+          Ten
+        </MenuItem>
+        <MenuItem value={20}>Twenty</MenuItem>
+        <MenuItem value={30}>Thirty</MenuItem>
+      </CustomizedSelect>
+      <CustomizedCheckbox defaultChecked />
+      <RadioGroup
+        defaultValue="female"
+        aria-labelledby="demo-customized-radios"
+        name="customized-radios"
+      >
+        <FormControlLabel value="female" control={<CustomizedRadio />} label="Female" />
+        <FormControlLabel value="male" control={<CustomizedRadio />} label="Male" />
+      </RadioGroup>
+      <FormControlLabel value="female" control={<CustomizedToggle defaultChecked /> } label="Activé" />
+      <FormControlLabel value="female" control={<Switch checked={!disabled} onClick={() => setDisabled(!disabled)}/> } label="Disable" />
+      <FormControlLabel value="female" control={<CustomizedSwitch defaultChecked disabled={disabled}/> } label="Female" />
+    </Stack>
+  );
+}
 
 export default TestFormulaire;

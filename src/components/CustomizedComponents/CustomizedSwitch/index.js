@@ -48,13 +48,10 @@ const IOSSwitch = styled((props) => (
         border: '6px solid #fff',
       },
       '&.Mui-disabled .MuiSwitch-thumb': {
-        color:
-          theme.palette.mode === 'light'
-            ? theme.palette.grey[100]
-            : theme.palette.grey[600],
+        background:theme.palette.grey[400],
       },
       '&.Mui-disabled + .MuiSwitch-track': {
-        opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
+        opacity: 0.5,
       },
     },
     '& .MuiSwitch-thumb': {
@@ -77,7 +74,7 @@ const IOSSwitch = styled((props) => (
       borderLeft: '1px solid rgba(255,255,255,0.3)',
       borderTop: '1px solid rgba(255,255,255,0.3)',
       borderRadius: 100,
-      boxShadow: 'inset -4px -4px 9px rgba(255, 255, 255, 0.6), inset 4px 4px 20px 3px #C5D7EE',
+      boxShadow: 'inset -4px -4px 5px rgba(255, 255, 255, 0.6), inset 2px 2px 10px  #C5D7EE',
       backgroundColor: '#E3EDF7',
       opacity: 1,
       transition: theme.transitions.create(['background-color'], {
@@ -86,8 +83,8 @@ const IOSSwitch = styled((props) => (
     },
   }));
 
-  export default function CustomizedSwitch() {
+  export default function CustomizedSwitch(props) {
     return (
-    <IOSSwitch sx={{ m: 1 }} defaultChecked />
+    <IOSSwitch sx={{ m: 1 }} {...props} />
     );
   }

@@ -33,3 +33,10 @@ export const getRoomTypeAndCancelingPoliticList = () =>
 
 export const getRatePlanDetails = (id) =>
     axios.get(`${config.host}/planTarifaire/details/${id}`);
+
+export const switchRatePlanStatus = (payload) =>
+    axios.post(`${config.host}/TCTarif/switchIsTarifActif`, payload, {
+        // headers: {
+        //     Authorization: idToken,
+        // },
+});

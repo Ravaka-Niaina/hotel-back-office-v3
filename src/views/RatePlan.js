@@ -48,6 +48,7 @@ const RatePlan = () => {
             .then((fetch) => {
                 if (fetch.data.status === 200) {
                     setRatePlanList(fetch.data.list);
+                    console.log(fetch.data.list[0]);
                 } else {
                     context.changeResultErrorMessage('Cannot fetch data!');
                     context.showResultError(true);
@@ -68,6 +69,7 @@ const RatePlan = () => {
 
     useEffect(() => {
         reload();
+        
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
@@ -95,7 +97,8 @@ const RatePlan = () => {
                                 />
                                 <TableBody>
                                     {ratePlanList.map((row) => {
-                                        const { _id, nom } = row;
+                                        const { _id, nom,isActif} = row;
+                                        console.log(isActif)
                                         const isItemSelected = selected.indexOf(nom) !== -1;
 
                                         return (
@@ -118,7 +121,7 @@ const RatePlan = () => {
                                                 <TableCellStyled align="left">{nom}</TableCellStyled>
 
                                                 <TableCellStyled align="right">
-                                                    <RatePlanMoreMenu  reload={reload} ratePlanId={_id}/>
+                                                    <RatePlanMoreMenu  reload={reload} ratePlanId={_id} isActif={isActif}/>
                                                 </TableCellStyled>
                                             </TableRow>
                                         );

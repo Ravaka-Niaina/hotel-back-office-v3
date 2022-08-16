@@ -13,6 +13,8 @@ import {
 } from '@mui/material';
 import { ThemeContext } from '../context/Wrapper';
 import {deleteRatePlan} from '../../services/RatePlan';
+import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
+import Iconify from '../Iconify';
 
 const DeleteRatePlanDialog = ({reload,ratePlanId}) => {
   
@@ -53,7 +55,9 @@ const DeleteRatePlanDialog = ({reload,ratePlanId}) => {
     };
     return (
     <>
-      <ListItemText onClick={handleClickOpen} primary="Supprimer" primaryTypographyProps={{ variant: 'body2' }} />
+      <CustomizedIconButton variant="contained" onClick={handleClickOpen}>
+        <Iconify icon="eva:trash-2-fill" width={20} height={20} color="rgba(140, 159, 177, 1)"/>
+      </CustomizedIconButton >
       <Dialog
         open={open}
         onClose={handleClose}
