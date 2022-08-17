@@ -320,7 +320,7 @@ const ModifyPromotionDialog = ({ row, reload }) => {
     };
     const promotionTemp = promotion;
     const newSelected = [];
-    if (promotion[field].find((elem) => elem === id) === undefined) {
+    if (promotion[field]?.find((elem) => elem === id) === undefined) {
       newSelected.push(id);
     }
     promotion[field].forEach((e) => {
