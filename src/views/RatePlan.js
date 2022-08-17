@@ -19,6 +19,7 @@ import Scrollbar from '../components/Scrollbar';
 import { ThemeContext } from '../components/context/Wrapper';
 import { getRatePlanList } from '../services/RatePlan';
 import { UserListHead, UserListToolbar } from '../components/table';
+import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
 
 const TABLE_HEAD = [
     { id: 'id', label: 'ID', alignRight: false },
@@ -79,9 +80,7 @@ const RatePlan = () => {
         <Page title="planTarifaire">
             <Container>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-                    <Typography sx={{ color: '#787878', fontWeight: '500' }} variant="h4" gutterBottom>
-                        Plan tarifaire
-                    </Typography>
+                    <CustomizedTitle sx={{ color: '#787878'}} text='Plan tarifaire' />
                     <AddRatePlanDialog reload={reload} />
                 </Stack>
 

@@ -18,6 +18,7 @@ import { UserListHead, UserListToolbar } from '../components/table';
 import UserMoreMenu from '../components/user/UserMoreMenu';
 import CustomizedCard from '../components/CustomizedComponents/CustomizedCard';
 import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
+import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
 import TableCellStyled from '../components/CustomizedComponents/CustomizedTableCell';
 import AddUserDialog from '../components/user/AddUserDialog';
 import { ThemeContext } from '../components/context/Wrapper';
@@ -140,9 +141,7 @@ export default function User() {
     <Page title="User">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography sx={{ color: '#787878', fontWeight: '500' }} variant="h4" gutterBottom>
-            Utilisateurs
-          </Typography>
+          <CustomizedTitle sx={{ color: '#787878'}} text='Utilisateur'/>
           <AddUserDialog />
         </Stack>
 

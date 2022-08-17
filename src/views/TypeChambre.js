@@ -25,6 +25,7 @@ import AddRoomTypeDialog from '../components/roomType/AddRoomTypeDialog';
 
 import { ThemeContext } from '../components/context/Wrapper';
 import { getRoomTypeList } from '../services/RoomType';
+import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
 
 // ----------------------------------------------------------------------
 
@@ -150,9 +151,7 @@ const TypeChambre = () => {
     <Page title="TypeChambre">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography sx={{ color: '#787878', fontWeight: '500' }} variant="h4" gutterBottom>
-            Type de Chambre
-          </Typography>
+          <CustomizedTitle sx={{ color: '#787878'}} text='Type de chambre'/>
           <AddRoomTypeDialog />
         </Stack>
 

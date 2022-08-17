@@ -18,6 +18,7 @@ import Scrollbar from '../components/Scrollbar';
 import { ThemeContext } from '../components/context/Wrapper';
 import { UserListHead, UserListToolbar } from '../components/table';
 import { getAccessRightList } from '../services/AccessRight';
+import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
 
 const TABLE_HEAD = [
   { id: 'id', label: 'ID', alignRight: false },
@@ -75,9 +76,7 @@ const AccessRight = () => {
     <Page title="User">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography sx={{ color: '#787878', fontWeight: '500' }} variant="h4" gutterBottom>
-            Droits d'accès
-          </Typography>
+          <CustomizedTitle sx={{ color: '#787878' }} text="Droit d'acces" />
           <AddAccessRightDialog reload={reload} />
         </Stack>
 

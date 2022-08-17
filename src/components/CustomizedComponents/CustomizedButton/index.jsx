@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import './index.css';
 
+const formatText = (text) => {
+  console.log(text.replace(' ','_'));
+  return text.replace(' ','_');
+};
 const ButtonStyled = styled(Button)({
   height:'50px',
   textTransform:'Capitalize',
@@ -20,7 +24,7 @@ const CustomizedButton = (props) => (
     }
 
   >
-    <p className='depth' title={props.text}
+    <p className='depth' title={formatText(props.text)}
       style={{
         fontFamily:'RalewayExtraBold',
         fontWeight:800,
@@ -31,7 +35,7 @@ const CustomizedButton = (props) => (
         letterSpacing: '-0.4px',
       }}
     >
-      {props.text}
+      {formatText(props.text)}
     </p>
   </ButtonStyled>
 );

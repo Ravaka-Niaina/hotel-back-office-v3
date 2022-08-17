@@ -12,6 +12,7 @@ import {
 import AddPoliticDialog from '../components/politic/AddPoliticDialog';
 import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
 import CustomizedCard from '../components/CustomizedComponents/CustomizedCard';
+import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
 import TableCellStyled from '../components/CustomizedComponents/CustomizedTableCell';
 import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
@@ -33,9 +34,7 @@ const Politic = () => {
         <Page title="Politique">
             <Container>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-                    <Typography sx={{ color: '#787878', fontWeight: '500' }} variant="h4" gutterBottom>
-                        Politique
-                    </Typography>
+                    <CustomizedTitle sx={{ color: '#787878'}} text='Politique' />
                     <AddPoliticDialog />
                 </Stack>
 
