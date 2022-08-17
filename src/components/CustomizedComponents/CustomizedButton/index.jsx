@@ -42,7 +42,6 @@ const CustomizedButton = (props) => (
 
 CustomizedButton.propTypes = {
   isFullWidth: PropTypes.bool,
-  handleClick: PropTypes.func,
   text: PropTypes.any,
 };
 
