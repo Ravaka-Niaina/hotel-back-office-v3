@@ -193,7 +193,7 @@ const AddRatePlanDialog = ({ reload }) => {
   };
   return (
     <>
-      <CustomizedButton onClick={handleClickOpen} text={`Ajouter`} />
+      <CustomizedButton onClick={handleClickOpen} text={`Ajouter`} component={RouterLink} to="#" />
       <Dialog open={open} onClose={handleClose} maxWidth={'md'}>
         <CustomizedDialogTitle text="Ajouter un nouveau plan tarifaire" />
         <DialogContent sx={{ backgroundColor: '#E8F0F8', pt: 20, pr: 2, pl: 2 }}>

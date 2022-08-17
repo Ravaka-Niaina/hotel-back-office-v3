@@ -23,7 +23,7 @@ const AddHotelDialog = () => {
 
   return (
     <>
-      <CustomizedButton onClick={handleClickOpen} text={`Ajouter`} />
+      <CustomizedButton onClick={handleClickOpen} text={`Ajouter`} component={RouterLink} to="#" />
       <Dialog open={open} onClose={handleClose} maxWidth={'sm'}>
         <CustomizedDialogTitle text="Ajouter hotel" />
         <DialogContent style={{ backgroundColor: '#E8F0F8', paddingTop: 15 }}>Content</DialogContent>

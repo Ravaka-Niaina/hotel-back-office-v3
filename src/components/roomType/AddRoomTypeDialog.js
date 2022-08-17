@@ -61,7 +61,7 @@ const AddRoomTypeDialog = () => {
 
   return (
     <>
-      <CustomizedButton onClick={handleClickOpen} text={`Ajouter`} />
+      <CustomizedButton onClick={handleClickOpen} text={`Ajouter`} component={RouterLink} to="#" />
       <Dialog open={open} onClose={handleClose} maxWidth={'xl'}>
         <CustomizedDialogTitle text="Ajouter un nouveau type de chambre" />
 
