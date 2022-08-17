@@ -102,6 +102,7 @@ const AddRatePlanDialog = ({reload}) => {
     const formIsValid = (newRatePlan) => {
         const isValid = newRatePlan.french_name && newRatePlan.english_name && newRatePlan.french_description &&
             newRatePlan.english_description && (newRatePlan.lead_min || newRatePlan.no_lead_min) && (newRatePlan.lead_max || newRatePlan.no_lead_min) && Object.values(errors).every((x) => x === '');
+        
         return isValid;
     };
     

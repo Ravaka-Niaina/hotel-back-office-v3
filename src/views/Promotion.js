@@ -23,6 +23,7 @@ import PromotionMoreMenu from '../components/promotion/PromotionMoreMenu';
 import { ThemeContext } from '../components/context/Wrapper';
 import { UserListHead, UserListToolbar } from '../components/table';
 import { getPromotionList } from '../services/Promotion';
+import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
 
 // mock
 
@@ -149,9 +150,7 @@ const Promotion = () => {
     <Page title="Promotion">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography sx={{ color: '#787878', fontWeight: '500' }} variant="h4" gutterBottom>
-            Promotions
-          </Typography>
+          <CustomizedTitle sx={{ color: '#787878' }} text='Promotion'/>
           <AddPromotionDialog reload={reload} />
         </Stack>
 
