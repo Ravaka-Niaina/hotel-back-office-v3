@@ -80,9 +80,11 @@ const TypeChambre = () => {
     try {
       getRoomTypeList(payload)
         .then((datas) => {
+          if (datas.status === 200) {
           const roomTypeData = datas.data;
-          if (roomTypeData.status === 200) {
-            setRoomTypeList(roomTypeData.list);
+          setRoomTypeList(roomTypeData.list);
+          }else{
+            // console.log(datas)
           }
         })
         .catch(() => {})

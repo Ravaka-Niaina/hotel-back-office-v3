@@ -52,7 +52,7 @@ const AddRoomTypeDialog = () => {
     // });
   };
   useEffect(() => {
-    console.log(roomType)
+    // console.log(roomType)
   }, [roomType]);
 
   const addRoomType = () => {
@@ -249,7 +249,7 @@ const AddRoomTypeDialog = () => {
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#E8F0F8' }}>
           <Button onClick={handleClose}>Annuler</Button>
-          <CustomizedButton handleClick={addRoomType} text={`Valider`} />
+          <CustomizedButton onClick={addRoomType} text={`Valider`} />
         </DialogActions>
       </Dialog>
     </>

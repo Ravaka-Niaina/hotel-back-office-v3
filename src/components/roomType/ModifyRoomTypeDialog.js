@@ -228,7 +228,7 @@ const ModifyRoomTypeDialog = ({ row }) => {
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#E8F0F8' }}>
           <Button onClick={handleClose}>Annuler</Button>
-          <CustomizedButton handleClick={modifyPromotion} text={`Valider`} />
+          <CustomizedButton onClick={modifyPromotion} text={`Valider`} />
         </DialogActions>
       </Dialog>
     </>

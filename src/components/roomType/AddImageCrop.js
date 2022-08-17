@@ -209,7 +209,7 @@ const AddImageCrop = ({addCropedImage}) => {
               </Button>
             </DialogContent>
             <DialogActions sx={{ backgroundColor: '#E8F0F8' }}>
-              <CustomizedButton handleClick={validateImage} text={`Valider`} />
+              <CustomizedButton onClick={validateImage} text={`Valider`} />
             </DialogActions>
           </Dialog>
         )}

@@ -262,7 +262,7 @@ const ModifyPromotionDialog = ({ row, reload }) => {
     };
     const promotionTemp = promotion;
     const newSelected = [];
-    if (promotion[field].find((elem) => elem === id) === undefined) {
+    if (promotion[field]?.find((elem) => elem === id) === undefined) {
       newSelected.push(id);
     }
     promotion[field].forEach((e) => {
@@ -362,7 +362,7 @@ const ModifyPromotionDialog = ({ row, reload }) => {
                 <FormControlLabel
                   onClick={() => handleChangeSelected(e._id, 'planTarifaire')}
                   key={e._id}
-                  control={<Checkbox checked={promotion.planTarifaire.find((elem) => elem === e._id) !== undefined} />}
+                  control={<Checkbox checked={promotion.planTarifaire?.find((elem) => elem === e._id) !== undefined} />}
                   label={e.nom}
                 />
               ))}
@@ -394,7 +394,7 @@ const ModifyPromotionDialog = ({ row, reload }) => {
                 <FormControlLabel
                   onClick={() => handleChangeSelected(e._id, 'typeChambre')}
                   key={e._id}
-                  control={<Checkbox checked={promotion.typeChambre.find((elem) => elem === e._id) !== undefined} />}
+                  control={<Checkbox checked={promotion.typeChambre?.find((elem) => elem === e._id) !== undefined} />}
                   label={e.nom}
                 />
               ))}
@@ -569,7 +569,7 @@ const ModifyPromotionDialog = ({ row, reload }) => {
               </RadioGroup>
               <Stack direction="row" spacing={3}>
                 <TextField
-                  value={promotion.lead.min}
+                  value={promotion.lead?.min}
                   onChange={(e) => handleChangeInputs2(e, 'lead', 'min')}
                   type="number"
                   disabled={!promotion.isWithLead}
@@ -581,7 +581,7 @@ const ModifyPromotionDialog = ({ row, reload }) => {
               </Stack>
               <Stack direction="row" spacing={3}>
                 <TextField
-                  value={promotion.lead.max}
+                  value={promotion.lead?.max}
                   onChange={(e) => handleChangeInputs2(e, 'lead', 'max')}
                   type="number"
                   disabled={!promotion.isWithLead}
@@ -631,10 +631,10 @@ const ModifyPromotionDialog = ({ row, reload }) => {
             />
 
             <div style={{ paddingLeft: '2em', paddingRight: '2em' }}>
-              {Object.keys(promotion.weekDays).map((k) => (
+              {promotion && Object.keys(promotion?.weekDays).map((k) => (
                 <FormControlLabel
                   key={k}
-                  control={<Checkbox onClick={() => handleChangeWeekDays(k)} checked={promotion.weekDays[k] !== 0} />}
+                  control={<Checkbox onClick={() => handleChangeWeekDays(k)} checked={promotion?.weekDays[k] !== 0} />}
                   label={k}
                 />
               ))}

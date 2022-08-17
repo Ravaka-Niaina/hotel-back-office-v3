@@ -46,7 +46,7 @@ const AccessRight = () => {
     context.showLoader(true);
     getAccessRightList(payload)
       .then((fetch) => {
-        if (fetch.data.status === 200) {
+        if (fetch.status === 200) {
           setAccessRightList(fetch.data.list);
         } else {
           context.changeResultErrorMessage('Cannot fetch data!');
