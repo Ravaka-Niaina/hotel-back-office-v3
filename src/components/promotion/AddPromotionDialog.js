@@ -83,32 +83,7 @@ const AddPromotionDialog = () => {
   const roomSelected = [];
   const promotionTemp = promotion;
   useEffect(() => {
-    const fetchData = async () => {
-      getListTarifAndRoom()
-        .then((fetch) => {
-          if (fetch.data.status === 200) {
-            setListTarif(fetch.data.listTarif);
-            setListRoom(fetch.data.listTypeChambre);
-            fetch.data.listTarif.forEach((e) => {
-              tarifSelected.push(e._id);
-            });
-            fetch.data.listTypeChambre.forEach((e) => {
-              roomSelected.push(e._id);
-            });
-            setPromotion({ ...promotionTemp, room_type: [...roomSelected], rate_plan: [...tarifSelected] });
-          } else {
-            setOpen(false);
-            context.changeResultErrorMessage('Une erreur est interne survenue lors du chargement des  listes.');
-            context.showResultError(true);
-          }
-        })
-        .catch(() => {
-          setOpen(false);
-          context.changeResultErrorMessage('Une erreur est interne survenue lors du chargement des  listes.');
-          context.showResultError(true);
-        });
-    };
-    fetchData();
+    
   }, []);
   
 
@@ -124,9 +99,38 @@ const AddPromotionDialog = () => {
       setSpecificDay(true);
     }
   };
-
+  const fetchData = async () => {
+    context.showLoader(true);
+    getListTarifAndRoom()
+      .then((fetch) => {
+        if (fetch.data.status === 200) {
+          setListTarif(fetch.data.listTarif);
+          setListRoom(fetch.data.listTypeChambre);
+          fetch.data.listTarif.forEach((e) => {
+            tarifSelected.push(e._id);
+          });
+          fetch.data.listTypeChambre.forEach((e) => {
+            roomSelected.push(e._id);
+          });
+          setPromotion({ ...promotionTemp, room_type: [...roomSelected], rate_plan: [...tarifSelected] });
+        } else {
+          setOpen(false);
+          context.changeResultErrorMessage('Une erreur est interne survenue lors du chargement des  listes.');
+          context.showResultError(true);
+        }
+      })
+      .catch(() => {
+        setOpen(false);
+        context.changeResultErrorMessage('Une erreur est interne survenue lors du chargement des  listes.');
+        context.showResultError(true);
+      }).finally(()=> {
+        context.showLoader(false);
+      });
+  };
+  
   const handleClickOpen = () => {
     setOpen(true);
+    fetchData();
   };
 
   const handleClose = () => {
@@ -194,9 +198,9 @@ const AddPromotionDialog = () => {
   const handleChangeInputs3 = (e, field) => {
     const promotionTemp = promotion;
     promotionTemp[field] = e.target.value === '' ? '' : parseInt(e.target.value, 10);
-    promotionTemp[field === 'first_day' ? 'last_day' : 'first_day'] = '';
+    promotionTemp[field === 'first_day' ? 'last_day' : 'first_day'] = 0;
     setPromotion({ ...promotionTemp });
-    validate({ [field]: e.target.value});
+    validate({ [field]: e.target.value, [field === 'first_day' ? 'last_day' : 'first_day']: '0' });
   };
   const handleChangeInputs2 = (e, field, field2) => {
     const promotionTemp = promotion;
@@ -212,23 +216,20 @@ const AddPromotionDialog = () => {
     const temp = { ...errors };
     if ('french_name' in fieldValues) temp.french_name = fieldValues.french_name ? '' : 'Ce champ est requis.';
     if ('english_name' in fieldValues) temp.english_name = fieldValues.english_name ? '' : 'Ce champ est requis.';
-    if ('discount' in fieldValues) temp.discount = fieldValues.discount ? '' : 'Ce champ est requis.';
-    if ('min_stay' in fieldValues) temp.min_stay = fieldValues.min_stay ? '' : 'Ce champ est requis.';
+    if ('discount' in fieldValues) temp.discount = fieldValues.discount!=='' ? '' : 'Ce champ est requis.';
+    if ('min_stay' in fieldValues) temp.min_stay = fieldValues.min_stay!=='' ? '' : 'Ce champ est requis.';
     if(fieldValues.lead)
     {
-      if ('min' in fieldValues.lead && promotion.is_with_lead) temp.lead_min = fieldValues.lead.min ? '' : 'Ce champ est requis.';
-      if ('max' in fieldValues.lead && promotion.is_with_lead) temp.lead_max = fieldValues.lead.max ? '' : 'Ce champ est requis.';
+      if ('min' in fieldValues.lead && promotion.is_with_lead) temp.lead_min = fieldValues.lead.min!=='' ? '' : 'Ce champ est requis.';
+      if ('max' in fieldValues.lead && promotion.is_with_lead) temp.lead_max = fieldValues.lead.max!=='' ? '' : 'Ce champ est requis.';
     }
     if('last_day' in fieldValues && promotion.specific_days_of_stay) 
     {
-      
-      temp.last_day = fieldValues.last_day  ? '' : `L'un de ces deux champs ne  doit pas être vide. `;
-      temp.first_day = fieldValues.last_day  ? '' : `L'un de ces deux champs ne  doit pas être vide. `;
+      temp.last_day = fieldValues.last_day!=='' ? '' : 'Ce champ est requis.';
     }
-    else if ('first_day' in fieldValues && promotion.specific_days_of_stay) 
+    if ('first_day' in fieldValues && promotion.specific_days_of_stay) 
     {
-      temp.first_day = fieldValues.first_day  ? '' : `L' un de ces deux champs ne  doit pas être vide.`;
-      temp.last_day = fieldValues.first_day  ? '' : `L' un de ces deux champs ne  doit pas être vide.`;
+      temp.first_day = fieldValues.first_day!=='' ? '' : 'Ce champ est requis.'
     }
     setErrors({
       ...temp,
@@ -238,11 +239,11 @@ const AddPromotionDialog = () => {
 
   const formIsValid = (newPromotion) => {
     const isValid = newPromotion.french_name && newPromotion.english_name && newPromotion.discount &&
-      newPromotion.min_stay && (newPromotion.lead.min || !newPromotion.is_with_lead) 
-      && (newPromotion.lead.max || !newPromotion.is_with_lead) 
-      && ((newPromotion.last_day || newPromotion.first_day) || !newPromotion.specific_days_of_stay) 
-      && Object.values(errors).every((x) => x === '');
-
+      newPromotion.min_stay!=='' && (newPromotion.lead.min!=='' || !newPromotion.is_with_lead) 
+      && (newPromotion.lead.max!=='' || !newPromotion.is_with_lead) 
+      && (newPromotion.last_day!==''  || !newPromotion.specific_days_of_stay)
+      && (newPromotion.first_day!=='' || !newPromotion.specific_days_of_stay) 
+      && Object.values(errors).every((x) => x === '');  
     if(isValid)
     {
       console.log('valid');
@@ -432,7 +433,6 @@ const AddPromotionDialog = () => {
         variant="contained"
         component={RouterLink}
         to="#"
-        startIcon={<Iconify icon="eva:plus-fill" />}
       />
       <Dialog open={open} onClose={handleClose} maxWidth={'md'}>
         <CustomizedDialogTitle text="Ajouter une nouvelle promotion" />
@@ -638,7 +638,7 @@ const AddPromotionDialog = () => {
               Combien de temps les clients doivent-ils séjourner dans votre établissement pour bénéficier de cette
               promotion ?
             </FormLabel>
-            <Stack sx={{ p: 2 }} direction="row" spacing={3}>
+            <Stack sx={{ p: 2 }} direction="row" spacing={3} alignItems='center'>
               <CustomizedInput
                 name='min_stay'
                 value={promotion.min_stay}

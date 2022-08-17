@@ -3,22 +3,16 @@ import PropTypes from 'prop-types';
 
 // material
 import {
-  ListItemText,
-  Typography,
   Stack,
   Divider,
   FormGroup,
-  Checkbox,
-  Radio,
   FormControl,
   FormLabel,
   RadioGroup,
   Button,
-  TextField,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   FormControlLabel,
 } from '@mui/material';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
@@ -30,23 +24,29 @@ import { getListTarifAndRoom, getPromotionDetail, updatePromotion } from '../../
 import { formatDate } from '../../services/Util';
 import { ThemeContext } from '../context/Wrapper';
 import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
+import CustomizedButton from '../CustomizedComponents/CustomizedButton';
+import CustomizedCheckbox from '../CustomizedComponents/CustomizedCheckbox';
+import CustomizedRadio from '../CustomizedComponents/CustomizedRadio';
+import CustomizedInput from '../CustomizedComponents/CustomizedInput';
+import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import Iconify from '../Iconify';
 
 const ModifyPromotionDialog = ({ row, reload }) => {
   const context = useContext(ThemeContext);
   const [open, setOpen] = React.useState(false);
+  const [errors, setErrors] = useState({});
   const [disabledModifyButton, setDisabledModifyButton] = React.useState(true);
   // const [errors, setErrors] = React.useState({});
   const [listTarif, setListTarif] = useState([]);
   const [listRoom, setListRoom] = useState([]);
   const [promotion, setPromotion] = useState({
-    _id: row._id,
-    nom: '',
-    planTarifaire: [],
-    typeChambre: [],
-    dateDebutS: formatDate(new Date().toLocaleDateString('en-US')),
-    dateFinS: formatDate(new Date().toLocaleDateString('en-US')),
-    weekDays: {
+    french_name: '',
+    english_name: '',
+    rate_plan: [],
+    room_type: [],
+    start_date_of_stay: formatDate(new Date().toLocaleDateString('en-US')),
+    end_date_of_stay: formatDate(new Date().toLocaleDateString('en-US')),
+    week_days: {
       lundi: 1,
       mardi: 1,
       mercredi: 1,
@@ -55,69 +55,27 @@ const ModifyPromotionDialog = ({ row, reload }) => {
       samedi: 1,
       dimanche: 1,
     },
-    sejourMin: 1,
-    premierJour: '',
-    dernierJour: '',
-    isLeadHour: true,
+    min_stay: 1,
+    first_day: 1,
+    last_day: 0,
+    is_lead_hour: true,
     lead: {
       min: '',
       max: '',
     },
-    name: '',
-    isRemiseEuro: false,
-    remise: 1,
-    leadMinInfini: false,
-    dateFinSejourInfini: false,
-    debutReserv: 1,
-    finReserv: 0,
-    reservAToutMoment: true,
-    isWithLead: false,
-    reservAllTime: true,
-    withNbDaysGetProm: false,
-    etat: 1,
-    dateCreation: '',
+    is_discount_euro: false,
+    discount: 1,
+    beginning_of_reservation: '',
+    end_of_reservation: '',
+    is_with_lead: false,
+    book_any_time: true,
+    specific_days_of_stay: false,
   });
   // const tarifSelected = [];
   // const roomSelected = [];
 
   useEffect(() => {
-    const fetchData = async () => {
-      const user = JSON.parse(localStorage.getItem('partner_id'));
-      getPromotionDetail(row._id, user)
-        .then((promotionDetail) => {
-          if (promotionDetail.data.status === 200) {
-            const oldPromotion = promotionDetail.data.promotion;
-            delete oldPromotion.etat;
-            delete oldPromotion.dateCreation;
-            delete oldPromotion.userIdInsert;
-            delete oldPromotion.hotelUser;
-            setPromotion({ ...oldPromotion, _id: row._id });
-          } else {
-            context.changeResultErrorMessage('Une erreur interne est survenue lors du chargemenent des données.');
-            context.showResultError(true);
-          }
-        })
-        .catch(() => {
-          context.changeResultErrorMessage('Une erreur interne est survenue lors du chargemenent des données.');
-          context.showResultError(true);
-        });
-      getListTarifAndRoom()
-        .then((fetch) => {
-          if (fetch.data.status === 200) {
-            setListTarif(fetch.data.listTarif);
-            setListRoom(fetch.data.listTypeChambre);
-            context.showLoader(false);
-          } else {
-            context.changeResultErrorMessage('Une erreur interne est survenue lors du chargemenent des données.');
-            context.showResultError(true);
-          }
-        })
-        .catch(() => {
-          context.changeResultErrorMessage('Une erreur interne est survenue lors du chargemenent des données.');
-          context.showResultError(true);
-        });
-    };
-    fetchData().catch(() => {});
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -127,21 +85,87 @@ const ModifyPromotionDialog = ({ row, reload }) => {
   const [allRoomType, setAllRoomType] = useState(true);
 
   const handleChangeWeekDays = (k) => {
-    const weekDaysTemp = promotion.weekDays;
-
-    weekDaysTemp[k] = promotion.weekDays[k] === 0 ? 1 : 0;
+    const weekDaysTemp = promotion.week_days;
+    weekDaysTemp[k] = promotion.week_days[k] === 0 ? 1 : 0;
     const promotionTemp = promotion;
-    promotionTemp.weekDays = { ...weekDaysTemp };
+    promotionTemp.week_days = { ...weekDaysTemp };
     setPromotion({ ...promotionTemp });
-    if (Object.keys(promotion.weekDays).filter((key) => promotion.weekDays[key] === 0).length === 0) {
+    if (Object.keys(promotion.week_days).filter((key) => promotion.week_days[key] === 0).length === 0) {
       setSpecificDay(false);
     } else {
       setSpecificDay(true);
     }
   };
+  
+  const fetchData = async () => {
+    context.showLoader(true);
+    const user = JSON.parse(localStorage.getItem('partner_id'));
+    getPromotionDetail(row._id, user)
+      .then((promotionDetail) => {
+        if (promotionDetail.data.status === 200) {
+          const oldPromotion = promotionDetail.data.promotion;
+          console.log(oldPromotion);
+          delete oldPromotion.etat;
+          delete oldPromotion.dateCreation;
+          delete oldPromotion.userIdInsert;
+          delete oldPromotion.hotelUser;
+          setPromotion({
+            french_name: oldPromotion.nom,
+            english_name: oldPromotion.name,
+            rate_plan: oldPromotion.planTarifaire,
+            room_type: oldPromotion.typeChambre,
+            start_date_of_stay: oldPromotion.dateDebutS,
+            end_date_of_stay: oldPromotion.dateFinS,
+            week_days: oldPromotion.weekDays,
+            min_stay: oldPromotion.sejourMin,
+            first_day: oldPromotion.premierJour,
+            last_day: oldPromotion.dernierJour,
+            is_lead_hour: oldPromotion.isLeadHour,
+            lead: oldPromotion.lead,
+            is_discount_euro: oldPromotion.isRemiseEuro,
+            discount: oldPromotion.remise,
+            beginning_of_reservation: oldPromotion.debutReserv,
+            end_of_reservation: oldPromotion.finReserv,
+            is_with_lead: oldPromotion.isWithLead,
+            book_any_time: oldPromotion.reservAllTime,
+            specific_days_of_stay: oldPromotion.withNbDaysGetProm,
+            _id: row._id
+          });
+          setSpecificDay(Object.values(oldPromotion.weekDays).some((elem)=>elem === 0));
+        } else {
+          context.changeResultErrorMessage('Une erreur interne est survenue lors du chargemenent des données.');
+          context.showResultError(true);
+        }
+      })
+      .catch(() => {
+        context.changeResultErrorMessage('Une erreur interne est survenue lors du chargemenent des données.');
+        context.showResultError(true);
+      }).finally(() => {
+        context.showLoader(false);
+      });
+    context.showLoader(true);
+    getListTarifAndRoom()
+      .then((fetch) => {
+        if (fetch.data.status === 200) {
+          setListTarif(fetch.data.listTarif);
+          setListRoom(fetch.data.listTypeChambre);
+          context.showLoader(false);
+        } else {
+          context.changeResultErrorMessage('Une erreur interne est survenue lors du chargemenent des données.');
+          context.showResultError(true);
+        }
+      })
+      .catch(() => {
+        context.changeResultErrorMessage('Une erreur interne est survenue lors du chargemenent des données.');
+        context.showResultError(true);
+      }).finally(() => {
+        context.showLoader(false);
+      });
+
+  };
   const handleClickOpen = () => {
     setOpen(true);
-    context.showLoader(true);
+    fetchData();
   };
 
   const handleClose = () => {
@@ -159,26 +183,26 @@ const ModifyPromotionDialog = ({ row, reload }) => {
   // };
 
   const handleChangeSpecificDay = () => {
-    const weekDaysTemp = promotion.weekDays;
+    const weekDaysTemp = promotion.week_days;
     Object.keys(weekDaysTemp).map((k) => {
       weekDaysTemp[k] = specificDay ? 1 : 0;
       return 0;
     });
     const promotionTemp = promotion;
-    promotionTemp.weekDays = { ...weekDaysTemp };
+    promotionTemp.week_days = { ...weekDaysTemp };
     setPromotion({ ...promotionTemp });
     setSpecificDay(!specificDay);
   };
 
-  const handleChangeWithNbDaysGetProm = () => {
+  const handleChangeSpecificDaysOfStay = () => {
     const promotionTemp = promotion;
-    promotionTemp.withNbDaysGetProm = !promotion.withNbDaysGetProm;
-    if (promotionTemp.withNbDaysGetProm) {
-      promotionTemp.premierJour = '';
-      promotionTemp.dernierJour = '';
+    promotionTemp.specific_days_of_stay = !promotion.specific_days_of_stay;
+    if (promotionTemp.specific_days_of_stay) {
+      promotionTemp.first_day = '';
+      promotionTemp.last_day = '';
     } else {
-      promotionTemp.premierJour = 1;
-      promotionTemp.dernierJour = 0;
+      promotionTemp.first_day = 1;
+      promotionTemp.last_day = 0;
     }
     setPromotion({ ...promotionTemp });
   };
@@ -192,7 +216,7 @@ const ModifyPromotionDialog = ({ row, reload }) => {
     }
     setAllRatePlan(!allRatePlan);
 
-    setPromotion((promotion) => ({ ...promotion, planTarifaire: selected }));
+    setPromotion((promotion) => ({ ...promotion, rate_plan: selected }));
   };
 
   const handleChangeAllRoomType = () => {
@@ -203,62 +227,96 @@ const ModifyPromotionDialog = ({ row, reload }) => {
       });
     }
     setAllRoomType(!allRoomType);
-    setPromotion((promotion) => ({ ...promotion, typeChambre: selected }));
+    setPromotion((promotion) => ({ ...promotion, room_type: selected }));
   };
 
   const handleChangeInputs3 = (e, field) => {
     const promotionTemp = promotion;
-    promotionTemp[field] = parseInt(e.target.value, 10);
-    promotionTemp[field === 'premierJour' ? 'dernierJour' : 'premierJour'] = '';
+    promotionTemp[field] = e.target.value === '' ? '' : parseInt(e.target.value, 10);
+    promotionTemp[field === 'first_day' ? 'last_day' : 'first_day'] = 0;
     setPromotion({ ...promotionTemp });
+    validate({ [field]: e.target.value, [field === 'first_day' ? 'last_day' : 'first_day']: '0' });
   };
   const handleChangeInputs2 = (e, field, field2) => {
     const promotionTemp = promotion;
     const leadTemp = { ...promotion.lead };
-    leadTemp[field2] = parseInt(e.target.value, 10);
+    leadTemp[field2] = e.target.value !== '' ? parseInt(e.target.value, 10) : '';
     promotionTemp.lead = { ...leadTemp };
     setPromotion({ ...promotionTemp });
+    validate({ lead: { [field2]: e.target.value } });
+    console.log(promotion);
   };
+
+  const validate = (fieldValues) => {
+    const temp = { ...errors };
+    if ('french_name' in fieldValues) temp.french_name = fieldValues.french_name ? '' : 'Ce champ est requis.';
+    if ('english_name' in fieldValues) temp.english_name = fieldValues.english_name ? '' : 'Ce champ est requis.';
+    if ('discount' in fieldValues) temp.discount = fieldValues.discount !== '' ? '' : 'Ce champ est requis.';
+    if ('min_stay' in fieldValues) temp.min_stay = fieldValues.min_stay !== '' ? '' : 'Ce champ est requis.';
+    if (fieldValues.lead) {
+      if ('min' in fieldValues.lead && promotion.is_with_lead) temp.lead_min = fieldValues.lead.min !== '' ? '' : 'Ce champ est requis.';
+      if ('max' in fieldValues.lead && promotion.is_with_lead) temp.lead_max = fieldValues.lead.max !== '' ? '' : 'Ce champ est requis.';
+    }
+    if ('last_day' in fieldValues && promotion.specific_days_of_stay) {
+      temp.last_day = fieldValues.last_day !== '' ? '' : 'Ce champ est requis.';
+    }
+    if ('first_day' in fieldValues && promotion.specific_days_of_stay) {
+      temp.first_day = fieldValues.first_day !== '' ? '' : 'Ce champ est requis.'
+    }
+    setErrors({
+      ...temp,
+    });
+
+  };
+
+  const formIsValid = (newPromotion) => {
+    const isValid = newPromotion.french_name && newPromotion.english_name && newPromotion.discount &&
+      newPromotion.min_stay !== '' && (newPromotion.lead.min !== '' || !newPromotion.is_with_lead)
+      && (newPromotion.lead.max !== '' || !newPromotion.is_with_lead)
+      && (newPromotion.last_day !== '' || !newPromotion.specific_days_of_stay)
+      && (newPromotion.first_day !== '' || !newPromotion.specific_days_of_stay)
+      && Object.values(errors).every((x) => x === '');
+    if (isValid) {
+      console.log('valid');
+    }
+    return isValid;
+  };
+
   const handleChangeInputs = (e, field) => {
     const promotionTemp = promotion;
-
     if (e.target === undefined) {
-      // REHEFA ILAY MOBILE DATE PICKER NO ALAIANA NY VALEUR ANY
-
       promotionTemp[field] = formatDate(e.toLocaleDateString('en-US'));
-    }
-    // else {
-    else if (e.target.value === 'false') {
+    } else if (e.target.value === 'false') {
       promotionTemp[field] = false;
-      if (field === 'reservAllTime') {
-        promotionTemp.debutReserv = '2000-1-1';
-        promotionTemp.finReserv = '2000-1-1';
+      if (field === 'book_any_time') {
+        promotionTemp.beginning_of_reservation = '2000-1-1';
+        promotionTemp.end_of_reservation = '2000-1-1';
       }
-    } else if (Number.isNaN(e.target.value)) {
-      //
     } else if (e.target.value === 'true') {
       promotionTemp[field] = true;
-      if (field === 'reservAllTime') {
-        promotionTemp.debutReserv = '';
-        promotionTemp.finReserv = '';
+      if (field === 'book_any_time') {
+        promotionTemp.beginning_of_reservation = '';
+        promotionTemp.end_of_reservation = '';
       }
     } else if (e.target.type === 'number' && e.target.value !== '') {
+      validate({ [e.target.name]: e.target.value });
       promotionTemp[field] = parseInt(e.target.value, 10);
     } else {
+      validate({ [e.target.name]: e.target.value });
       promotionTemp[field] = e.target.value;
     }
-    // }
     setPromotion({ ...promotionTemp });
+    console.log(promotion);
   };
 
   const handleChangeSelected = (id, field) => {
     const setAll = {
-      planTarifaire: setAllRatePlan,
-      typeChambre: setAllRoomType,
+      rate_plan: setAllRatePlan,
+      room_type: setAllRoomType,
     };
     const list = {
-      planTarifaire: listTarif,
-      typeChambre: listRoom,
+      rate_plan: listTarif,
+      room_type: listRoom,
     };
     const promotionTemp = promotion;
     const newSelected = [];
@@ -275,28 +333,105 @@ const ModifyPromotionDialog = ({ row, reload }) => {
     setAll[field](promotion[field].length === list[field].length);
   };
 
+  const cleanPromotion = () => {
+    setErrors(false);
+    setPromotion({
+      french_name: '',
+      english_name: '',
+      rate_plan: [],
+      room_type: [],
+      start_date_of_stay: formatDate(new Date().toLocaleDateString('en-US')),
+      end_date_of_stay: formatDate(new Date().toLocaleDateString('en-US')),
+      week_days: {
+        lundi: 1,
+        mardi: 1,
+        mercredi: 1,
+        jeudi: 1,
+        vendredi: 1,
+        samedi: 1,
+        dimanche: 1,
+      },
+      min_stay: 1,
+      first_day: 1,
+      last_day: 0,
+      is_lead_hour: true,
+      lead: {
+        min: '',
+        max: '',
+      },
+      is_discount_euro: false,
+      discount: 1,
+      beginning_of_reservation: '',
+      end_of_reservation: '',
+      is_with_lead: false,
+      book_any_time: true,
+      specific_days_of_stay: false,
+    });
+  };
+
+  const formatPayloadToSend = () => {
+    const payload = {
+      nom: promotion.french_name,
+      planTarifaire: promotion.rate_plan,
+      typeChambre: promotion.room_type,
+      dateDebutS: promotion.start_date_of_stay,
+      dateFinS: promotion.end_date_of_stay,
+      weekDays: {
+        lundi: promotion.week_days.lundi,
+        mardi: promotion.week_days.mardi,
+        mercredi: promotion.week_days.mercredi,
+        jeudi: promotion.week_days.jeudi,
+        vendredi: promotion.week_days.vendredi,
+        samedi: promotion.week_days.samedi,
+        dimanche: promotion.week_days.dimanche,
+      },
+      sejourMin: promotion.min_stay.toString(),
+      premierJour: promotion.first_day,
+      dernierJour: promotion.last_day,
+      isLeadHour: promotion.is_lead_hour,
+      lead: {
+        min: promotion.is_with_lead ? promotion.lead.min : '',
+        max: promotion.is_with_lead ? promotion.lead.max : '',
+      },
+      name: promotion.english_name,
+      isRemiseEuro: promotion.is_discount_euro,
+      remise: promotion.discount,
+      leadMinInfini: promotion.lead.min === '',
+      dateFinSejourInfini: false,
+      debutReserv: promotion.beginning_of_reservation,
+      finReserv: promotion.end_of_reservation,
+      reservAToutMoment: true,
+      isWithLead: promotion.is_with_lead,
+      reservAllTime: promotion.book_any_time,
+      withNbDaysGetProm: promotion.specific_days_of_stay,
+    };
+    return payload;
+  };
   const modifyPromotion = async () => {
-    setDisabledModifyButton(false);
-    context.showLoader(true);
-    updatePromotion(promotion)
-      .then((result) => {
-        if (result.data.status === 200) {
-          context.changeResultSuccessMessage('Enregistrement mis à jour avec succès.');
-          context.showResultSuccess(true);
-          setOpen(false);
-          reload();
-        } else {
+    validate(promotion);
+    if(formIsValid(promotion))
+    {
+      context.showLoader(true);
+      updatePromotion(formatPayloadToSend())
+        .then((result) => {
+          if (result.data.status === 200) {
+            context.changeResultSuccessMessage('Enregistrement mis à jour avec succès.');
+            context.showResultSuccess(true);
+            setOpen(false);
+            reload();
+          } else {
+            context.changeResultErrorMessage('Une erreur est survenue lors du modification.');
+            context.showResultError(true);
+          }
+        })
+        .catch(() => {
           context.changeResultErrorMessage('Une erreur est survenue lors du modification.');
           context.showResultError(true);
-        }
-      })
-      .catch(() => {
-        context.changeResultErrorMessage('Une erreur est survenue lors du modification.');
-        context.showResultError(true);
-      })
-      .finally(() => {
-        context.showLoader(false);
-      });
+        })
+        .finally(() => {
+          context.showLoader(false);
+        });
+    }
   };
 
   // const validate = (fieldValues) => {
@@ -329,25 +464,21 @@ const ModifyPromotionDialog = ({ row, reload }) => {
       <CustomizedIconButton variant="contained" onClick={handleClickOpen}>
         <Iconify icon="eva:edit-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
       </CustomizedIconButton >
-      <Dialog open={open} onClose={handleClose} maxWidth={'sm'}>
-        <DialogTitle>
-          <Typography variant="h3" component="div" gutterBottom>
-            Modifier promotion
-          </Typography>
-        </DialogTitle>
-        <DialogContent>
-          <h2>Détails de la promotion</h2>
+      <Dialog open={open} onClose={handleClose} maxWidth={'md'}>
+        <CustomizedDialogTitle text="Modifier promotion" />
+        <DialogContent sx={{ backgroundColor: '#E8F0F8', pt: 20, pl: 2 }}>
+          <h3>Détails de la promotion</h3>
           <FormControl>
-            <FormLabel id="demo-controlled-radio-buttons-group">
+            <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               À quels plans tarifaires cette promotion s'appliquera-t-elle ?
             </FormLabel>
             <RadioGroup aria-labelledby="demo-controlled-radio-buttons-group" name="controlled-radio-buttons-group">
               <FormControlLabel
-                control={<Radio checked={allRatePlan} onClick={handleChangeAllRatePlan} />}
+                control={<CustomizedRadio checked={allRatePlan} onChange={handleChangeAllRatePlan} />}
                 label="Tous les plans tarifaires"
               />
               <FormControlLabel
-                control={<Radio checked={!allRatePlan} onClick={handleChangeAllRatePlan} />}
+                control={<CustomizedRadio checked={!allRatePlan} onChange={handleChangeAllRatePlan} />}
                 label="Plans tarifaires séléctionnés"
               />
             </RadioGroup>
@@ -355,31 +486,35 @@ const ModifyPromotionDialog = ({ row, reload }) => {
 
           <Box sx={{ pr: 5, pl: 5, pt: 2, pb: 2 }}>
             <FormGroup>
-              <FormLabel id="demo-controlled-radio-buttons-group">
+              <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
                 Veuillez sélectionnez au moins 1 plan tarifaire
               </FormLabel>
-              {listTarif.map((e) => (
-                <FormControlLabel
-                  onClick={() => handleChangeSelected(e._id, 'planTarifaire')}
-                  key={e._id}
-                  control={<Checkbox checked={promotion.planTarifaire?.find((elem) => elem === e._id) !== undefined} />}
-                  label={e.nom}
-                />
-              ))}
+              <div style={{ columnCount: 3, }}>
+                {listTarif.map((e) => (
+                  <FormControlLabel
+                    onChange={() => handleChangeSelected(e._id, 'rate_plan')}
+                    key={e._id}
+                    control={
+                      <CustomizedCheckbox checked={promotion.rate_plan.find((elem) => elem === e._id) !== undefined} />
+                    }
+                    label={e.nom}
+                  />
+                ))}
+              </div>
             </FormGroup>
           </Box>
 
           <FormControl>
-            <FormLabel id="demo-controlled-radio-buttons-group">
+            <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               À quels hébergements cette promotion s'appliquera-t-elle ?
             </FormLabel>
             <RadioGroup aria-labelledby="demo-controlled-radio-buttons-group" name="controlled-radio-buttons-group">
               <FormControlLabel
-                control={<Radio checked={allRoomType} onClick={handleChangeAllRoomType} />}
+                control={<CustomizedRadio checked={allRoomType} onChange={handleChangeAllRoomType} />}
                 label="Tous les hébergements des plans tarifaires sélectionnés"
               />
               <FormControlLabel
-                control={<Radio checked={!allRoomType} onClick={handleChangeAllRoomType} />}
+                control={<CustomizedRadio checked={!allRoomType} onChange={handleChangeAllRoomType} />}
                 label="Hébergements sélectionnés"
               />
             </RadioGroup>
@@ -387,49 +522,63 @@ const ModifyPromotionDialog = ({ row, reload }) => {
 
           <Box sx={{ pr: 5, pl: 5, pt: 2, pb: 2 }}>
             <FormGroup>
-              <FormLabel id="demo-controlled-radio-buttons-group">
+              <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
                 Veuillez sélectionner au moins 1 type d'hébergement.
               </FormLabel>
-              {listRoom.map((e) => (
-                <FormControlLabel
-                  onClick={() => handleChangeSelected(e._id, 'typeChambre')}
-                  key={e._id}
-                  control={<Checkbox checked={promotion.typeChambre?.find((elem) => elem === e._id) !== undefined} />}
-                  label={e.nom}
-                />
-              ))}
+              <div style={{ columnCount: 3, }}>
+                {listRoom.map((e) => (
+                  <FormControlLabel
+                    onChange={() => handleChangeSelected(e._id, 'room_type')}
+                    key={e._id}
+                    control={
+                      <CustomizedCheckbox checked={promotion.room_type.find((elem) => elem === e._id) !== undefined} />
+                    }
+                    label={e.nom}
+                  />
+                ))}
+              </div>
             </FormGroup>
           </Box>
-
           <Divider />
           <h4>Valeur de la promotion</h4>
           <FormControl>
-            <FormLabel id="demo-controlled-radio-buttons-group">
+            <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Veuillez sélectionnez au moins 1 plan tarifaire
             </FormLabel>
-            <FormLabel id="demo-controlled-radio-buttons-group">
+            <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Sélectionnez le type et valeur de la réduction que vous voulez appliquer
             </FormLabel>
             <Stack sx={{ p: 2 }} direction="row" spacing={3}>
-              <TextField
+              <CustomizedInput
+                name='discount'
                 type="number"
                 variant="outlined"
-                value={promotion.remise}
-                onChange={(e) => handleChangeInputs(e, 'remise')}
+                value={promotion.discount}
+                onChange={(e) => handleChangeInputs(e, 'discount')}
                 label="remise"
+                {...(errors.discount && {
+                  error: true,
+                  helpertext: errors.discount,
+                })}
               />
               <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
                 <FormControlLabel
                   value="true"
                   control={
-                    <Radio checked={promotion.isRemiseEuro} onClick={(e) => handleChangeInputs(e, 'isRemiseEuro')} />
+                    <CustomizedRadio
+                      checked={promotion.is_discount_euro}
+                      onChange={(e) => handleChangeInputs(e, 'is_discount_euro')}
+                    />
                   }
                   label="Euro"
                 />
                 <FormControlLabel
                   value="false"
                   control={
-                    <Radio checked={!promotion.isRemiseEuro} onClick={(e) => handleChangeInputs(e, 'isRemiseEuro')} />
+                    <CustomizedRadio
+                      checked={!promotion.is_discount_euro}
+                      onChange={(e) => handleChangeInputs(e, 'is_discount_euro')}
+                    />
                   }
                   label="Pourcentage"
                 />
@@ -439,47 +588,51 @@ const ModifyPromotionDialog = ({ row, reload }) => {
 
           <h4>Dates de séjour</h4>
           <FormControl>
-            <FormLabel id="demo-controlled-radio-buttons-group">
+            <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Quand les clients peuvent-ils séjourner chez vous en bénéficiant de cette promotion ?
             </FormLabel>
-
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <Stack sx={{ p: 2 }} direction="row" spacing={3}>
                 <MobileDatePicker
                   label="Date debut sejour"
                   inputFormat="dd/MM/yyyy"
-                  value={new Date(promotion.dateDebutS)}
-                  onChange={(e) => handleChangeInputs(e, 'dateDebutS')}
-                  renderInput={(params) => <TextField {...params} />}
+                  value={new Date(promotion.start_date_of_stay)}
+                  onChange={(e) => handleChangeInputs(e, 'start_date_of_stay')}
+                  renderInput={(params) => <CustomizedInput {...params} />}
                 />
                 <MobileDatePicker
                   label="Date fin sejours"
                   inputFormat="dd/MM/yyyy"
-                  value={new Date(promotion.dateFinS)}
-                  onChange={(e) => handleChangeInputs(e, 'dateFinS')}
-                  renderInput={(params) => <TextField {...params} />}
+                  value={new Date(promotion.end_date_of_stay)}
+                  onChange={(e) => handleChangeInputs(e, 'end_date_of_stay')}
+                  renderInput={(params) => <CustomizedInput {...params} />}
                 />
               </Stack>
             </LocalizationProvider>
           </FormControl>
-
           <h4>Période de réservation - facultatif</h4>
           <FormControl>
-            <FormLabel id="demo-controlled-radio-buttons-group">
+            <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Quand les clients peuvent-ils réserver cette promotion?
             </FormLabel>
             <RadioGroup aria-labelledby="demo-controlled-radio-buttons-group" name="controlled-radio-buttons-group">
               <FormControlLabel
                 value="true"
                 control={
-                  <Radio checked={promotion.reservAllTime} onClick={(e) => handleChangeInputs(e, 'reservAllTime')} />
+                  <CustomizedRadio
+                    checked={promotion.book_any_time}
+                    onChange={(e) => handleChangeInputs(e, 'book_any_time')}
+                  />
                 }
                 label="A tout moment"
               />
               <FormControlLabel
                 value="false"
                 control={
-                  <Radio checked={!promotion.reservAllTime} onClick={(e) => handleChangeInputs(e, 'reservAllTime')} />
+                  <CustomizedRadio
+                    checked={!promotion.book_any_time}
+                    onChange={(e) => handleChangeInputs(e, 'book_any_time')}
+                  />
                 }
                 label="Sélectionner une période"
               />
@@ -487,57 +640,67 @@ const ModifyPromotionDialog = ({ row, reload }) => {
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <Stack sx={{ p: 2 }} direction="row" spacing={3}>
                 <MobileDatePicker
-                  disabled={promotion.reservAllTime}
+                  disabled={promotion.book_any_time}
                   label="Date debut reservation"
                   inputFormat="dd/MM/yyyy"
-                  value={promotion.debutReserv === '' ? new Date() : new Date(promotion.debutReserv)}
-                  onChange={(e) => handleChangeInputs(e, 'debutReserv')}
-                  renderInput={(params) => <TextField {...params} />}
+                  value={
+                    promotion.beginning_of_reservation === ''
+                      ? new Date()
+                      : new Date(promotion.beginning_of_reservation)
+                  }
+                  onChange={(e) => handleChangeInputs(e, 'beginning_of_reservation')}
+                  renderInput={(params) => <CustomizedInput {...params} />}
                 />
                 <MobileDatePicker
-                  disabled={promotion.reservAllTime}
+                  disabled={promotion.book_any_time}
                   label="Date fin reservation"
                   inputFormat="dd/MM/yyyy"
-                  value={promotion.finReserv === '' ? new Date() : new Date(promotion.finReserv)}
-                  onChange={(e) => handleChangeInputs(e, 'finReserv')}
-                  renderInput={(params) => <TextField {...params} />}
+                  value={promotion.end_of_reservation === '' ? new Date() : new Date(promotion.end_of_reservation)}
+                  onChange={(e) => handleChangeInputs(e, 'end_of_reservation')}
+                  renderInput={(params) => <CustomizedInput {...params} />}
                 />
               </Stack>
             </LocalizationProvider>
           </FormControl>
-
           <h4>Séjour minimum</h4>
           <FormControl>
-            <FormLabel id="demo-controlled-radio-buttons-group">
+            <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Combien de temps les clients doivent-ils séjourner dans votre établissement pour bénéficier de cette
               promotion ?
             </FormLabel>
-
-            <Stack sx={{ p: 2 }} direction="row" spacing={3}>
-              <TextField
-                value={promotion.sejourMin}
-                onChange={(e) => handleChangeInputs(e, 'sejourMin')}
+            <Stack sx={{ p: 2 }} direction="row" spacing={3} alignItems='center'>
+              <CustomizedInput
+                name='min_stay'
+                value={promotion.min_stay}
+                onChange={(e) => handleChangeInputs(e, 'min_stay')}
                 type="number"
                 id="outlined-basic"
                 label="min"
                 variant="outlined"
+                {...(errors.min_stay && {
+                  error: true,
+                  helpertext: errors.min_stay,
+                })}
               />
               <p>nuits ou plus</p>
             </Stack>
           </FormControl>
-
           <h4>Période réservable (Min lead et Max lead)</h4>
           <FormControl>
             <FormControlLabel
-              value={promotion.isWithLead ? 'false' : 'true'}
-              control={<Checkbox onClick={(e) => handleChangeInputs(e, 'isWithLead')} checked={promotion.isWithLead} />}
+              value={promotion.is_with_lead ? 'false' : 'true'}
+              control={
+                <CustomizedCheckbox
+                  onChange={(e) => handleChangeInputs(e, 'is_with_lead')}
+                  checked={promotion.is_with_lead}
+                />
+              }
               label="Cette promotion est elle disponible uniquement pendant une plage de nombre de jour?"
             />
-            <FormLabel id="demo-controlled-radio-buttons-group">
+            <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Si oui, la question suivante se pose Combien de temps à l'avance les clients doivent-ils réserver pour
               bénéficier de cette promotion ?
             </FormLabel>
-
             <Stack sx={{ p: 2 }} spacing={3}>
               <RadioGroup
                 aria-labelledby="demo-controlled-radio-buttons-group"
@@ -547,10 +710,10 @@ const ModifyPromotionDialog = ({ row, reload }) => {
                 <FormControlLabel
                   value="true"
                   control={
-                    <Radio
-                      checked={promotion.isLeadHour}
-                      onClick={(e) => handleChangeInputs(e, 'isLeadHour')}
-                      disabled={!promotion.isWithLead}
+                    <CustomizedRadio
+                      checked={promotion.is_lead_hour}
+                      onChange={(e) => handleChangeInputs(e, 'is_lead_hour')}
+                      disabled={!promotion.is_with_lead}
                     />
                   }
                   label="Hour"
@@ -558,36 +721,46 @@ const ModifyPromotionDialog = ({ row, reload }) => {
                 <FormControlLabel
                   value="false"
                   control={
-                    <Radio
-                      checked={!promotion.isLeadHour}
-                      onClick={(e) => handleChangeInputs(e, 'isLeadHour')}
-                      disabled={!promotion.isWithLead}
+                    <CustomizedRadio
+                      checked={!promotion.is_lead_hour}
+                      onChange={(e) => handleChangeInputs(e, 'is_lead_hour')}
+                      disabled={!promotion.is_with_lead}
                     />
                   }
                   label="Day"
                 />
               </RadioGroup>
-              <Stack direction="row" spacing={3}>
-                <TextField
-                  value={promotion.lead?.min}
+              <Stack direction="row" spacing={3} alignItems='center'>
+                <CustomizedInput
+                  name='lead_min'
+                  value={promotion.lead.min}
                   onChange={(e) => handleChangeInputs2(e, 'lead', 'min')}
                   type="number"
-                  disabled={!promotion.isWithLead}
-                  id={promotion.isWithLead ? 'outlined-basic' : 'filled-disabled'}
+                  disabled={!promotion.is_with_lead}
+                  id={promotion.is_with_lead ? 'outlined-basic' : 'filled-disabled'}
                   label="min"
-                  variant={promotion.isWithLead ? 'outlined' : 'filled'}
+                  variant={promotion.is_with_lead ? 'outlined' : 'filled'}
+                  {...(errors.lead_min && promotion.is_with_lead && {
+                    error: true,
+                    helpertext: errors.lead_min,
+                  })}
                 />
                 <p>jours minimum</p>
               </Stack>
-              <Stack direction="row" spacing={3}>
-                <TextField
-                  value={promotion.lead?.max}
+              <Stack direction="row" spacing={3} alignItems='center'>
+                <CustomizedInput
+                  name='lead_max'
+                  value={promotion.lead.max}
                   onChange={(e) => handleChangeInputs2(e, 'lead', 'max')}
                   type="number"
-                  disabled={!promotion.isWithLead}
-                  id={promotion.isWithLead ? 'outlined-basic' : 'filled-disabled'}
+                  disabled={!promotion.is_with_lead}
+                  id={promotion.is_with_lead ? 'outlined-basic' : 'filled-disabled'}
                   label="max"
-                  variant={promotion.isWithLead ? 'outlined' : 'filled'}
+                  variant={promotion.is_with_lead ? 'outlined' : 'filled'}
+                  {...(errors.lead_max && promotion.is_with_lead && {
+                    error: true,
+                    helpertext: errors.lead_max,
+                  })}
                 />
                 <p>jours maximum avant l’arrivée</p>
               </Stack>
@@ -596,45 +769,64 @@ const ModifyPromotionDialog = ({ row, reload }) => {
 
           <h4>Nombre de jour d'attribution de la promotion</h4>
           <FormControl>
-            <FormLabel id="demo-controlled-radio-buttons-group">
+            <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Par défaut, la promotion est attribuée à tous les jours
             </FormLabel>
             <FormControlLabel
-              control={<Checkbox checked={promotion.withNbDaysGetProm} onClick={handleChangeWithNbDaysGetProm} />}
+              control={
+                <CustomizedCheckbox
+                  checked={promotion.specific_days_of_stay}
+                  onChange={handleChangeSpecificDaysOfStay}
+                />
+              }
               label="Cette promotion est-elle attribuée à des jours spécifiques du séjour?"
             />
-
             <Stack sx={{ p: 2 }} direction="row" spacing={3}>
-              <TextField
-                value={promotion.premierJour}
-                onChange={(e) => handleChangeInputs3(e, 'premierJour')}
-                id={promotion.withNbDaysGetProm ? 'outlined-basic' : 'filled-disabled'}
+              <CustomizedInput
+                name='first_day'
+                value={promotion.first_day}
+                onChange={(e) => handleChangeInputs3(e, 'first_day')}
+                id={promotion.specific_days_of_stay ? 'outlined-basic' : 'filled-disabled'}
                 type="number"
                 label="Premier  jour"
-                disabled={!promotion.withNbDaysGetProm}
-                variant={promotion.withNbDaysGetProm ? 'outlined' : 'filled'}
+                disabled={!promotion.specific_days_of_stay}
+                variant={promotion.specific_days_of_stay ? 'outlined' : 'filled'}
+                {...(errors.first_day && promotion.specific_days_of_stay && {
+                  error: true,
+                  helpertext: errors.first_day,
+                })}
               />
-              <TextField
-                value={promotion.dernierJour}
-                onChange={(e) => handleChangeInputs3(e, 'dernierJour')}
-                id={promotion.withNbDaysGetProm ? 'outlined-basic' : 'filled-disabled'}
+              <CustomizedInput
+                name='last_day'
+                value={promotion.last_day}
+                onChange={(e) => handleChangeInputs3(e, 'last_day')}
+                id={promotion.specific_days_of_stay ? 'outlined-basic' : 'filled-disabled'}
                 type="number"
                 label="Dernier  jour"
-                disabled={!promotion.withNbDaysGetProm}
-                variant={promotion.withNbDaysGetProm ? 'outlined' : 'filled'}
+                disabled={!promotion.specific_days_of_stay}
+                variant={promotion.specific_days_of_stay ? 'outlined' : 'filled'}
+                {...(errors.last_day && promotion.specific_days_of_stay && {
+                  error: true,
+                  helpertext: errors.last_day,
+                })}
               />
             </Stack>
 
             <FormControlLabel
-              control={<Checkbox checked={specificDay} onClick={handleChangeSpecificDay} />}
+              control={<CustomizedCheckbox checked={specificDay} onChange={handleChangeSpecificDay} />}
               label="Cette promotion est elle attribuée à des jours spécifiques du séjour?"
             />
 
             <div style={{ paddingLeft: '2em', paddingRight: '2em' }}>
-              {promotion && Object.keys(promotion?.weekDays).map((k) => (
+              {Object.keys(promotion.week_days).map((k) => (
                 <FormControlLabel
                   key={k}
-                  control={<Checkbox onClick={() => handleChangeWeekDays(k)} checked={promotion?.weekDays[k] !== 0} />}
+                  control={
+                    <CustomizedCheckbox
+                      onChange={() => handleChangeWeekDays(k)}
+                      checked={promotion.week_days[k] !== 0}
+                    />
+                  }
                   label={k}
                 />
               ))}
@@ -643,22 +835,34 @@ const ModifyPromotionDialog = ({ row, reload }) => {
 
           <h4>Nom de la promotion</h4>
           <FormControl>
-            <FormLabel id="demo-controlled-radio-buttons-group">Comment voulez-vous nommer cette promotion ?</FormLabel>
+            <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
+              Comment voulez-vous nommer cette promotion ?
+            </FormLabel>
 
-            <Stack sx={{ p: 2 }} spacing={3}>
-              <TextField
-                value={promotion.nom}
-                onChange={(e) => handleChangeInputs(e, 'nom')}
+            <Stack sx={{ p: 2 }} direction='row' spacing={3}>
+              <CustomizedInput
+                name='french_name'
+                value={promotion.french_name}
+                onChange={(e) => handleChangeInputs(e, 'french_name')}
                 id="outlined-basic"
                 label="Nom"
                 variant="outlined"
+                {...(errors.french_name && {
+                  error: true,
+                  helpertext: errors.french_name,
+                })}
               />
-              <TextField
-                value={promotion.name}
-                onChange={(e) => handleChangeInputs(e, 'name')}
+              <CustomizedInput
+                name='english_name'
+                value={promotion.english_name}
+                onChange={(e) => handleChangeInputs(e, 'english_name')}
                 id="outlined-basic"
                 label="Name"
                 variant="outlined"
+                {...(errors.english_name && {
+                  error: true,
+                  helpertext: errors.english_name,
+                })}
               />
             </Stack>
           </FormControl>
@@ -680,7 +884,7 @@ const ModifyPromotionDialog = ({ row, reload }) => {
             })}
           /> */}
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ backgroundColor: '#E8F0F8' }}>
           <Button onClick={handleClose}>Annuler</Button>
           <Button disabled={!disabledModifyButton} onClick={modifyPromotion}>
             OK
