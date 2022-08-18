@@ -19,8 +19,9 @@ const AddHotelDialog = () => {
   const  handlePhotoChange = (e) => {
     const tmpPhoto = [];
     const tmpPreview = [];
-    console.log(e.target.files);
+
     for (let i = 0; i < e.target.files.length; i+=1) {
+      console.log(e.target.files[i]);
       const u = i;
       const img = e.target.files[i];
       const r = /^image/;
@@ -31,7 +32,6 @@ const AddHotelDialog = () => {
         reader.onload = (evt) => {
           tmpPhoto[i] = evt.target.result;
           tmpPreview[i] = evt.target.result;
-          console.log(i);
           if (i === e.target.files.length-1) {
             setPictureList(tmpPreview);
             console.log(tmpPreview);
@@ -58,7 +58,7 @@ const AddHotelDialog = () => {
         to="#" />
       <Dialog open={open} onClose={handleClose} maxWidth={'md'} sx={{ overflowY: "inherit !important", }}>
         <CustomizedDialogTitle text="Ajouter hotel" />
-        <DialogContent sx={{ backgroundColor: '#E8F0F8', pr: 2, pl: 2}}>
+        <DialogContent sx={{ backgroundColor: '#E8F0F8', pr: 2, pl: 2,overflowX:'inherit !important'}}>
           <Stack justifyContent="space-between"
             alignItems="flex-start"
             direction={{ xs: 'column' }}

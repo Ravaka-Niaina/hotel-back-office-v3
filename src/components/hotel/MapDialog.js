@@ -15,7 +15,7 @@ const MapDialog = () => {
     return (
         <>
             <CustomizedButton onClick={handleClickOpen} text='Coordonnées gps' elevation={8} sx={{ width: '250px' }} variant='contained' />
-            <Dialog open={open} onClose={handleClose} maxWidth={'md'} sx={{ 'overflow-y': "none !important", }}>
+            <Dialog open={open} onClose={handleClose} maxWidth={'md'} sx={{ overflowY: "none !important", }}>
                 <DialogContent sx={{ backgroundColor: '#E8F0F8', pr: 2, pl: 2 }}>
                     Our map
                 </DialogContent>

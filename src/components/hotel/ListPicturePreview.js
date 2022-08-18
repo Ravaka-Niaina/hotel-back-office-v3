@@ -1,22 +1,38 @@
 import React from 'react';
-import { ImageList , ImageListItem} from '@mui/material';
+import { ImageList , ImageListItem , Stack} from '@mui/material';
+import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
+import {lightBackgroundToTop} from '../CustomizedComponents/NeumorphismTheme';
 
 const ListPicturePreview = (props) => {
     const {itemData} = props;
     console.log(itemData);
     return (
-        <ImageList sx={{ width: 1, height: 450 }}  rowHeight={164} gap={8} variant="masonry">
-            {itemData.map((item) => (
-                <ImageListItem key={item}  style={{border:'1px white solid'}}>
-                    <img
-                        src={`${item}`}
-                        alt='imge'
-                        loading="lazy"
-                        
-                    />
-                </ImageListItem>
+        <div 
+            style={{
+                display:'flex',
+                overflowX:'auto',
+                padding:'10px',
+                maxWidth:'700px',
+                height:'280',
+                background:'transparent',
+                border:'1px solid transparent'
+            }}
+        >
+            {itemData.map((item,i) => (
+                    <CustomizedPaperOutside 
+                        key={i} 
+                        sx={{
+                            ...lightBackgroundToTop,
+                            p:2,
+                            minWidth:'200px',
+                            height:"260px",
+                            mr:2
+                        }}
+                    >
+                        <img src={`${item}`} alt='alta' />
+                    </CustomizedPaperOutside>
             ))}
-        </ImageList>
+        </div>
     );
 };
 
