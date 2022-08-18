@@ -6,7 +6,6 @@ import { Stack, Button, Dialog, DialogActions, DialogContent } from '@mui/materi
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
-import Iconify from '../Iconify';
 import AddImageCrop from './AddImageCrop';
 
 const AddRoomTypeDialog = () => {
@@ -61,7 +60,7 @@ const AddRoomTypeDialog = () => {
 
   return (
     <>
-      <CustomizedButton onClick={handleClickOpen} text={`Ajouter`} />
+      <CustomizedButton onClick={handleClickOpen} text={`Ajouter`} component={RouterLink} to="#" />
       <Dialog open={open} onClose={handleClose} maxWidth={'xl'}>
         <CustomizedDialogTitle text="Ajouter un nouveau type de chambre" />
 

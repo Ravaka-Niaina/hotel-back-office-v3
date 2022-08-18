@@ -6,7 +6,6 @@ import {
   DialogActions,
   DialogContent,
   Button,
-  ListItemText,
 } from '@mui/material';
 
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
@@ -33,8 +32,6 @@ const ModifyUserDialog = ({ userId,reload }) => {
     const fetchData = async () => {
       getUserDetails(userId)
         .then((result) => {
-          console.log(userId);
-          console.log(result);
           if (result.data.status === 200) {
             setUser({
               last_name: result.data.user.nom,
@@ -54,6 +51,7 @@ const ModifyUserDialog = ({ userId,reload }) => {
         });
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -216,7 +214,7 @@ const ModifyUserDialog = ({ userId,reload }) => {
           <Button onClick={handleClose} sx={{ fontSize: 12 }}>
             Annuler
           </Button>
-          <CustomizedButton handleClick={modifyUser} text={`Valider`} />
+          <CustomizedButton onClick={modifyUser} text={`Valider`} />
         </DialogActions>
       </Dialog>
     </>

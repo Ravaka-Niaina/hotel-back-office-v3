@@ -96,6 +96,8 @@ const AddAccessRightDialog = (props) => {
       <CustomizedButton
         onClick={handleClickOpen}
         text={`Ajouter`}
+        component={RouterLink}
+        to="#"
       />
       <Dialog open={open} onClose={handleClose} maxWidth={'sm'}>
         <CustomizedDialogTitle text="Ajouter un nouveau droit d'accès" />

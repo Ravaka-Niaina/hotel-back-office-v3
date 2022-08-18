@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import merge from 'lodash/merge';
 import ReactApexChart from 'react-apexcharts';
 // @mui
-import { Card, CardHeader, Box } from '@mui/material';
+import { CardHeader, Box } from '@mui/material';
 // components
 import { BaseOptionChart } from '../chart';
 import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';

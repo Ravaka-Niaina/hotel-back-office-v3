@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 // material
 import {
-  ListItemText,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -60,7 +59,7 @@ const DeleteRoomTypeDialog = ({ row }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Annuler</Button>
-          <CustomizedButton handleClick={deleteRoomType} text={'Supprimer'} />
+          <CustomizedButton onClick={deleteRoomType} text={'Supprimer'} />
         </DialogActions>
       </Dialog>
     </>

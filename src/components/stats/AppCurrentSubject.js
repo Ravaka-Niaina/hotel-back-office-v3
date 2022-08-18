@@ -3,7 +3,7 @@ import merge from 'lodash/merge';
 import ReactApexChart from 'react-apexcharts';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Card, CardHeader } from '@mui/material';
+import { CardHeader } from '@mui/material';
 // components
 import { BaseOptionChart } from '../chart';
 import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';

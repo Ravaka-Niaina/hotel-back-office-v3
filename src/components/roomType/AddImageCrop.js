@@ -1,4 +1,4 @@
-import { Stack, Button, Dialog, DialogContent, DialogActions, Typography } from '@mui/material';
+import { Stack, Button, Dialog, DialogContent, DialogActions } from '@mui/material';
 import ReactCrop from 'react-image-crop';
 import { useDropzone } from 'react-dropzone';
 import 'react-image-crop/dist/ReactCrop.css';

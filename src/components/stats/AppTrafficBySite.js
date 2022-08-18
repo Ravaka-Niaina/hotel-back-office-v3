@@ -1,6 +1,6 @@
 // @mui
 import PropTypes from 'prop-types';
-import { Box, Card, Paper, Typography, CardHeader, CardContent } from '@mui/material';
+import { Box, Typography, CardHeader, CardContent } from '@mui/material';
 // utils
 import { fShortenNumber } from '../../utils/formatNumber';
 import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
