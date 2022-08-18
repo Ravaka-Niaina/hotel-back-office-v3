@@ -8,8 +8,6 @@ import { ThemeContext } from '../context/Wrapper';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
-import Iconify from '../Iconify';
-
 
 const AddAccessRightDialog = (props) => {
   const { reload } = props;

@@ -12,13 +12,12 @@ import {
 } from '@mui/material';
 
 
-import { deleteAccessRight as Delete } from '../../services/AccessRight';
 import { ThemeContext } from '../context/Wrapper';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
 import Iconify from '../Iconify'; 
 
-const DeleteAccessRightDialog = ({ reload, accessRightId }) => {
+const DeletePoliticDialog = ({ reload }) => {
   const [open, setOpen] = useState(false);
   const context = useContext(ThemeContext);
   const handleClickOpen = () => {
@@ -31,7 +30,6 @@ const DeleteAccessRightDialog = ({ reload, accessRightId }) => {
 
   const formatPayloadToSend = () => {
     const payload = {
-      access_right_id: accessRightId,
     };
     return payload;
   };
@@ -40,27 +38,6 @@ const DeleteAccessRightDialog = ({ reload, accessRightId }) => {
     // setDisabledDeleteButton(true);
     // deleteOnePromotion(promotionId, type)
     //   .then(() => {
-    setOpen(true);
-    context.showLoader(true);
-    Delete(formatPayloadToSend())
-      .then((result) => {
-        if (result.data.status === 200) {
-          context.changeResultSuccessMessage(`Droit d'accès supprimé avec succès.`);
-          context.showResultSuccess(true);
-          reload();
-        } else {
-          context.changeResultErrorMessage(`Suppression de droit d'accès refusée.`);
-          context.showResultError(true);
-        }
-      })
-      .catch((e) => {
-        context.changeResultErrorMessage(e.message);
-        context.showResultError(true);
-      })
-      .finally(() => {
-        context.showLoader(false);
-        setOpen(false);
-      });
   };
   return (
     <>
@@ -78,7 +55,7 @@ const DeleteAccessRightDialog = ({ reload, accessRightId }) => {
         </DialogTitle>
         <DialogContent sx={{ backgroundColor: '#D6E3F3' }}>
           <DialogContentText id="alert-dialog-description">
-            Voulez vous vraiment supprimer cet enregistrement "{accessRightId}" ?
+            Voulez vous vraiment supprimer cet enregistrement ?
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#D6E3F3' }}>
@@ -89,8 +66,8 @@ const DeleteAccessRightDialog = ({ reload, accessRightId }) => {
     </>
   );
 };
-DeleteAccessRightDialog.propTypes = {
+DeletePoliticDialog.propTypes = {
   reload: PropTypes.any,
   accessRightId: PropTypes.any,
 };
-export default DeleteAccessRightDialog;
+export default DeletePoliticDialog;

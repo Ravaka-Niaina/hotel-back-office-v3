@@ -32,13 +32,13 @@ import { formatDate } from '../../services/Util';
 
 const AddPromotionDialog = () => {
   const context = useContext(ThemeContext);
-  
+
   const [listTarif, setListTarif] = useState([]);
-  
+
   const [listRoom, setListRoom] = useState([]);
 
   const [open, setOpen] = useState(false);
-  
+
   const [errors, setErrors] = useState({});
 
   const [specificDay, setSpecificDay] = useState(false);
@@ -82,10 +82,7 @@ const AddPromotionDialog = () => {
   const tarifSelected = [];
   const roomSelected = [];
   const promotionTemp = promotion;
-  useEffect(() => {
-    
-  }, []);
-  
+  useEffect(() => {}, []);
 
   const handleChangeWeekDays = (k) => {
     const weekDaysTemp = promotion.week_days;
@@ -123,11 +120,12 @@ const AddPromotionDialog = () => {
         setOpen(false);
         context.changeResultErrorMessage('Une erreur est interne survenue lors du chargement des  listes.');
         context.showResultError(true);
-      }).finally(()=> {
+      })
+      .finally(() => {
         context.showLoader(false);
       });
   };
-  
+
   const handleClickOpen = () => {
     setOpen(true);
     fetchData();
@@ -208,74 +206,77 @@ const AddPromotionDialog = () => {
     leadTemp[field2] = e.target.value !== '' ? parseInt(e.target.value, 10) : '';
     promotionTemp.lead = { ...leadTemp };
     setPromotion({ ...promotionTemp });
-    validate({ lead: {[field2]: e.target.value } });
-    console.log(promotion);
+    validate({ lead: { [field2]: e.target.value } });
+    // console.log(promotion);
   };
 
   const validate = (fieldValues) => {
     const temp = { ...errors };
     if ('french_name' in fieldValues) temp.french_name = fieldValues.french_name ? '' : 'Ce champ est requis.';
     if ('english_name' in fieldValues) temp.english_name = fieldValues.english_name ? '' : 'Ce champ est requis.';
-    if ('discount' in fieldValues) temp.discount = fieldValues.discount!=='' ? '' : 'Ce champ est requis.';
-    if ('min_stay' in fieldValues) temp.min_stay = fieldValues.min_stay!=='' ? '' : 'Ce champ est requis.';
-    if(fieldValues.lead)
-    {
-      if ('min' in fieldValues.lead && promotion.is_with_lead) temp.lead_min = fieldValues.lead.min!=='' ? '' : 'Ce champ est requis.';
-      if ('max' in fieldValues.lead && promotion.is_with_lead) temp.lead_max = fieldValues.lead.max!=='' ? '' : 'Ce champ est requis.';
+    if ('discount' in fieldValues) temp.discount = fieldValues.discount !== '' ? '' : 'Ce champ est requis.';
+    if ('min_stay' in fieldValues) temp.min_stay = fieldValues.min_stay !== '' ? '' : 'Ce champ est requis.';
+    if (fieldValues.lead) {
+      if ('min' in fieldValues.lead && promotion.is_with_lead)
+        temp.lead_min = fieldValues.lead.min !== '' ? '' : 'Ce champ est requis.';
+      if ('max' in fieldValues.lead && promotion.is_with_lead)
+        temp.lead_max = fieldValues.lead.max !== '' ? '' : 'Ce champ est requis.';
     }
-    if('last_day' in fieldValues && promotion.specific_days_of_stay) 
-    {
-      temp.last_day = fieldValues.last_day!=='' ? '' : 'Ce champ est requis.';
+    if ('last_day' in fieldValues && promotion.specific_days_of_stay) {
+      temp.last_day = fieldValues.last_day !== '' ? '' : 'Ce champ est requis.';
     }
-    if ('first_day' in fieldValues && promotion.specific_days_of_stay) 
-    {
-      temp.first_day = fieldValues.first_day!=='' ? '' : 'Ce champ est requis.'
+    if ('first_day' in fieldValues && promotion.specific_days_of_stay) {
+      temp.first_day = fieldValues.first_day !== '' ? '' : 'Ce champ est requis.';
     }
     setErrors({
       ...temp,
     });
-
   };
 
   const formIsValid = (newPromotion) => {
-    const isValid = newPromotion.french_name && newPromotion.english_name && newPromotion.discount &&
-      newPromotion.min_stay!=='' && (newPromotion.lead.min!=='' || !newPromotion.is_with_lead) 
-      && (newPromotion.lead.max!=='' || !newPromotion.is_with_lead) 
-      && (newPromotion.last_day!==''  || !newPromotion.specific_days_of_stay)
-      && (newPromotion.first_day!=='' || !newPromotion.specific_days_of_stay) 
-      && Object.values(errors).every((x) => x === '');  
-    if(isValid)
-    {
+    const isValid =
+      newPromotion.french_name &&
+      newPromotion.english_name &&
+      newPromotion.discount &&
+      newPromotion.min_stay !== '' &&
+      (newPromotion.lead.min !== '' || !newPromotion.is_with_lead) &&
+      (newPromotion.lead.max !== '' || !newPromotion.is_with_lead) &&
+      (newPromotion.last_day !== '' || !newPromotion.specific_days_of_stay) &&
+      (newPromotion.first_day !== '' || !newPromotion.specific_days_of_stay) &&
+      Object.values(errors).every((x) => x === '');
+    if (isValid) {
       console.log('valid');
     }
     return isValid;
   };
 
   const handleChangeInputs = (e, field) => {
-    const promotionTemp = promotion;
-    if (e.target === undefined) {
-      promotionTemp[field] = formatDate(e.toLocaleDateString('en-US'));
-    } else if (e.target.value === 'false') {
-      promotionTemp[field] = false;
-      if (field === 'book_any_time') {
-        promotionTemp.beginning_of_reservation = '2000-1-1';
-        promotionTemp.end_of_reservation = '2000-1-1';
+    setTimeout(() => {
+      const promotionTemp = promotion;
+      if (e.target === undefined) {
+        promotionTemp[field] = formatDate(e.toLocaleDateString('en-US'));
+      } else if (e.target.value === 'false') {
+        promotionTemp[field] = false;
+        if (field === 'book_any_time') {
+          promotionTemp.beginning_of_reservation = '2000-1-1';
+          promotionTemp.end_of_reservation = '2000-1-1';
+        }
+      } else if (e.target.value === 'true') {
+        promotionTemp[field] = true;
+        if (field === 'book_any_time') {
+          promotionTemp.beginning_of_reservation = '';
+          promotionTemp.end_of_reservation = '';
+        }
+      } else if (e.target.type === 'number' && e.target.value !== '') {
+        validate({ [e.target.name]: e.target.value });
+        promotionTemp[field] = parseInt(e.target.value, 10);
+      } else {
+        validate({ [e.target.name]: e.target.value });
+        promotionTemp[field] = e.target.value;
       }
-    }else if (e.target.value === 'true') {
-      promotionTemp[field] = true;
-      if (field === 'book_any_time') {
-        promotionTemp.beginning_of_reservation = '';
-        promotionTemp.end_of_reservation = '';
-      }
-    } else if (e.target.type === 'number' && e.target.value !== '') {
-      validate({ [e.target.name]: e.target.value });
-      promotionTemp[field] = parseInt(e.target.value, 10);
-    } else {
-      validate({ [e.target.name]: e.target.value });
-      promotionTemp[field] = e.target.value;
-    }
-    setPromotion({ ...promotionTemp });
-    console.log(promotion);
+      setPromotion({ ...promotionTemp });
+    });
+    // console.log(promotion);
   };
 
   const handleChangeSelected = (id, field) => {
@@ -379,21 +380,20 @@ const AddPromotionDialog = () => {
 
   const addPromotion = async () => {
     validate(promotion);
-    if(formIsValid(promotion))
-    {
+    if (formIsValid(promotion)) {
       context.showLoader(true);
       const idToken = JSON.parse(localStorage.getItem('id_token'));
       setOpen(true);
       createPromotion(formatPayloadToSend(), idToken)
         .then((result) => {
-          console.log(result);
+          // console.log(result);
           if (result.data.status === 200) {
             context.showLoader(false);
             setOpen(false);
             context.changeResultSuccessMessage('Enregistrement inséré avec succès');
             context.showResultSuccess(true);
             cleanPromotion();
-          } else if(result.data.errors){
+          } else if (result.data.errors) {
             context.showLoader(false);
             const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
             const indication = result.data.errors[item];
@@ -427,13 +427,7 @@ const AddPromotionDialog = () => {
 
   return (
     <>
-      <CustomizedButton
-        text="Ajouter"
-        onClick={handleClickOpen}
-        variant="contained"
-        component={RouterLink}
-        to="#"
-      />
+      <CustomizedButton text="Ajouter" onClick={handleClickOpen} variant="contained" component={RouterLink} to="#" />
       <Dialog open={open} onClose={handleClose} maxWidth={'md'}>
         <CustomizedDialogTitle text="Ajouter une nouvelle promotion" />
         <DialogContent sx={{ backgroundColor: '#E8F0F8', pt: 20, pl: 2 }}>
@@ -459,7 +453,7 @@ const AddPromotionDialog = () => {
               <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
                 Veuillez sélectionnez au moins 1 plan tarifaire
               </FormLabel>
-              <div style={{ columnCount: 3, }}>
+              <div style={{ columnCount: 3 }}>
                 {listTarif.map((e) => (
                   <FormControlLabel
                     onChange={() => handleChangeSelected(e._id, 'rate_plan')}
@@ -495,7 +489,7 @@ const AddPromotionDialog = () => {
               <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
                 Veuillez sélectionner au moins 1 type d'hébergement.
               </FormLabel>
-              <div style={{ columnCount: 3, }}>
+              <div style={{ columnCount: 3 }}>
                 {listRoom.map((e) => (
                   <FormControlLabel
                     onChange={() => handleChangeSelected(e._id, 'room_type')}
@@ -520,7 +514,7 @@ const AddPromotionDialog = () => {
             </FormLabel>
             <Stack sx={{ p: 2 }} direction="row" spacing={3}>
               <CustomizedInput
-                name='discount'
+                name="discount"
                 type="number"
                 variant="outlined"
                 value={promotion.discount}
@@ -638,9 +632,9 @@ const AddPromotionDialog = () => {
               Combien de temps les clients doivent-ils séjourner dans votre établissement pour bénéficier de cette
               promotion ?
             </FormLabel>
-            <Stack sx={{ p: 2 }} direction="row" spacing={3} alignItems='center'>
+            <Stack sx={{ p: 2 }} direction="row" spacing={3} alignItems="center">
               <CustomizedInput
-                name='min_stay'
+                name="min_stay"
                 value={promotion.min_stay}
                 onChange={(e) => handleChangeInputs(e, 'min_stay')}
                 type="number"
@@ -700,9 +694,9 @@ const AddPromotionDialog = () => {
                   label="Day"
                 />
               </RadioGroup>
-              <Stack direction="row" spacing={3} alignItems='center'>
+              <Stack direction="row" spacing={3} alignItems="center">
                 <CustomizedInput
-                  name='lead_min'
+                  name="lead_min"
                   value={promotion.lead.min}
                   onChange={(e) => handleChangeInputs2(e, 'lead', 'min')}
                   type="number"
@@ -710,16 +704,17 @@ const AddPromotionDialog = () => {
                   id={promotion.is_with_lead ? 'outlined-basic' : 'filled-disabled'}
                   label="min"
                   variant={promotion.is_with_lead ? 'outlined' : 'filled'}
-                  {...(errors.lead_min && promotion.is_with_lead &&{
-                    error: true,
-                    helpertext: errors.lead_min,
-                  })}
+                  {...(errors.lead_min &&
+                    promotion.is_with_lead && {
+                      error: true,
+                      helpertext: errors.lead_min,
+                    })}
                 />
                 <p>jours minimum</p>
               </Stack>
-              <Stack direction="row" spacing={3} alignItems='center'>
+              <Stack direction="row" spacing={3} alignItems="center">
                 <CustomizedInput
-                  name='lead_max'
+                  name="lead_max"
                   value={promotion.lead.max}
                   onChange={(e) => handleChangeInputs2(e, 'lead', 'max')}
                   type="number"
@@ -727,10 +722,11 @@ const AddPromotionDialog = () => {
                   id={promotion.is_with_lead ? 'outlined-basic' : 'filled-disabled'}
                   label="max"
                   variant={promotion.is_with_lead ? 'outlined' : 'filled'}
-                  {...(errors.lead_max  && promotion.is_with_lead && {
-                    error: true,
-                    helpertext: errors.lead_max,
-                  })}
+                  {...(errors.lead_max &&
+                    promotion.is_with_lead && {
+                      error: true,
+                      helpertext: errors.lead_max,
+                    })}
                 />
                 <p>jours maximum avant l’arrivée</p>
               </Stack>
@@ -753,7 +749,7 @@ const AddPromotionDialog = () => {
             />
             <Stack sx={{ p: 2 }} direction="row" spacing={3}>
               <CustomizedInput
-                name='first_day'
+                name="first_day"
                 value={promotion.first_day}
                 onChange={(e) => handleChangeInputs3(e, 'first_day')}
                 id={promotion.specific_days_of_stay ? 'outlined-basic' : 'filled-disabled'}
@@ -761,13 +757,14 @@ const AddPromotionDialog = () => {
                 label="Premier  jour"
                 disabled={!promotion.specific_days_of_stay}
                 variant={promotion.specific_days_of_stay ? 'outlined' : 'filled'}
-                {...(errors.first_day && promotion.specific_days_of_stay && {
-                  error: true,
-                  helpertext: errors.first_day,
-                })}
+                {...(errors.first_day &&
+                  promotion.specific_days_of_stay && {
+                    error: true,
+                    helpertext: errors.first_day,
+                  })}
               />
               <CustomizedInput
-                name='last_day'
+                name="last_day"
                 value={promotion.last_day}
                 onChange={(e) => handleChangeInputs3(e, 'last_day')}
                 id={promotion.specific_days_of_stay ? 'outlined-basic' : 'filled-disabled'}
@@ -775,10 +772,11 @@ const AddPromotionDialog = () => {
                 label="Dernier  jour"
                 disabled={!promotion.specific_days_of_stay}
                 variant={promotion.specific_days_of_stay ? 'outlined' : 'filled'}
-                {...(errors.last_day && promotion.specific_days_of_stay && {
-                  error: true,
-                  helpertext: errors.last_day,
-                })}
+                {...(errors.last_day &&
+                  promotion.specific_days_of_stay && {
+                    error: true,
+                    helpertext: errors.last_day,
+                  })}
               />
             </Stack>
 
@@ -809,10 +807,10 @@ const AddPromotionDialog = () => {
               Comment voulez-vous nommer cette promotion ?
             </FormLabel>
 
-            <Stack sx={{ p: 2 }} direction='row' spacing={3}>
+            <Stack sx={{ p: 2 }} direction="row" spacing={3}>
               <CustomizedInput
-                name='french_name'
-                value={promotion.french_name}
+                name="french_name"
+                // value={promotion.french_name}
                 onChange={(e) => handleChangeInputs(e, 'french_name')}
                 id="outlined-basic"
                 label="Nom"
@@ -823,13 +821,13 @@ const AddPromotionDialog = () => {
                 })}
               />
               <CustomizedInput
-                name='english_name'
-                value={promotion.english_name}
+                name="english_name"
+                // value={promotion.english_name}
                 onChange={(e) => handleChangeInputs(e, 'english_name')}
                 id="outlined-basic"
                 label="Name"
                 variant="outlined"
-                {...(errors.english_name  && {
+                {...(errors.english_name && {
                   error: true,
                   helpertext: errors.english_name,
                 })}
@@ -856,7 +854,7 @@ const AddPromotionDialog = () => {
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#E8F0F8' }}>
           <Button onClick={handleClose}>Annuler</Button>
-          <CustomizedButton text='Enregistrer' onClick={addPromotion}/>
+          <CustomizedButton text="Enregistrer" onClick={addPromotion} />
         </DialogActions>
       </Dialog>
     </>
