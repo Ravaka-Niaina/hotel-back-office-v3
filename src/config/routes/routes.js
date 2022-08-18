@@ -8,7 +8,7 @@ import Hotel from '../../views/Hotel';
 import RatePlan from '../../views/RatePlan';
 import Calendar from '../../views/Calendar';
 import Promotion from '../../views/Promotion';
-import TypeChambre from '../../views/TypeChambre';
+import TypeChambre from '../../views/RoomType';
 import AccessRight from '../../views/AccessRight';
 import User from '../../views/User';
 import Login from '../../views/Login';
@@ -37,8 +37,6 @@ export default function Router() {
         { path: 'typeChambre', element: <TypeChambre /> },
         { path: 'politic', element: <Politic /> },
         { path: 'hotel', element: <Hotel /> },
-
-
       ],
     },
     {

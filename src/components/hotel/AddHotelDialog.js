@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 
-import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 
 import { Dialog, DialogActions, DialogContent, Button } from '@mui/material';
 
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
-
-import Iconify from '../Iconify';
 
 const AddHotelDialog = () => {
   const [open, setOpen] = useState(false);
