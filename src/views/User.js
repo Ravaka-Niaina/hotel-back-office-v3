@@ -57,6 +57,7 @@ export default function User() {
 
   useEffect(() => {
     reload();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const getAllUser = async () => {
     context.showLoader(true);
@@ -69,7 +70,7 @@ export default function User() {
     };
     getUserList(payload)
       .then((result) => {
-        if (result.data.status === 200) {
+        if (result.status === 200) {
           setUserList(result.data.list);
         } else {
           context.changeResultErrorMessage('Une erreur est survenue lors du chargement des données');

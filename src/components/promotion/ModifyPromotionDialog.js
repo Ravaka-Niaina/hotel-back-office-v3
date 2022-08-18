@@ -24,7 +24,6 @@ import { getListTarifAndRoom, getPromotionDetail, updatePromotion } from '../../
 import { formatDate } from '../../services/Util';
 import { ThemeContext } from '../context/Wrapper';
 import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
-import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedCheckbox from '../CustomizedComponents/CustomizedCheckbox';
 import CustomizedRadio from '../CustomizedComponents/CustomizedRadio';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
@@ -102,6 +101,7 @@ const ModifyPromotionDialog = ({ row, reload }) => {
     const user = JSON.parse(localStorage.getItem('partner_id'));
     getPromotionDetail(row._id, user)
       .then((promotionDetail) => {
+        // console.log(promotionDetail)
         if (promotionDetail.data.status === 200) {
           const oldPromotion = promotionDetail.data.promotion;
           console.log(oldPromotion);
