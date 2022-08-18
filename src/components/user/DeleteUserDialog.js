@@ -1,9 +1,6 @@
-import React, { useState, useContext } from 'react';
-import PropTypes from 'prop-types';
-
+import React, { useState } from 'react';
 // material
 import {
-  ListItemText,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -15,7 +12,7 @@ import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
 import Iconify from '../Iconify';
 
-const DeleteUserDialog = ({ row }) => {
+const DeleteUserDialog = () => {
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -54,6 +51,5 @@ const DeleteUserDialog = ({ row }) => {
   );
 };
 DeleteUserDialog.propTypes = {
-  row: PropTypes.any,
 };
 export default DeleteUserDialog;

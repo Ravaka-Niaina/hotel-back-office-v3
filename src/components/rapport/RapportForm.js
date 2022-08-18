@@ -1,5 +1,6 @@
 import { useContext, useMemo, useState } from 'react';
-import { Typography, MenuItem, Paper, FormControlLabel, RadioGroup, Stack } from '@mui/material';
+import PropTypes from 'prop-types'
+import { Typography, MenuItem, FormControlLabel, RadioGroup, Stack } from '@mui/material';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -153,5 +154,7 @@ const RapportForm = ({ setStateDataSalesReport }) => {
     </>
   );
 };
-
+RapportForm.propTypes = {
+  setStateDataSalesReport : PropTypes.any
+}
 export default RapportForm;

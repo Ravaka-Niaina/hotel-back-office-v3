@@ -6,7 +6,6 @@ import { Stack, Button, Dialog, DialogActions, DialogContent } from '@mui/materi
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
-import Iconify from '../Iconify';
 import AddImageCrop from './AddImageCrop';
 
 const AddRoomTypeDialog = () => {

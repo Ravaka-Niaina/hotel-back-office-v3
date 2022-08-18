@@ -3,7 +3,7 @@ import merge from 'lodash/merge';
 import ReactApexChart from 'react-apexcharts';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
-import { Card, CardHeader } from '@mui/material';
+import { CardHeader } from '@mui/material';
 // utils
 import { fNumber } from '../../utils/formatNumber';
 // components

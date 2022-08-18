@@ -6,7 +6,6 @@ import {
   DialogActions,
   DialogContent,
   Button,
-  ListItemText,
 } from '@mui/material';
 
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
@@ -54,6 +53,7 @@ const ModifyUserDialog = ({ userId,reload }) => {
         });
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleChange = (e) => {
     const { name, value } = e.target;

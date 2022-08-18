@@ -1,13 +1,11 @@
-import {useState,useEffect,useContext} from 'react';
+import {useContext} from 'react';
+import { PropTypes } from 'prop-types';
 import { CircularProgress ,  Stack  } from '@mui/material';
 import { ThemeContext } from '../context/Wrapper';
 import CustomizedSwitch from '../CustomizedComponents/CustomizedSwitch';
 import {switchRatePlanStatus} from '../../services/RatePlan';
 
-
-
 const RatePlanStatus = (props) => {
-
     const { reload,ratePlanId,isActif } = props;
     const context = useContext(ThemeContext);
     const handleSwitch = () => {
@@ -55,4 +53,9 @@ const RatePlanStatus = (props) => {
         </>
     );
 };
+RatePlanStatus.propTypes = {
+    reload: PropTypes.any,
+    ratePlanId: PropTypes.any,
+    isActif: PropTypes.any
+}
 export default RatePlanStatus;

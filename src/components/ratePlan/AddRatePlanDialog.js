@@ -21,7 +21,6 @@ import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedRadio from '../CustomizedComponents/CustomizedRadio';
 import CustomizedCheckbox from '../CustomizedComponents/CustomizedCheckbox';
-import Iconify from '../Iconify';
 import { formatDate } from '../../services/Util';
 import { getRoomTypeAndCancelingPoliticList, createRatePlan } from '../../services/RatePlan';
 
@@ -52,6 +51,7 @@ const AddRatePlanDialog = ({ reload }) => {
   const [listPolitic, setListPolitic] = useState(new Array(0));
   useEffect(() => {
     getItems();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const getItems = () => {
     getRoomTypeAndCancelingPoliticList()
@@ -124,7 +124,7 @@ const AddRatePlanDialog = ({ reload }) => {
   };
 
   const formatPayloadToSend = () => {
-    return {
+    const payloadToSend = {
       nom: ratePlan.french_name,
       description: ratePlan.french_description,
       dateReservation: {
@@ -146,6 +146,7 @@ const AddRatePlanDialog = ({ reload }) => {
       reservAToutMoment: ratePlan.booking_all_time === 'true',
       aucunFinDateSejour: ratePlan.no_end_date_of_stay,
     };
+    return payloadToSend;
   };
 
   const addNewRatePlan = () => {
@@ -155,7 +156,6 @@ const AddRatePlanDialog = ({ reload }) => {
       context.showLoader(true);
       createRatePlan(formatPayloadToSend(), idToken)
         .then((result) => {
-          let message = '';
           console.log(result);
           if (result.data.status === 200) {
             setOpen(false);
@@ -163,13 +163,13 @@ const AddRatePlanDialog = ({ reload }) => {
             context.changeResultSuccessMessage('Enregistrement effectué');
             context.showResultSuccess(true);
           } else if (result.data.message) {
-            message = result.data.message;
+            const { message } = result.data
             context.changeResultErrorMessage(message);
             context.showResultError(true);
           } else if (result.data.errors) {
             const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
             const indication = result.data.errors[item];
-            message = `${item}: ${indication}`;
+            const message = `${item}: ${indication}`;
             context.changeResultErrorMessage(message);
             context.showResultError(true);
           }

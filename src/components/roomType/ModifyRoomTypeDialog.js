@@ -2,7 +2,7 @@ import React, { useEffect, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 
 // material
-import { ListItemText, Stack, Button, Dialog, DialogActions, DialogContent } from '@mui/material';
+import { Stack, Button, Dialog, DialogActions, DialogContent } from '@mui/material';
 
 // components
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';

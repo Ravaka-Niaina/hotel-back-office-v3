@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 // material
 import {
-  ListItemText,
   Dialog,
   DialogTitle,
   DialogContent,

@@ -3,7 +3,7 @@ import { useState } from 'react';
 // form
 import { useForm, Controller } from 'react-hook-form';
 // @mui
-import { Card, Stack, Divider, Checkbox, MenuItem, IconButton, CardHeader, FormControlLabel } from '@mui/material';
+import { Stack, Divider, Checkbox, MenuItem, IconButton, CardHeader, FormControlLabel } from '@mui/material';
 // components
 import Iconify from '../Iconify';
 import MenuPopover from '../dashboardLayout/MenuPopover';
