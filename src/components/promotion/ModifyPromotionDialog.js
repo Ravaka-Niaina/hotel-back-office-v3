@@ -40,6 +40,7 @@ const ModifyPromotionDialog = ({ row, reload }) => {
   const [listTarif, setListTarif] = useState([]);
   const [listRoom, setListRoom] = useState([]);
   const [promotion, setPromotion] = useState({
+    _id:'',
     french_name: '',
     english_name: '',
     rate_plan: [],
@@ -105,11 +106,11 @@ const ModifyPromotionDialog = ({ row, reload }) => {
         if (promotionDetail.data.status === 200) {
           const oldPromotion = promotionDetail.data.promotion;
           console.log(oldPromotion);
-          delete oldPromotion.etat;
-          delete oldPromotion.dateCreation;
           delete oldPromotion.userIdInsert;
           delete oldPromotion.hotelUser;
           setPromotion({
+            etat:oldPromotion.etat,
+            dateCreation:oldPromotion.dateCreation,
             french_name: oldPromotion.nom,
             english_name: oldPromotion.name,
             rate_plan: oldPromotion.planTarifaire,
@@ -370,7 +371,9 @@ const ModifyPromotionDialog = ({ row, reload }) => {
   };
 
   const formatPayloadToSend = () => {
+    
     const payload = {
+      _id: promotion._id,
       nom: promotion.french_name,
       planTarifaire: promotion.rate_plan,
       typeChambre: promotion.room_type,
@@ -404,6 +407,8 @@ const ModifyPromotionDialog = ({ row, reload }) => {
       isWithLead: promotion.is_with_lead,
       reservAllTime: promotion.book_any_time,
       withNbDaysGetProm: promotion.specific_days_of_stay,
+      etat:promotion.etat,
+      dateCreation:promotion.dateCreation,
     };
     return payload;
   };
