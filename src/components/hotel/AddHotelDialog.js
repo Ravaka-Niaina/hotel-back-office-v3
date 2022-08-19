@@ -17,31 +17,34 @@ const AddHotelDialog = () => {
 
 
   const  handlePhotoChange = (e) => {
-    const tmpPhoto = [];
     const tmpPreview = [];
 
     for (let i = 0; i < e.target.files.length; i+=1) {
-      console.log(e.target.files[i]);
-      const u = i;
       const img = e.target.files[i];
       const r = /^image/;
-      console.log(img.type);
       if (r.test(img.type)) {
         console.log('type image');
         const reader = new FileReader();
         reader.onload = (evt) => {
-          tmpPhoto[i] = evt.target.result;
-          tmpPreview[i] = evt.target.result;
-          if (i === e.target.files.length-1) {
-            setPictureList(tmpPreview);
-            console.log(tmpPreview);
+          const im = new Image()
+          im.src = evt.target.result;
+          im.onload= (a) =>{
+            tmpPreview.push({
+              img: evt.target.result,
+              width: a.currentTarget.width,
+              height: a.currentTarget.height,
+            });
+            if (i + 1 === e.target.files.length) setPictureList([...tmpPreview, ...pictureList]);
           }
+          
         }
         reader.readAsDataURL(img);
       } else {
         console.log('else lery');
       }
+      
     }
+    
   }
 
   const handleClickOpen = () => {
@@ -126,7 +129,6 @@ const AddHotelDialog = () => {
               />
             </Stack>
             <h4>Photos</h4>
-            <ListPicturePreview itemData={pictureList}/>
             <Stack direction='row' spacing={2} alignItems='center'>
               <CustomizedInput
                 sx={{ width: 1 }}
@@ -141,6 +143,8 @@ const AddHotelDialog = () => {
                 required
               />
             </Stack>
+            <ListPicturePreview itemData={pictureList} setPictureList={setPictureList}/>
+            
             <h4>Horaire</h4>
             <Stack direction='row' spacing={2} alignItems='center'>
               <CustomizedInput
@@ -250,7 +254,7 @@ const AddHotelDialog = () => {
           </Stack>
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#E8F0F8' }}>
-          <Button onClick={handleClose} sx={{ fontSize: 12 }}>
+          <Button onClick={handleClose} sx={{ fontSize: 12, height:'100%'}}>
             Annuler
           </Button>
           <CustomizedButton text="Enregistrer" component={RouterLink} to='#'/>

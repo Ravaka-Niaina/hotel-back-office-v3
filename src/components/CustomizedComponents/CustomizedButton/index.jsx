@@ -15,7 +15,7 @@ const ButtonStyled = styled(Button)({
 });
 
 const CustomizedButton = (props) => (
-  <ButtonStyled size="medium" variant="contained" {...props}>
+  <ButtonStyled size="large" variant="contained" {...props}>
     <p
       className="depth"
       title={formatText(props.text)}
