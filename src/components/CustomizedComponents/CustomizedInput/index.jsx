@@ -56,7 +56,7 @@ const CustomizedInput = (props) => {
   oprops.InputProps={...(oprops.InputProps && {...oprops.InputProps}),'style':font};
   return(
     <Stack spacing={1} direction="column">
-      <CustomizedLabel label={props.label} />
+      {props.label && <CustomizedLabel label={props.label} /> }
       <CustomizedTextField {...oprops}  />
       {props.helpertext && <CustomizedHelperText text={props.helpertext} />}
     </Stack>
