@@ -168,26 +168,24 @@ const ModifyPoliticDialog = ({ reload, politic: politicToModify }) => {
 
   // Fonction pour enregistrer un politique
   const handleModifyPolitic = () => {
-    formatPayloadToSend().then(payloadToSend => {
-      console.log(payloadToSend)
-    })
     const idPoliticToModify = politicToModify?._id
     context.showLoader(true)
     formatPayloadToSend().then((newPolitic) => {
       modifyPolitic(newPolitic, idPoliticToModify).then(results => {
-        console.log(results)
+        // console.log(results)
         const { status } = results.data
         if (status === 200) {
           context.changeResultSuccessMessage(`Politique modifiée avec succès`)
           context.showResultSuccess(true)
+          setOpen(false)
+        reload();
         } else {
           context.showLoader(false)
-          context.changeResultErrorMessage(`Une erreur est survenue`)
+          context.changeResultErrorMessage(`Une erreur est survenue lors de la modification de la politique d'annulation.`)
           context.showResultError(true)
         }
       }).finally(() => {
-        setOpen(false)
-        reload();
+        
       })
     }).catch(err => {
       context.showLoader(false)

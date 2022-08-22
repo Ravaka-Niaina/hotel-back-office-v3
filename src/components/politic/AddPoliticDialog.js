@@ -171,25 +171,28 @@ const AddPoliticDialog = ({ reload }) => {
   const addPolitic = () => {
     context.showLoader(true)
     formatPayloadToSend().then((politicToAdd) => {
+      console.log(politicToAdd)
       createPolitic(politicToAdd).then((datas) => {
         const status = datas?.data?.status
         if (status) {
           if (status === 200) {
             context.changeResultSuccessMessage(`Politique ajoutée avec succès`)
             context.showResultSuccess(true)
+            setOpen(false)
+            reload()
           } else {
             context.showLoader(false)
-            context.changeResultErrorMessage(`Une erreur est survenue`)
+            context.changeResultErrorMessage(`Veuillez renseigner tous les champs avant de valider`)
+            console.log(datas)
             context.showResultError(true)
           }
         }
       }).catch(() => {
         context.showLoader(false)
-        context.changeResultErrorMessage('Une erreur est survenue')
+        context.changeResultErrorMessage('Veuillez renseigner tous les champs')
         context.showResultError(true)
       }).finally(() => {
-        setOpen(false)
-        reload()
+
       })
     }).catch(err => {
       context.showLoader(false)
@@ -229,9 +232,7 @@ const AddPoliticDialog = ({ reload }) => {
                 </div>
               )
           )}
-        <Button onClick={addToConditions} variant="contained" sx={{ fontSize: 25 }}>
-          +
-        </Button>
+        <CustomizedButton text="+" onClick={addToConditions} />
         <></>
       </Stack>
     </>
