@@ -16,7 +16,6 @@ import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-geosearch/assets/css/leaflet.css';
 
-
 const MapDialog = () => {
     const DefaultIcon = L.icon({
         iconUrl: icon,

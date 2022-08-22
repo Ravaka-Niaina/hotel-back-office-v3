@@ -211,24 +211,22 @@ const ModifyPoliticDialog = ({ reload, politic: politicToModify }) => {
             (data, key) =>
               data && (
                 <div key={key}>
-                  <Stack direction="row" spacing={2}>
+                  <Stack direction="row" spacing={2} alignItems="center">
                     {politic?.type && <CustomizedInput type="number" name="date" value={conditions[key]?.date} onChange={(e) => handleChangeCondition(key, e)} label={formatLabel(politic?.type)} />}
                     <CustomizedInput type="number" name="pourcentage" value={conditions[key]?.pourcentage} onChange={(e) => handleChangeCondition(key, e)} label={'Pourcentage'} />
-                    <Button
+                    <CustomizedIconButton
                       // variant="contained"
                       onClick={() => {
                         deleteFromConditions(key);
                       }}
                     >
-                      <Iconify icon="eva:trash-2-fill" width={20} height={20} color="red" />
-                    </Button>
+                      <Iconify icon="eva:trash-2-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
+                    </CustomizedIconButton>
                   </Stack>
                 </div>
               )
           )}
-        <Button onClick={addToConditions} variant="contained" sx={{ fontSize: 25 }}>
-          +
-        </Button>
+        <CustomizedButton text="+" onClick={addToConditions} />
         <></>
       </Stack>
     </>
