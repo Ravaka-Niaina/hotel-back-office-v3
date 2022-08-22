@@ -10,7 +10,6 @@ const StyledPaperOutside=styled(Paper)({
 });
 
 const CustomizedPaperOutside = (props) => {
-    console.log(props);
     return (
         <StyledPaperOutside {...props}> 
             {props.children}
