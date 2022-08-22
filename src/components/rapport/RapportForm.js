@@ -147,7 +147,7 @@ const RapportForm = ({ setStateDataSalesReport }) => {
                 <MenuItem value={30}>2020</MenuItem>
               </CustomizedSelect>
             </div>
-            <CustomizedButton handleClick={getSalesReport} text="Obtenir_rapport" sx={{ width: 0.5 }} />
+            <CustomizedButton onClick={getSalesReport} text="Obtenir_rapport" sx={{ width: 0.5 }} />
           </Stack>
         </CustomizedPaperOutside>
       </Stack>

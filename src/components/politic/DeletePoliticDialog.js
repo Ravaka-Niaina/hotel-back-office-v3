@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
-
 // material
 import {
   Dialog,
@@ -11,15 +10,16 @@ import {
   Button,
 } from '@mui/material';
 
-
+import { deletePolitic } from '../../services/Politic';
 import { ThemeContext } from '../context/Wrapper';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
-import Iconify from '../Iconify'; 
+import Iconify from '../Iconify';
 
-const DeletePoliticDialog = ({ reload }) => {
+const DeletePoliticDialog = ({ reload, politic }) => {
   const [open, setOpen] = useState(false);
   const context = useContext(ThemeContext);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -30,11 +30,30 @@ const DeletePoliticDialog = ({ reload }) => {
 
   const formatPayloadToSend = () => {
     const payload = {
+      id: politic?._id,
+      nom: politic?.nom
     };
     return payload;
   };
 
-  const deleteAccessRight = async () => {
+  const handleDeletePolitic = () => {
+    context.showLoader(true)
+    const payloadToSend = formatPayloadToSend();
+    deletePolitic(payloadToSend).then((datas) => {
+      const { status } = datas.data
+      if (status === 200) {
+        context.changeResultSuccessMessage(`Suppression de la politique ${payloadToSend?.nom} avec succès.`)
+        context.showResultSuccess(true)
+      } else {
+        context.changeResultSuccessMessage(`Erreur lors de la suppression de la politque ${payloadToSend?.nom}`);
+        context.showResultError(true)
+      }
+    }).catch(err => {
+      context.changeResultErrorMessage(err?.message)
+      context.showResultError(true)
+    }).finally(() => {
+      reload()
+    })
     // setDisabledDeleteButton(true);
     // deleteOnePromotion(promotionId, type)
     //   .then(() => {
@@ -50,17 +69,17 @@ const DeletePoliticDialog = ({ reload }) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle sx={{ backgroundColor: '#D6E3F3', color:'red' }} id="alert-dialog-title">
+        <DialogTitle sx={{ backgroundColor: '#D6E3F3', color: 'red' }} id="alert-dialog-title">
           {'Confirmation de suppression'}
         </DialogTitle>
         <DialogContent sx={{ backgroundColor: '#D6E3F3' }}>
           <DialogContentText id="alert-dialog-description">
-            Voulez vous vraiment supprimer cet enregistrement ?
+            Souhaitez-vous vraiment supprimer la politique {politic?.nom} ?
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#D6E3F3' }}>
           <Button onClick={handleClose}>Annuler</Button>
-          <CustomizedButton handleClick={deleteAccessRight} text={'Supprimer'} />
+          <CustomizedButton onClick={handleDeletePolitic} text={'Supprimer'} />
         </DialogActions>
       </Dialog>
     </>
@@ -68,6 +87,6 @@ const DeletePoliticDialog = ({ reload }) => {
 };
 DeletePoliticDialog.propTypes = {
   reload: PropTypes.any,
-  accessRightId: PropTypes.any,
+  politic: PropTypes.any,
 };
 export default DeletePoliticDialog;
