@@ -29,6 +29,7 @@ const Politic = () => {
   const orderBy = 'name';
   const filterName = '';
   const getAllPolitics = () => {
+    context.showLoader(true)
     const payload = {
       tableName: 'politiqueAnnulation',
       valuesToSearch: [],
@@ -50,7 +51,11 @@ const Politic = () => {
         context.changeResultErrorMessage(err.message);
         context.showResultError(true);
       }
-    });
+    }).catch(() => {
+
+    }).finally(() => {
+      context.showLoader(false)
+    })
   };
   const reload = () => {
     getAllPolitics();
@@ -64,7 +69,7 @@ const Politic = () => {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <CustomizedTitle sx={{ color: '#787878' }} text="Politique" />
-          <AddPoliticDialog />
+          <AddPoliticDialog reload={reload} />
         </Stack>
 
         <CustomizedCard sx={{ background: '#E3EDF7', p: 5 }}>
@@ -107,7 +112,7 @@ const Politic = () => {
                           )}
                         </TableCellStyled>
                         <TableCellStyled align="right">
-                          <PoliticMoreMenu reload={reload} ratePlanId={'_id'} isActif={'isActif'} />
+                          <PoliticMoreMenu reload={reload} politic={row} ratePlanId={'_id'} isActif={'isActif'} />
                         </TableCellStyled>
                       </TableRow>
                     );

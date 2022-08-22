@@ -1,40 +1,16 @@
 // scroll bar
-import 'simplebar/src/simplebar.css';
-
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
 
-//
+import App from './App'
 import * as serviceWorker from './serviceWorker';
 import reportWebVitals from './reportWebVitals';
 
-// components
-import Wrapper from './components/context/Wrapper';
-// routes
-import ThemeProvider from './theme';
-// components
-import ScrollToTop from './utils/ScrollToTop';
-import { BaseOptionChartStyle } from './components/chart/BaseOptionChartStyle';
-import Router from './config/routes/routes';
-// css
-import './assets/css/fonts.css'
 // ----------------------------------------------------------------------
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-  <Wrapper>
-    <HelmetProvider>
-      <BrowserRouter>
-        <ThemeProvider>
-          <ScrollToTop />
-          <BaseOptionChartStyle />
-          <Router />
-        </ThemeProvider>
-      </BrowserRouter>
-    </HelmetProvider>
-  </Wrapper>
+  <App />
 );
 
 // If you want to enable client cache, register instead.
