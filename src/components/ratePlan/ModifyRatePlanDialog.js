@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useState, useContext } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import {
   Dialog,
   DialogActions,
@@ -599,7 +600,7 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId }) => {
           <Button onClick={handleClose} sx={{ fontSize: 12 }}>
             Annuler
           </Button>
-          <CustomizedButton text="Enregistrer modification" onClick={modifyRatePlan} />
+          <CustomizedButton text="Enregistrer modification" onClick={modifyRatePlan} component={RouterLink} to="#"/>
         </DialogActions>
       </Dialog>
     </>

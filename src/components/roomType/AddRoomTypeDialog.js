@@ -227,13 +227,13 @@ const AddRoomTypeDialog = () => {
           </Stack>
           <h4>Images de la chambre</h4>
           <Stack sx={{ p: 2 }} direction="row" spacing={2}>
-            <CustomizedButton text={`Choisir à partir de la gallerie`} />
-            <CustomizedButton text={`Uploader une image`} />
+            <CustomizedButton text={`Choisir à partir de la gallerie`} component={RouterLink} to="#"/>
+            <CustomizedButton text={`Uploader une image`} component={RouterLink} to="#"/>
           </Stack>
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px' }}>
           <Button onClick={handleClose}>Annuler</Button>
-          <CustomizedButton onClick={addRoomType} text={`Valider`} />
+          <CustomizedButton onClick={addRoomType} text={`Valider`} component={RouterLink} to="#" />
         </DialogActions>
       </Dialog>
     </>

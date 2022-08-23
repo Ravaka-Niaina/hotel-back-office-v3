@@ -514,7 +514,7 @@ const AddRatePlanDialog = ({ reload }) => {
           <Button onClick={handleClose} sx={{ fontSize: 12 }}>
             Annuler
           </Button>
-          <CustomizedButton text="Enregistrer" onClick={addNewRatePlan} />
+          <CustomizedButton text="Enregistrer" onClick={addNewRatePlan} component={RouterLink} to="#"/>
         </DialogActions>
       </Dialog>
     </>
