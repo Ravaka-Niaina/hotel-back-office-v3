@@ -1,4 +1,5 @@
 import React,{useEffect, useState , useRef , useMemo} from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { Dialog, DialogContent, Button, Stack } from '@mui/material';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import FindReplaceIcon from '@mui/icons-material/FindReplace';
@@ -130,23 +131,23 @@ const MapDialog = (props) => {
     };
     return (
         <>
-            <CustomizedButton onClick={handleClickOpen} text='Coordonnées gps' elevation={8} sx={{ width: '250px' }} variant='contained' />
+            <CustomizedButton component={RouterLink} to="#" onClick={handleClickOpen} text='Coordonnées gps' elevation={8} sx={{ width: '250px' }} variant='contained' />
             <Dialog open={open} onClose={handleClose} maxWidth={'xl'} sx={{ overflowY: "none !important", }}>
                 <DialogContent sx={{ backgroundColor: '#E8F0F8', pr: 2, pl: 2 }}>
                     {
                         mapReference && 
                         <Stack direction="row" justifyContent="space-between">
                             <Stack sx={{p:1}} direction='row' spacing={2} >
-                                <CustomizedIconButton onClick={handleClickLocate}>
-                                    <MyLocationIcon />
+                                <CustomizedIconButton  onClick={handleClickLocate}>
+                                        <MyLocationIcon sx={{width:20,height:20}}/>
                                 </CustomizedIconButton>
                                 
                                 <CustomizedIconButton onClick={handleShowSearchBar}>
-                                    <FindReplaceIcon />
+                                        <FindReplaceIcon sx={{ width: 20, height: 20 }}/>
                                 </CustomizedIconButton>
 
                                 <CustomizedIconButton onClick={handleChangeMode}>
-                                        {!navigateMode ? <EditLocationAltIcon  /> : <PanToolIcon  />}
+                                        {!navigateMode ? <EditLocationAltIcon sx={{ width: 20, height: 20 }} /> : <PanToolIcon sx={{ width: 20, height: 20 }} />}
                                 </CustomizedIconButton>
                             </Stack>
                             <Stack sx={{p:1}} direction='row' spacing={2} alignItems='center'>
@@ -154,10 +155,10 @@ const MapDialog = (props) => {
                                 <h5>Lng:  {position ? position.lng:''}</h5>
                                 <Stack direction='row' spacing={1}>
                                     <CustomizedIconButton onClick={handleClickValidate}>
-                                            <CheckCircleIcon />
+                                            <CheckCircleIcon sx={{ width: 20, height: 20 }}/>
                                     </CustomizedIconButton>
                                     <CustomizedIconButton onClick={handleClickCancel}>
-                                            <CancelIcon />
+                                            <CancelIcon sx={{ width: 20, height: 20 }}/>
                                     </CustomizedIconButton>
                                 </Stack>
                                 

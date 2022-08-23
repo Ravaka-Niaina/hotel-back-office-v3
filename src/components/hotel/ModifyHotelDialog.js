@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useContext} from 'react';
 
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -10,8 +10,14 @@ import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedRadio from '../CustomizedComponents/CustomizedRadio';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
+import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
+import Iconify from '../Iconify';
+import {ThemeContext} from '../context/Wrapper';
+import { updateHotel } from '../../services/Hotel';
 
-const ModifyHotelDialog = () => {
+const ModifyHotelDialog = (props) => {
+    const { row , reload} = props;
+    const context = useContext(ThemeContext);
     const [open, setOpen] = useState(false);
     const [pictureList, setPictureList] = useState(new Array(0));
     const [errors, setErrors] = useState(false);
@@ -83,6 +89,7 @@ const ModifyHotelDialog = () => {
 
     const formatPayloadToSend = () => {
         const payload = {
+            "_id":  row._id,
             "name": hotel.name,
             "link": hotel.link,
             "phoneNum": hotel.phone_number,
@@ -95,9 +102,9 @@ const ModifyHotelDialog = () => {
             "minKidAge": Number.parseFloat(hotel.min_kid_age, 10),
             "maxKidAge": Number.parseFloat(hotel.max_kid_age, 10),
             "vignette": Number.parseFloat(hotel.tourist_sticker, 10),
+            "photo": pictureList.map((e) => e.img),
             "isTVAIncluded": hotel.is_tva_included === 'true',
             "TVA": hotel.is_tva_included === 'true' ? hotel.tva : 0,
-            "photo": pictureList.map((e) => e.img),
             "location": { "lat": Number.parseFloat(hotel.location_lat, 10), "lng": Number.parseFloat(hotel.location_lng, 10) },
         };
         return payload;
@@ -132,19 +139,94 @@ const ModifyHotelDialog = () => {
         }
 
     }
+    const cleanHotelState = () => {
+        setHotel({
+            "name": '',
+            "link": '',
+            "phone_number": '',
+            "email_address": '',
+            "check_in": '',
+            "check_out": '',
+            "address": '',
+            "min_baby_age": '',
+            "max_baby_age": '',
+            "min_kid_age": '',
+            "max_kid_age": '',
+            "tourist_sticker": '',
+            "is_tva_included": 'true',
+            "tva": '',
+            "location_lat": '',
+            "location_lng": '',
+        })
+        setErrors(false);
+        setPictureList(new Array(0));
+    };
+    const modifyHotel = () => {
+        validate(hotel);
+        if (formIsValid(hotel)) {
+            console.log('updating...');
+            context.showLoader(true);
+            updateHotel(formatPayloadToSend())
+                .then((result) => {
+                    if (result.data.status === 200) {
+                        setOpen(false);
+                        cleanHotelState();
+                        reload();
+                        context.changeResultSuccessMessage('Enregistrement effectué');
+                        context.showResultSuccess(true);
+                    }
+                    else if (result.data.errors) {
+                        const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+                        const indication = result.data.errors[item];
+                        const message = `${item}: ${indication}`;
+                        context.showLoader(false);
+                        context.changeResultErrorMessage(message);
+                        context.showResultError(true);
+                    }
+                })
+                .catch(() => {
+                    context.showLoader(false);
+                    context.changeResultErrorMessage('Enregistrement non effectué');
+                    context.showResultError(true);
+                })
 
+        }
+    };
     const handleClickOpen = () => {
         setOpen(true);
+        
+        console.log(row);
+        setHotel({
+            "name": row.name,
+            "link": row.link,
+            "phone_number": row.phoneNum,
+            "email_address": row.emailAddress,
+            "check_in": row.checkIn,
+            "check_out": row.checkOut,
+            "address": row.address,
+            "min_baby_age": row.minBabyAge,
+            "max_baby_age": row.maxBabyAge,
+            "min_kid_age": row.minKidAge,
+            "max_kid_age": row.maxKidAge,
+            "tourist_sticker": row.vignette,
+            "is_tva_included": row.isTVAIncluded?'true':'false',
+            "tva": row.TVA,
+            "location_lat": row.location.lat,
+            "location_lng": row.location.lng,
+        });
     };
 
     const handleClose = () => {
         setOpen(false);
+        cleanHotelState();
+        reload();
     };
 
     return (
         <>
-            <CustomizedButton onClick={handleClickOpen} text='Ajouter' variant="contained" component={RouterLink}
-                to="#" />
+            <CustomizedIconButton variant="contained" onClick={handleClickOpen}>
+                <Iconify icon="eva:edit-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
+            </CustomizedIconButton>
             <Dialog open={open} onClose={handleClose} maxWidth={'md'} sx={{ overflowY: "inherit !important", }}>
                 <CustomizedDialogTitle text="Modifier hotel" />
                 <DialogContent sx={{ backgroundColor: '#E8F0F8', pr: 2, pl: 2, overflowX: 'inherit !important' }}>
@@ -156,6 +238,7 @@ const ModifyHotelDialog = () => {
                     >
                         <Stack direction='row' spacing={2} alignItems='flex-start'>
                             <CustomizedInput
+                                defaultValue={row.name}
                                 placeholder="nom"
                                 sx={{ width: 1 }}
                                 id="nom"
@@ -171,6 +254,7 @@ const ModifyHotelDialog = () => {
                                 })}
                             />
                             <CustomizedInput
+                                defaultValue={row.link}
                                 placeholder="ex: www.nom-de-domaine.com"
                                 sx={{ width: 1 }}
                                 id="Lien"
@@ -188,6 +272,7 @@ const ModifyHotelDialog = () => {
                         </Stack>
                         <Stack direction='row' spacing={2} alignItems='flex-start'>
                             <CustomizedInput
+                                defaultValue={row.phoneNum}
                                 placeholder="telephone"
                                 sx={{ width: 1 }}
                                 id="Telephone"
@@ -203,6 +288,7 @@ const ModifyHotelDialog = () => {
                                 })}
                             />
                             <CustomizedInput
+                                defaultValue={row.emailAddress}
                                 placeholder="ex: xxx@yyyy.com"
                                 sx={{ width: 1 }}
                                 id="Email"
@@ -220,6 +306,7 @@ const ModifyHotelDialog = () => {
                         </Stack>
                         <Stack direction='row' spacing={2} alignItems='flex-start'>
                             <CustomizedInput
+                                defaultValue={row.address}
                                 placeholder='ex:  Alarobia Antananarivo Antananarivo, 101'
                                 sx={{ width: 1 }}
                                 id="Adresse"
@@ -235,6 +322,7 @@ const ModifyHotelDialog = () => {
                                 })}
                             />
                             <CustomizedInput
+                                defaultValue={row.vignette}
                                 placeholder="vignette touristique"
                                 sx={{ width: 1 }}
                                 id="Vignette touristique"
@@ -270,6 +358,7 @@ const ModifyHotelDialog = () => {
                         <h4>Horaire</h4>
                         <Stack direction='row' spacing={2} alignItems='flex-start'>
                             <CustomizedInput
+                                defaultValue={row.checkIn}
                                 sx={{ width: 1 }}
                                 label="checkIn"
                                 name='check_in'
@@ -283,6 +372,7 @@ const ModifyHotelDialog = () => {
                                 })}
                             />
                             <CustomizedInput
+                                defaultValue={row.checkOut}
                                 sx={{ width: 1 }}
                                 label="checkOut"
                                 name='check_out'
@@ -317,6 +407,7 @@ const ModifyHotelDialog = () => {
                             {
                                 hotel.is_tva_included === 'true' &&
                                 <CustomizedInput
+                                    defaultValue={row.TVA}
                                     placeholder='tva'
                                     sx={{ width: 1 }}
                                     label="Taxes communale"
@@ -338,6 +429,7 @@ const ModifyHotelDialog = () => {
                             <h5>Bebe:</h5>
                             <Stack direction='row' spacing={2} alignItems='flex-start'>
                                 <CustomizedInput
+                                    defaultValue={row.minBabyAge}
                                     placeholder='ex: 3 mois'
                                     sx={{ width: 1 }}
                                     label="A partir de"
@@ -352,6 +444,7 @@ const ModifyHotelDialog = () => {
                                     })}
                                 />
                                 <CustomizedInput
+                                    defaultValue={row.maxBabyAge}
                                     placeholder='ex: 2 ans'
                                     sx={{ width: 1 }}
                                     label="Jusqu'à"
@@ -371,6 +464,7 @@ const ModifyHotelDialog = () => {
                             <h5>Enfant:</h5>
                             <Stack direction='row' spacing={2} alignItems='flex-start'>
                                 <CustomizedInput
+                                    defaultValue={row.minKidAge}
                                     placeholder='ex: 4 ans'
                                     sx={{ width: 1 }}
                                     label="A partir de"
@@ -385,6 +479,7 @@ const ModifyHotelDialog = () => {
                                     })}
                                 />
                                 <CustomizedInput
+                                    defaultValue={row.maxKidAge}
                                     placeholder='ex: 11 ans'
                                     sx={{ width: 1 }}
                                     label="Jusqu'à"
@@ -438,11 +533,13 @@ const ModifyHotelDialog = () => {
                         </Stack>
                     </Stack>
                 </DialogContent>
-                <DialogActions sx={{ backgroundColor: '#E8F0F8' }}>
-                    <Button onClick={handleClose} sx={{ fontSize: 12, height: '100%' }}>
-                        Annuler
-                    </Button>
-                    <CustomizedButton text="Enregistrer" component={RouterLink} to='#' />
+                <DialogActions sx={{ backgroundColor: '#E8F0F8',height:'150px' }}>
+                    <Stack direction='row' spacing={2} alignItems='flex-end' >
+                        <Button onClick={handleClose} sx={{ fontSize: 12, height: '100%' }}>
+                            Annuler
+                        </Button>
+                        <CustomizedButton text="Enregistrer" component={RouterLink} onClick={modifyHotel} to='#' />
+                    </Stack>                
                 </DialogActions>
             </Dialog>
         </>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useContext} from 'react';
 
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -10,8 +10,12 @@ import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedRadio from '../CustomizedComponents/CustomizedRadio';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
+import {ThemeContext} from '../context/Wrapper';
+import  {createHotel} from '../../services/Hotel';
 
-const AddHotelDialog = () => {
+const AddHotelDialog = (props) => {
+  const { reload } = props;
+  const context = useContext(ThemeContext);
   const [open, setOpen] = useState(false);
   const [pictureList,setPictureList] = useState(new Array(0));
   const [errors,setErrors] = useState(false);
@@ -79,7 +83,28 @@ const AddHotelDialog = () => {
     const isValid =  Object.values(errors).every((x) => x === '');
     return isValid;
   };
-
+  const cleanHotelState = () => {
+    setHotel({
+      "name": '',
+      "link": '',
+      "phone_number": '',
+      "email_address": '',
+      "check_in": '',
+      "check_out": '',
+      "address": '',
+      "min_baby_age": '',
+      "max_baby_age": '',
+      "min_kid_age": '',
+      "max_kid_age": '',
+      "tourist_sticker": '',
+      "is_tva_included": 'true',
+      "tva": '',
+      "location_lat": '',
+      "location_lng": '',
+    })
+    setErrors(false);
+    setPictureList(new Array(0));
+  };
   const formatPayloadToSend = () => {
     const payload = {
       "name": hotel.name,
@@ -137,6 +162,33 @@ const AddHotelDialog = () => {
     if(formIsValid(hotel))
     {
       console.log('adding...');
+      const idToken = JSON.parse(localStorage.getItem('id_token'));
+      context.showLoader(true);
+      createHotel(formatPayloadToSend(),idToken)
+        .then((result)=>{
+          if(result.data.status === 200)
+          {
+            setOpen(false);
+            cleanHotelState();
+            reload();
+            context.changeResultSuccessMessage('Enregistrement effectué');
+            context.showResultSuccess(true);
+          }
+          else if (result.data.errors){
+            const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+            const indication = result.data.errors[item];
+            const message = `${item}: ${indication}`;
+            context.showLoader(false);
+            context.changeResultErrorMessage(message);
+            context.showResultError(true);
+          }
+        })
+        .catch(()=>{
+          context.showLoader(false);
+          context.changeResultErrorMessage('Enregistrement non effectué');
+          context.showResultError(true);
+        })
+
     }
     
   }
@@ -445,7 +497,7 @@ const AddHotelDialog = () => {
             </Stack>
           </Stack>
         </DialogContent>
-        <DialogActions sx={{ backgroundColor: '#E8F0F8' }}>
+        <DialogActions sx={{ backgroundColor: '#E8F0F8' ,height: '150px'}}>
           <Button onClick={handleClose} sx={{ fontSize: 12, height:'100%'}}>
             Annuler
           </Button>
