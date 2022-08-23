@@ -83,7 +83,7 @@ const DeleteAccessRightDialog = ({ reload, accessRightId }) => {
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#D6E3F3' }}>
           <Button onClick={handleClose}>Annuler</Button>
-          <CustomizedButton handleClick={deleteAccessRight} text={'Supprimer'} />
+          <CustomizedButton onClick={deleteAccessRight} text={'Supprimer'} />
         </DialogActions>
       </Dialog>
     </>

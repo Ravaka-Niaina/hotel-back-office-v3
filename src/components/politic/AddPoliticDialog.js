@@ -24,6 +24,19 @@ import { ThemeContext } from '../context/Wrapper';
 
 const AddPoliticDialog = ({ reload }) => {
   const context = useContext(ThemeContext);
+  // function to reinitialize politic
+  const reinitializePolitic = () => {
+    setPolitic({
+      frenchName: '',
+      englishName: '',
+      englishDescription: '',
+      frenchDescription: '',
+      type: 'jour',
+      refundable: false,
+      datePrice: [],
+      state: 1,
+    })
+  }
   // Open or close the dialog
   const [open, setOpen] = useState(false);
   // State of the politic to create (in english)
@@ -37,6 +50,48 @@ const AddPoliticDialog = ({ reload }) => {
     datePrice: [],
     state: 1,
   });
+
+  // State of the errors
+  const [errors, setErrors] = useState(false);
+
+  // Function to validate input fields
+  const validate = (fieldValues) => {
+    const temp = { ...errors };
+    // For example : temp.nom is handling the string that contains the errors for the field nom
+    // There is no error if temp.field is ''
+    if ('frenchName' in fieldValues) {
+      temp.frenchName = fieldValues.frenchName ? '' : 'Ce champ est requis.';
+    }
+    if ('englishName' in fieldValues) {
+      temp.englishName = fieldValues.englishName ? '' : 'Ce champ est requis.';
+    }
+    if ('englishDescription' in fieldValues) {
+      temp.englishDescription = fieldValues.englishDescription ? '' : 'Ce champ est requis.';
+    }
+    if ('frenchDescription' in fieldValues) {
+      temp.frenchDescription = fieldValues.frenchDescription ? '' : 'Ce champ est requis.';
+    }
+    if ('type' in fieldValues) {
+      temp.type = fieldValues.type ? '' : 'Ce champ est requis.';
+    }
+    setErrors({
+      ...temp,
+    });
+  };
+  // Function returning true if there is no error , otherwise it'll return false
+  const formIsValid = (newPolitic) => {
+    const testEveryField = () => {
+      let test = false;
+      if (newPolitic.frenchName && newPolitic.englishName && newPolitic.englishDescription && newPolitic.frenchDescription && newPolitic.type && newPolitic.refundable !== null && newPolitic.refundable !== undefined && newPolitic.datePrice) {
+        test = true
+      } else {
+        test = false;
+      }
+      return test;
+    }
+    const isValid = testEveryField() && Object.values(errors).every((x) => x === '');
+    return isValid;
+  };
 
   // Function to format the 'datePrice' payload to give to the 'conditions' tab
   const formatToDatePricePayload = (obj) => {
@@ -163,43 +218,51 @@ const AddPoliticDialog = ({ reload }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setPolitic((politic) => ({ ...politic, [name]: value }));
+    validate({ [name]: value })
   };
 
   // UseEffect to console politic state each time it changes
 
   // Fonction pour enregistrer un politique
   const addPolitic = () => {
-    context.showLoader(true)
-    formatPayloadToSend().then((politicToAdd) => {
-      console.log(politicToAdd)
-      createPolitic(politicToAdd).then((datas) => {
-        const status = datas?.data?.status
-        if (status) {
-          if (status === 200) {
-            context.changeResultSuccessMessage(`Politique ajoutée avec succès`)
-            context.showResultSuccess(true)
-            setOpen(false)
-            reload()
-          } else {
-            context.showLoader(false)
-            context.changeResultErrorMessage(`Veuillez renseigner tous les champs avant de valider`)
-            console.log(datas)
-            context.showResultError(true)
+    validate(politic)
+    if (formIsValid(politic)) {
+      context.showLoader(true)
+      formatPayloadToSend().then((politicToAdd) => {
+        createPolitic(politicToAdd).then((datas) => {
+          const status = datas?.data?.status
+          if (status) {
+            if (status === 200) {
+              context.changeResultSuccessMessage(`Politique ajoutée avec succès`)
+              context.showResultSuccess(true)
+              reinitializePolitic()
+              setOpen(false)
+              reload()
+            } else {
+              context.showLoader(false)
+              context.changeResultErrorMessage(`Veuillez renseigner tous les champs avant de valider`)
+              context.showResultError(true)
+            }
           }
-        }
-      }).catch(() => {
+        }).catch(() => {
+          context.showLoader(false)
+          context.changeResultErrorMessage('Veuillez renseigner tous les champs')
+          context.showResultError(true)
+        }).finally(() => {
+
+        })
+      }).catch(err => {
         context.showLoader(false)
-        context.changeResultErrorMessage('Veuillez renseigner tous les champs')
+        context.changeResultErrorMessage(err.message)
         context.showResultError(true)
       }).finally(() => {
-
       })
-    }).catch(err => {
+    }
+    else {
       context.showLoader(false)
-      context.changeResultErrorMessage(err.message)
+      context.changeResultErrorMessage('Veuillez renseigner tous les champs')
       context.showResultError(true)
-    }).finally(() => {
-    })
+    }
   }
   // Composant à afficher remboursable est coché
   const PoliticConditionsComponent = (
@@ -256,12 +319,32 @@ const AddPoliticDialog = ({ reload }) => {
             Informations sur la politique d'annulation
           </Typography>
           <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-            <CustomizedInput name="frenchName" value={politic?.frenchName} onChange={handleChange} label={'Nom en français'} />
-            <CustomizedInput name="englishName" value={politic?.englishName} onChange={handleChange} label={'Nom en anglais'} />
+            <CustomizedInput name="frenchName" value={politic?.frenchName} onChange={handleChange} label={'Nom en français'}
+              {...(errors.frenchName && {
+                error: true,
+                helpertext: errors.frenchName,
+              })}
+            />
+            <CustomizedInput name="englishName" value={politic?.englishName} onChange={handleChange} label={'Nom en anglais'}
+              {...(errors.englishName && {
+                error: true,
+                helpertext: errors.englishName,
+              })}
+            />
           </Stack>
           <Stack sx={{ mb: 2 }}>
-            <CustomizedInput name="frenchDescription" value={politic?.frenchDescription} onChange={handleChange} label={'Description'} multiline />
-            <CustomizedInput name="englishDescription" value={politic?.englishDescription} onChange={handleChange} label={'Description en anglais'} multiline />
+            <CustomizedInput name="frenchDescription" value={politic?.frenchDescription} onChange={handleChange} label={'Description'} multiline
+              {...(errors.frenchDescription && {
+                error: true,
+                helpertext: errors.frenchDescription,
+              })}
+            />
+            <CustomizedInput name="englishDescription" value={politic?.englishDescription} onChange={handleChange} label={'Description en anglais'} multiline
+              {...(errors.englishDescription && {
+                error: true,
+                helpertext: errors.englishDescription,
+              })}
+            />
           </Stack>
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#E8F0F8', borderTop: "1px solid grey" }}>
