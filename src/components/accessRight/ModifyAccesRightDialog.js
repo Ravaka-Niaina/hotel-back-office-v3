@@ -109,7 +109,7 @@ const ModifyAccessRightDialog = ({ reload, accessRightProp }) => {
           <Button onClick={handleClose} sx={{ fontSize: 12 }}>
             Annuler
           </Button>
-          <CustomizedButton handleClick={modifyAccessRight} text={`Valider`} />
+          <CustomizedButton onClick={modifyAccessRight} text={`Valider`} />
         </DialogActions>
       </Dialog>
     </>

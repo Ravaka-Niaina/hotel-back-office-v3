@@ -44,13 +44,15 @@ const DeletePoliticDialog = ({ reload, politic }) => {
       if (status === 200) {
         context.changeResultSuccessMessage(`Suppression de la politique ${payloadToSend?.nom} avec succès.`)
         context.showResultSuccess(true)
+        setOpen(false)
       } else {
-        context.changeResultSuccessMessage(`Erreur lors de la suppression de la politque ${payloadToSend?.nom}`);
+        context.changeResultSuccessMessage(`Erreur lors de la suppression de la politique ${payloadToSend?.nom}`);
         context.showResultError(true)
       }
     }).catch(err => {
       context.changeResultErrorMessage(err?.message)
       context.showResultError(true)
+      reload()
     }).finally(() => {
       reload()
     })

@@ -30,6 +30,30 @@ const AddAccessRightDialog = (props) => {
     setOpen(false);
   };
 
+  // Function to validate input fields
+  const validate = (fieldValues) => {
+    const temp = { ...errors };
+
+    // For example : temp.nom is handling the string that contains the errors for the field nom
+    // There is no error if temp.field is ''
+    if ('name' in fieldValues) {
+      temp.name = fieldValues.name ? '' : 'Ce champ est requis.';
+    }
+    if ('id' in fieldValues) {
+      temp.id = fieldValues.id ? '' : 'Ce champ est requis.';
+    }
+    setErrors({
+      ...temp,
+    });
+  };
+
+  // Function returning true if there is no error , otherwise it'll return false
+  const formIsValid = (newAccessRight) => {
+    const isValid = newAccessRight.name && Object.values(errors).every((x) => x === '');
+    return isValid;
+  };
+
+  // Function that handles changes of inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
     setAccessRight((accessRight) => ({ ...accessRight, [name]: value }));
@@ -40,22 +64,7 @@ const AddAccessRightDialog = (props) => {
     });
   };
 
-  const validate = (fieldValues) => {
-    const temp = { ...errors };
-
-    if ('name' in fieldValues) temp.name = fieldValues.name ? '' : 'Ce champ est requis.';
-    if ('id' in fieldValues) temp.id = fieldValues.id ? '' : 'Ce champ est requis.';
-
-    setErrors({
-      ...temp,
-    });
-  };
-
-  const formIsValid = (newAccessRight) => {
-    const isValid = newAccessRight.name && Object.values(errors).every((x) => x === '');
-    return isValid;
-  };
-
+  // Function that format the payload to send to the api
   const formatPayloadToSend = () => {
     const payload = {
       id: accessRight.id,
@@ -64,6 +73,7 @@ const AddAccessRightDialog = (props) => {
     return payload;
   };
 
+  // Function that handles the submit button
   const addAccessRight = () => {
     validate(accessRight);
     if (formIsValid(accessRight)) {
@@ -119,7 +129,7 @@ const AddAccessRightDialog = (props) => {
               })}
             />
             <CustomizedInput
-              sx={{width:1}}
+              sx={{ width: 1 }}
               placeholder="Nom"
               onChange={handleChange}
               error={false}
@@ -141,7 +151,7 @@ const AddAccessRightDialog = (props) => {
           <Button onClick={handleClose} sx={{ fontSize: 12 }}>
             Annuler
           </Button>
-          <CustomizedButton handleClick={addAccessRight} text="Valider" />
+          <CustomizedButton onClick={addAccessRight} text="Valider" />
         </DialogActions>
       </Dialog>
     </>
