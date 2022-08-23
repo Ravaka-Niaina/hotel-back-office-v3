@@ -852,7 +852,7 @@ const AddPromotionDialog = () => {
             })}
           /> */}
         </DialogContent>
-        <DialogActions sx={{ backgroundColor: '#E8F0F8' }}>
+        <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px' }}>
           <Button onClick={handleClose}>Annuler</Button>
           <CustomizedButton text="Enregistrer" onClick={addPromotion} />
         </DialogActions>

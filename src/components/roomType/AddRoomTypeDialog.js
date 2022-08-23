@@ -231,7 +231,7 @@ const AddRoomTypeDialog = () => {
             <CustomizedButton text={`Uploader une image`} />
           </Stack>
         </DialogContent>
-        <DialogActions sx={{ backgroundColor: '#E8F0F8' }}>
+        <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px' }}>
           <Button onClick={handleClose}>Annuler</Button>
           <CustomizedButton onClick={addRoomType} text={`Valider`} />
         </DialogActions>
