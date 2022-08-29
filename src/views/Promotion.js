@@ -59,9 +59,10 @@ const Promotion = () => {
     try {
       getPromotionList(payload, user)
         .then((datas) => {
-          const dataStatus = datas.status;
+          const dataStatus = datas.data.status;
           const dataList = datas.data.list;
           if (dataStatus === 200) {
+            console.log();
             setPromotionList(dataList);
           } else {
             context.changeResultErrorMessage(`Une erreur est survenue lors du chargement de la liste de promotions.`);
