@@ -1,4 +1,4 @@
-const hosturl = 'http://adr-hotel-back.herokuapp.com';
+const hosturl = 'https://adr-hotel-back.herokuapp.com';
 
 const config = {
     host: hosturl,
