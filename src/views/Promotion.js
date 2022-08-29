@@ -46,6 +46,9 @@ const Promotion = () => {
     reload()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(()=>{
+    console.log(promotionList)
+  },[promotionList])
   const getAllPromotion = () => {
     context.showLoader(true)
     const payload = {
@@ -143,7 +146,7 @@ const Promotion = () => {
 
   const filteredUsers = promotionList;
 
-  const isUserNotFound = filteredUsers.length === 0;
+  // const isUserNotFound = filteredUsers?.length === 0;
 
 
   return (
@@ -164,13 +167,13 @@ const Promotion = () => {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={promotionList.length}
+                  // rowCount={promotionList.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {promotionList.map((row) => {
+                  {promotionList && promotionList.map((row) => {
                     const { _id, nom, sejourMin, planTarifaire, typeChambre, dateDebutS, dateFinS } = row;
                     const isItemSelected = selected.indexOf(nom) !== -1;
 
@@ -210,7 +213,7 @@ const Promotion = () => {
                   )}
                 </TableBody>
 
-                {isUserNotFound && (
+                {/* {(0)
                   <TableBody>
                     <TableRow>
                       <TableCellStyled align="center" colSpan={6} sx={{ py: 3 }}>
@@ -218,7 +221,7 @@ const Promotion = () => {
                       </TableCellStyled>
                     </TableRow>
                   </TableBody>
-                )}
+                )} */}
               </Table>
             </TableContainer>
           </Scrollbar>

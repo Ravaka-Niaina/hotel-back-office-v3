@@ -50,7 +50,7 @@ export default function Router() {
         { path: '/', element: <Navigate to="/login" /> },
         { path: 'login', element: <Login /> },
         { path: 'verifycode', element: <VerifyCode /> },
-        { path: '404', element: <NotFound /> },
+        { path: '404', element: <Navigate to="/dashboard/app" /> },
         { path: '*', element: <Navigate to="/404" /> },
       ],
     },
