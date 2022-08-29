@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
+import {Link as RouterLink } from "react-router-dom";
 import { Dialog, DialogActions, DialogContent, Button, ListItemText } from '@mui/material';
 
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
@@ -87,7 +88,7 @@ const ModifyAccessRightDialog = ({ reload, accessRightProp }) => {
         <Iconify icon="eva:edit-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
       </CustomizedIconButton >
       <Dialog open={openModifyAccessRightDialog}  maxwidth={'xl'}>
-        <CustomizedDialogTitle text={`Modifier le droit d'accès "${accessRight.id}"`} />
+        <CustomizedDialogTitle text={`Modifier le droit d'accès `} />
         <DialogContent style={{ backgroundColor: '#E8F0F8', paddingTop: 15 }}>
           <CustomizedInput
             onChange={handleChange}
@@ -109,7 +110,7 @@ const ModifyAccessRightDialog = ({ reload, accessRightProp }) => {
           <Button onClick={handleClose} sx={{ fontSize: 12 }}>
             Annuler
           </Button>
-          <CustomizedButton onClick={modifyAccessRight} text={`Valider`} />
+          <CustomizedButton onClick={modifyAccessRight} text={`Valider`} component={RouterLink} to="#"/>
         </DialogActions>
       </Dialog>
     </>

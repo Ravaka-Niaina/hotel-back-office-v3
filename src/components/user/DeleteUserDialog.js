@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {Link as RouterLink} from "react-router-dom";
 // material
 import {
   Dialog,
@@ -44,7 +45,7 @@ const DeleteUserDialog = () => {
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#D6E3F3' }}>
           <Button onClick={handleClose}>Annuler</Button>
-          <CustomizedButton handleClick={deleteUser} text={'Supprimer'} />
+          <CustomizedButton handleClick={deleteUser} text={'Supprimer'} component={RouterLink} to="#"/>
         </DialogActions>
       </Dialog>
     </>

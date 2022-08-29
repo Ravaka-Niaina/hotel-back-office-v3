@@ -1,4 +1,5 @@
 import { useContext, useMemo, useState } from 'react';
+import {Link as RouterLink} from "react-router-dom";
 import PropTypes from 'prop-types'
 import { Typography, MenuItem, FormControlLabel, RadioGroup, Stack } from '@mui/material';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
@@ -147,7 +148,7 @@ const RapportForm = ({ setStateDataSalesReport }) => {
                 <MenuItem value={30}>2020</MenuItem>
               </CustomizedSelect>
             </div>
-            <CustomizedButton onClick={getSalesReport} text="Obtenir_rapport" sx={{ width: 0.5 }} />
+            <CustomizedButton onClick={getSalesReport} text="Obtenir_rapport" sx={{ width: 0.5 }} component={RouterLink} to="#" />
           </Stack>
         </CustomizedPaperOutside>
       </Stack>

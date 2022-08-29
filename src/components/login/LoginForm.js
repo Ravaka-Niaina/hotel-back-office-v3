@@ -1,7 +1,8 @@
 import { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 // form// @mui
 import { Link, Stack, IconButton, InputAdornment, Typography, styled } from '@mui/material';
+
 // components
 import Iconify from '../Iconify';
 
@@ -132,7 +133,7 @@ export default function LoginForm() {
         </Link>
       </Stack>
 
-      <CustomizedButton onClick={handleSubmit} fullWidth text={`Se connecter`}/>
+      <CustomizedButton onClick={handleSubmit} fullWidth text={`Se connecter`} component={RouterLink} to="#"/>
     </form>
   );
 }

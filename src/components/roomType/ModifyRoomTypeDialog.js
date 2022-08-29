@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
-
+import { Link as RouterLink} from "react-router-dom";
 // material
 import { Stack, Button, Dialog, DialogActions, DialogContent } from '@mui/material';
 
@@ -228,7 +228,7 @@ const ModifyRoomTypeDialog = ({ row }) => {
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px' }}>
           <Button onClick={handleClose}>Annuler</Button>
-          <CustomizedButton onClick={modifyPromotion} text={`Valider`} />
+          <CustomizedButton onClick={modifyPromotion} text={`Valider`} component={RouterLink} to="#"/>
         </DialogActions>
       </Dialog>
     </>

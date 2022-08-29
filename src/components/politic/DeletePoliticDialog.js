@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
+import {Link as RouterLink} from "react-router-dom";
 // material
 import {
   Dialog,
@@ -81,7 +82,7 @@ const DeletePoliticDialog = ({ reload, politic }) => {
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#D6E3F3' }}>
           <Button onClick={handleClose}>Annuler</Button>
-          <CustomizedButton onClick={handleDeletePolitic} text={'Supprimer'} />
+          <CustomizedButton onClick={handleDeletePolitic} text={'Supprimer'} component={RouterLink} to="#"/>
         </DialogActions>
       </Dialog>
     </>

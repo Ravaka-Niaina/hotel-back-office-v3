@@ -71,25 +71,12 @@ const navConfig = [
     icon: getIcon('bx:shield-quarter'),
   },
   {
-    title: 'produits',
-    path: '/dashboard/products',
-    icon: getIcon('eva:shopping-bag-fill'),
-  },
-  {
     title: 'login',
     path: '/login',
     icon: getIcon('eva:lock-fill'),
   },
-  {
-    title: 'inscription',
-    path: '/register',
-    icon: getIcon('eva:person-add-fill'),
-  },
-  {
-    title: 'Not found',
-    path: '/404',
-    icon: getIcon('eva:alert-triangle-fill'),
-  },
+
+
 ];
 
 export default navConfig;

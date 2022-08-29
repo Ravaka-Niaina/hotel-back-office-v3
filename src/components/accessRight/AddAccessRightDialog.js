@@ -108,7 +108,7 @@ const AddAccessRightDialog = (props) => {
         to="#"
       />
       <Dialog open={open} onClose={handleClose} maxWidth={'sm'}>
-        <CustomizedDialogTitle text="Ajouter un nouveau droit d'accès" />
+        <CustomizedDialogTitle text="Ajouter droit d'accès" />
         <DialogContent style={{ backgroundColor: '#E8F0F8', paddingTop: 15 }}>
           <Stack spacing={2}>
             <CustomizedInput
@@ -151,7 +151,7 @@ const AddAccessRightDialog = (props) => {
           <Button onClick={handleClose} sx={{ fontSize: 12 }}>
             Annuler
           </Button>
-          <CustomizedButton onClick={addAccessRight} text="Valider" />
+          <CustomizedButton onClick={addAccessRight} text="Valider" component={RouterLink} to="#"/>
         </DialogActions>
       </Dialog>
     </>

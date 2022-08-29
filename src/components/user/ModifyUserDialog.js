@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
+import {Link as RouterLink} from "react-router-dom";
 import {
   Stack,
   Dialog,
@@ -214,7 +215,7 @@ const ModifyUserDialog = ({ userId,reload }) => {
           <Button onClick={handleClose} sx={{ fontSize: 12 }}>
             Annuler
           </Button>
-          <CustomizedButton onClick={modifyUser} text={`Valider`} />
+          <CustomizedButton onClick={modifyUser} text={`Valider`} component={RouterLink} to="#"/>
         </DialogActions>
       </Dialog>
     </>

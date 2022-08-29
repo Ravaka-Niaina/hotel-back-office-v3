@@ -295,7 +295,7 @@ const AddPoliticDialog = ({ reload }) => {
                 </div>
               )
           )}
-        <CustomizedButton text="+" onClick={addToConditions} />
+        <CustomizedButton text="+" onClick={addToConditions} component={RouterLink} to="#"/>
         <></>
       </Stack>
     </>
@@ -351,7 +351,7 @@ const AddPoliticDialog = ({ reload }) => {
           <Button onClick={handleClose} sx={{ fontSize: 12 }}>
             Annuler
           </Button>
-          <CustomizedButton onClick={addPolitic} text="Enregistrer" />
+          <CustomizedButton onClick={addPolitic} text="Enregistrer" component={RouterLink} to="#"/>
         </DialogActions>
       </Dialog>
     </>

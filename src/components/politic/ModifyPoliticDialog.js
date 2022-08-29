@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import {Link as RouterLink } from "react-router-dom";
 import {
   Dialog,
   DialogActions,
@@ -275,7 +276,7 @@ const ModifyPoliticDialog = ({ reload, politic: politicToModify }) => {
                 </div>
               )
           )}
-        <CustomizedButton text="+" onClick={addToConditions} />
+        <CustomizedButton text="+" onClick={addToConditions} component={RouterLink} to="#"/>
         <></>
       </Stack>
     </>
@@ -335,7 +336,7 @@ const ModifyPoliticDialog = ({ reload, politic: politicToModify }) => {
           <Button onClick={handleClose} sx={{ fontSize: 12 }}>
             Annuler
           </Button>
-          <CustomizedButton onClick={handleModifyPolitic} text="Enregistrer" />
+          <CustomizedButton onClick={handleModifyPolitic} text="Enregistrer" component={RouterLink} to="#"/>
         </DialogActions>
       </Dialog>
     </>
