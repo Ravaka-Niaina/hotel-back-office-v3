@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Table, Stack, TableRow, TableBody, Container, Typography, TableContainer } from '@mui/material';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 import AddPoliticDialog from '../components/politic/AddPoliticDialog';
 import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
@@ -106,9 +108,9 @@ const Politic = () => {
                         </TableCellStyled>
                         <TableCellStyled component="th" scope="row" padding="none">
                           {row.remboursable ? (
-                            <Typography color={"green"}>Remboursable</Typography>
+                            <Typography color={"green"}>Remboursable <CheckCircleOutlineIcon /></Typography>
                           ) : (
-                            <Typography color={"red"}>Non remboursable</Typography>
+                              <Typography color={"red"}>Non remboursable  <HighlightOffIcon /></Typography>
                           )}
                         </TableCellStyled>
                         <TableCellStyled align="right">
