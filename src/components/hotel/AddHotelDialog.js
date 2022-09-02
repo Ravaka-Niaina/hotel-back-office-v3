@@ -1,4 +1,4 @@
-import React, { useState,useContext} from 'react';
+import React, { useState,useContext, useEffect} from 'react';
 
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -18,24 +18,29 @@ const AddHotelDialog = (props) => {
   const context = useContext(ThemeContext);
   const [open, setOpen] = useState(false);
   const [pictureList,setPictureList] = useState(new Array(0));
+  const [logo, setLogo] = useState(new Array(0));
+  const [banner, setBanner] = useState(new Array(0));
   const [errors,setErrors] = useState(false);
   const [hotel, setHotel] = useState({
-    "name": '',
-    "link": '',
-    "phone_number": '',
-    "email_address": '',
-    "check_in": '',
-    "check_out": '',
-    "address": '',
-    "min_baby_age": '',
-    "max_baby_age": '',
-    "min_kid_age": '',
-    "max_kid_age": '',
-    "tourist_sticker": '',
-    "is_tva_included": 'true',
-    "tva": '',
-    "location_lat": '', 
-    "location_lng": '', 
+    name: '',
+    link: '',
+    phone_number: '',
+    email_address: '',
+    check_in: '',
+    check_out: '',
+    address: '',
+    min_kid_age: '',
+    max_kid_age: '',
+    tourist_sticker: '',
+    is_tva_included: 'true',
+    tva: '',
+    location_lat: '', 
+    location_lng: '',
+    primary_button_color: '',
+    secondary_button_color: '',
+    typography_h1: '',
+    typography_h2: '',
+    typography_h3: ''
   });
 
   const handleChange = (e) => {
@@ -62,24 +67,30 @@ const AddHotelDialog = (props) => {
           : "Email invalide.";
       };
     }
-    if ('phone_number' in fieldValues) temp.phone_number = fieldValues.phone_number ? '' : 'Ce champ est requis.';
-    if ('check_in' in fieldValues) temp.check_in = fieldValues.check_in ? '' : 'Ce champ est requis.';
-    if ('check_out' in fieldValues) temp.check_out = fieldValues.check_out ? '' : 'Ce champ est requis.';
-    if ('address' in fieldValues) temp.address = fieldValues.address? '' : 'Ce champ est requis.';
-    if ('min_baby_age' in fieldValues) temp.min_baby_age = fieldValues.min_baby_age ? '' : 'Ce champ est requis.';
-    if ('max_baby_age' in fieldValues) temp.max_baby_age = fieldValues.max_baby_age ? '' : 'Ce champ est requis.';
-    if ('min_kid_age' in fieldValues) temp.min_kid_age = fieldValues.min_kid_age ? '' : 'Ce champ est requis.';
-    if ('max_kid_age' in fieldValues) temp.max_kid_age = fieldValues.max_kid_age ? '' : 'Ce champ est requis.';
-    if ('tourist_sticker' in fieldValues) temp.tourist_sticker = fieldValues.tourist_sticker ? '' : 'Ce champ est requis.';
-    if ('tva' in fieldValues) temp.tva = fieldValues.tva || hotel.is_tva_included === 'false' ? '' : 'Ce champ est requis.';
-    if ('location_lat' in fieldValues) temp.location_lat = fieldValues.location_lat ? '' : 'Ce champ est requis.';
-    if ('location_lng' in fieldValues) temp.location_lng = fieldValues.location_lng ? '' : 'Ce champ est requis.';
+    const requiredFieldMessage = 'Ce champ est requis.';
+    if ('phone_number' in fieldValues) temp.phone_number = fieldValues.phone_number ? '' : requiredFieldMessage;
+    if ('check_in' in fieldValues) temp.check_in = fieldValues.check_in ? '' : requiredFieldMessage;
+    if ('check_out' in fieldValues) temp.check_out = fieldValues.check_out ? '' : requiredFieldMessage;
+    if ('address' in fieldValues) temp.address = fieldValues.address? '' : requiredFieldMessage;
+    if ('min_kid_age' in fieldValues) temp.min_kid_age = fieldValues.min_kid_age ? '' : requiredFieldMessage;
+    if ('max_kid_age' in fieldValues) temp.max_kid_age = fieldValues.max_kid_age ? '' : requiredFieldMessage;
+    if ('tourist_sticker' in fieldValues) temp.tourist_sticker = fieldValues.tourist_sticker ? '' : requiredFieldMessage;
+    if ('tva' in fieldValues) temp.tva = fieldValues.tva || hotel.is_tva_included === 'false' ? '' : requiredFieldMessage;
+    if ('location_lat' in fieldValues) temp.location_lat = fieldValues.location_lat ? '' : requiredFieldMessage;
+    if ('location_lng' in fieldValues) temp.location_lng = fieldValues.location_lng ? '' : requiredFieldMessage;
+    if (logo.length === 0 || logo.length > 1) temp.logo = 'Un logo est requis';
+    if (banner.length === 0 || banner.length > 1) temp.banner = 'Une bannière est requise'
+    if ('primary_button_color' in fieldValues) temp.primary_button_color = fieldValues.primary_button_color ? '' : requiredFieldMessage;
+    if ('secondary_button_color' in fieldValues) temp.secondary_button_color = fieldValues.secondary_button_color ? '' : requiredFieldMessage;
+    if ('typography_h1' in fieldValues) temp.typography_h1 = fieldValues.typography_h1 ? '' : requiredFieldMessage;
+    if ('typography_h2' in fieldValues) temp.typography_h2 = fieldValues.typography_h2 ? '' : requiredFieldMessage;
+    if ('typography_h3' in fieldValues) temp.typography_h3 = fieldValues.typography_h3 ? '' : requiredFieldMessage;
     setErrors({
       ...temp,
     });
   };
 
-  const formIsValid = (newHotel) => {
+  const formIsValid = (errors) => {
     const isValid =  Object.values(errors).every((x) => x === '');
     return isValid;
   };
@@ -101,6 +112,13 @@ const AddHotelDialog = (props) => {
       "tva": '',
       "location_lat": '',
       "location_lng": '',
+      logo: '',
+      banner: '',
+      typography_h1: '',
+      typography_h2: '',
+      typography_h3: '',
+      primary_button_color: '',
+      secondary_button_color: '',
     })
     setErrors(false);
     setPictureList(new Array(0));
@@ -114,21 +132,26 @@ const AddHotelDialog = (props) => {
       "checkIn": hotel.check_in,
       "checkOut": hotel.check_out,
       "address": hotel.address,
-      "minBabyAge": Number.parseFloat(hotel.min_baby_age,10),
-      "maxBabyAge": Number.parseFloat(hotel.max_baby_age,10),
       "minKidAge": Number.parseFloat(hotel.min_kid_age,10),
       "maxKidAge": Number.parseFloat(hotel.max_kid_age,10),
       "vignette": Number.parseFloat(hotel.tourist_sticker,10),
       "isTVAIncluded": hotel.is_tva_included === 'true',
-      "TVA": hotel.is_tva_included === 'true' ? hotel.tva : 0,
+      "TVA": hotel.is_tva_included === 'true' ? Number.parseFloat(hotel.tva) : 0,
       "photo": pictureList.map((e)=>e.img),
       "location": { "lat": Number.parseFloat(hotel.location_lat, 10), "lng": Number.parseFloat(hotel.location_lng,10) },
+      "logo": logo[0].img,
+      "banner": banner[0].img,
+      typography_h1: hotel.typography_h1,
+      typography_h2: hotel.typography_h2,
+      typography_h3: hotel.typography_h3,
+      primary_button_color: hotel.primary_button_color,
+      secondary_button_color: hotel.secondary_button_color,
     };
     return payload;
   };
-  const  handlePhotoChange = (e) => {
+  const  handlePhotoChange = (e, statePhoto, setStatePhoto, nameStatePhoto) => {
     const tmpPreview = [];
-
+    setErrors({ ...errors, [nameStatePhoto]: '',  });
     for (let i = 0; i < e.target.files.length; i+=1) {
       const img = e.target.files[i];
       const r = /^image/;
@@ -144,44 +167,40 @@ const AddHotelDialog = (props) => {
               width: a.currentTarget.width,
               height: a.currentTarget.height,
             });
-            if (i + 1 === e.target.files.length) setPictureList([...tmpPreview, ...pictureList]);
+            if (i + 1 === e.target.files.length) setStatePhoto([...tmpPreview, ...statePhoto]);
           }
           
         }
         reader.readAsDataURL(img);
-      } else {
-        console.log('else lery');
       }
-      
     }
     
   }
-  const addOneHotel = () => {
-    console.log(formatPayloadToSend());
+  const addOneHotel = (e) => {
+    e.preventDefault();
     validate(hotel);
-    if(formIsValid(hotel))
+    if(formIsValid(errors))
     {
-      console.log('adding...');
       const idToken = JSON.parse(localStorage.getItem('id_token'));
-      context.showLoader(true);
+      // context.showLoader(true);
       createHotel(formatPayloadToSend(),idToken)
         .then((result)=>{
-          if(result.data.status === 200)
-          {
-            setOpen(false);
-            cleanHotelState();
-            reload();
-            context.changeResultSuccessMessage('Enregistrement effectué');
-            context.showResultSuccess(true);
-          }
-          else if (result.data.errors){
-            const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
-            const indication = result.data.errors[item];
-            const message = `${item}: ${indication}`;
-            context.showLoader(false);
-            context.changeResultErrorMessage(message);
-            context.showResultError(true);
-          }
+          // if(result.data.status === 200)
+          // {
+          //   setOpen(false);
+          //   cleanHotelState();
+          //   reload();
+          //   context.changeResultSuccessMessage('Enregistrement effectué');
+          //   context.showResultSuccess(true);
+          // }
+          // else if (result.data.errors){
+          //   const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+          //   const indication = result.data.errors[item];
+          //   const message = `${item}: ${indication}`;
+          //   context.showLoader(false);
+          //   context.changeResultErrorMessage(message);
+          //   context.showResultError(true);
+          // }
         })
         .catch(()=>{
           context.showLoader(false);
@@ -199,6 +218,14 @@ const AddHotelDialog = (props) => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    if (logo.length > 1) setLogo([logo[0]]);
+  }, [logo]);
+
+  useEffect(() => {
+    if (banner.length > 1) setBanner([banner[0]]);
+  }, [banner]);
 
   return (
     <>
@@ -319,7 +346,7 @@ const AddHotelDialog = (props) => {
                 inputProps={{
                   multiple: true
                 }}
-                onChange={handlePhotoChange}
+                onChange={(e) => handlePhotoChange(e, pictureList, setPictureList, 'pictureList')}
                 fullWidth
                 required
               />
@@ -394,39 +421,6 @@ const AddHotelDialog = (props) => {
             </Stack>
             <h4>Age</h4>
             <Stack spacing={1}>
-              <h5>Bebe:</h5>
-              <Stack direction='row' spacing={2} alignItems='flex-start'>
-                  <CustomizedInput
-                    placeholder='ex: 3 mois'
-                    sx={{ width: 1 }}
-                    label="A partir de"
-                    name='min_baby_age'
-                    type="number"
-                    onChange={handleChange}
-                    fullWidth
-                    required
-                    {...(errors.min_baby_age && {
-                      error: true,
-                      helpertext: errors.min_baby_age,
-                    })}
-                  />
-                  <CustomizedInput
-                    placeholder='ex: 2 ans'
-                    sx={{ width: 1 }}
-                    label="Jusqu'à"
-                    name='max_baby_age'
-                    type="number"
-                    onChange={handleChange}
-                    fullWidth
-                    required
-                    {...(errors.max_baby_age && {
-                      error: true,
-                      helpertext: errors.max_baby_age,
-                    })}
-                  />
-              </Stack>
-            </Stack>
-            <Stack spacing={1}>
               <h5>Enfant:</h5>
               <Stack direction='row' spacing={2} alignItems='flex-start'>
                 <CustomizedInput
@@ -491,6 +485,132 @@ const AddHotelDialog = (props) => {
                   {...(errors.location_lng && {
                     error: true,
                     helpertext: errors.location_lng,
+                  })}
+                />
+              </Stack>
+            </Stack>
+            <Stack spacing={1}>
+              <Stack direction='row' spacing={2} alignItems='center'>
+                <CustomizedInput
+                  sx={{ width: 1 }}
+                  id="photos"
+                  label="Logo"
+                  type="file"
+                  inputProps={{
+                    multiple: false
+                  }}
+                  onChange={(e) => handlePhotoChange(e, logo, setLogo, 'logo')}
+                  fullWidth
+                  required
+                />
+              </Stack>
+              <ListPicturePreview itemData={logo} setPictureList={setPictureList}/>
+            </Stack>
+            <Stack spacing={1}>
+              <Stack direction='row' spacing={2} alignItems='center'>
+                <CustomizedInput
+                  sx={{ width: 1 }}
+                  id="photos"
+                  label="Bannière"
+                  type="file"
+                  inputProps={{
+                    multiple: false
+                  }}
+                  onChange={(e) => handlePhotoChange(e, banner, setBanner, 'banner')}
+                  fullWidth
+                  required
+                />
+              </Stack>
+              <ListPicturePreview itemData={banner} setPictureList={setBanner}/>
+            </Stack>
+            <Stack spacing={1}>
+              <MapDialog hotel={hotel} setHotel={setHotel}/>
+              <Stack direction='row' spacing={2} alignItems='center'>
+                <CustomizedInput
+                  sx={{ width: 1 }}
+                  value={hotel.primary_button_color}
+                  placeholder='ex: #F22323'
+                  label="Couleur bouton primaire"
+                  name='primary_button_color'
+                  type="text"
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                  {...(errors.primary_button_color && {
+                    error: true,
+                    helpertext: errors.primary_button_color,
+                  })}
+                />
+                <CustomizedInput
+                  sx={{ width: 1 }}
+                  value={hotel.secondary_button_color}
+                  placeholder='ex: #F22323'
+                  label="Couleur bouton secondaire"
+                  name='secondary_button_color'
+                  type="text"
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                  {...(errors.secondary_button_color && {
+                    error: true,
+                    helpertext: errors.secondary_button_color,
+                  })}
+                />
+              </Stack>
+            </Stack>
+            <Stack spacing={1}>
+              <Stack direction='row' spacing={2} alignItems='center'>
+                <CustomizedInput
+                  sx={{ width: 1 }}
+                  value={hotel.typography_h1}
+                  placeholder='ex: Montserrat'
+                  label="Typography h1"
+                  name='typography_h1'
+                  type="text"
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                  {...(errors.typography_h1 && {
+                    error: true,
+                    helpertext: errors.typography_h1,
+                  })}
+                />
+              </Stack>
+            </Stack>
+            <Stack spacing={1}>
+              <Stack direction='row' spacing={2} alignItems='center'>
+                <CustomizedInput
+                  sx={{ width: 1 }}
+                  value={hotel.typography_h2}
+                  placeholder='ex: Montserrat'
+                  label="Typography h2"
+                  name='typography_h2'
+                  type="text"
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                  {...(errors.typography_h2 && {
+                    error: true,
+                    helpertext: errors.typography_h2,
+                  })}
+                />
+                </Stack>
+            </Stack>
+            <Stack spacing={1}>
+              <Stack direction='row' spacing={2} alignItems='center'>
+                <CustomizedInput
+                  sx={{ width: 1 }}
+                  value={hotel.typography_h3}
+                  placeholder='ex: Montserrat'
+                  label="Typography h3"
+                  name='typography_h3'
+                  type="text"
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                  {...(errors.typography_h3 && {
+                    error: true,
+                    helpertext: errors.typography_h3,
                   })}
                 />
               </Stack>
