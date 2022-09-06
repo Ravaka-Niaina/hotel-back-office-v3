@@ -74,12 +74,13 @@ const AddHotelDialog = (props) => {
     if ('address' in fieldValues) temp.address = fieldValues.address? '' : requiredFieldMessage;
     if ('min_kid_age' in fieldValues) temp.min_kid_age = fieldValues.min_kid_age ? '' : requiredFieldMessage;
     if ('max_kid_age' in fieldValues) temp.max_kid_age = fieldValues.max_kid_age ? '' : requiredFieldMessage;
+    if (!pictureList || pictureList.length === 0) temp.photos = requiredFieldMessage;
     if ('tourist_sticker' in fieldValues) temp.tourist_sticker = fieldValues.tourist_sticker ? '' : requiredFieldMessage;
     if ('tva' in fieldValues) temp.tva = fieldValues.tva || hotel.is_tva_included === 'false' ? '' : requiredFieldMessage;
     if ('location_lat' in fieldValues) temp.location_lat = fieldValues.location_lat ? '' : requiredFieldMessage;
     if ('location_lng' in fieldValues) temp.location_lng = fieldValues.location_lng ? '' : requiredFieldMessage;
-    if (logo.length === 0 || logo.length > 1) temp.logo = 'Un logo est requis';
-    if (banner.length === 0 || banner.length > 1) temp.banner = 'Une bannière est requise'
+    if (logo.length === 0 || logo.length > 1) temp.logo = requiredFieldMessage;
+    if (banner.length === 0 || banner.length > 1) temp.banner = requiredFieldMessage;
     if ('primary_button_color' in fieldValues) temp.primary_button_color = fieldValues.primary_button_color ? '' : requiredFieldMessage;
     if ('secondary_button_color' in fieldValues) temp.secondary_button_color = fieldValues.secondary_button_color ? '' : requiredFieldMessage;
     if ('typography_h1' in fieldValues) temp.typography_h1 = fieldValues.typography_h1 ? '' : requiredFieldMessage;
@@ -88,6 +89,8 @@ const AddHotelDialog = (props) => {
     setErrors({
       ...temp,
     });
+
+    return temp;
   };
 
   const formIsValid = (errors) => {
@@ -112,13 +115,13 @@ const AddHotelDialog = (props) => {
       "tva": '',
       "location_lat": '',
       "location_lng": '',
-      logo: '',
-      banner: '',
-      typography_h1: '',
-      typography_h2: '',
-      typography_h3: '',
-      primary_button_color: '',
-      secondary_button_color: '',
+      "logo": '',
+      "banner": '',
+      "typography_h1": '',
+      "typography_h2": '',
+      "typography_h3": '',
+      "primary_button_color": '',
+      "secondary_button_color": '',
     })
     setErrors(false);
     setPictureList(new Array(0));
@@ -156,7 +159,6 @@ const AddHotelDialog = (props) => {
       const img = e.target.files[i];
       const r = /^image/;
       if (r.test(img.type)) {
-        console.log('type image');
         const reader = new FileReader();
         reader.onload = (evt) => {
           const im = new Image()
@@ -178,29 +180,28 @@ const AddHotelDialog = (props) => {
   }
   const addOneHotel = (e) => {
     e.preventDefault();
-    validate(hotel);
-    if(formIsValid(errors))
+    if(formIsValid(validate(hotel)))
     {
       const idToken = JSON.parse(localStorage.getItem('id_token'));
-      // context.showLoader(true);
+      context.showLoader(true);
       createHotel(formatPayloadToSend(),idToken)
         .then((result)=>{
-          // if(result.data.status === 200)
-          // {
-          //   setOpen(false);
-          //   cleanHotelState();
-          //   reload();
-          //   context.changeResultSuccessMessage('Enregistrement effectué');
-          //   context.showResultSuccess(true);
-          // }
-          // else if (result.data.errors){
-          //   const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
-          //   const indication = result.data.errors[item];
-          //   const message = `${item}: ${indication}`;
-          //   context.showLoader(false);
-          //   context.changeResultErrorMessage(message);
-          //   context.showResultError(true);
-          // }
+          if(result.data.status === 200)
+          {
+            setOpen(false);
+            cleanHotelState();
+            reload();
+            context.changeResultSuccessMessage('Enregistrement effectué');
+            context.showResultSuccess(true);
+          }
+          else if (result.data.errors){
+            const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+            const indication = result.data.errors[item];
+            const message = `${item}: ${indication}`;
+            context.showLoader(false);
+            context.changeResultErrorMessage(message);
+            context.showResultError(true);
+          }
         })
         .catch(()=>{
           context.showLoader(false);
@@ -346,9 +347,13 @@ const AddHotelDialog = (props) => {
                 inputProps={{
                   multiple: true
                 }}
-                onChange={(e) => handlePhotoChange(e, pictureList, setPictureList, 'pictureList')}
+                onChange={(e) => handlePhotoChange(e, pictureList, setPictureList, 'photos')}
                 fullWidth
                 required
+                {...(errors.photos && {
+                  error: true,
+                  helpertext: errors.logo,
+                })}
               />
             </Stack>
             <ListPicturePreview itemData={pictureList} setPictureList={setPictureList}/>
@@ -455,7 +460,11 @@ const AddHotelDialog = (props) => {
             </Stack>
             <h4>Coordonnées gps</h4>
             <Stack spacing={1}>
-              <MapDialog hotel={hotel} setHotel={setHotel}/>
+              <MapDialog 
+                hotel={hotel} 
+                setHotel={setHotel} 
+                errors={errors}
+                setErrors={setErrors} />
               <Stack direction='row' spacing={2} alignItems='center'>
                 <CustomizedInput
                   sx={{ width: 1 }}
@@ -502,6 +511,10 @@ const AddHotelDialog = (props) => {
                   onChange={(e) => handlePhotoChange(e, logo, setLogo, 'logo')}
                   fullWidth
                   required
+                  {...(errors.logo && {
+                    error: true,
+                    helpertext: errors.logo,
+                  })}
                 />
               </Stack>
               <ListPicturePreview itemData={logo} setPictureList={setPictureList}/>
@@ -519,12 +532,15 @@ const AddHotelDialog = (props) => {
                   onChange={(e) => handlePhotoChange(e, banner, setBanner, 'banner')}
                   fullWidth
                   required
+                  {...(errors.banner && {
+                    error: true,
+                    helpertext: errors.banner,
+                  })}
                 />
               </Stack>
               <ListPicturePreview itemData={banner} setPictureList={setBanner}/>
             </Stack>
             <Stack spacing={1}>
-              <MapDialog hotel={hotel} setHotel={setHotel}/>
               <Stack direction='row' spacing={2} alignItems='center'>
                 <CustomizedInput
                   sx={{ width: 1 }}

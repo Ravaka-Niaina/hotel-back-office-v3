@@ -23,7 +23,7 @@ const MapDialog = (props) => {
         iconUrl: 'https://img.icons8.com/material-sharp/32/E32727/marker.png',
     });
     const [mapReference,setMapReference] = useState(null);
-    const { hotel , setHotel } = props;
+    const { hotel , setHotel, errors, setErrors, } = props;
     const [position, setPosition] = useState(null);
     const [open,setOpen] = useState(false);
     const [showSearchBar,setShowSearchBar] = useState(false);
@@ -33,7 +33,7 @@ const MapDialog = (props) => {
         const pro =  new OpenStreetMapProvider();
         pro.search({query:'Ambatoroka'})
         .then((result)=>{
-            console.log(result);
+            // console.log(result);
         })
     },[])
 
@@ -108,12 +108,17 @@ const MapDialog = (props) => {
         }
     };
     const handleClickValidate = () => {
-        const hotelTemp = hotel;
-        hotelTemp.location_lat = `${position.lat}`;
-        hotelTemp.location_lng = `${position.lng}`;
-        setHotel({ ...hotelTemp });
+        setHotel({
+            ...hotel,
+            location_lat: `${position.lat}`,
+            location_lng: `${position.lng}`,
+        });
+        setErrors({
+            ...errors,
+            location_lat: '',
+            location_lng: '',
+        });
         setOpen(false);
-        console.log(hotel);
     };
     const handleClickCancel = () => {
         setOpen(false);
