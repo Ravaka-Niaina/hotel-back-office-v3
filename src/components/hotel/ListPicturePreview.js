@@ -3,7 +3,7 @@ import { ImageList, ImageListItem, Stack, IconButton  } from '@mui/material';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
 import {lightBackgroundToTop} from '../CustomizedComponents/NeumorphismTheme';
-
+import config from '../../config/api';
 
 
 const previewCropping = (width,height,newHeight) => {
@@ -21,6 +21,8 @@ const ListPicturePreview = (props) => {
         newArray.splice(index,1);
         setPictureList([...newArray]);
     }
+
+    itemData.map(item => console.log(`${config.host}/${item}`));
     return (
         <div 
             style={{
@@ -59,8 +61,8 @@ const ListPicturePreview = (props) => {
                         onClick={()=>handleDeleteItem(i)}
                     >
                         <DeleteForeverIcon />
-                    </IconButton>  
-                    <img src={`${item.img}`} alt='alta' style={{ height: `200px`, width: `${previewCropping(item.width, item.height, 200)}`,borderRadius:'15px'}}/>
+                    </IconButton>
+                    <img src={item.img ? `${item.img}` : `${config.host}/${item}`} alt='alta' style={{ height: `200px`, width: `${previewCropping(item.width, item.height, 200)}`,borderRadius:'15px'}}/>
                     </CustomizedPaperOutside>
             ))}
         </div>
