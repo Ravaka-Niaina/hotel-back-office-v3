@@ -40,13 +40,15 @@ const Hotel = () => {
         const payload = {
             "tableName": "hotel",
             "valuesToSearch": [],
-            "fieldsToPrint": ["_id", "name", "phoneNum", "emailAddress", "link", "address","checkIn","checkOut", "vignette", "minKidAge", "maxKidAge", "minBabyAge", "maxBabyAge", "location", "isTVAIncluded", "TVA", "photo"],
+            "fieldsToPrint": ["_id", "name", "phoneNum", "emailAddress", "link", "address", "checkIn", "checkOut", "vignette", "minKidAge", "maxKidAge", "minBabyAge", "maxBabyAge", "location", "isTVAIncluded", "TVA", "photo", "logo", "banner", "typography_h1", "typography_h2", "typography_h3", "primary_button_color", "secondary_button_color"],
             "nbContent": 200,
             "numPage": 1
         };
         context.showLoader(true);
         getHotelList(payload)
             .then((fetch) => {
+                fetch.data.status = 200;
+                console.log(fetch);
                 if (fetch.data.status === 200) {
                     setHotelList(fetch.data.list);
                 } else {

@@ -54,7 +54,7 @@ const TestFormulaire = () => {
     }
     else if(selected[selected.length-1] !== item){
         setSelected(oldSelected => oldSelected.slice(0, oldSelected.findIndex((elem) => elem === item)+1));
-    }  
+    }   
     
   }
   const handleDrag = (e) => {

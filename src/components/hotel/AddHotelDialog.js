@@ -29,6 +29,8 @@ const AddHotelDialog = (props) => {
     check_in: '',
     check_out: '',
     address: '',
+    min_baby_age: '',
+    max_baby_age: '',
     min_kid_age: '',
     max_kid_age: '',
     tourist_sticker: '',
@@ -67,6 +69,8 @@ const AddHotelDialog = (props) => {
           : "Email invalide.";
       };
     }
+    if ('min_baby_age' in fieldValues) temp.min_baby_age = fieldValues.min_baby_age ? '' : 'Ce champ est requis.';
+    if ('max_baby_age' in fieldValues) temp.max_baby_age = fieldValues.max_baby_age ? '' : 'Ce champ est requis.';
     const requiredFieldMessage = 'Ce champ est requis.';
     if ('phone_number' in fieldValues) temp.phone_number = fieldValues.phone_number ? '' : requiredFieldMessage;
     if ('check_in' in fieldValues) temp.check_in = fieldValues.check_in ? '' : requiredFieldMessage;
@@ -132,6 +136,8 @@ const AddHotelDialog = (props) => {
       "checkIn": hotel.check_in,
       "checkOut": hotel.check_out,
       "address": hotel.address,
+      "minBabyAge": Number.parseFloat(hotel.min_baby_age, 10),
+      "maxBabyAge": Number.parseFloat(hotel.max_baby_age, 10),
       "minKidAge": Number.parseFloat(hotel.min_kid_age,10),
       "maxKidAge": Number.parseFloat(hotel.max_kid_age,10),
       "vignette": Number.parseFloat(hotel.tourist_sticker,10),
@@ -182,25 +188,25 @@ const AddHotelDialog = (props) => {
     if(formIsValid(errors))
     {
       const idToken = JSON.parse(localStorage.getItem('id_token'));
-      // context.showLoader(true);
+      context.showLoader(true);
       createHotel(formatPayloadToSend(),idToken)
         .then((result)=>{
-          // if(result.data.status === 200)
-          // {
-          //   setOpen(false);
-          //   cleanHotelState();
-          //   reload();
-          //   context.changeResultSuccessMessage('Enregistrement effectué');
-          //   context.showResultSuccess(true);
-          // }
-          // else if (result.data.errors){
-          //   const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
-          //   const indication = result.data.errors[item];
-          //   const message = `${item}: ${indication}`;
-          //   context.showLoader(false);
-          //   context.changeResultErrorMessage(message);
-          //   context.showResultError(true);
-          // }
+          if(result.data.status === 200)
+          {
+            setOpen(false);
+            cleanHotelState();
+            reload();
+            context.changeResultSuccessMessage('Enregistrement effectué');
+            context.showResultSuccess(true);
+          }
+          else if (result.data.errors){
+            const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+            const indication = result.data.errors[item];
+            const message = `${item}: ${indication}`;
+            context.showLoader(false);
+            context.changeResultErrorMessage(message);
+            context.showResultError(true);
+          }
         })
         .catch(()=>{
           context.showLoader(false);
@@ -421,6 +427,39 @@ const AddHotelDialog = (props) => {
             </Stack>
             <h4>Age</h4>
             <Stack spacing={1}>
+              <h5>Bebe:</h5>
+              <Stack direction='row' spacing={2} alignItems='flex-start'>
+                <CustomizedInput
+                  placeholder='ex: 3 mois'
+                  sx={{ width: 1 }}
+                  label="A partir de"
+                  name='min_baby_age'
+                  type="number"
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                  {...(errors.min_baby_age && {
+                    error: true,
+                    helpertext: errors.min_baby_age,
+                  })}
+                />
+                <CustomizedInput
+                  placeholder='ex: 2 ans'
+                  sx={{ width: 1 }}
+                  label="Jusqu'à"
+                  name='max_baby_age'
+                  type="number"
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                  {...(errors.max_baby_age && {
+                    error: true,
+                    helpertext: errors.max_baby_age,
+                  })}
+                />
+              </Stack>
+            </Stack>
+            <Stack spacing={1}>
               <h5>Enfant:</h5>
               <Stack direction='row' spacing={2} alignItems='flex-start'>
                 <CustomizedInput
@@ -489,6 +528,7 @@ const AddHotelDialog = (props) => {
                 />
               </Stack>
             </Stack>
+            <h4>Themes (contenu front-office)</h4>
             <Stack spacing={1}>
               <Stack direction='row' spacing={2} alignItems='center'>
                 <CustomizedInput
@@ -523,14 +563,14 @@ const AddHotelDialog = (props) => {
               </Stack>
               <ListPicturePreview itemData={banner} setPictureList={setBanner}/>
             </Stack>
+            <h5>Thème principal</h5>
             <Stack spacing={1}>
-              <MapDialog hotel={hotel} setHotel={setHotel}/>
               <Stack direction='row' spacing={2} alignItems='center'>
                 <CustomizedInput
                   sx={{ width: 1 }}
                   value={hotel.primary_button_color}
                   placeholder='ex: #F22323'
-                  label="Couleur bouton primaire"
+                  label="Couleur  primaire"
                   name='primary_button_color'
                   type="text"
                   onChange={handleChange}
@@ -545,7 +585,7 @@ const AddHotelDialog = (props) => {
                   sx={{ width: 1 }}
                   value={hotel.secondary_button_color}
                   placeholder='ex: #F22323'
-                  label="Couleur bouton secondaire"
+                  label="Couleur secondaire"
                   name='secondary_button_color'
                   type="text"
                   onChange={handleChange}
@@ -558,7 +598,9 @@ const AddHotelDialog = (props) => {
                 />
               </Stack>
             </Stack>
+            <h5>Typography</h5>
             <Stack spacing={1}>
+              
               <Stack direction='row' spacing={2} alignItems='center'>
                 <CustomizedInput
                   sx={{ width: 1 }}
@@ -575,10 +617,6 @@ const AddHotelDialog = (props) => {
                     helpertext: errors.typography_h1,
                   })}
                 />
-              </Stack>
-            </Stack>
-            <Stack spacing={1}>
-              <Stack direction='row' spacing={2} alignItems='center'>
                 <CustomizedInput
                   sx={{ width: 1 }}
                   value={hotel.typography_h2}
@@ -594,7 +632,7 @@ const AddHotelDialog = (props) => {
                     helpertext: errors.typography_h2,
                   })}
                 />
-                </Stack>
+              </Stack>
             </Stack>
             <Stack spacing={1}>
               <Stack direction='row' spacing={2} alignItems='center'>
