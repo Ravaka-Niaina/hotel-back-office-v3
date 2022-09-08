@@ -1,0 +1,51 @@
+import React from 'react';
+import {  Stack } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
+
+const CalendarAttributeSide = ({chambre,ratePlanAttributeList}) => {
+    return (
+        <div className='calendarEditor'>
+            <table>
+                <thead>
+                    <tr style={{ height: "150px" }}>
+                        <th>
+                            <Stack
+                                spacing={1}
+                                direction="column"
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                <h3>{chambre.nom}</h3>
+                                <Stack direction='row' spacing={1} alignItems='center'>
+                                    <CustomizedIconButton >
+                                        <EditIcon sx={{ width: 20, height: 20 }} />
+                                    </CustomizedIconButton>
+                                    <span>customize</span>
+                                </Stack>
+
+                            </Stack>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td className='status'>
+                            status
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Firstname</td>
+                    </tr>
+                    {
+                        ratePlanAttributeList.map((element)=>{
+                            return element;
+                        })
+                    }
+                </tbody>
+            </table>
+        </div>
+    );
+};
+
+export default CalendarAttributeSide;

@@ -6,3 +6,7 @@ export const formatDate = (date) => {
   format.push(allTime[1]);
   return format.map((e) => e).join('-');
 };
+export const dateIHMFormat = (date) => {
+  const d = new Date(date.getTime());
+  return d.toString().split(' ').filter((e, j) => j < 3).join(' ');
+}
