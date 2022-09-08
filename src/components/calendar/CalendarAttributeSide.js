@@ -31,7 +31,7 @@ const CalendarAttributeSide = ({chambre,ratePlanAttributeList}) => {
                 <tbody>
                     <tr>
                         <td className='status'>
-                            status
+                            Status (Open or Closed)
                         </td>
                     </tr>
                     <tr>
