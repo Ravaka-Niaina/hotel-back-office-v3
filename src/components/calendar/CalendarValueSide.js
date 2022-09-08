@@ -1,5 +1,8 @@
 import React from 'react';
 import { Stack } from '@mui/material';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import EventBusyIcon from '@mui/icons-material/EventBusy';
+
 import { dateIHMFormat } from '../../services/Util';
 
 const CalendarValueSide = ({list,chambre,ratePlanList}) => {
@@ -46,28 +49,42 @@ const CalendarValueSide = ({list,chambre,ratePlanList}) => {
                     <tr>
                         {
                             list.map((e) => {
+                                const rand = Math.round(Math.random() * 2);
                                 return (
                                     <td className='status' key={e}>
                                         <div
                                             style={{
                                                 paddingLeft: '0px !important',
-                                                background: e % 4 ? '#FF0000' : '#64E986',
+                                                background: rand === 1 ? '#FF0000' : '#64E986',
                                                 height: '75%',
 
                                             }}
-                                        />
+                                        >
+                                            {
+                                                rand === 1 ? (<EventBusyIcon style = {{ color: 'white', width: '18px', height: '18px' }} />) : (<EventAvailableIcon style={{ color: 'white', width: '18px', height: '18px' }} />)
+                                            }
+                                        </div>
                                     </td>
 
                                 );
                             })
                         }
-
                     </tr>
+                    
                     <tr>
                         {
                             list.map((e,i) => {
                                 return (
-                                    <td key={e}>{(i+1)*10}</td>
+                                    <td key={e}>20</td>
+                                );
+                            })
+                        }
+                    </tr>
+                    <tr>
+                        {
+                            list.map((e, i) => {
+                                return (
+                                    <td key={e}>{Math.round(Math.random()*20)}</td>
                                 );
                             })
                         }

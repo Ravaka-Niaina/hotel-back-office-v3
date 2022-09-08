@@ -35,7 +35,10 @@ const CalendarAttributeSide = ({chambre,ratePlanAttributeList}) => {
                         </td>
                     </tr>
                     <tr>
-                        <td>Firstname</td>
+                        <td>Room to sell</td>
+                    </tr>
+                    <tr>
+                        <td>Booked</td>
                     </tr>
                     {
                         ratePlanAttributeList.map((element)=>{

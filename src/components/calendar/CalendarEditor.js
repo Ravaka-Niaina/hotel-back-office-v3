@@ -1,6 +1,8 @@
 import React , { useEffect , useState } from 'react';
 import { Grid , Stack } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import EventBusyIcon from '@mui/icons-material/EventBusy';
 
 import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
 import CalendarValueSide from './CalendarValueSide';
@@ -1461,6 +1463,7 @@ const CalendarEditor = () => {
                         <tr key='ratePlan status'>
                             {
                                 tarif.prixTarif.map((p, i) => {
+                                    
                                     return (
                                         <td className='status' key={i}>
                                             <div
@@ -1469,7 +1472,11 @@ const CalendarEditor = () => {
                                                     background: p.closed ? '#FF0000' : '#64E986',
                                                     height: '75%',
                                                 }}
-                                            />
+                                            >
+                                                {
+                                                    p.closed ? (<EventBusyIcon style={{ color: 'white', width: '18px', height: '18px' }} />) : (<EventAvailableIcon style={{ color: 'white', width: '18px', height: '18px' }} />)
+                                                }
+                                            </div>
                                         </td>
                                     );
                                 })
