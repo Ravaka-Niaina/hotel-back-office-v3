@@ -43,7 +43,10 @@ const VerifyCodeForm = () => {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
+  const removeDoubleQuotes = (str) => {
+    const toReplace = '"';
+    return str.replaceAll(toReplace, '');
+  };
   const onSubmit = async (e) => {
     const user = JSON.parse(localStorage.getItem('partner_id'));
     const payload = {
@@ -53,7 +56,7 @@ const VerifyCodeForm = () => {
     };
     const verifyResult = await verifyCode(payload);
     if (verifyResult.data.status === 200) {
-      localStorage.setItem('id_token', JSON.stringify(verifyResult.data.id_token));
+      localStorage.setItem('id_token', removeDoubleQuotes(verifyResult.data.id_token));
       navigate('/dashboard/app');
     } else {
       context.changeResultErrorMessage(verifyResult.data.message);

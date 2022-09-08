@@ -100,7 +100,7 @@ const Hotel = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
-        <Page title="Hotel">
+        <Page title="AIOLIA | Hotels">
             <Container>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <CustomizedTitle sx={{ color: '#787878'}}  text='Hotel'/>

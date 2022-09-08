@@ -64,7 +64,7 @@ const VerifyCode = () => {
   const mdUp = useResponsive('up', 'md');
 
   return (
-    <Page title="Login">
+    <Page title="AIOLIA | Verification de code">
       <RootStyle>
         <HeaderStyle>
           {/* <Logo /> */}

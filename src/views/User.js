@@ -23,6 +23,7 @@ import TableCellStyled from '../components/CustomizedComponents/CustomizedTableC
 import AddUserDialog from '../components/user/AddUserDialog';
 import { ThemeContext } from '../components/context/Wrapper';
 import { getUserList } from '../services/User';
+import { getAccessRightList } from '../services/AccessRight';
 
 // mock
 
@@ -61,14 +62,16 @@ export default function User() {
   }, []);
   const getAllUser = async () => {
     context.showLoader(true);
-    const payload = {
+    const payloadListUser = {
       tableName: 'partenaire',
       valuesToSearch: [],
-      fieldsToPrint: ['_id', 'nom', 'prenom', 'telephone', 'isActive'],
+      fieldsToPrint: ['_id', 'nom', 'prenom', 'telephone', 'isActive', 'idDroitAcces'],
       nbContent: 200,
       numPage: 1,
     };
-    getUserList(payload)
+    const accessRights = await getAccessRightList({})
+    console.log(accessRights)
+    getUserList(payloadListUser)
       .then((result) => {
         if (result.status === 200) {
           setUserList(result.data.list);
@@ -137,9 +140,11 @@ export default function User() {
   const filteredUsers = userList;
 
   const isUserNotFound = filteredUsers.length === 0;
-
+  useEffect(()=>{
+    console.log(userList)
+  },[userList])
   return (
-    <Page title="User">
+    <Page title="AIOLIA | Utilisateurs">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <CustomizedTitle sx={{ color: '#787878'}} text='Utilisateur'/>
@@ -162,7 +167,7 @@ export default function User() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {userList.map((row) => {
+                  {userList && userList.map((row) => {
                     const { _id, nom, prenom, telephone, isActive } = row;
                     const isItemSelected = selected.indexOf(nom) !== -1;
 

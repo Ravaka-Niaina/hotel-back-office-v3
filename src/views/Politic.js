@@ -31,7 +31,7 @@ const Politic = () => {
   const orderBy = 'name';
   const filterName = '';
   const getAllPolitics = () => {
-    context.showLoader(true)
+    context.showLoader(true);
     const payload = {
       tableName: 'politiqueAnnulation',
       valuesToSearch: [],
@@ -39,25 +39,26 @@ const Politic = () => {
       nbContent: 200,
       numPage: 1,
     };
-    getPolitics({ ...payload }).then((datas) => {
-      try {
-        const status = datas?.status;
-        if (status === 200) {
-          const list = datas.data?.list;
-          setPoliticList(list);
-        } else {
-          context.changeResultErrorMessage('Un problème est survenu, veuillez rafraichir la page!');
+    getPolitics({ ...payload })
+      .then((datas) => {
+        try {
+          const status = datas?.status;
+          if (status === 200) {
+            const list = datas.data?.list;
+            setPoliticList(list);
+          } else {
+            context.changeResultErrorMessage('Un problème est survenu, veuillez rafraichir la page!');
+            context.showResultError(true);
+          }
+        } catch (err) {
+          context.changeResultErrorMessage(err.message);
           context.showResultError(true);
         }
-      } catch (err) {
-        context.changeResultErrorMessage(err.message);
-        context.showResultError(true);
-      }
-    }).catch(() => {
-
-    }).finally(() => {
-      context.showLoader(false)
-    })
+      })
+      .catch(() => {})
+      .finally(() => {
+        context.showLoader(false);
+      });
   };
   const reload = () => {
     getAllPolitics();
@@ -67,7 +68,7 @@ const Politic = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <Page title="Politique">
+    <Page title="AIOLIA | Politiques d'annulation">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <CustomizedTitle sx={{ color: '#787878' }} text="Politique" />
@@ -108,9 +109,13 @@ const Politic = () => {
                         </TableCellStyled>
                         <TableCellStyled component="th" scope="row" padding="none">
                           {row.remboursable ? (
-                            <Typography color={"green"}>Remboursable <CheckCircleOutlineIcon /></Typography>
+                            <Typography color={'green'}>
+                              Remboursable <CheckCircleOutlineIcon />
+                            </Typography>
                           ) : (
-                              <Typography color={"red"}>Non remboursable  <HighlightOffIcon /></Typography>
+                            <Typography color={'red'}>
+                              Non remboursable <HighlightOffIcon />
+                            </Typography>
                           )}
                         </TableCellStyled>
                         <TableCellStyled align="right">
