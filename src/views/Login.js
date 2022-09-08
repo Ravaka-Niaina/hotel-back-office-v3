@@ -43,7 +43,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 export default function Login() {
   return (
-    <Page title="Login" sx={{ backgroundColor: '#E8F0F8' }}>
+    <Page title="AIOLIA | Connexion" sx={{ backgroundColor: '#E8F0F8' }}>
       <RootStyle>
         <HeaderStyle>
           <div> </div>

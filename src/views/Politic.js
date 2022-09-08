@@ -68,7 +68,7 @@ const Politic = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <Page title="Politique">
+    <Page title="AIOLIA | Politiques d'annulation">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <CustomizedTitle sx={{ color: '#787878' }} text="Politique" />

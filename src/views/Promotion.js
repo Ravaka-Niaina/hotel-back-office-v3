@@ -148,7 +148,7 @@ const Promotion = () => {
   // const isUserNotFound = filteredUsers?.length === 0;
 
   return (
-    <Page title="Promotion">
+    <Page title="AIOLIA | Promotions">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <CustomizedTitle sx={{ color: '#787878' }} text='Promotion'/>

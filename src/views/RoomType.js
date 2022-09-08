@@ -148,7 +148,7 @@ const TypeChambre = () => {
 
   const isUserNotFound = filteredUsers.length === 0;
   return (
-    <Page title="TypeChambre">
+    <Page title="AIOLIA | Types de chambres">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <CustomizedTitle sx={{ color: '#787878'}} text='Type de chambre'/>
