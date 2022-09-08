@@ -145,10 +145,7 @@ const Promotion = () => {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - promotionList.length) : 0;
 
-  const filteredUsers = promotionList;
-
   // const isUserNotFound = filteredUsers?.length === 0;
-
 
   return (
     <Page title="Promotion">

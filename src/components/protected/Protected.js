@@ -25,15 +25,11 @@ const Protected = ({ child, superAdmin, admin, partner }) => {
       };
       const roles = testPayload?.roles;
       const isAllowed = allowed.some((allowedRole) => roles.some((userRole) => allowedRole === userRole));
-      if (!isAllowed) {
-        context.showLoader(false);
-        navigate('/login');
-      } else {
-        context.showLoader(false);
-        return isAllowed;
-      }
+      if (!isAllowed) navigate('/login');
+      context.showLoader(false);
+      return isAllowed
     },
-    [navigate]
+    [navigate, context]
   );
 
   // The useEffect that will define if the user can access the page or not

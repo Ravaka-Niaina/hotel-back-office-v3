@@ -14,7 +14,6 @@ import { UserListHead, UserListToolbar } from '../components/table';
 import { getPolitics } from '../services/Politic';
 import { ThemeContext } from '../components/context/Wrapper';
 import PoliticMoreMenu from '../components/politic/PoliticMoreMenu';
-import { verifyToken } from '../services/User';
 
 const TABLE_HEAD = [
   { id: 'id', label: 'ID', alignRight: false },
