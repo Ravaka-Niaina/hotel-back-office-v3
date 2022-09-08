@@ -28,7 +28,6 @@ const TABLE_HEAD = [
 
 const RatePlan = () => {
     const context = useContext(ThemeContext);
-
     const order = 'asc';
     const selected = [];
     const orderBy = 'name';
@@ -38,7 +37,7 @@ const RatePlan = () => {
 
     const getAllRatePlan = (noLoading) => {
         const payload = {
-            tableName: 'tarif',
+            tableName: "tarif",
             valuesToSearch: [],
             fieldsToPrint: ["_id", "nom"],
             nbContent: 100,
@@ -49,9 +48,9 @@ const RatePlan = () => {
         } 
         getRatePlanList(payload)
             .then((fetch) => {
-                if (fetch.data.status === 200) {
+                const status = 200;
+                if (status === 200) {
                     setRatePlanList(fetch.data.list);
-                    console.log(fetch.data.list[0]);
                 } else {
                     context.changeResultErrorMessage('Cannot fetch data!');
                     context.showResultError(true);

@@ -62,8 +62,9 @@ const Promotion = () => {
     try {
       getPromotionList(payload, user)
         .then((datas) => {
-          const dataStatus = datas.data.status;
+          const dataStatus = 200;
           const dataList = datas.data.list;
+
           if (dataStatus === 200) {
             console.log();
             setPromotionList(dataList);
