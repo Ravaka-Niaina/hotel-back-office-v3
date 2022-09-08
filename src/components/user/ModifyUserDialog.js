@@ -11,7 +11,8 @@ import { ThemeContext } from '../context/Wrapper';
 import { updateUser } from '../../services/User';
 import Iconify from '../Iconify';
 import CustomizedLabel from '../CustomizedComponents/CustomizedLabel';
-import CustomizedCheckbox from '../CustomizedComponents/CustomizedCheckbox';
+import CustomizedCard from '../CustomizedComponents/CustomizedCard';
+import CustomizedSwitch from '../CustomizedComponents/CustomizedSwitch';
 
 const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
   const context = useContext(ThemeContext);
@@ -99,6 +100,7 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
       nom: user.last_name,
       prenom: user.first_name,
       email: user.email,
+      
     };
     return payload;
   };
@@ -127,121 +129,120 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
         });
     } else {
       context.changeResultErrorMessage("Une erreur s'est produite");
+      context.showResultError(true);
     }
   };
   useEffect(() => {
     // console.log(user)
   }, [user]);
+  const handleModifyAccessRight = (idAccessRight) => {
+    const tempUser = { ...user };
+    const tempUserAccessRights = tempUser?.user_access_rights;
+    const newAccessRights = tempUserAccessRights.filter((accessRight) => accessRight !== idAccessRight);
+    if(newAccessRights.length === tempUserAccessRights.length) newAccessRights.push(idAccessRight)
+    setUser({
+      ...tempUser,
+      user_access_rights: [...newAccessRights]
+    })
+  };
   return (
     <>
       <CustomizedIconButton variant="contained" onClick={handleClickOpen}>
         <Iconify icon="eva:edit-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
       </CustomizedIconButton>
-      <Dialog open={open} onClose={handleClose} maxWidth={'sm'}>
-        <CustomizedDialogTitle text={`Modifier l'utilisateur "${`xxx`}"`} />
-        <DialogContent style={{ backgroundColor: '#E8F0F8', paddingTop: 15, paddingRight: 20, paddingLeft: 20 }}>
-          <Stack spacing={1}>
-            <CustomizedInput
-              onChange={handleChange}
-              required
-              {...(errors.last_name && {
-                error: true,
-                helpertext: errors.last_name,
-              })}
-              value={user.last_name}
-              placeholder="Nom"
-              name="last_name"
-              label="Nom"
-            />
-            <CustomizedInput
-              onChange={handleChange}
-              required
-              {...(errors.first_name && {
-                error: true,
-                helpertext: errors.first_name,
-              })}
-              value={user.first_name}
-              placeholder="Prenom"
-              name="first_name"
-              label="Prenom"
-            />
+      {user && (
+        <Dialog open={open} onClose={handleClose} fullWidth maxWidth={'md'}>
+          <CustomizedDialogTitle text={`Modifier l'utilisateur ${user?.first_name} ${user?.last_name}`} />
+          <DialogContent style={{ backgroundColor: '#E8F0F8', paddingTop: 15, paddingRight: 20, paddingLeft: 20 }}>
+            <Stack spacing={1}>
+              <CustomizedInput
+                onChange={handleChange}
+                required
+                {...(errors.last_name && {
+                  error: true,
+                  helpertext: errors.last_name,
+                })}
+                value={user.last_name}
+                placeholder="Nom"
+                name="last_name"
+                label="Nom"
+              />
+              <CustomizedInput
+                onChange={handleChange}
+                required
+                {...(errors.first_name && {
+                  error: true,
+                  helpertext: errors.first_name,
+                })}
+                value={user.first_name}
+                placeholder="Prenom"
+                name="first_name"
+                label="Prenom"
+              />
 
-            <CustomizedInput
-              onChange={handleChange}
-              required
-              {...(errors.email && {
-                error: true,
-                helpertext: errors.email,
-              })}
-              value={user.email}
-              placeholder="Adresse e-mail"
-              name="email"
-              label="Adresse e-mail"
-            />
-            <CustomizedInput
-              onChange={handleChange}
-              required
-              {...(errors.phone_number && {
-                error: true,
-                helpertext: errors.phone_number,
-              })}
-              value={user.phone_number}
-              type="text"
-              placeholder="Telephone"
-              name="phone_number"
-              label="Telephone"
-            />
-            <CustomizedInput
-              onChange={handleChange}
-              required
-              {...(errors.backup_email && {
-                error: true,
-                helpertext: errors.backup_email,
-              })}
-              value={user.backup_email}
-              placeholder="Adresse e-mail de secours"
-              name="backup_email"
-              label="Adresse e-mail de secours"
-            />
-            <CustomizedLabel label={`Droits d'acces de l'utilisateur`} />
-            {/* {user?.user_access_rights &&
-              user?.user_access_rights.map((userAccessRight, index) => (
-                <div key={index}>
-                  <FormControlLabel
-                    control={
-                      <CustomizedCheckbox
-                        checked
-                        onClick={() => console.log('clicked')}
+              <CustomizedInput
+                onChange={handleChange}
+                required
+                {...(errors.email && {
+                  error: true,
+                  helpertext: errors.email,
+                })}
+                value={user.email}
+                placeholder="Adresse e-mail"
+                name="email"
+                label="Adresse e-mail"
+              />
+              <CustomizedInput
+                onChange={handleChange}
+                required
+                {...(errors.phone_number && {
+                  error: true,
+                  helpertext: errors.phone_number,
+                })}
+                value={user.phone_number}
+                type="text"
+                placeholder="Telephone"
+                name="phone_number"
+                label="Telephone"
+              />
+              <CustomizedInput
+                onChange={handleChange}
+                required
+                {...(errors.backup_email && {
+                  error: true,
+                  helpertext: errors.backup_email,
+                })}
+                value={user.backup_email}
+                placeholder="Adresse e-mail de secours"
+                name="backup_email"
+                label="Adresse e-mail de secours"
+              />
+              <CustomizedLabel label={`Droits d'acces de l'utilisateur`} />
+              <CustomizedCard sx={{ background: '#E3EDF7', p: 5 }}>
+                {accessRights &&
+                  accessRights.map((accessRight, index) => (
+                    <div key={index}>
+                      <CustomizedSwitch
+                        checked={user.user_access_rights.some(
+                          (userAccessRight) => userAccessRight === accessRight?._id
+                        )}
+                        onClick={() => handleModifyAccessRight(accessRight?._id)}
                       />
-                    }
-                    label={userAccessRight}
-                  />
-                  {userAccessRight}
-                </div>
-              ))}
-            {user?.user_access_rights && user?.user_access_rights.length <= 0 && (
-              <>Cet utilisateur n'a aucun droit d'acces </>
-            )} */}
-
-            {accessRights &&
-              accessRights.map((accessRight, index) => (
-                <div key={index}>
-                  <FormControlLabel
-                    control={<CustomizedCheckbox checked={user.user_access_rights.some(userAccessRight => userAccessRight === accessRight?._id)} onClick={() => console.log('clicked')} />}
-                    label={accessRight?.nom}
-                  />
-                </div>
-              ))}
-            {/* <button onClick={()=>{console.log(user?.user_access_rights)}}>Click</button> */}
-          </Stack>
-        </DialogContent>
-        <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px' }}>
-          <Button onClick={handleClose} sx={{ fontSize: 12 }}>
-            Annuler
-          </Button>
-          <CustomizedButton onClick={modifyUser} text={`Valider`} component={RouterLink} to="#" />
-        </DialogActions>
-      </Dialog>
+                      {accessRight?.nom}
+                    </div>
+                  ))}
+              </CustomizedCard>
+              {/* <button onClick={()=>{console.log(user?.user_access_rights)}}>Click</button> */}
+            </Stack>
+          </DialogContent>
+          <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px' }}>
+            <Button onClick={handleClose} sx={{ fontSize: 12 }}>
+              Annuler
+            </Button>
+            <CustomizedButton onClick={modifyUser} text={`Valider`} component={RouterLink} to="#" />
+          </DialogActions>
+        </Dialog>
+      )}
     </>
   );
 };

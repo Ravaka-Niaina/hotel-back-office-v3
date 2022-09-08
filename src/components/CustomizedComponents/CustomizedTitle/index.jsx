@@ -14,7 +14,7 @@ const CustomTitle = styled(Typography)({
   letterSpacing: '-0.4px',
   color: 'white',
 });
-const CustomizedTitle = (props) => <CustomTitle {...props} variant="h4" gutterBottom>{props.text}</CustomTitle>;
+const CustomizedTitle = (props) => <CustomTitle {...props} variant="h5" gutterBottom>{props.text}</CustomTitle>;
 
 CustomizedTitle.propTypes = {
   text: PropTypes.any,
