@@ -8,10 +8,10 @@ import ModifyUserDialog from './ModifyUserDialog';
 
 // ----------------------------------------------------------------------
 
-const UserMoreMenu = ({userId,reload})  => (
+const UserMoreMenu = ({userId, userDetails,reload, accessRights})  => (
     <>
       <Stack direction='row' spacing={2}>
-        <ModifyUserDialog userId={userId} reload={reload} />
+        <ModifyUserDialog accessRights={accessRights} userDetails={userDetails} userId={userId} reload={reload} />
         <DeleteUserDialog />
       </Stack>
     </>
@@ -20,5 +20,6 @@ const UserMoreMenu = ({userId,reload})  => (
 UserMoreMenu.propTypes = {
   userId:PropTypes.any,
   reload:PropTypes.any,
+  accessRights: PropTypes.any
 };
 export default UserMoreMenu;
