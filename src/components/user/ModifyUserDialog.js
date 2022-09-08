@@ -100,6 +100,7 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
       nom: user.last_name,
       prenom: user.first_name,
       email: user.email,
+      
     };
     return payload;
   };
@@ -128,13 +129,21 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
         });
     } else {
       context.changeResultErrorMessage("Une erreur s'est produite");
+      context.showResultError(true);
     }
   };
   useEffect(() => {
     // console.log(user)
   }, [user]);
   const handleModifyAccessRight = (idAccessRight) => {
-    console.log(idAccessRight);
+    const tempUser = { ...user };
+    const tempUserAccessRights = tempUser?.user_access_rights;
+    const newAccessRights = tempUserAccessRights.filter((accessRight) => accessRight !== idAccessRight);
+    if(newAccessRights.length === tempUserAccessRights.length) newAccessRights.push(idAccessRight)
+    setUser({
+      ...tempUser,
+      user_access_rights: [...newAccessRights]
+    })
   };
   return (
     <>
