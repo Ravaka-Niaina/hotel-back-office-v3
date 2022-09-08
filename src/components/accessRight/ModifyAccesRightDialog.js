@@ -87,7 +87,7 @@ const ModifyAccessRightDialog = ({ reload, accessRightProp }) => {
       <CustomizedIconButton variant="contained" onClick={handleClickOpen}>
         <Iconify icon="eva:edit-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
       </CustomizedIconButton >
-      <Dialog open={openModifyAccessRightDialog}  maxwidth={'xl'}>
+      <Dialog open={openModifyAccessRightDialog} fullWidth maxwidth={'md'}>
         <CustomizedDialogTitle text={`Modifier le droit d'accès `} />
         <DialogContent style={{ backgroundColor: '#E8F0F8', paddingTop: 15 }}>
           <CustomizedInput
