@@ -147,7 +147,7 @@ const AddAccessRightDialog = (props) => {
             />
           </Stack>
         </DialogContent>
-        <DialogActions sx={{ backgroundColor: '#E8F0F8' }}>
+        <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px' }}>
           <Button onClick={handleClose} sx={{ fontSize: 12 }}>
             Annuler
           </Button>
