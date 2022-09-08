@@ -41,7 +41,7 @@ const Protected = ({ child, superAdmin, admin, partner }) => {
     if (superAdmin) allowedRoles.push(ROLES.SUPER_ADMIN);
     if (admin) allowedRoles.push(ROLES.ADMIN);
     if (partner) allowedRoles.push(ROLES.PARTNER);
-    console.log('mety');
+    // console.log('mety');
     setIsAuth(checkAuthWithRole(allowedRoles));
   }, [admin, superAdmin, partner, checkAuthWithRole]);
 
