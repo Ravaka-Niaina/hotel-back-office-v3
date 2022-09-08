@@ -1,6 +1,6 @@
 {
-  "name": "@minimal/material-kit-react",
-  "author": "minimals.cc",
+  "name": "adr-hotel-backoffice",
+  "author": "Adr",
   "licence": "MIT",
   "version": "1.5.0",
   "private": false,

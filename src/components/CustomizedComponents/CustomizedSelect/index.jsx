@@ -23,7 +23,7 @@ const CustomSelect = styled(Select)({
 const CustomizedSelect = (props) => (
   <Stack spacing={1} direction="column">
     <CustomizedLabel label={props.label} />
-    <CustomSelect InputProps={{ ...props, shrink: false }} children={props.children} />
+    <CustomSelect inputprops={{ ...props, shrink: false }} children={props.children} />
   </Stack>
 );
 

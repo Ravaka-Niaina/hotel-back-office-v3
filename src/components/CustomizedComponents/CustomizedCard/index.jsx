@@ -1,7 +1,7 @@
 import { Paper } from '@mui/material';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import {shadowInset,cardRadius,linearBorderOutside} from '../NeumorphismTheme';
+import {shadowInset,cardRadius} from '../NeumorphismTheme';
 
 const StyledPaperInset = styled(Paper)({
   ...shadowInset,
@@ -15,6 +15,6 @@ const CustomizedCard = (props) => (
   </StyledPaperInset>
 );
 CustomizedCard.propTypes = {
-  
+  children: PropTypes.any
 };
 export default CustomizedCard;

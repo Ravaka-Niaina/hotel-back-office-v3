@@ -14,6 +14,7 @@ import { UserListHead, UserListToolbar } from '../components/table';
 import { getPolitics } from '../services/Politic';
 import { ThemeContext } from '../components/context/Wrapper';
 import PoliticMoreMenu from '../components/politic/PoliticMoreMenu';
+import { verifyToken } from '../services/User';
 
 const TABLE_HEAD = [
   { id: 'id', label: 'ID', alignRight: false },
@@ -31,7 +32,7 @@ const Politic = () => {
   const orderBy = 'name';
   const filterName = '';
   const getAllPolitics = () => {
-    context.showLoader(true)
+    context.showLoader(true);
     const payload = {
       tableName: 'politiqueAnnulation',
       valuesToSearch: [],
@@ -39,25 +40,26 @@ const Politic = () => {
       nbContent: 200,
       numPage: 1,
     };
-    getPolitics({ ...payload }).then((datas) => {
-      try {
-        const status = datas?.status;
-        if (status === 200) {
-          const list = datas.data?.list;
-          setPoliticList(list);
-        } else {
-          context.changeResultErrorMessage('Un problème est survenu, veuillez rafraichir la page!');
+    getPolitics({ ...payload })
+      .then((datas) => {
+        try {
+          const status = datas?.status;
+          if (status === 200) {
+            const list = datas.data?.list;
+            setPoliticList(list);
+          } else {
+            context.changeResultErrorMessage('Un problème est survenu, veuillez rafraichir la page!');
+            context.showResultError(true);
+          }
+        } catch (err) {
+          context.changeResultErrorMessage(err.message);
           context.showResultError(true);
         }
-      } catch (err) {
-        context.changeResultErrorMessage(err.message);
-        context.showResultError(true);
-      }
-    }).catch(() => {
-
-    }).finally(() => {
-      context.showLoader(false)
-    })
+      })
+      .catch(() => {})
+      .finally(() => {
+        context.showLoader(false);
+      });
   };
   const reload = () => {
     getAllPolitics();
@@ -108,9 +110,13 @@ const Politic = () => {
                         </TableCellStyled>
                         <TableCellStyled component="th" scope="row" padding="none">
                           {row.remboursable ? (
-                            <Typography color={"green"}>Remboursable <CheckCircleOutlineIcon /></Typography>
+                            <Typography color={'green'}>
+                              Remboursable <CheckCircleOutlineIcon />
+                            </Typography>
                           ) : (
-                              <Typography color={"red"}>Non remboursable  <HighlightOffIcon /></Typography>
+                            <Typography color={'red'}>
+                              Non remboursable <HighlightOffIcon />
+                            </Typography>
                           )}
                         </TableCellStyled>
                         <TableCellStyled align="right">
