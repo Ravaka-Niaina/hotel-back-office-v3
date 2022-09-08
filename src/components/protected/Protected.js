@@ -9,6 +9,7 @@ const ROLES = {
   PARTNER: 'partner',
 };
 const Protected = ({ child, superAdmin, admin, partner }) => {
+  const [childComponent, setChildComponent] = useState(null);
   const context = useContext(ThemeContext);
   const navigate = useNavigate();
   // The state of the auth
@@ -45,10 +46,13 @@ const Protected = ({ child, superAdmin, admin, partner }) => {
     setIsAuth(checkAuthWithRole(allowedRoles));
   }, [admin, superAdmin, partner, checkAuthWithRole]);
 
+  useEffect(()=>{
+    setChildComponent(child)
+  },[child])
   return (
     <>
       {isAuth ? (
-        child
+        childComponent
       ) : (
         <div
           style={{
