@@ -1412,12 +1412,30 @@ const CalendarEditor = () => {
             ]
         }
     );
+    
     const [ratePlanList , setRatePlanList] = useState(new Array(0));
     const [ratePlanAttributList ,setRatePlanAttributeList ] = useState(new Array(0));
     console.log(chambre);
     const loadCells = () => {
         const ratePlanListTemp = []; // [RatePlan values and information ] all the cells in the right side in the calendar(table)
         const ratePlanAttributeListTemp = []; // [RatePlan name or attribute ] all the cells in the left side in the calendar(table)
+        
+        // chambre.statusDays.forEach((status)=>{
+        //     <td className='status' key={status}>
+        //         <div
+        //             style={{
+        //                 paddingLeft: '0px !important',
+        //                 background: status.closed ? '#FF0000' : '#64E986',
+        //                 height: '75%',
+
+        //             }}
+        //         >
+        //             {
+        //                 status.toSell ? (<EventBusyIcon style={{ color: 'white', width: '18px', height: '18px' }} />) : (<EventAvailableIcon style={{ color: 'white', width: '18px', height: '18px' }} />)
+        //             }
+        //         </div>
+        //     </td>
+        // })
         chambre.planTarifaire.forEach((tarif, j) => {
             const prixTarifList = [];
             const prixTarifAttributeList = [];
