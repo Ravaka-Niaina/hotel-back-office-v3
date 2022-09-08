@@ -27,7 +27,7 @@ const CalendarValueSide = ({list,chambre,ratePlanList}) => {
                                             {
                                                 dateIHMFormat(e).split(' ').map((datePart)=>{
                                                     return (
-                                                        <span>
+                                                        <span key={datePart}>
                                                             {datePart}
                                                         </span>
                                                     )
