@@ -18,7 +18,7 @@ const Protected = ({ child, superAdmin, admin, partner }) => {
   // A function that will determine if the user has the required roles or not
   const checkAuthWithRole = useCallback(
     (allowed) => {
-      context.showLoader(true);
+      // context.showLoader(true);
       const testPayload = {
         partnerId: 'it_s_just_a_test_lol',
         roles: ['super_admin', 'admin'],
@@ -26,7 +26,7 @@ const Protected = ({ child, superAdmin, admin, partner }) => {
       const roles = testPayload?.roles;
       const isAllowed = allowed.some((allowedRole) => roles.some((userRole) => allowedRole === userRole));
       if (!isAllowed) navigate('/login');
-      context.showLoader(false);
+      // context.showLoader(false);
       return isAllowed
     },
     [navigate, context]
