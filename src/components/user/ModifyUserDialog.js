@@ -1,23 +1,19 @@
 import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
-import {Link as RouterLink} from "react-router-dom";
-import {
-  Stack,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  Button,
-} from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import { Stack, Dialog, DialogActions, DialogContent, Button, FormControlLabel } from '@mui/material';
 
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import { ThemeContext } from '../context/Wrapper';
-import { getUserDetails,updateUser} from '../../services/User';
+import { updateUser } from '../../services/User';
 import Iconify from '../Iconify';
+import CustomizedLabel from '../CustomizedComponents/CustomizedLabel';
+import CustomizedCheckbox from '../CustomizedComponents/CustomizedCheckbox';
 
-const ModifyUserDialog = ({ userId,reload }) => {
+const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
   const context = useContext(ThemeContext);
   const [errors, setErrors] = useState(false);
   const [open, setOpen] = useState(false);
@@ -27,30 +23,22 @@ const ModifyUserDialog = ({ userId,reload }) => {
     email: '',
     backup_email: '',
     phone_number: '',
+    user_access_rights: [],
   });
 
+  const fetchData = async () => {
+    setUser({
+      id: userDetails?._id,
+      last_name: userDetails?.nom,
+      first_name: userDetails?.prenom,
+      email: userDetails?.email,
+      backup_email: userDetails?.backupEmail,
+      phone_number: userDetails?.telephone,
+      user_access_rights: userDetails?.idDroitAcces,
+    });
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      getUserDetails(userId)
-        .then((result) => {
-          if (result.data.status === 200) {
-            setUser({
-              last_name: result.data.user.nom,
-              first_name: result.data.user.prenom,
-              email: result.data.user.email,
-              backup_email: result.data.user.backupEmail,
-              phone_number: result.data.user.telephone,
-            });
-          } else {
-            context.changeResultErrorMessage('Une erreur est servenue lors du chargement des anciennes valeurs');
-            context.showResultError(true);
-          }
-        })
-        .catch(() => {
-          context.changeResultErrorMessage('Une erreur est servenue lors du chargement des anciennes valeurs');
-          context.showResultError(true);
-        });
-    };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -70,19 +58,16 @@ const ModifyUserDialog = ({ userId,reload }) => {
     if ('first_name' in fieldValues) temp.first_name = fieldValues.first_name ? '' : 'Ce champ est requis.';
     if ('last_name' in fieldValues) temp.last_name = fieldValues.last_name ? '' : 'Ce champ est requis.';
     if ('email' in fieldValues) {
-      temp.email = fieldValues.email ? "" : "Ce champ est requis.";
-      if (fieldValues.email)
-        temp.email = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(fieldValues.email)
-          ? ""
-          : "Email invalide.";
-    };
-    if ('backup_email' in fieldValues) {
-      temp.backup_email = fieldValues.backup_email ? "" : "Ce champ est requis.";
-      if (fieldValues.backup_email)
-        temp.backup_email = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(fieldValues.backup_email)
-          ? ""
-          : "Email invalide.";
-    };
+      temp.email = fieldValues.email ? '' : 'Ce champ est requis.';
+      if (fieldValues.email) temp.email = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(fieldValues.email) ? '' : 'Email invalide.';
+    }
+    // if ('backup_email' in fieldValues) {
+    //   temp.backup_email = fieldValues.backup_email ? "" : "Ce champ est requis.";
+    //   if (fieldValues.backup_email)
+    //     temp.backup_email = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(fieldValues.backup_email)
+    //       ? ""
+    //       : "Email invalide.";
+    // };
     if ('phone_number' in fieldValues) temp.phone_number = fieldValues.phone_number ? '' : 'Ce champ est requis.';
 
     setErrors({
@@ -91,8 +76,13 @@ const ModifyUserDialog = ({ userId,reload }) => {
   };
 
   const formIsValid = (newUser) => {
-    const isValid = newUser.first_name && newUser.last_name && newUser.email &&
-    newUser.backup_email && newUser.phone_number && Object.values(errors).every((x) => x === '');
+    const isValid =
+      newUser.first_name &&
+      newUser.last_name &&
+      newUser.email &&
+      newUser.backup_email &&
+      newUser.phone_number &&
+      Object.values(errors).every((x) => x === '');
     return isValid;
   };
   const handleClickOpen = () => {
@@ -109,40 +99,44 @@ const ModifyUserDialog = ({ userId,reload }) => {
       nom: user.last_name,
       prenom: user.first_name,
       email: user.email,
-    }
+    };
     return payload;
-  }
+  };
   const modifyUser = () => {
     validate(user);
-    if(formIsValid(user)){
+    if (formIsValid(user)) {
       context.showLoader(true);
       updateUser(formatPayloadToSend())
-      .then((result) => {
-        if(result.data.status === 200)
-        {
+        .then((result) => {
+          if (result.data.status === 200) {
             setOpen(false);
             reload();
-          context.changeResultSuccessMessage('Modification effectué');
+            context.changeResultSuccessMessage('Modification effectuée');
             context.showResultSuccess(true);
-        }
-        else{
-          
-          context.changeResultErrorMessage('Une erreure est servunue lors du modification des données');
+          } else {
+            context.changeResultErrorMessage('Une erreur est servenue lors de la modification des données');
+            context.showResultError(true);
+          }
+        })
+        .catch(() => {
+          context.changeResultErrorMessage('Une erreur est servunue lors de la modification des données');
           context.showResultError(true);
-        }
-      }).catch(() => {
-        context.changeResultErrorMessage('Une erreure est servunue lors du modification des données');
-        context.showResultError(true);
-      }).finally(()=>{
-        context.showLoader(false);
-      });
+        })
+        .finally(() => {
+          context.showLoader(false);
+        });
+    } else {
+      context.changeResultErrorMessage("Une erreur s'est produite");
     }
   };
+  useEffect(() => {
+    // console.log(user)
+  }, [user]);
   return (
     <>
       <CustomizedIconButton variant="contained" onClick={handleClickOpen}>
         <Iconify icon="eva:edit-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
-      </CustomizedIconButton >
+      </CustomizedIconButton>
       <Dialog open={open} onClose={handleClose} maxWidth={'sm'}>
         <CustomizedDialogTitle text={`Modifier l'utilisateur "${`xxx`}"`} />
         <DialogContent style={{ backgroundColor: '#E8F0F8', paddingTop: 15, paddingRight: 20, paddingLeft: 20 }}>
@@ -209,13 +203,43 @@ const ModifyUserDialog = ({ userId,reload }) => {
               name="backup_email"
               label="Adresse e-mail de secours"
             />
+            <CustomizedLabel label={`Droits d'acces de l'utilisateur`} />
+            {/* {user?.user_access_rights &&
+              user?.user_access_rights.map((userAccessRight, index) => (
+                <div key={index}>
+                  <FormControlLabel
+                    control={
+                      <CustomizedCheckbox
+                        checked
+                        onClick={() => console.log('clicked')}
+                      />
+                    }
+                    label={userAccessRight}
+                  />
+                  {userAccessRight}
+                </div>
+              ))}
+            {user?.user_access_rights && user?.user_access_rights.length <= 0 && (
+              <>Cet utilisateur n'a aucun droit d'acces </>
+            )} */}
+
+            {accessRights &&
+              accessRights.map((accessRight, index) => (
+                <div key={index}>
+                  <FormControlLabel
+                    control={<CustomizedCheckbox checked={user.user_access_rights.some(userAccessRight => userAccessRight === accessRight?._id)} onClick={() => console.log('clicked')} />}
+                    label={accessRight?.nom}
+                  />
+                </div>
+              ))}
+            {/* <button onClick={()=>{console.log(user?.user_access_rights)}}>Click</button> */}
           </Stack>
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px' }}>
           <Button onClick={handleClose} sx={{ fontSize: 12 }}>
             Annuler
           </Button>
-          <CustomizedButton onClick={modifyUser} text={`Valider`} component={RouterLink} to="#"/>
+          <CustomizedButton onClick={modifyUser} text={`Valider`} component={RouterLink} to="#" />
         </DialogActions>
       </Dialog>
     </>
@@ -224,5 +248,7 @@ const ModifyUserDialog = ({ userId,reload }) => {
 ModifyUserDialog.propTypes = {
   userId: PropTypes.any,
   reload: PropTypes.any,
+  accessRights: PropTypes.any,
+  userDetails: PropTypes.any,
 };
 export default ModifyUserDialog;

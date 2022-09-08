@@ -1,7 +1,6 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { ThemeContext } from '../context/Wrapper';
 
 const ROLES = {
   SUPER_ADMIN: 'super_admin',
@@ -10,7 +9,6 @@ const ROLES = {
 };
 const Protected = ({ child, superAdmin, admin, partner }) => {
   const [childComponent, setChildComponent] = useState(null);
-  const context = useContext(ThemeContext);
   const navigate = useNavigate();
   // The state of the auth
   const [isAuth, setIsAuth] = useState(false);
@@ -29,7 +27,7 @@ const Protected = ({ child, superAdmin, admin, partner }) => {
       // context.showLoader(false);
       return isAllowed
     },
-    [navigate, context]
+    [navigate]
   );
 
   // The useEffect that will define if the user can access the page or not

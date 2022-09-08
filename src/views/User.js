@@ -56,6 +56,8 @@ export default function User() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const [accessRights, setAccessRights] = useState(null);
+  
   useEffect(() => {
     reload();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -65,12 +67,12 @@ export default function User() {
     const payloadListUser = {
       tableName: 'partenaire',
       valuesToSearch: [],
-      fieldsToPrint: ['_id', 'nom', 'prenom', 'telephone', 'isActive', 'idDroitAcces'],
+      fieldsToPrint: [],
       nbContent: 200,
       numPage: 1,
     };
-    const accessRights = await getAccessRightList({})
-    console.log(accessRights)
+    // const accessRights = await getAccessRightList({})
+    // console.log(accessRights)
     getUserList(payloadListUser)
       .then((result) => {
         if (result.status === 200) {
@@ -88,8 +90,18 @@ export default function User() {
         context.showLoader(false);
       });
   };
+
+  const getAccessRights = () => {
+    getAccessRightList().then(result=>{
+      if(result.status !== 200) return
+      if (!result.data) return
+      if(!result.data?.list) return
+      setAccessRights(result?.data?.list)
+    })
+  }
   const reload = () => {
     getAllUser();
+    getAccessRights();
   };
 
   const handleRequestSort = (event, property) => {
@@ -141,7 +153,7 @@ export default function User() {
 
   const isUserNotFound = filteredUsers.length === 0;
   useEffect(()=>{
-    console.log(userList)
+    // console.log(userList)
   },[userList])
   return (
     <Page title="AIOLIA | Utilisateurs">
@@ -194,7 +206,7 @@ export default function User() {
                         <TableCellStyled align="left">{isActive ? 'Oui' : 'Non'}</TableCellStyled>
 
                         <TableCellStyled align="right">
-                          <UserMoreMenu userId={_id} reload={reload}/>
+                          {row && <UserMoreMenu accessRights={accessRights} userDetails={row} userId={_id} reload={reload}/>}
                         </TableCellStyled>
                       </TableRow>
                     );
