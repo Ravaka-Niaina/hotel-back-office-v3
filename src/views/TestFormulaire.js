@@ -45,8 +45,9 @@ const TestFormulaire = () => {
   const handleSelected = (item) => {
     console.log(selected);
   };
-
-
+  const allowDraggingArea = (e) => {
+    e.preventDefault();
+  };
   const handleSelect = (e, item) => {
     const direction = e.dataTransfer.types[0];
     console.log(direction);
@@ -79,8 +80,8 @@ const TestFormulaire = () => {
   const handleDragStart = (e,direction) => {
     const crt = document.createElement('div');
     crt.style.visibility = "hidden"; /* or visibility: hidden, or any of the above */
-    e.dataTransfer.setDragImage(crt, 0, 0);
     e.dataTransfer.clearData();
+    e.dataTransfer.setDragImage(crt,0,0);
     e.dataTransfer.setData(direction,direction);
     // ev.dataTransfer.setDragImage(img, -50, -50);
   }
@@ -105,6 +106,7 @@ const TestFormulaire = () => {
                       border: '1px solid #e0e0e0'
                     }} 
                     onClick={()=>handleSelected(item)}
+                    onDragOver={allowDraggingArea}
                     onDragEnter={(e) => {
                       handleSelect(e,item);
                     }}
