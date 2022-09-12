@@ -1,5 +1,5 @@
 import React, {useState , useEffect} from 'react';
-import { Stack, MenuItem,FormControlLabel,RadioGroup,Switch, IconButton } from '@mui/material';
+import { Popper , Fade , Collapse, Zoom, Grow , Slide , Paper , Stack, MenuItem,FormControlLabel,RadioGroup,Switch, IconButton } from '@mui/material';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import CustomizedInput from '../components/CustomizedComponents/CustomizedInput';
@@ -33,7 +33,8 @@ const TestFormulaire = () => {
   const [ list , setList ] = useState(new Array(0));
   const [disabled,setDisabled]= React.useState(false);
   const [selected , setSelected ] = useState(new Array(0));
-  const [ dragging , setDragging ] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [open, setOpen] = React.useState(false);
   
   useEffect(()=>{
     const items = [...new Array(20)].map((e,i)=>`item${i}`);
@@ -42,8 +43,10 @@ const TestFormulaire = () => {
   
   },[])
 
-  const handleSelected = (item) => {
-    console.log(selected);
+  const handleSelectOneItem = (e,item) => {
+    setAnchorEl(e.currentTarget);
+    setOpen((prev) => !prev);
+    setSelected([item]);
   };
   const allowDraggingArea = (e) => {
     e.preventDefault();
@@ -57,16 +60,17 @@ const TestFormulaire = () => {
     const firstItemSelectedIndex = list.indexOf(selected[0]);
     const lastItemSelectedIndex = list.indexOf(selected[selected.length - 1]);
     if (direction === 'right' && !(newItemIndex < firstItemSelectedIndex)){
+      setAnchorEl(e.currentTarget);
       if (!selected.includes(item)) {
         setSelected(oldSelected => (list.filter((e, i) => i <= newItemIndex && i >= firstItemSelectedIndex )));
       }
       else {
-        
         console.log('ITEM IN SELECTEDDDD RIGHT');
         setSelected(oldSelected => (oldSelected.slice(0, oldSelected.indexOf(item)+1)));
       }   
     }
     else if (direction === 'left' && !(newItemIndex > lastItemSelectedIndex)){
+      setAnchorEl(e.currentTarget);
       if (!selected.includes(item)) {
         
         setSelected(oldSelected => (list.filter((e, i) => i >= newItemIndex && i <= lastItemSelectedIndex)));
@@ -88,6 +92,15 @@ const TestFormulaire = () => {
   
   return (
     <Stack sx={style.content} spacing={3}>
+      <Popper open={open} anchorEl={anchorEl} placement='top' transition>
+        {({ TransitionProps }) => (
+          <Slide {...TransitionProps} timeout={350}>
+            <Paper sx={{p: 5, width:'200px',height:'200px'}}>
+              <div sx={{  }}>The content of the Popper.</div>
+            </Paper>
+          </Slide>
+        )}
+      </Popper>
       <table style={{ border: '1px solid #e0e0e0',borderCollapse:'collapse' }}>
         <tbody>
           <tr style={{ border: '1px solid #e0e0e0' }}>
@@ -105,7 +118,7 @@ const TestFormulaire = () => {
                       position:'relative',
                       border: '1px solid #e0e0e0'
                     }} 
-                    onClick={()=>handleSelected(item)}
+                    onClick={(e)=>handleSelectOneItem(e,item)}
                     onDragOver={allowDraggingArea}
                     onDragEnter={(e) => {
                       handleSelect(e,item);
