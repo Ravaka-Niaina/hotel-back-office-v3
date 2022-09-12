@@ -171,6 +171,10 @@ const ModifyPoliticDialog = ({ reload, politic: politicToModify }) => {
         }]
       }
     }
+    newPoliticDatePrice.forEach((datePrice) => {
+      datePrice.pourcentage = Number.parseFloat(datePrice.pourcentage);
+    });
+
     const newRefundableValue = politic.refundable === "true" || politic.refundable === true
     // Formated Payload
     const formatedPayload = {
@@ -218,7 +222,7 @@ const ModifyPoliticDialog = ({ reload, politic: politicToModify }) => {
       context.showLoader(true)
       formatPayloadToSend().then((newPolitic) => {
         modifyPolitic(newPolitic, idPoliticToModify).then(results => {
-          // console.log(results)
+          console.log(results);
           const { status } = results.data
           if (status === 200) {
             context.changeResultSuccessMessage(`Politique modifiée avec succès`)
