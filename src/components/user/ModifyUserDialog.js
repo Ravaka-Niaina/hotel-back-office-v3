@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Dialog, DialogActions, DialogContent, Button, FormControlLabel } from '@mui/material';
+import { Stack, Dialog, DialogActions, DialogContent, Button } from '@mui/material';
 
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import { ThemeContext } from '../context/Wrapper';
-import { updateUser } from '../../services/User';
+import { addAccessRight, updateUser } from '../../services/User';
 import Iconify from '../Iconify';
 import CustomizedLabel from '../CustomizedComponents/CustomizedLabel';
 import CustomizedCard from '../CustomizedComponents/CustomizedCard';
@@ -18,6 +18,8 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
   const context = useContext(ThemeContext);
   const [errors, setErrors] = useState(false);
   const [open, setOpen] = useState(false);
+  const initialAccessRights = userDetails?.idDroitAcces
+
   const [user, setUser] = useState({
     last_name: '',
     first_name: '',
@@ -100,17 +102,30 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
       nom: user.last_name,
       prenom: user.first_name,
       email: user.email,
-      
+      idDroitAcces: user.user_access_rights
     };
     return payload;
   };
+  const addAccessRights = async(idUser , accessRightsList) => {
+    const newAccessRights = accessRightsList.filter(elem => !initialAccessRights.includes(elem) )
+    const addedAccessRights = newAccessRights.map(async(elem)=>{
+      const res = await addAccessRight({
+        idUser,
+        idDroitAcces: elem
+      })
+      return res
+    })
+    return Promise.all(addedAccessRights)
+  }
   const modifyUser = () => {
     validate(user);
     if (formIsValid(user)) {
       context.showLoader(true);
-      updateUser(formatPayloadToSend())
-        .then((result) => {
+      const payloadToSend = formatPayloadToSend()
+      updateUser(payloadToSend)
+        .then(async(result) => {
           if (result.data.status === 200) {
+            await addAccessRights(user?.id, user?.user_access_rights)
             setOpen(false);
             reload();
             context.changeResultSuccessMessage('Modification effectuée');
@@ -120,7 +135,8 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
             context.showResultError(true);
           }
         })
-        .catch(() => {
+        .catch((e) => {
+          console.log(e)
           context.changeResultErrorMessage('Une erreur est servunue lors de la modification des données');
           context.showResultError(true);
         })
@@ -145,6 +161,10 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
       user_access_rights: [...newAccessRights]
     })
   };
+  useEffect(()=>{
+    console.log(initialAccessRights)
+    console.log(user.user_access_rights)
+  },[user])
   return (
     <>
       <CustomizedIconButton variant="contained" onClick={handleClickOpen}>

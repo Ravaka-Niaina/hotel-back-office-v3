@@ -52,3 +52,17 @@ export const updateUser = (payload) =>
             Authorization: token,
         }, */
   });
+
+export const addAccessRight = (payload) => {
+  /**
+   * @payload (raw json body) {
+   *  idUser: xxx,
+   *  idDroitAccess : xxx
+   * }
+   */
+  return axios.post(`${config.host}/user/addAccessRight`, payload, {
+    /* headers: {
+            Authorization: token,
+        }, */
+  })
+}
