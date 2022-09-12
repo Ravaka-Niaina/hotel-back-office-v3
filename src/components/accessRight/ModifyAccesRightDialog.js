@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import {Link as RouterLink } from "react-router-dom";
-import { Dialog, DialogActions, DialogContent, Button, ListItemText } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, Button } from '@mui/material';
 
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
@@ -87,7 +87,7 @@ const ModifyAccessRightDialog = ({ reload, accessRightProp }) => {
       <CustomizedIconButton variant="contained" onClick={handleClickOpen}>
         <Iconify icon="eva:edit-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
       </CustomizedIconButton >
-      <Dialog open={openModifyAccessRightDialog}  maxwidth={'xl'}>
+      <Dialog open={openModifyAccessRightDialog} fullWidth maxwidth={'md'}>
         <CustomizedDialogTitle text={`Modifier le droit d'accès `} />
         <DialogContent style={{ backgroundColor: '#E8F0F8', paddingTop: 15 }}>
           <CustomizedInput
@@ -106,7 +106,7 @@ const ModifyAccessRightDialog = ({ reload, accessRightProp }) => {
             })}
           />
         </DialogContent>
-        <DialogActions sx={{ backgroundColor: '#E8F0F8' }}>
+        <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px' }}>
           <Button onClick={handleClose} sx={{ fontSize: 12 }}>
             Annuler
           </Button>

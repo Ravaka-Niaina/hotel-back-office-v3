@@ -73,7 +73,7 @@ const AccessRight = () => {
   }, []);
 
   return (
-    <Page title="User">
+    <Page title="AIOLIA | Droits d'acces">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <CustomizedTitle sx={{ color: '#787878' }} text="Droit d'acces" />

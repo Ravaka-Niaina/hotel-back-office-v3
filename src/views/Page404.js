@@ -22,7 +22,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 export default function Page404() {
   return (
-    <Page title="404 Page Not Found">
+    <Page title="AIOLIA | 404">
       <Container>
         <ContentStyle sx={{ textAlign: 'center', alignItems: 'center' }}>
           <Typography variant="h3" paragraph>

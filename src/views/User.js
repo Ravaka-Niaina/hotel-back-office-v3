@@ -23,6 +23,7 @@ import TableCellStyled from '../components/CustomizedComponents/CustomizedTableC
 import AddUserDialog from '../components/user/AddUserDialog';
 import { ThemeContext } from '../components/context/Wrapper';
 import { getUserList } from '../services/User';
+import { getAccessRightList } from '../services/AccessRight';
 
 // mock
 
@@ -55,20 +56,24 @@ export default function User() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const [accessRights, setAccessRights] = useState(null);
+  
   useEffect(() => {
     reload();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const getAllUser = async () => {
     context.showLoader(true);
-    const payload = {
+    const payloadListUser = {
       tableName: 'partenaire',
       valuesToSearch: [],
-      fieldsToPrint: ['_id', 'nom', 'prenom', 'telephone', 'isActive'],
+      fieldsToPrint: [],
       nbContent: 200,
       numPage: 1,
     };
-    getUserList(payload)
+    // const accessRights = await getAccessRightList({})
+    // console.log(accessRights)
+    getUserList(payloadListUser)
       .then((result) => {
         if (result.status === 200) {
           setUserList(result.data.list);
@@ -85,8 +90,18 @@ export default function User() {
         context.showLoader(false);
       });
   };
+
+  const getAccessRights = () => {
+    getAccessRightList().then(result=>{
+      if(result.status !== 200) return
+      if (!result.data) return
+      if(!result.data?.list) return
+      setAccessRights(result?.data?.list)
+    })
+  }
   const reload = () => {
     getAllUser();
+    getAccessRights();
   };
 
   const handleRequestSort = (event, property) => {
@@ -137,9 +152,11 @@ export default function User() {
   const filteredUsers = userList;
 
   const isUserNotFound = filteredUsers.length === 0;
-
+  useEffect(()=>{
+    // console.log(userList)
+  },[userList])
   return (
-    <Page title="User">
+    <Page title="AIOLIA | Utilisateurs">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <CustomizedTitle sx={{ color: '#787878'}} text='Utilisateur'/>
@@ -162,7 +179,7 @@ export default function User() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {userList.map((row) => {
+                  {userList && userList.map((row) => {
                     const { _id, nom, prenom, telephone, isActive } = row;
                     const isItemSelected = selected.indexOf(nom) !== -1;
 
@@ -189,7 +206,7 @@ export default function User() {
                         <TableCellStyled align="left">{isActive ? 'Oui' : 'Non'}</TableCellStyled>
 
                         <TableCellStyled align="right">
-                          <UserMoreMenu userId={_id} reload={reload}/>
+                          {row && <UserMoreMenu accessRights={accessRights} userDetails={row} userId={_id} reload={reload}/>}
                         </TableCellStyled>
                       </TableRow>
                     );

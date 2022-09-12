@@ -13,12 +13,13 @@ import AccessRight from '../../views/AccessRight';
 import User from '../../views/User';
 import Login from '../../views/Login';
 import VerifyCode from '../../views/VerifyCode';
-import NotFound from '../../views/Page404';
+// import NotFound from '../../views/Page404';
 import DashboardApp from '../../views/DashboardApp';
 import TestSideBar from '../../views/TestSideBar';
 import TestFormulaire from '../../views/TestFormulaire';
 import HomeForm from '../../views/HomeForm';
 import RapportApp from '../../views/RapportApp';
+import Protected from '../../components/protected/Protected';
 // ----------------------------------------------------------------------
 export default function Router() {
   return useRoutes([
@@ -26,17 +27,17 @@ export default function Router() {
       path: '/dashboard',
       element: <DashboardLayout />,
       children: [
-        { path: 'app', element: <DashboardApp /> },
-        { path: 'homeForm', element: <HomeForm /> },
-        { path: 'rapport', element: <RapportApp /> },
-        { path: 'ratePlan', element: <RatePlan /> },
-        { path: 'calendar', element: <Calendar /> },
-        { path: 'accessRight', element: <AccessRight /> },
-        { path: 'user', element: <User /> },
-        { path: 'promotion', element: <Promotion /> },
-        { path: 'typeChambre', element: <TypeChambre /> },
-        { path: 'politic', element: <Politic /> },
-        { path: 'hotel', element: <Hotel /> },
+        { path: 'app', element: <Protected child={<DashboardApp />} admin partner/> },
+        { path: 'homeForm', element: <Protected child={<HomeForm />} admin partner /> },
+        { path: 'rapport', element: <Protected child={<RapportApp />} admin partner/>},
+        { path: 'ratePlan', element: <Protected child={<RatePlan />} admin partner/>},
+        { path: 'calendar', element: <Protected child={<Calendar />} admin partner/>},
+        { path: 'accessRight', element: <Protected child={<AccessRight />} admin partner/>},
+        { path: 'user', element: <Protected child={<User />} admin /> },
+        { path: 'promotion', element: <Protected child={<Promotion />} admin /> },
+        { path: 'typeChambre', element: <Protected child={<TypeChambre />} admin partner /> },
+        { path: 'politic', element: <Protected child={<Politic />} admin partner/> },
+        { path: 'hotel', element: <Protected child={<Hotel />} admin partner/> },
       ],
     },
     {

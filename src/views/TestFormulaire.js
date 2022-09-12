@@ -50,11 +50,12 @@ const TestFormulaire = () => {
     console.log(item);
     if(!selected.includes(item))
     {
-      setSelected(oldSelected => list.filter((e, i) => i < list.findIndex((elem) => elem === item)));
+      const index = list.indexOf(item);
+      setSelected(oldSelected => list.filter((e, i) => i <= index));
     }
     else if(selected[selected.length-1] !== item){
         setSelected(oldSelected => oldSelected.slice(0, oldSelected.findIndex((elem) => elem === item)+1));
-    }  
+    }   
     
   }
   const handleDrag = (e) => {
@@ -78,7 +79,7 @@ const TestFormulaire = () => {
                       background: selected.includes(item) ? "#97E1FF" : "none"
                     }} 
                     onClick={()=>handleSelected(item)}
-                    onMouseEnter={() => {
+                    onDragEnter={() => {
                       handleSelect(item);
                     }}
                   >
@@ -86,16 +87,10 @@ const TestFormulaire = () => {
                     {
                       selected.length>0 && 
                         selected[selected.length-1] === item && (
-                         <IconButton
-                           fontSize="small"
-                           
-                           onDrag={handleDrag}
-                           draggable
-                           aria-label="fingerprint"
-                           color="success">
+                        
                             
-                           <ArrowCircleRightIcon />
-                         </IconButton>
+                       <span onDrag={handleDrag} draggable><ArrowCircleRightIcon /></span>
+                         
                         )
                       
                     }

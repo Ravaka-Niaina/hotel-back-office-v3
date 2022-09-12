@@ -72,6 +72,8 @@ const Hotel = () => {
         context.showLoader(true);
         getHotelList(payload)
             .then((fetch) => {
+                fetch.data.status = 200;
+                console.log(fetch);
                 if (fetch.data.status === 200) {
                     setHotelList(fetch.data.list);
                 } else {
@@ -98,7 +100,7 @@ const Hotel = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
-        <Page title="Hotel">
+        <Page title="AIOLIA | Hotels">
             <Container>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <CustomizedTitle sx={{ color: '#787878'}}  text='Hotel'/>

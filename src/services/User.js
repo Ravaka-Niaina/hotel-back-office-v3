@@ -14,7 +14,13 @@ export const verifyCode = (payload) =>
             Authorization: token,
         }, */
   });
-
+export const verifyToken = (token) => {
+  return axios.get(`${config.host}/verify_token`, {
+    headers: {
+      Authorization: token,
+    },
+  });
+};
 export const resendCode = (payload) =>
   axios.post(`${config.host}/user/login/resendVerificationCode`, payload, {
     /* headers: {
@@ -33,17 +39,16 @@ export const getUserList = (payload) =>
     /* headers: {
             Authorization: token,
         }, */
-});
+  });
 export const getUserDetails = (id) =>
   axios.get(`${config.host}/user/details/${id}`, {
     headers: {
-      'ispartner':true,
-    }, 
-});
+      ispartner: true,
+    },
+  });
 export const updateUser = (payload) =>
   axios.post(`${config.host}/user/update`, payload, {
     /* headers: {
             Authorization: token,
         }, */
-});
-
+  });

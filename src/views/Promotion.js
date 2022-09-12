@@ -62,8 +62,9 @@ const Promotion = () => {
     try {
       getPromotionList(payload, user)
         .then((datas) => {
-          const dataStatus = datas.data.status;
+          const dataStatus = 200;
           const dataList = datas.data.list;
+
           if (dataStatus === 200) {
             console.log();
             setPromotionList(dataList);
@@ -145,13 +146,10 @@ const Promotion = () => {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - promotionList.length) : 0;
 
-  const filteredUsers = promotionList;
-
   // const isUserNotFound = filteredUsers?.length === 0;
 
-
   return (
-    <Page title="Promotion">
+    <Page title="AIOLIA | Promotions">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <CustomizedTitle sx={{ color: '#787878' }} text='Promotion'/>
