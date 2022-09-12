@@ -1,13 +1,16 @@
 import React, {useState , useEffect} from 'react';
-import { Popper , Fade , Collapse, Zoom, Grow , Slide , Paper , Stack, MenuItem,FormControlLabel,RadioGroup,Switch, IconButton } from '@mui/material';
+import { Popper , Slide , Paper , Stack, MenuItem,FormControlLabel,RadioGroup,Switch, IconButton } from '@mui/material';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
+
+import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
 import CustomizedInput from '../components/CustomizedComponents/CustomizedInput';
 import CustomizedSelect from '../components/CustomizedComponents/CustomizedSelect';
 import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
 import CustomizedRadio from '../components/CustomizedComponents/CustomizedRadio';
 import CustomizedToggle from '../components/CustomizedComponents/CustomizedToggle';
 import CustomizedSwitch from '../components/CustomizedComponents/CustomizedSwitch';
+import CustomizedIconButton from '../components/CustomizedComponents/CustomizedIconButton';
 
 const style = {
   content: {
@@ -95,9 +98,34 @@ const TestFormulaire = () => {
       <Popper open={open} anchorEl={anchorEl} placement='top' transition>
         {({ TransitionProps }) => (
           <Slide {...TransitionProps} timeout={350}>
-            <Paper sx={{p: 5, width:'200px',height:'200px'}}>
-              <div sx={{  }}>The content of the Popper.</div>
-            </Paper>
+            <div>
+            <CustomizedPaperOutside sx={{p: 2, width:'250px',height:'350px'}}>
+              <Stack direction="column" spacing={1} justifyContent='center'>
+                <Stack>
+                  <h4>Chambre standard</h4>
+                  <h6>Sep 14, 2022</h6>
+                </Stack>
+                <FormControlLabel control={<CustomizedRadio />} label="Modifier" />
+                <RadioGroup
+                  defaultValue="oui"
+                  aria-labelledby="demo-customized-radios"
+                  name="customized-radios"
+                >
+                  <FormControlLabel value="oui" control={<CustomizedRadio />} label="Oui" />
+                  <FormControlLabel value="non" control={<CustomizedRadio />} label="Non" />
+                </RadioGroup>
+                <CustomizedInput placeholder="Test" variant="outlined" label="Test"/>
+                <Stack direction="row" spacing={5} justifyContent='space-around' alignItems='center'>
+                  <CustomizedIconButton>
+                    <ArrowCircleRightIcon sx={{ color:'#2476d2'}}/>
+                  </CustomizedIconButton>
+                  <CustomizedIconButton>
+                    <ArrowCircleLeftIcon sx={{ color:'#2476d2'}}/>
+                  </CustomizedIconButton>
+                </Stack>
+              </Stack>
+            </CustomizedPaperOutside>
+            </div>
           </Slide>
         )}
       </Popper>
