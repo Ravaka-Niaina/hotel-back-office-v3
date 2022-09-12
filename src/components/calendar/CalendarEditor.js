@@ -1,12 +1,16 @@
 import React , { useEffect , useState } from 'react';
 import { Grid , Stack } from '@mui/material';
-import PersonIcon from '@mui/icons-material/Person';
+
+import PeopleIcon from '@mui/icons-material/People';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import EventBusyIcon from '@mui/icons-material/EventBusy';
+
+import StatusCell from './StatusCell';
 
 import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
 import CalendarValueSide from './CalendarValueSide';
 import CalendarAttributeSide from './CalendarAttributeSide';
+
 import { getTcTarifPrix } from '../../services/TCTarif';
 
 import './index.css';
@@ -1413,29 +1417,36 @@ const CalendarEditor = () => {
         }
     );
     
-    const [ratePlanList , setRatePlanList] = useState(new Array(0));
+    const [roomDetails , setRoomDetails ] = useState(new Array(0));
+    const [ratePlanList , setRatePlanList ] = useState(new Array(0));
     const [ratePlanAttributList ,setRatePlanAttributeList ] = useState(new Array(0));
     console.log(chambre);
-    const loadCells = () => {
+    
+    const loadRoomDetailsRows = () => {
+        const roomDetailsTemp = [];
+        const roomStatusList = [] ; const roomToSellList = [] ; const bookedRoomList = [];
+        chambre.statusDays.forEach((status,i)=>{
+            roomStatusList.push((
+                <td className='status' key={status}>
+                    <StatusCell available={!status.closed} />
+                </td>
+            ))
+            roomToSellList.push((
+                <td key={status}>
+                    {status.toSell}
+                </td>
+            ))
+            bookedRoomList.push((
+                <td key={status}>
+                    {chambre.booked?.[i]?.value}
+                </td>
+            ))
+        })
+
+    };
+    const loadRatePlanRows  = () => {
         const ratePlanListTemp = []; // [RatePlan values and information ] all the cells in the right side in the calendar(table)
         const ratePlanAttributeListTemp = []; // [RatePlan name or attribute ] all the cells in the left side in the calendar(table)
-        
-        // chambre.statusDays.forEach((status)=>{
-        //     <td className='status' key={status}>
-        //         <div
-        //             style={{
-        //                 paddingLeft: '0px !important',
-        //                 background: status.closed ? '#FF0000' : '#64E986',
-        //                 height: '75%',
-
-        //             }}
-        //         >
-        //             {
-        //                 status.toSell ? (<EventBusyIcon style={{ color: 'white', width: '18px', height: '18px' }} />) : (<EventAvailableIcon style={{ color: 'white', width: '18px', height: '18px' }} />)
-        //             }
-        //         </div>
-        //     </td>
-        // })
         chambre.planTarifaire.forEach((tarif, j) => {
             const prixTarifList = [];
             const prixTarifAttributeList = [];
@@ -1452,7 +1463,7 @@ const CalendarEditor = () => {
                                 <span style={{ fontSize: '16px' }}>
                                     (x {tarif.prixTarif[0]?.versions[index]?.nbPers})
                                 </span>
-                                <PersonIcon />
+                                <PeopleIcon />
                             </Stack>
                                 
                         </td>
@@ -1484,17 +1495,7 @@ const CalendarEditor = () => {
                                     
                                     return (
                                         <td className='status' key={i}>
-                                            <div
-                                                style={{
-                                                    paddingLeft: '0px !important',
-                                                    background: p.closed ? '#FF0000' : '#64E986',
-                                                    height: '75%',
-                                                }}
-                                            >
-                                                {
-                                                    p.closed ? (<EventBusyIcon style={{ color: 'white', width: '18px', height: '18px' }} />) : (<EventAvailableIcon style={{ color: 'white', width: '18px', height: '18px' }} />)
-                                                }
-                                            </div>
+                                            <StatusCell available={!p.closed} />
                                         </td>
                                     );
                                 })
@@ -1528,6 +1529,12 @@ const CalendarEditor = () => {
         setRatePlanList(()=>ratePlanListTemp);
         setRatePlanAttributeList(()=>ratePlanAttributeListTemp);
     };
+
+    const loadCells = () => {
+       loadRoomDetailsRows();
+       loadRatePlanRows();
+    };
+      
     useEffect(()=>{
         const payload = {
             dateDebut:"2022-09-01",

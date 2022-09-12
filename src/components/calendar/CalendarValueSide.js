@@ -1,8 +1,6 @@
 import React from 'react';
 import { Stack } from '@mui/material';
-import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import EventBusyIcon from '@mui/icons-material/EventBusy';
-
+import StatusCell from './StatusCell';
 import { dateIHMFormat } from '../../services/Util';
 
 const CalendarValueSide = ({list,chambre,ratePlanList}) => {
@@ -52,18 +50,7 @@ const CalendarValueSide = ({list,chambre,ratePlanList}) => {
                                 const rand = Math.round(Math.random() * 2);
                                 return (
                                     <td className='status' key={e}>
-                                        <div
-                                            style={{
-                                                paddingLeft: '0px !important',
-                                                background: rand === 1 ? '#FF0000' : '#64E986',
-                                                height: '75%',
-
-                                            }}
-                                        >
-                                            {
-                                                rand === 1 ? (<EventBusyIcon style = {{ color: 'white', width: '18px', height: '18px' }} />) : (<EventAvailableIcon style={{ color: 'white', width: '18px', height: '18px' }} />)
-                                            }
-                                        </div>
+                                        <StatusCell available={rand === 1} />
                                     </td>
 
                                 );
