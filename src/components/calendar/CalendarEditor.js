@@ -1417,32 +1417,38 @@ const CalendarEditor = () => {
         }
     );
     
-    const [roomDetails , setRoomDetails ] = useState(new Array(0));
+    const [roomDetails , setRoomDetails ] = useState({
+        roomStatus:[],
+        roomToSell:[],
+        bookedRoom:[],
+    });
     const [ratePlanList , setRatePlanList ] = useState(new Array(0));
     const [ratePlanAttributList ,setRatePlanAttributeList ] = useState(new Array(0));
     console.log(chambre);
     
     const loadRoomDetailsRows = () => {
-        const roomDetailsTemp = [];
-        const roomStatusList = [] ; const roomToSellList = [] ; const bookedRoomList = [];
+        const roomStatus = []; const roomToSell = []; const bookedRoom= [];
         chambre.statusDays.forEach((status,i)=>{
-            roomStatusList.push((
-                <td className='status' key={status}>
+            roomStatus.push((
+                <td className='status' key={`roomStatus-${i}`}>
                     <StatusCell available={!status.closed} />
                 </td>
             ))
-            roomToSellList.push((
-                <td key={status}>
+            roomToSell.push((
+                <td key={`roomToSell-${i}`}>
                     {status.toSell}
                 </td>
             ))
-            bookedRoomList.push((
-                <td key={status}>
+            bookedRoom.push((
+                <td key={`bookedRoom-${i}`}>
                     {chambre.booked?.[i]?.value}
                 </td>
             ))
         })
-
+        setRoomDetails((oldRoomDetails) => ({
+            ...oldRoomDetails,
+            roomStatus,roomToSell,bookedRoom
+        }));
     };
     const loadRatePlanRows  = () => {
         const ratePlanListTemp = []; // [RatePlan values and information ] all the cells in the right side in the calendar(table)
@@ -1563,7 +1569,7 @@ const CalendarEditor = () => {
                     <CalendarAttributeSide chambre={chambre} ratePlanAttributeList={ratePlanAttributList}/>
                 </Grid>
                 <Grid item xs={8} >
-                    <CalendarValueSide  list={list} chambre={chambre} ratePlanList={ratePlanList}/>
+                    <CalendarValueSide  list={list} chambre={chambre} ratePlanList={ratePlanList} roomDetails={roomDetails}/>
                 </Grid>
             </Grid>
         </CustomizedPaperOutside>
