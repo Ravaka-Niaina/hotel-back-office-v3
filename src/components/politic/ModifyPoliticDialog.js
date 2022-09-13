@@ -221,7 +221,8 @@ const ModifyPoliticDialog = ({ reload, politic: politicToModify }) => {
       const idPoliticToModify = politicToModify?._id
       context.showLoader(true)
       formatPayloadToSend().then((newPolitic) => {
-        modifyPolitic(newPolitic, idPoliticToModify).then(results => {
+        const idToken = JSON.parse(localStorage.getItem('id_token'));
+        modifyPolitic(newPolitic, idPoliticToModify, idToken).then(results => {
           console.log(results);
           const { status } = results.data
           if (status === 200) {

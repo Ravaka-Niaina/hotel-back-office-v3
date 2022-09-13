@@ -21,11 +21,11 @@ export const deletePolitic = (payload) =>
     }
   })
 
-export const modifyPolitic = (payload, idPolitic) =>
+export const modifyPolitic = (payload, idPolitic, idToken) =>
   axios.post(`${config.host}/politique/updateP/${idPolitic}`, payload, {
     headers: {
-      // Authorization: idToken,
-    }
+        Authorization: idToken,
+    },
 })
 // export const updatePolitic = (payload) =>
 //   axios.post(`${config.host}/droitAcces/update`, payload, {
