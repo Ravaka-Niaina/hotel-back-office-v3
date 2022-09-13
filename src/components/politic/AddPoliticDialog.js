@@ -184,6 +184,11 @@ const AddPoliticDialog = ({ reload }) => {
         }]
       }
     }
+
+    newPoliticDatePrice.forEach((datePrice) => {
+      datePrice.pourcentage = Number.parseFloat(datePrice.pourcentage);
+    });
+
     const newRefundableValue = politic.refundable === "true" || politic.refundable === true
     // Formated Payload
     const formatedPayload = {
@@ -229,7 +234,9 @@ const AddPoliticDialog = ({ reload }) => {
     if (formIsValid(politic)) {
       context.showLoader(true)
       formatPayloadToSend().then((politicToAdd) => {
-        createPolitic(politicToAdd).then((datas) => {
+        console.log(politicToAdd);
+        const idToken = JSON.parse(localStorage.getItem('id_token'));
+        createPolitic(politicToAdd, idToken).then((datas) => {
           const status = datas?.data?.status
           if (status) {
             if (status === 200) {

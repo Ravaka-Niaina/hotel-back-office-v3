@@ -6,7 +6,7 @@ import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
 const CalendarAttributeSide = ({chambre,ratePlanAttributeList}) => {
     return (
         <div className='calendarEditor'>
-            <table>
+            <table >
                 <thead>
                     <tr style={{ height: "150px" }}>
                         <th>

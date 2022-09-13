@@ -12,11 +12,11 @@ export const createHotel = (payload,idToken) =>
             Authorization: idToken,
         },
 });
-export const updateHotel = (payload) =>
+export const updateHotel = (payload, idToken) =>
     axios.post(`${config.host}/hotel/update`, payload, {
-        // headers: {
-        //     Authorization: idToken,
-        // },
+        headers: {
+            Authorization: idToken,
+        },
 });
 export const deleteHotel = (payload) =>
     axios.post(`${config.host}/delete`, payload, {

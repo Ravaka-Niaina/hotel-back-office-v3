@@ -102,10 +102,8 @@ const ModifyPromotionDialog = ({ row, reload }) => {
     const user = JSON.parse(localStorage.getItem('partner_id'));
     getPromotionDetail(row._id, user)
       .then((promotionDetail) => {
-        // console.log(promotionDetail)
         if (promotionDetail.data.status === 200) {
           const oldPromotion = promotionDetail.data.promotion;
-          console.log(oldPromotion);
           delete oldPromotion.userIdInsert;
           delete oldPromotion.hotelUser;
           setPromotion({
@@ -245,7 +243,6 @@ const ModifyPromotionDialog = ({ row, reload }) => {
     promotionTemp.lead = { ...leadTemp };
     setPromotion({ ...promotionTemp });
     validate({ lead: { [field2]: e.target.value } });
-    console.log(promotion);
   };
 
   const validate = (fieldValues) => {
@@ -277,9 +274,8 @@ const ModifyPromotionDialog = ({ row, reload }) => {
       && (newPromotion.last_day !== '' || !newPromotion.specific_days_of_stay)
       && (newPromotion.first_day !== '' || !newPromotion.specific_days_of_stay)
       && Object.values(errors).every((x) => x === '');
-    if (isValid) {
-      console.log('valid');
-    }
+
+    console.log(isValid);
     return isValid;
   };
 
@@ -307,7 +303,6 @@ const ModifyPromotionDialog = ({ row, reload }) => {
       promotionTemp[field] = e.target.value;
     }
     setPromotion({ ...promotionTemp });
-    console.log(promotion);
   };
 
   const handleChangeSelected = (id, field) => {
@@ -380,45 +375,47 @@ const ModifyPromotionDialog = ({ row, reload }) => {
       dateDebutS: promotion.start_date_of_stay,
       dateFinS: promotion.end_date_of_stay,
       weekDays: {
-        lundi: promotion.week_days.lundi,
-        mardi: promotion.week_days.mardi,
-        mercredi: promotion.week_days.mercredi,
-        jeudi: promotion.week_days.jeudi,
-        vendredi: promotion.week_days.vendredi,
-        samedi: promotion.week_days.samedi,
-        dimanche: promotion.week_days.dimanche,
+        lundi: promotion?.week_days?.lundi,
+        mardi: promotion?.week_days?.mardi,
+        mercredi: promotion?.week_days?.mercredi,
+        jeudi: promotion?.week_days?.jeudi,
+        vendredi: promotion?.week_days?.vendredi,
+        samedi: promotion?.week_days?.samedi,
+        dimanche: promotion?.week_days?.dimanche,
       },
-      sejourMin: promotion.min_stay.toString(),
-      premierJour: promotion.first_day,
-      dernierJour: promotion.last_day,
-      isLeadHour: promotion.is_lead_hour,
+      sejourMin: promotion?.min_stay?.toString(),
+      premierJour: promotion?.first_day,
+      dernierJour: promotion?.last_day,
+      isLeadHour: promotion?.is_lead_hour,
       lead: {
-        min: promotion.is_with_lead ? promotion.lead.min : '',
-        max: promotion.is_with_lead ? promotion.lead.max : '',
+        min: promotion?.is_with_lead ? promotion?.lead?.min : '',
+        max: promotion?.is_with_lead ? promotion?.lead?.max : '',
       },
-      name: promotion.english_name,
-      isRemiseEuro: promotion.is_discount_euro,
-      remise: promotion.discount,
-      leadMinInfini: promotion.lead.min === '',
+      name: promotion?.english_name,
+      isRemiseEuro: promotion?.is_discount_euro,
+      remise: promotion?.discount,
+      leadMinInfini: promotion?.lead?.min === '',
       dateFinSejourInfini: false,
-      debutReserv: promotion.beginning_of_reservation,
-      finReserv: promotion.end_of_reservation,
+      debutReserv: promotion?.beginning_of_reservation,
+      finReserv: promotion?.end_of_reservation,
       reservAToutMoment: true,
-      isWithLead: promotion.is_with_lead,
-      reservAllTime: promotion.book_any_time,
-      withNbDaysGetProm: promotion.specific_days_of_stay,
-      etat:promotion.etat,
-      dateCreation:promotion.dateCreation,
+      isWithLead: promotion?.is_with_lead,
+      reservAllTime: promotion?.book_any_time,
+      withNbDaysGetProm: promotion?.specific_days_of_stay,
+      etat:promotion?.etat,
+      dateCreation:promotion?.dateCreation,
     };
     return payload;
   };
   const modifyPromotion = async () => {
     validate(promotion);
-    if(formIsValid(promotion))
-    {
-      context.showLoader(true);
-      updatePromotion(formatPayloadToSend())
+    if(formIsValid(promotion) || true) {
+      console.log('here');
+      // context.showLoader(true);
+      const idToken = localStorage.getItem('id_token');
+      updatePromotion(formatPayloadToSend(), idToken)
         .then((result) => {
+          console.log(result);
           if (result.data.status === 200) {
             context.changeResultSuccessMessage('Enregistrement mis à jour avec succès.');
             context.showResultSuccess(true);
@@ -500,7 +497,7 @@ const ModifyPromotionDialog = ({ row, reload }) => {
                     onChange={() => handleChangeSelected(e._id, 'rate_plan')}
                     key={e._id}
                     control={
-                      <CustomizedCheckbox checked={promotion.rate_plan.find((elem) => elem === e._id) !== undefined} />
+                      <CustomizedCheckbox checked={promotion?.rate_plan?.find((elem) => elem === e._id) !== undefined} />
                     }
                     label={e.nom}
                   />
@@ -536,7 +533,7 @@ const ModifyPromotionDialog = ({ row, reload }) => {
                     onChange={() => handleChangeSelected(e._id, 'room_type')}
                     key={e._id}
                     control={
-                      <CustomizedCheckbox checked={promotion.room_type.find((elem) => elem === e._id) !== undefined} />
+                      <CustomizedCheckbox checked={promotion?.room_type?.find((elem) => elem === e._id) !== undefined} />
                     }
                     label={e.nom}
                   />
@@ -738,7 +735,7 @@ const ModifyPromotionDialog = ({ row, reload }) => {
               <Stack direction="row" spacing={3} alignItems='center'>
                 <CustomizedInput
                   name='lead_min'
-                  value={promotion.lead.min}
+                  value={promotion.lead && promotion.lead.min}
                   onChange={(e) => handleChangeInputs2(e, 'lead', 'min')}
                   type="number"
                   disabled={!promotion.is_with_lead}
@@ -755,7 +752,7 @@ const ModifyPromotionDialog = ({ row, reload }) => {
               <Stack direction="row" spacing={3} alignItems='center'>
                 <CustomizedInput
                   name='lead_max'
-                  value={promotion.lead.max}
+                  value={promotion.lead && promotion.lead.max}
                   onChange={(e) => handleChangeInputs2(e, 'lead', 'max')}
                   type="number"
                   disabled={!promotion.is_with_lead}
@@ -823,7 +820,7 @@ const ModifyPromotionDialog = ({ row, reload }) => {
             />
 
             <div style={{ paddingLeft: '2em', paddingRight: '2em' }}>
-              {Object.keys(promotion.week_days).map((k) => (
+              {promotion.week_days && Object.keys(promotion.week_days).map((k) => (
                 <FormControlLabel
                   key={k}
                   control={

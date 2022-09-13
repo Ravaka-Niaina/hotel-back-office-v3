@@ -1,9 +1,9 @@
 import React from 'react';
 import { Stack } from '@mui/material';
-import StatusCell from './StatusCell';
+import StatusCell from './Cells/StatusCell';
 import { dateIHMFormat } from '../../services/Util';
 
-const CalendarValueSide = ({list,chambre,ratePlanList}) => {
+const CalendarValueSide = ({list,chambre,ratePlanList,roomDetails}) => {
     return (
         <div className='calendarEditor value' style={{ overflowX: "auto" }}>
             <table>
@@ -44,38 +44,19 @@ const CalendarValueSide = ({list,chambre,ratePlanList}) => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        {
-                            list.map((e) => {
-                                const rand = Math.round(Math.random() * 2);
-                                return (
-                                    <td className='status' key={e}>
-                                        <StatusCell available={rand === 1} />
-                                    </td>
-
-                                );
-                            })
-                        }
-                    </tr>
-                    
-                    <tr>
-                        {
-                            list.map((e,i) => {
-                                return (
-                                    <td key={e}>20</td>
-                                );
-                            })
-                        }
-                    </tr>
-                    <tr>
-                        {
-                            list.map((e, i) => {
-                                return (
-                                    <td key={e}>{Math.round(Math.random()*20)}</td>
-                                );
-                            })
-                        }
-                    </tr>
+                    {
+                        Object.keys(roomDetails).map((key) => {
+                            return (
+                                <tr key={key}>
+                                    {
+                                        roomDetails[key].map((cell)=>{
+                                            return cell;
+                                        })
+                                    }
+                                </tr>
+                            )
+                        })
+                    }
                     {
                         ratePlanList.map((tarifDetails, j) => {
                             return tarifDetails;

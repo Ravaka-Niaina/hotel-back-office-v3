@@ -26,4 +26,9 @@ export const getPromotionDetail = (promotionId, partnerId) =>
       partner_id: partnerId,
     },
   });
-export const updatePromotion = (payload) => axios.post(`${config.host}/promotion/updateP/`, payload, {});
+export const updatePromotion = (payload, idToken) => 
+  axios.post(`${config.host}/promotion/updateP/`, payload, {
+    headers: {
+      Authorization: idToken,
+    },
+  });

@@ -2,10 +2,12 @@ import React , { useEffect , useState } from 'react';
 import { Grid , Stack } from '@mui/material';
 
 import PeopleIcon from '@mui/icons-material/People';
-import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import EventBusyIcon from '@mui/icons-material/EventBusy';
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 
-import StatusCell from './StatusCell';
+import StatusCell from './Cells/StatusCell';
+import SelectableCell from './Cells/SelectableCell';
+import CellEditorPopper from './Cells/CellEditorPopper';
 
 import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
 import CalendarValueSide from './CalendarValueSide';
@@ -23,6 +25,78 @@ const CalendarEditor = () => {
         date.setDate(date.getDate() + 1);
         return new Date(date.getTime());
     });
+    const [selected, setSelected] = useState(new Array(0));
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [open, setOpen] = React.useState(false);
+    const handleSelectOneItem = (e, item) => {
+        setAnchorEl(e.currentTarget);
+        setOpen((prev) => !prev);
+        setSelected([item]);
+    };
+    const allowDraggingArea = (e) => {
+        e.preventDefault();
+    };
+    const handleSelect = (e, item) => {
+        console.log('SELECT.........///');
+        const direction = e.dataTransfer.types[0];
+        console.log(direction);
+        console.log(selected)
+        console.log(item);
+        const newItemIndex = chambre.statusDays.findIndex((elem)=> elem.date===item);
+        const firstItemSelectedIndex = chambre.statusDays.findIndex((elem) => elem.date === selected[0]);
+        const lastItemSelectedIndex = chambre.statusDays.findIndex((elem) => elem.date === selected[selected.length - 1]);
+        if (direction === 'right' && !(newItemIndex < firstItemSelectedIndex)) {
+            setAnchorEl(e.currentTarget);
+            if (!selected.includes(item)) {
+                setSelected(
+                    oldSelected => 
+                    (
+                        chambre.statusDays.reduce((stack, elem , i) => {
+                            if (i <= newItemIndex && i >= firstItemSelectedIndex)
+                            {
+                                stack.push(elem.date);
+                            }
+                            return stack;
+                        }, [])
+                    )
+                );
+            }
+            else {
+                console.log('ITEM IN SELECTEDDDD RIGHT');
+                setSelected(oldSelected => (oldSelected.slice(0, oldSelected.indexOf(item) + 1)));
+            }
+        }
+        else if (direction === 'left' && !(newItemIndex > lastItemSelectedIndex)) {
+            setAnchorEl(e.currentTarget);
+            if (!selected.includes(item)) {
+
+                setSelected(
+                    oldSelected => 
+                    (
+                        chambre.statusDays.reduce((stack, elem, i) => {
+                            if (i >= newItemIndex && i <= lastItemSelectedIndex) {
+                                stack.push(elem.date);
+                            }
+                            return stack;
+                        }, [])
+                    )
+                );
+            }
+            else {
+                console.log('ITEM IN SELECTEDDDD LEFT');
+                setSelected(oldSelected => (oldSelected.slice(oldSelected.indexOf(item), oldSelected.length)));
+            }
+        }
+    }
+    const handleDragStart = (e, direction) => {
+        const crt = document.createElement('div');
+        crt.style.visibility = "hidden"; /* or visibility: hidden, or any of the above */
+        e.dataTransfer.clearData();
+        e.dataTransfer.setDragImage(crt, 0, 0);
+        e.dataTransfer.setData(direction, direction);
+        // ev.dataTransfer.setDragImage(img, -50, -50);
+    }
+
     const [chambre,setChambre] = useState(
         {
             "_id": "620f4277d5360b160f48908e",
@@ -1417,32 +1491,51 @@ const CalendarEditor = () => {
         }
     );
     
-    const [roomDetails , setRoomDetails ] = useState(new Array(0));
+    const [roomDetails , setRoomDetails ] = useState({
+        roomStatus:[],
+        roomToSell:[],
+        bookedRoom:[],
+    });
     const [ratePlanList , setRatePlanList ] = useState(new Array(0));
     const [ratePlanAttributList ,setRatePlanAttributeList ] = useState(new Array(0));
     console.log(chambre);
     
     const loadRoomDetailsRows = () => {
-        const roomDetailsTemp = [];
-        const roomStatusList = [] ; const roomToSellList = [] ; const bookedRoomList = [];
+        const roomStatus = []; const roomToSell = []; const bookedRoom= [];
         chambre.statusDays.forEach((status,i)=>{
-            roomStatusList.push((
-                <td className='status' key={status}>
+            roomStatus.push((
+                <td className='status' key={`roomStatus-${i}`}>
                     <StatusCell available={!status.closed} />
                 </td>
             ))
-            roomToSellList.push((
-                <td key={status}>
-                    {status.toSell}
+            roomToSell.push((
+                <td key={`roomToSell-${i}`} style={{position:'relative'}}>
+                    <SelectableCell
+                        selected={selected}
+                        item={status.date}
+                        onClick={(e) => handleSelectOneItem(e, status.date)}
+                        onDragOver={allowDraggingArea}
+                        onDragEnter={(e) => {
+                            handleSelect(e, status.date);
+                        }}
+                        
+                    >
+                        {status.toSell}
+                        
+                    </SelectableCell>
+                    
                 </td>
             ))
-            bookedRoomList.push((
-                <td key={status}>
+            bookedRoom.push((
+                <td key={`bookedRoom-${i}`}>
                     {chambre.booked?.[i]?.value}
                 </td>
             ))
         })
-
+        setRoomDetails((oldRoomDetails) => ({
+            ...oldRoomDetails,
+            roomStatus,roomToSell,bookedRoom
+        }));
     };
     const loadRatePlanRows  = () => {
         const ratePlanListTemp = []; // [RatePlan values and information ] all the cells in the right side in the calendar(table)
@@ -1474,10 +1567,16 @@ const CalendarEditor = () => {
                         {
                             tarif.prixTarif.map((pt, i) => {
                                 return (
-                                    <td 
+                                    <td
                                         key={`${index}-${i}`}
+                                        
                                     >
-                                        {pt.versions[index]?.prix}$
+                                        {/* <SelectableCell 
+                                            onClick={(e) => handleSelectOneItem(e, pt.date)}
+                                        > */}
+                                            {pt.versions[index]?.prix}$
+                                        {/* </SelectableCell> */}
+                                        
                                     </td>
                                 )
                                         
@@ -1531,11 +1630,13 @@ const CalendarEditor = () => {
     };
 
     const loadCells = () => {
+        console.log('loading...');
        loadRoomDetailsRows();
        loadRatePlanRows();
     };
       
     useEffect(()=>{
+        console.log('loading... useEffect');
         const payload = {
             dateDebut:"2022-09-01",
             dateFin:"2022-09-30"
@@ -1555,15 +1656,24 @@ const CalendarEditor = () => {
                 alert('Error!');
             });
         loadCells();
-    },[])
+    },[selected])
     return (
         <CustomizedPaperOutside elevation={12} sx={{ background: '#E3EDF7', p: 5 }}>
-            <Grid container >
-                <Grid item xs={4}>
-                    <CalendarAttributeSide chambre={chambre} ratePlanAttributeList={ratePlanAttributList}/>
+            <CellEditorPopper open={open} setOpen={setOpen} anchorEl={anchorEl} sx={{ zIndex:16777270}} selected={selected}/>
+            <Grid container>
+                <Grid item xs={4} >
+                    <CalendarAttributeSide 
+                        chambre={chambre} 
+                        ratePlanAttributeList={ratePlanAttributList}
+                    />
                 </Grid>
-                <Grid item xs={8} >
-                    <CalendarValueSide  list={list} chambre={chambre} ratePlanList={ratePlanList}/>
+                <Grid item xs={8}>
+                    <CalendarValueSide  
+                        list={list} 
+                        chambre={chambre} 
+                        ratePlanList={ratePlanList} 
+                        roomDetails={roomDetails}
+                    />
                 </Grid>
             </Grid>
         </CustomizedPaperOutside>
