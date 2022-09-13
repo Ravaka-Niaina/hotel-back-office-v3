@@ -117,7 +117,7 @@ const ModifyHotelDialog = (props) => {
       vignette: Number.parseFloat(hotel.tourist_sticker, 10),
       photo: pictureList.map((e) => e.img),
       isTVAIncluded: hotel.is_tva_included === 'true',
-      TVA: hotel.is_tva_included === 'true' ? hotel.tva : 0,
+      TVA: hotel.is_tva_included === 'true' ? Number.parseFloat(hotel.tva) : 0,
       location: { lat: Number.parseFloat(hotel.location_lat, 10), lng: Number.parseFloat(hotel.location_lng, 10) },
       logo: logo[0].img,
       banner: banner[0].img,
@@ -186,7 +186,8 @@ const ModifyHotelDialog = (props) => {
     validate(hotel);
     if (formIsValid(hotel)) {
       context.showLoader(true);
-      updateHotel(formatPayloadToSend())
+      const idToken = localStorage.getItem('id_token');
+      updateHotel(formatPayloadToSend(), idToken)
         .then((result) => {
           if (result.data.status === 200) {
             setOpen(false);
@@ -221,8 +222,6 @@ const ModifyHotelDialog = (props) => {
       check_in: row.checkIn,
       check_out: row.checkOut,
       address: row.address,
-      min_baby_age: row.minBabyAge,
-      max_baby_age: row.maxBabyAge,
       min_kid_age: row.minKidAge,
       max_kid_age: row.maxKidAge,
       tourist_sticker: row.vignette,

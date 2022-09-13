@@ -29,8 +29,6 @@ const AddHotelDialog = (props) => {
     check_in: '',
     check_out: '',
     address: '',
-    min_baby_age: '',
-    max_baby_age: '',
     min_kid_age: '',
     max_kid_age: '',
     tourist_sticker: '',
@@ -67,8 +65,6 @@ const AddHotelDialog = (props) => {
         temp.email_address = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(fieldValues.email_address) ? '' : 'Email invalide.';
       }
     }
-    if ('min_baby_age' in fieldValues) temp.min_baby_age = fieldValues.min_baby_age ? '' : 'Ce champ est requis.';
-    if ('max_baby_age' in fieldValues) temp.max_baby_age = fieldValues.max_baby_age ? '' : 'Ce champ est requis.';
     const requiredFieldMessage = 'Ce champ est requis.';
     if ('phone_number' in fieldValues) temp.phone_number = fieldValues.phone_number ? '' : requiredFieldMessage;
     if ('check_in' in fieldValues) temp.check_in = fieldValues.check_in ? '' : requiredFieldMessage;
@@ -112,8 +108,6 @@ const AddHotelDialog = (props) => {
       check_in: '',
       check_out: '',
       address: '',
-      min_baby_age: '',
-      max_baby_age: '',
       min_kid_age: '',
       max_kid_age: '',
       tourist_sticker: '',
@@ -141,8 +135,6 @@ const AddHotelDialog = (props) => {
       checkIn: hotel.check_in,
       checkOut: hotel.check_out,
       address: hotel.address,
-      minBabyAge: Number.parseFloat(hotel.min_baby_age, 10),
-      maxBabyAge: Number.parseFloat(hotel.max_baby_age, 10),
       minKidAge: Number.parseFloat(hotel.min_kid_age, 10),
       maxKidAge: Number.parseFloat(hotel.max_kid_age, 10),
       vignette: Number.parseFloat(hotel.tourist_sticker, 10),
@@ -187,7 +179,7 @@ const AddHotelDialog = (props) => {
   const addOneHotel = (e) => {
     e.preventDefault();
     if (formIsValid(validate(hotel))) {
-      const idToken = JSON.parse(localStorage.getItem('id_token'));
+      const idToken = localStorage.getItem('id_token');
       context.showLoader(true);
       createHotel(formatPayloadToSend(), idToken)
         .then((result) => {
@@ -423,39 +415,6 @@ const AddHotelDialog = (props) => {
               )}
             </Stack>
             <h4>Age</h4>
-            <Stack spacing={1}>
-              <h5>Bebe:</h5>
-              <Stack direction="row" spacing={2} alignItems="flex-start">
-                <CustomizedInput
-                  placeholder="ex: 3 mois"
-                  sx={{ width: 1 }}
-                  label="A partir de"
-                  name="min_baby_age"
-                  type="number"
-                  onChange={handleChange}
-                  fullWidth
-                  required
-                  {...(errors.min_baby_age && {
-                    error: true,
-                    helpertext: errors.min_baby_age,
-                  })}
-                />
-                <CustomizedInput
-                  placeholder="ex: 2 ans"
-                  sx={{ width: 1 }}
-                  label="Jusqu'à"
-                  name="max_baby_age"
-                  type="number"
-                  onChange={handleChange}
-                  fullWidth
-                  required
-                  {...(errors.max_baby_age && {
-                    error: true,
-                    helpertext: errors.max_baby_age,
-                  })}
-                />
-              </Stack>
-            </Stack>
             <Stack spacing={1}>
               <h5>Enfant:</h5>
               <Stack direction="row" spacing={2} alignItems="flex-start">
