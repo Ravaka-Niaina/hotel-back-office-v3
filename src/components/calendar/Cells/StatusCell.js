@@ -8,7 +8,7 @@ const StatusCell = ({available,...other}) => {
         <div
             style={{
                     paddingLeft: '0px !important',
-                    background: available ?  '#64E986' : '#FF0000',
+                    background: available ? '#2FEFCC' : '#FF647C',
                     height: '75%',
 
             }}

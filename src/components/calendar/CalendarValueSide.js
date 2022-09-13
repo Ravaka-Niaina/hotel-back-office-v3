@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stack } from '@mui/material';
-import StatusCell from './StatusCell';
+import StatusCell from './Cells/StatusCell';
 import { dateIHMFormat } from '../../services/Util';
 
 const CalendarValueSide = ({list,chambre,ratePlanList,roomDetails}) => {

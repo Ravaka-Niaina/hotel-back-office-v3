@@ -3,7 +3,9 @@ td,
 th {
     border: 1px solid #e0e0e0;
 }
-
+.calendarEditor{
+    padding: 10px;
+}
 .calendarEditor table {
     width: 100%;
     border-collapse: collapse;
@@ -13,9 +15,8 @@ th {
 }
 .calendarEditor  td {
     height: 50px;
-    padding: 10px;
-  
 }
+
 .calendarEditor .status{
     height: 25px;
     padding: 0px;
@@ -29,4 +30,8 @@ th {
 .value .status {
     padding-left: 0px;
     padding-right: 0px;
+}
+
+.SelectableCell {
+    padding: 10px;
 }
