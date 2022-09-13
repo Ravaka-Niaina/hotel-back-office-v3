@@ -20,7 +20,7 @@ import './index.css';
 
 const CalendarEditor = () => {
     const date = new Date('2022-08-31');
-    console.log(date);
+    // console.log(date);
     const list = [...new Array(30)].map((e,i)=>{
         date.setDate(date.getDate() + 1);
         return new Date(date.getTime());
@@ -29,9 +29,18 @@ const CalendarEditor = () => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [open, setOpen] = React.useState(false);
     const handleSelectOneItem = (e, item) => {
-        setAnchorEl(e.currentTarget);
-        setOpen((prev) => !prev);
-        setSelected([item]);
+        if(!selected.includes(item) || selected.length>1)
+        {
+            const target = e.currentTarget;
+            setSelected([item]);
+            setOpen(false);
+            setTimeout(
+                ()=>{
+                setAnchorEl(target);
+                setOpen(true);
+                } , 420
+            );      
+        }
     };
     const allowDraggingArea = (e) => {
         e.preventDefault();
@@ -39,15 +48,21 @@ const CalendarEditor = () => {
     const handleSelect = (e, item) => {
         console.log('SELECT.........///');
         const direction = e.dataTransfer.types[0];
-        console.log(direction);
-        console.log(selected)
-        console.log(item);
+        // console.log(direction);
+        // console.log(selected);
+        // console.log(item);
         const newItemIndex = chambre.statusDays.findIndex((elem)=> elem.date===item);
         const firstItemSelectedIndex = chambre.statusDays.findIndex((elem) => elem.date === selected[0]);
         const lastItemSelectedIndex = chambre.statusDays.findIndex((elem) => elem.date === selected[selected.length - 1]);
+        console.log(selected);
+        console.log(`item=${item}`);
+        console.log(`$first element:${selected[0]}`);
         if (direction === 'right' && !(newItemIndex < firstItemSelectedIndex)) {
+            console.log(`newItemIndex=${newItemIndex} > firstItemSelectedIndex=${firstItemSelectedIndex}`)
             setAnchorEl(e.currentTarget);
-            if (!selected.includes(item)) {
+            const isItemSelected = selected.includes(item);
+            console.log(isItemSelected);
+            if (!isItemSelected) {
                 setSelected(
                     oldSelected => 
                     (
@@ -57,13 +72,16 @@ const CalendarEditor = () => {
                                 stack.push(elem.date);
                             }
                             return stack;
-                        }, [])
+                        } , [])
                     )
                 );
             }
             else {
-                console.log('ITEM IN SELECTEDDDD RIGHT');
+                console.log('MIEMBOTRA°°°°°°°°°°°°°°°°°');
+                console.log(selected.indexOf(item));
                 setSelected(oldSelected => (oldSelected.slice(0, oldSelected.indexOf(item) + 1)));
+                console.log(selected);
+                console.log('TAPITRA');
             }
         }
         else if (direction === 'left' && !(newItemIndex > lastItemSelectedIndex)) {
@@ -83,19 +101,12 @@ const CalendarEditor = () => {
                 );
             }
             else {
-                console.log('ITEM IN SELECTEDDDD LEFT');
+
                 setSelected(oldSelected => (oldSelected.slice(oldSelected.indexOf(item), oldSelected.length)));
             }
         }
     }
-    const handleDragStart = (e, direction) => {
-        const crt = document.createElement('div');
-        crt.style.visibility = "hidden"; /* or visibility: hidden, or any of the above */
-        e.dataTransfer.clearData();
-        e.dataTransfer.setDragImage(crt, 0, 0);
-        e.dataTransfer.setData(direction, direction);
-        // ev.dataTransfer.setDragImage(img, -50, -50);
-    }
+
 
     const [chambre,setChambre] = useState(
         {
@@ -1498,7 +1509,6 @@ const CalendarEditor = () => {
     });
     const [ratePlanList , setRatePlanList ] = useState(new Array(0));
     const [ratePlanAttributList ,setRatePlanAttributeList ] = useState(new Array(0));
-    console.log(chambre);
     
     const loadRoomDetailsRows = () => {
         const roomStatus = []; const roomToSell = []; const bookedRoom= [];
@@ -1585,7 +1595,6 @@ const CalendarEditor = () => {
                     </tr>
                 ));
             });
-            console.log(prixTarifList);
             ratePlanListTemp.push((
                     <React.Fragment key={j}>
                         <tr key='ratePlan status'>
@@ -1630,13 +1639,13 @@ const CalendarEditor = () => {
     };
 
     const loadCells = () => {
-        console.log('loading...');
+
        loadRoomDetailsRows();
        loadRatePlanRows();
     };
       
     useEffect(()=>{
-        console.log('loading... useEffect');
+
         const payload = {
             dateDebut:"2022-09-01",
             dateFin:"2022-09-30"
@@ -1645,21 +1654,21 @@ const CalendarEditor = () => {
             .then((result)=>{
                 if(result.data.status === 200){
                     const temp = {...result.data.typeChambre[0]};
-                    console.log(temp);
+                    // console.log(temp);
                     setChambre(() =>  temp );
                 }
                 else{
-                    alert('Unable to load data');
+                    const e = 2;
                 }
             })
             .catch(()=>{
-                alert('Error!');
+                const c= 1;
             });
         loadCells();
     },[selected])
     return (
         <CustomizedPaperOutside elevation={12} sx={{ background: '#E3EDF7', p: 5 }}>
-            <CellEditorPopper open={open} setOpen={setOpen} anchorEl={anchorEl} sx={{ zIndex:16777270}} selected={selected}/>
+            <CellEditorPopper open={open} setOpen={setOpen} anchorEl={anchorEl} sx={{ zIndex:16777270}} selected={selected} setSelected={setSelected}/>
             <Grid container>
                 <Grid item xs={4} >
                     <CalendarAttributeSide 
