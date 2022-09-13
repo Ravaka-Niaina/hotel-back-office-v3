@@ -14,11 +14,11 @@ export const createRatePlan = (payload,idToken) =>
         },
 });
 
-export const updateRatePlan = (payload) =>
+export const updateRatePlan = (payload, idToken) =>
     axios.post(`${config.host}/planTarifaire/update`, payload, {
-        // headers: {
-        //     Authorization: idToken,
-        // },
+        headers: {
+            Authorization: idToken,
+        },
 });
 
 export const deleteRatePlan = (payload) =>

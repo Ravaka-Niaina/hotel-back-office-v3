@@ -72,7 +72,6 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId }) => {
       });
     getRatePlanDetails(ratePlanId)
       .then((result) => {
-        console.log(result);
         if (result.data.status === 200) {
           const checkedRoom = [];
           const checkedCancelingPolitic = [];
@@ -135,7 +134,6 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId }) => {
   const handleChange = (e) => {
     const temp = ratePlan;
     const { name, value } = e.target;
-    console.log(`${name} et ${value}`);
     temp[name] = value;
     setRatePlan({ ...temp });
     validate({ [name]: value });
@@ -206,7 +204,8 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId }) => {
     validate(ratePlan);
     if (formIsValid) {
       context.showLoader(true);
-      updateRatePlan(formatPayloadToSend())
+      const idToken = localStorage.getItem('id_token');
+      updateRatePlan(formatPayloadToSend(), idToken)
         .then((result) => {
           if (result.data.status === 200) {
             setOpen(false);

@@ -156,7 +156,6 @@ const AddRatePlanDialog = ({ reload }) => {
       context.showLoader(true);
       createRatePlan(formatPayloadToSend(), idToken)
         .then((result) => {
-          console.log(result);
           if (result.data.status === 200) {
             setOpen(false);
             reload();
