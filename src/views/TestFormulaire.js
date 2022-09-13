@@ -1,12 +1,16 @@
 import React, {useState , useEffect} from 'react';
-import { Stack, MenuItem,FormControlLabel,RadioGroup,Switch, IconButton } from '@mui/material';
+import { Popper , Slide , Paper , Stack, MenuItem,FormControlLabel,RadioGroup,Switch, IconButton } from '@mui/material';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
+
+import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
 import CustomizedInput from '../components/CustomizedComponents/CustomizedInput';
 import CustomizedSelect from '../components/CustomizedComponents/CustomizedSelect';
 import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
 import CustomizedRadio from '../components/CustomizedComponents/CustomizedRadio';
 import CustomizedToggle from '../components/CustomizedComponents/CustomizedToggle';
 import CustomizedSwitch from '../components/CustomizedComponents/CustomizedSwitch';
+import CustomizedIconButton from '../components/CustomizedComponents/CustomizedIconButton';
 
 const style = {
   content: {
@@ -32,68 +36,166 @@ const TestFormulaire = () => {
   const [ list , setList ] = useState(new Array(0));
   const [disabled,setDisabled]= React.useState(false);
   const [selected , setSelected ] = useState(new Array(0));
-  const [ dragging , setDragging ] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [open, setOpen] = React.useState(false);
   
   useEffect(()=>{
     const items = [...new Array(20)].map((e,i)=>`item${i}`);
     setList(list=>[...items]);
     setSelected(selectd => [...selectd , items[0]]);
-    console.log(selected);
+  
   },[])
 
-  const handleSelected = (item) => {
-    console.log(selected);
-    console.log(item);
-    console.log(selected.includes(item));
+  const handleSelectOneItem = (e,item) => {
+    setAnchorEl(e.currentTarget);
+    setOpen((prev) => !prev);
+    setSelected([item]);
   };
-  const handleSelect = (item) => {
+  const allowDraggingArea = (e) => {
+    e.preventDefault();
+  };
+  const handleSelect = (e, item) => {
+    const direction = e.dataTransfer.types[0];
+    console.log(direction);
+    console.log(selected)
     console.log(item);
-    if(!selected.includes(item))
-    {
-      const index = list.indexOf(item);
-      setSelected(oldSelected => list.filter((e, i) => i <= index));
+    const newItemIndex = list.indexOf(item);
+    const firstItemSelectedIndex = list.indexOf(selected[0]);
+    const lastItemSelectedIndex = list.indexOf(selected[selected.length - 1]);
+    if (direction === 'right' && !(newItemIndex < firstItemSelectedIndex)){
+      setAnchorEl(e.currentTarget);
+      if (!selected.includes(item)) {
+        setSelected(oldSelected => (list.filter((e, i) => i <= newItemIndex && i >= firstItemSelectedIndex )));
+      }
+      else {
+        console.log('ITEM IN SELECTEDDDD RIGHT');
+        setSelected(oldSelected => (oldSelected.slice(0, oldSelected.indexOf(item)+1)));
+      }   
     }
-    else if(selected[selected.length-1] !== item){
-        setSelected(oldSelected => oldSelected.slice(0, oldSelected.findIndex((elem) => elem === item)+1));
-    }   
-    
+    else if (direction === 'left' && !(newItemIndex > lastItemSelectedIndex)){
+      setAnchorEl(e.currentTarget);
+      if (!selected.includes(item)) {
+        
+        setSelected(oldSelected => (list.filter((e, i) => i >= newItemIndex && i <= lastItemSelectedIndex)));
+      }
+      else {
+        console.log('ITEM IN SELECTEDDDD LEFT');
+        setSelected(oldSelected => (oldSelected.slice(oldSelected.indexOf(item), oldSelected.length)));
+      }   
+    }
   }
-  const handleDrag = (e) => {
-    console.log('dragging');
-    console.log(e);
-    console.log(e.target);
+  const handleDragStart = (e,direction) => {
+    const crt = document.createElement('div');
+    crt.style.visibility = "hidden"; /* or visibility: hidden, or any of the above */
+    e.dataTransfer.clearData();
+    e.dataTransfer.setDragImage(crt,0,0);
+    e.dataTransfer.setData(direction,direction);
     // ev.dataTransfer.setDragImage(img, -50, -50);
   }
+  
   return (
     <Stack sx={style.content} spacing={3}>
-      <table>
+      <Popper open={open} anchorEl={anchorEl} placement='top' transition>
+        {({ TransitionProps }) => (
+          <Slide {...TransitionProps} timeout={350}>
+            <div>
+            <CustomizedPaperOutside sx={{p: 2, width:'250px',height:'350px'}}>
+              <Stack direction="column" spacing={1} justifyContent='center'>
+                <Stack>
+                  <h4>Chambre standard</h4>
+                  <h6>Sep 14, 2022</h6>
+                </Stack>
+                <FormControlLabel control={<CustomizedRadio />} label="Modifier" />
+                <RadioGroup
+                  defaultValue="oui"
+                  aria-labelledby="demo-customized-radios"
+                  name="customized-radios"
+                >
+                  <FormControlLabel value="oui" control={<CustomizedRadio />} label="Oui" />
+                  <FormControlLabel value="non" control={<CustomizedRadio />} label="Non" />
+                </RadioGroup>
+                <CustomizedInput placeholder="Test" variant="outlined" label="Test"/>
+                <Stack direction="row" spacing={5} justifyContent='space-around' alignItems='center'>
+                  <CustomizedIconButton>
+                    <ArrowCircleRightIcon sx={{ color:'#2476d2'}}/>
+                  </CustomizedIconButton>
+                  <CustomizedIconButton>
+                    <ArrowCircleLeftIcon sx={{ color:'#2476d2'}}/>
+                  </CustomizedIconButton>
+                </Stack>
+              </Stack>
+            </CustomizedPaperOutside>
+            </div>
+          </Slide>
+        )}
+      </Popper>
+      <table style={{ border: '1px solid #e0e0e0',borderCollapse:'collapse' }}>
         <tbody>
-          <tr>
+          <tr style={{ border: '1px solid #e0e0e0' }}>
             {
               list.map((item,i)=>{
                return (
                   <th 
                     key={i}
                     style={{
-                      border:"1px black solid",
-                      background: selected.includes(item) ? "#97E1FF" : "none"
+                      paddingRight:"15px",
+                      paddingLeft:"15px",
+                      width:"50px",
+                      height:"50px",
+                      background: selected.includes(item) ? "#b2d5f8" : "none",
+                      position:'relative',
+                      border: '1px solid #e0e0e0'
                     }} 
-                    onClick={()=>handleSelected(item)}
-                    onDragEnter={() => {
-                      handleSelect(item);
+                    onClick={(e)=>handleSelectOneItem(e,item)}
+                    onDragOver={allowDraggingArea}
+                    onDragEnter={(e) => {
+                      handleSelect(e,item);
                     }}
                   >
                   {`${item}`}
+                   {
+                     selected.length > 0 &&
+                     selected[0] === item && (
+
+
+                      <span 
+                        style={{ 
+                          cursor: 'ew-resize',
+                           position: 'absolute',
+                           left: '-10px',
+                           zIndex: '2',
+                        }} 
+                        onDragStart={(e) => handleDragStart(e, 'left')} 
+                        draggable
+                      >
+                         <ArrowCircleLeftIcon sx={{ color:'#2476d2'}}/>
+                      </span>
+
+                     )
+
+                   }
                     {
                       selected.length>0 && 
                         selected[selected.length-1] === item && (
                         
                             
-                       <span onDrag={handleDrag} draggable><ArrowCircleRightIcon /></span>
+                       <span 
+                        style={{ 
+                          cursor:'ew-resize',
+                          position:'absolute',
+                          right:'-10px',
+                          zIndex:'2',
+                        }} 
+                        onDragStart={(e)=>handleDragStart(e,'right')} 
+                        draggable
+                        >
+                         <ArrowCircleRightIcon sx={{ color:'#2476d2'}}/>
+                        </span>
                          
                         )
                       
                     }
+                   
                    
                   </th>
                 
