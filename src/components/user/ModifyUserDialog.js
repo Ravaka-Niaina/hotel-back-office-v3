@@ -162,8 +162,8 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
     })
   };
   useEffect(()=>{
-    console.log(initialAccessRights)
-    console.log(user.user_access_rights)
+    // console.log(initialAccessRights)
+    // console.log(user.user_access_rights)
   },[user])
   return (
     <>
