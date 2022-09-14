@@ -10,6 +10,7 @@ export const ThemeContext = createContext({
   changeResultErrorMessage: null,
   showResultSuccess: null,
   changeResultSuccessMessage: null,
+  getIdToken: null
 });
 
 const Wrapper = ({ children }) => {
@@ -58,6 +59,7 @@ const Wrapper = ({ children }) => {
     }
     setOpenAlertSuccess(false);
   };
+  const getIdToken = () => localStorage.getItem("id_token")
 
   return (
     <ThemeContext.Provider
@@ -69,6 +71,7 @@ const Wrapper = ({ children }) => {
         changeResultErrorMessage,
         showResultSuccess,
         changeResultSuccessMessage,
+        getIdToken
       }}
     >
       <SimpleBackdrop open={disable} />
