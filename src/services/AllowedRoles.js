@@ -6,43 +6,43 @@ export const getAllowedRoles = (pageSectionPath) => {
     },
     {
       path: '/dashboard/homeForm',
-      allowedRoles: ['olona'],
+      allowedRoles: ['superAdmin', 'admin','partner'],
     },
     {
       path: '/dashboard/rapport',
-      allowedRoles: ['olona'],
+      allowedRoles: ['superAdmin', 'admin','partner'],
     },
     {
       path: '/dashboard/ratePlan',
-      allowedRoles: ['olona'],
+      allowedRoles: ['admin','partner'],
     },
     {
       path: '/dashboard/calendar',
-      allowedRoles: ['olona'],
+      allowedRoles: ['admin','partner'],
     },
     {
       path: '/dashboard/accessRight',
-      allowedRoles: ['superAdmin', 'admin'],
+      allowedRoles: ['admin','partner'],
     },
     {
       path: '/dashboard/user',
-      allowedRoles: ['superAdmin', 'admin'],
+      allowedRoles: ['admin','partner'],
     },
     {
       path: '/dashboard/promotion',
-      allowedRoles: ['olona'],
+      allowedRoles: ['admin','partner'],
     },
     {
       path: '/dashboard/typeChambre',
-      allowedRoles: ['olona'],
+      allowedRoles: ['admin','partner'],
     },
     {
       path: '/dashboard/politic',
-      allowedRoles: ['olona'],
+      allowedRoles: ['admin','partner'],
     },
     {
       path: '/dashboard/hotel',
-      allowedRoles: ['olona'],
+      allowedRoles: ['superAdmin','admin','partner'],
     },
   ];
 

@@ -69,18 +69,12 @@ export const getNavConfig = async (idToken) => {
       path: '/dashboard/user',
       icon: getIcon('eva:people-fill'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/user')),
-      // children: [
-
-      // ],
     },
     {
-      title: 'Hotel',
+      title: 'Hotels',
       path: '/dashboard/hotel',
       icon: getIcon('bxs:building-house'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/hotel')),
-      // children: [
-
-      // ],
     },
     {
       title: "droit d'accès",
