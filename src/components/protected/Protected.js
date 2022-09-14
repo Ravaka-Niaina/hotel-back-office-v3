@@ -72,7 +72,7 @@ const Protected = ({ child, allowedRoles }) => {
   };
 
   /**
-   * A useEffect that triggers everytime we load protected pages
+   * An useEffect that triggers everytime we load protected pages
    */
   useEffect(() => {
     const token = getToken();
