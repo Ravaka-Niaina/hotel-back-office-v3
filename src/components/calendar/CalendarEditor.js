@@ -1,13 +1,13 @@
 import React , { useEffect , useState } from 'react';
+import debounce from 'lodash.debounce';
 import { Grid , Stack } from '@mui/material';
 
 import PeopleIcon from '@mui/icons-material/People';
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
-import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 
-import StatusCell from './Cells/StatusCell';
-import SelectableCell from './Cells/SelectableCell';
-import CellEditorPopper from './Cells/CellEditorPopper';
+import StatusCell from './cells/StatusCell';
+
+import { CellRoomEditorPopper, SelectableRoomCell } from './cells/room';
+import { CellRatePlanEditorPopper , SelectableRatePlanCell } from './cells/rateplan';
 
 import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
 import CalendarValueSide from './CalendarValueSide';
@@ -25,89 +25,41 @@ const CalendarEditor = () => {
         date.setDate(date.getDate() + 1);
         return new Date(date.getTime());
     });
-    const [selected, setSelected] = useState(new Array(0));
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const [open, setOpen] = React.useState(false);
-    const handleSelectOneItem = (e, item) => {
-        if(!selected.includes(item) || selected.length>1)
-        {
+    const [selectedRoom, setSelectedRoom] = useState(new Array(0));
+    const [anchorElRoom, setAnchorElRoom] = React.useState(null);
+    const [openRoomEditor, setOpenRoomEditor] = React.useState(false);
+
+    const [selectedRatePlan, setSelectedRatePlan] = useState(new Array(0));
+    const [anchorElRatePlan, setAnchorElRatePlan] = React.useState(null);
+    const [openRatePlanEditor, setOpenRatePlanEditor] = React.useState(false);
+    
+    const handleSelectOneRoom = (e, item) => {
+        if (!selectedRoom.includes(item) || selectedRoom.length > 1) {
             const target = e.currentTarget;
-            setSelected([item]);
-            setOpen(false);
+            setSelectedRoom([item]);
+            setOpenRoomEditor(false);
             setTimeout(
-                ()=>{
-                setAnchorEl(target);
-                setOpen(true);
-                } , 420
-            );      
+                () => {
+                    setAnchorElRoom(target);
+                    setOpenRoomEditor(true);
+                }, 420
+            );
         }
     };
-    const allowDraggingArea = (e) => {
-        e.preventDefault();
+    const handleSelectOneRatePlan = (e, item) => {
+        if (!selectedRatePlan.includes(item) || selectedRatePlan.length > 1) {
+            const target = e.currentTarget;
+            setSelectedRatePlan([item]);
+            setOpenRatePlanEditor(false);
+            setTimeout(
+                () => {
+                    setAnchorElRatePlan(target);
+                    setOpenRatePlanEditor(true);
+                }, 420
+            );
+        }
     };
-    const handleSelect = (e, item) => {
-        console.log('SELECT.........///');
-        const direction = e.dataTransfer.types[0];
-        // console.log(direction);
-        // console.log(selected);
-        // console.log(item);
-        const newItemIndex = chambre.statusDays.findIndex((elem)=> elem.date===item);
-        const firstItemSelectedIndex = chambre.statusDays.findIndex((elem) => elem.date === selected[0]);
-        const lastItemSelectedIndex = chambre.statusDays.findIndex((elem) => elem.date === selected[selected.length - 1]);
-        console.log(selected);
-        console.log(`item=${item}`);
-        console.log(`$first element:${selected[0]}`);
-        if (direction === 'right' && !(newItemIndex < firstItemSelectedIndex)) {
-            console.log(`newItemIndex=${newItemIndex} > firstItemSelectedIndex=${firstItemSelectedIndex}`)
-            setAnchorEl(e.currentTarget);
-            const isItemSelected = selected.includes(item);
-            console.log(isItemSelected);
-            if (!isItemSelected) {
-                setSelected(
-                    oldSelected => 
-                    (
-                        chambre.statusDays.reduce((stack, elem , i) => {
-                            if (i <= newItemIndex && i >= firstItemSelectedIndex)
-                            {
-                                stack.push(elem.date);
-                            }
-                            return stack;
-                        } , [])
-                    )
-                );
-            }
-            else {
-                console.log('MIEMBOTRA°°°°°°°°°°°°°°°°°');
-                console.log(selected.indexOf(item));
-                setSelected(oldSelected => (oldSelected.slice(0, oldSelected.indexOf(item) + 1)));
-                console.log(selected);
-                console.log('TAPITRA');
-            }
-        }
-        else if (direction === 'left' && !(newItemIndex > lastItemSelectedIndex)) {
-            setAnchorEl(e.currentTarget);
-            if (!selected.includes(item)) {
-
-                setSelected(
-                    oldSelected => 
-                    (
-                        chambre.statusDays.reduce((stack, elem, i) => {
-                            if (i >= newItemIndex && i <= lastItemSelectedIndex) {
-                                stack.push(elem.date);
-                            }
-                            return stack;
-                        }, [])
-                    )
-                );
-            }
-            else {
-
-                setSelected(oldSelected => (oldSelected.slice(oldSelected.indexOf(item), oldSelected.length)));
-            }
-        }
-    }
-
-
+    
     const [chambre,setChambre] = useState(
         {
             "_id": "620f4277d5360b160f48908e",
@@ -1520,19 +1472,17 @@ const CalendarEditor = () => {
             ))
             roomToSell.push((
                 <td key={`roomToSell-${i}`} style={{position:'relative'}}>
-                    <SelectableCell
-                        selected={selected}
+                    <SelectableRoomCell
                         item={status.date}
-                        onClick={(e) => handleSelectOneItem(e, status.date)}
-                        onDragOver={allowDraggingArea}
-                        onDragEnter={(e) => {
-                            handleSelect(e, status.date);
-                        }}
-                        
+                        selected={selectedRoom}
+                        setSelected={setSelectedRoom}
+                        setAnchorEl={setAnchorElRoom}
+                        chambre={chambre}
+                        onClick={(e) => handleSelectOneRoom(e, status.date)}
                     >
                         {status.toSell}
                         
-                    </SelectableCell>
+                    </SelectableRoomCell>
                     
                 </td>
             ))
@@ -1581,11 +1531,16 @@ const CalendarEditor = () => {
                                         key={`${index}-${i}`}
                                         
                                     >
-                                        {/* <SelectableCell 
-                                            onClick={(e) => handleSelectOneItem(e, pt.date)}
-                                        > */}
+                                        <SelectableRatePlanCell 
+                                            item={pt.date}
+                                            chambre={chambre} 
+                                            selected={selectedRatePlan} 
+                                            setSelected={setSelectedRatePlan} 
+                                            setAnchorEl={setSelectedRatePlan}
+                                            onClick={(e) => handleSelectOneRatePlan(e, pt.date)}
+                                        >
                                             {pt.versions[index]?.prix}$
-                                        {/* </SelectableCell> */}
+                                        </SelectableRatePlanCell>
                                         
                                     </td>
                                 )
@@ -1639,11 +1594,17 @@ const CalendarEditor = () => {
     };
 
     const loadCells = () => {
-
        loadRoomDetailsRows();
        loadRatePlanRows();
     };
-      
+    useEffect(()=>{
+        loadRoomDetailsRows();
+    },[selectedRoom]) 
+
+    useEffect(() => {
+        loadRatePlanRows();
+    }, [selectedRatePlan]) 
+
     useEffect(()=>{
 
         const payload = {
@@ -1665,10 +1626,11 @@ const CalendarEditor = () => {
                 const c= 1;
             });
         loadCells();
-    },[selected])
+    },[])
     return (
         <CustomizedPaperOutside elevation={12} sx={{ background: '#E3EDF7', p: 5 }}>
-            <CellEditorPopper open={open} setOpen={setOpen} anchorEl={anchorEl} sx={{ zIndex:16777270}} selected={selected} setSelected={setSelected}/>
+            <CellRoomEditorPopper open={openRoomEditor} setOpen={setOpenRoomEditor} anchorEl={anchorElRoom} sx={{ zIndex:16777270}} selected={selectedRoom} setSelected={setSelectedRoom}/>
+            <CellRatePlanEditorPopper open={openRatePlanEditor} setOpen={setOpenRatePlanEditor} anchorEl={anchorElRatePlan} sx={{ zIndex: 16777270 }} selected={selectedRatePlan} setSelected={setSelectedRatePlan} />
             <Grid container>
                 <Grid item xs={4} >
                     <CalendarAttributeSide 

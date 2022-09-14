@@ -3,12 +3,12 @@ import { Popper, Slide , Stack,  FormControlLabel, RadioGroup  } from '@mui/mate
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-import CustomizedIconButton from '../../CustomizedComponents/CustomizedIconButton';
-import CustomizedPaperOutside from '../../CustomizedComponents/CustomizedPaperOutside';
-import CustomizedRadio from '../../CustomizedComponents/CustomizedRadio';
-import CustomizedInput from '../../CustomizedComponents/CustomizedInput';
+import CustomizedIconButton from '../../../CustomizedComponents/CustomizedIconButton';
+import CustomizedPaperOutside from '../../../CustomizedComponents/CustomizedPaperOutside';
+import CustomizedRadio from '../../../CustomizedComponents/CustomizedRadio';
+import CustomizedInput from '../../../CustomizedComponents/CustomizedInput';
 
-const CellEditorPopper = ({ open, anchorEl , setOpen , selected , setSelected , ...others}) => {
+const CellRoomEditorPopper = ({ open, anchorEl , setOpen , selected , setSelected , ...others}) => {
     const handleClose = () => {
         setSelected([]);
         setOpen(false);
@@ -61,4 +61,4 @@ const CellEditorPopper = ({ open, anchorEl , setOpen , selected , setSelected , 
     );
 };
 
-export default CellEditorPopper;
+export default CellRoomEditorPopper;

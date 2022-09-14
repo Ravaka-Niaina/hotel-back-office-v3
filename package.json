@@ -63,6 +63,7 @@
     "leaflet": "^1.8.0",
     "leaflet-geosearch": "^3.6.1",
     "lodash": "^4.17.21",
+    "lodash.debounce": "^4.0.8",
     "numeral": "^2.0.6",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
