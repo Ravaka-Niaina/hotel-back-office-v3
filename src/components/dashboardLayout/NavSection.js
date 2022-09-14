@@ -25,7 +25,6 @@ const ListItemIconStyle = styled(ListItemIcon)({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  
 });
 
 // ----------------------------------------------------------------------
@@ -135,13 +134,12 @@ function NavItem({ item, active }) {
     >
       <ListItemIconStyle>{icon && icon}</ListItemIconStyle>
       <ListItemText disableTypography primary={title} />
-      {
-        isActiveRoot && (
-          <ListItemIconStyle><Iconify icon={'eva:arrow-ios-forward-fill'} width={22} height={22} /></ListItemIconStyle>
-        )
-      }
-      
-      
+      {isActiveRoot && (
+        <ListItemIconStyle>
+          <Iconify icon={'eva:arrow-ios-forward-fill'} width={22} height={22} />
+        </ListItemIconStyle>
+      )}
+
       {info && info}
     </ListItemStyle>
   );
@@ -159,9 +157,11 @@ export default function NavSection({ navConfig, ...other }) {
   return (
     <Box {...other}>
       <List disablePadding sx={{ p: 1 }}>
-        {navConfig.map((item) => (
-          <NavItem key={item.title} item={item} active={match} />
-        ))}
+        {navConfig.map((item) => {
+          if (item?.userIsAllowed)
+            return <NavItem key={item.title} item={item} userIsAllowed={item?.userIsAllowed} active={match} />;
+          return ''
+        })}
       </List>
     </Box>
   );

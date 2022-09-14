@@ -47,7 +47,7 @@ const Promotion = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(()=>{
-    console.log(promotionList)
+    // console.log(promotionList)
   },[promotionList])
   const getAllPromotion = () => {
     context.showLoader(true)
@@ -66,7 +66,6 @@ const Promotion = () => {
           const dataList = datas.data.list;
 
           if (dataStatus === 200) {
-            console.log();
             setPromotionList(dataList);
           } else {
             context.changeResultErrorMessage(`Une erreur est survenue lors du chargement de la liste de promotions.`);

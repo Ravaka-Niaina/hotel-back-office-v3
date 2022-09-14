@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
@@ -12,7 +12,9 @@ import useResponsive from '../../hooks/useResponsive';
 import Scrollbar from '../Scrollbar';
 import NavSection from './NavSection';
 //
-import navConfig from './NavConfig';
+import { getNavConfig } from './NavConfig';
+import { ThemeContext } from '../context/Wrapper';
+import { getToken } from '../../services/User';
 // ----------------------------------------------------------------------
 
 const DRAWER_WIDTH = 280;
@@ -42,9 +44,16 @@ DashboardSidebar.propTypes = {
 
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
-
+  const context = useContext(ThemeContext);
   const isDesktop = useResponsive('up', 'lg');
-
+  const [navConfig, setNavConfig] = useState(null);
+  useEffect(() => {
+    const initiateNavConfig = async () => {
+      const newNavConfig = await getNavConfig(getToken());
+      setNavConfig(newNavConfig);
+    };
+    initiateNavConfig();
+  }, []);
   useEffect(() => {
     if (isOpenSidebar) {
       onCloseSidebar();
@@ -60,10 +69,15 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       }}
     >
       <Box>
-        <img src={`${process.env.PUBLIC_URL}/images/logo/logowcolor.png`} alt="logo_aiolia" width={200} style={{ margin: 'auto' }} />
+        <img
+          src={`${process.env.PUBLIC_URL}/images/logo/logowcolor.png`}
+          alt="logo_aiolia"
+          width={200}
+          style={{ margin: 'auto' }}
+        />
       </Box>
 
-      <NavSection navConfig={navConfig} />
+      {navConfig && <NavSection navConfig={navConfig}/>}
       {/* <Box sx={{ flexGrow: 1 }} /> */}
       <Box>
         <Stack spacing={3} sx={{ borderRadius: 2, position: 'relative' }}>
