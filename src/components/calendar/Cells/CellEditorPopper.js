@@ -8,8 +8,9 @@ import CustomizedPaperOutside from '../../CustomizedComponents/CustomizedPaperOu
 import CustomizedRadio from '../../CustomizedComponents/CustomizedRadio';
 import CustomizedInput from '../../CustomizedComponents/CustomizedInput';
 
-const CellEditorPopper = ({ open, anchorEl , setOpen , selected , ...others}) => {
+const CellEditorPopper = ({ open, anchorEl , setOpen , selected , setSelected , ...others}) => {
     const handleClose = () => {
+        setSelected([]);
         setOpen(false);
     };
     return (
