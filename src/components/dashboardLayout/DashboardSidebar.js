@@ -49,9 +49,9 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
 
   // useEffect to set the userDetails
   useEffect(() => {
-    console.log(getPayloadFromToken(jwtDecode, getToken()))
     setUserDetails(getPayloadFromToken(jwtDecode, getToken()));
   }, []);
+
   useEffect(() => {
     const initiateNavConfig = async () => {
       const newNavConfig = await getNavConfig(getToken());

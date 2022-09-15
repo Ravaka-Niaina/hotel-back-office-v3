@@ -6,6 +6,12 @@ import Iconify from '../Iconify';
 // ----------------------------------------------------------------------
 
 const getIcon = (name) => <Iconify icon={name} width={22} height={22} />;
+/**
+ * @function getNavConfig
+ * @description A function to get all the items to be displayed on the sidebar referring to the user roles
+ * @param {string} idToken The jwt token of the user
+ * @returns {array} An array of all the items of the navigation bar
+ */
 export const getNavConfig = async (idToken) => {
   const payloadFromToken = getPayloadFromToken(jwtDecode, idToken);
   const partnerId = payloadFromToken?.partner_id;

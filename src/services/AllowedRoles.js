@@ -1,3 +1,12 @@
+/**
+ * @file Allowed Roles
+ */
+/**
+ * @function getAllowedRoles
+ * @description A function to get all the allowed roles of each sections and pages of the website
+ * @param {string} pageSectionPath
+ * @returns {array} Allowed roles
+ */
 export const getAllowedRoles = (pageSectionPath) => {
   const paths = [
     {
