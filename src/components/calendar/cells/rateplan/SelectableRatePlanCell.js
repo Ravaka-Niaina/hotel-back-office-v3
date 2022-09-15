@@ -3,7 +3,19 @@ import debounce from 'lodash.debounce';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 
-const SelectableRatePlanCell = ({children, chambre, selected, setSelected, setAnchorEl, item, ...others}) => {
+const getItemData = (item) => {
+    if(typeof item !== 'string')
+    {
+        return null;
+    };
+    const dataSplited = item.split('@');
+    return {
+            "date":dataSplited[0],
+            "rate_plan_index":parseInt(dataSplited[1],10),
+            "version_index":parseInt(dataSplited[2],10),
+    };
+};
+const SelectableRatePlanCell = ({children, item, chambre, selected, setSelected, setAnchorEl, setOpen , setRoomSelected,cleanOthers, ...others}) => {
     const handleDragStart = (e, direction) => {
         const crt = document.createElement('div');
         crt.style.visibility = "hidden"; /* or visibility: hidden, or any of the above */
@@ -15,22 +27,37 @@ const SelectableRatePlanCell = ({children, chambre, selected, setSelected, setAn
     const allowDraggingArea = (e) => {
         e.preventDefault();
     };
+    const openEditor = (target) => {
+        cleanOthers('room');
+        setOpen(false);
+        setTimeout(
+            () => {
+                setAnchorEl(target);
+                setOpen(true);
+            }, 420
+        );
+    }
     const handleSelect = debounce((e, item, target, direction) => {
         e.currentTarget = target;
-        const newItemIndex = chambre.statusDays.findIndex((elem) => elem.date === item);
-        const firstItemSelectedIndex = chambre.statusDays.findIndex((elem) => elem.date === selected[0]);
-        const lastItemSelectedIndex = chambre.statusDays.findIndex((elem) => elem.date === selected[selected.length - 1]);
+        
+        const newItemData = getItemData(item);
+        const firstItemData = getItemData(selected[0]) || newItemData;
+        const lastItemData = getItemData(selected[selected.length - 1]) || newItemData;
+
+        const newItemIndex = chambre.planTarifaire[newItemData.rate_plan_index].prixTarif.findIndex((elem) => elem.date ===  newItemData.date);
+        const firstItemSelectedIndex = chambre.planTarifaire[firstItemData.rate_plan_index].prixTarif.findIndex((elem) => elem.date === firstItemData.date);
+        const lastItemSelectedIndex = chambre.planTarifaire[lastItemData.rate_plan_index].prixTarif.findIndex((elem) => elem.date === lastItemData.date);
         if (direction === 'right' && !(newItemIndex < firstItemSelectedIndex)) {
-            setAnchorEl(e.currentTarget);
+            openEditor(e.currentTarget);
             const isItemSelected = selected.includes(item);
             if (!isItemSelected) {
     
                 setSelected(
                     oldSelected =>
                     (
-                        chambre.statusDays.reduce((stack, elem, i) => {
+                        chambre.planTarifaire[newItemData.rate_plan_index].prixTarif.reduce((stack, elem, i) => {
                             if (i <= newItemIndex && i >= firstItemSelectedIndex) {
-                                stack.push(elem.date);
+                                stack.push(`${elem.date}@${newItemData.rate_plan_index}@${newItemData.version_index}`);
                             }
                             return stack;
                         }, [])
@@ -39,20 +66,20 @@ const SelectableRatePlanCell = ({children, chambre, selected, setSelected, setAn
             }
             else {
 
-                setSelected(oldSelected => (oldSelected.slice(0, oldSelected.indexOf(item) + 1)));
+                setSelected(oldSelected => oldSelected.slice(0, oldSelected.indexOf(item) + 1));
 
             }
         }
         else if (direction === 'left' && !(newItemIndex > lastItemSelectedIndex)) {
-            setAnchorEl(e.currentTarget);
+            openEditor(e.currentTarget);
             if (!selected.includes(item)) {
 
                 setSelected(
                     oldSelected =>
                     (
-                        chambre.statusDays.reduce((stack, elem, i) => {
+                        chambre.planTarifaire[newItemData.rate_plan_index].prixTarif.reduce((stack, elem, i) => {
                             if (i >= newItemIndex && i <= lastItemSelectedIndex) {
-                                stack.push(elem.date);
+                                stack.push(`${elem.date}@${newItemData.rate_plan_index}@${newItemData.version_index}`);
                             }
                             return stack;
                         }, [])
@@ -64,12 +91,16 @@ const SelectableRatePlanCell = ({children, chambre, selected, setSelected, setAn
                 setSelected(oldSelected => (oldSelected.slice(oldSelected.indexOf(item), oldSelected.length)));
             }
         }
-    }, 500)
+    }, 0)
     return (
         <div
             {...others}
             className='SelectableCell'
             style={{ background: selected.includes(item) ? "#b2d5f8" : "none", }}
+            onDragOver={allowDraggingArea}
+            onDrop={(e) => {
+                handleSelect(e, item, e.currentTarget, e.dataTransfer.types[0]);
+            }}
         >
             {children}
             {
