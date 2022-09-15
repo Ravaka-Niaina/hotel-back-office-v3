@@ -1,14 +1,9 @@
 import PropTypes from 'prop-types';
 // material
 import { alpha, styled } from '@mui/material/styles';
-import { Box, Stack, AppBar, Toolbar, IconButton } from '@mui/material';
+import { AppBar, Toolbar, IconButton } from '@mui/material';
 // components
 import Iconify from '../Iconify';
-//
-import Searchbar from './Searchbar';
-import AccountPopover from './AccountPopover';
-import LanguagePopover from './LanguagePopover';
-import NotificationsPopover from './NotificationsPopover';
 // ----------------------------------------------------------------------
 
 const DRAWER_WIDTH = 280;
@@ -42,19 +37,10 @@ DashboardNavbar.propTypes = {
 export default function DashboardNavbar({ onOpenSidebar }) {
   return (
     <RootStyle sx={{ zIndex: 2 }}>
-      <ToolbarStyle > 
+      <ToolbarStyle>
         <IconButton onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary', display: { lg: 'none' } }}>
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
-
-        <Searchbar />
-        <Box sx={{ flexGrow: 1 }} />
-
-        <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
-          <LanguagePopover />
-          <NotificationsPopover />
-          <AccountPopover />
-        </Stack>
       </ToolbarStyle>
     </RootStyle>
   );

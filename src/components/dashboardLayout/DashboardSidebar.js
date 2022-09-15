@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { Link as RouterLink,useLocation } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
-import { Box, Drawer, Stack, Link,Avatar, Typography } from '@mui/material';
+import { Box, Drawer, Stack, Link, Avatar, Typography } from '@mui/material';
 // hooks
 import jwtDecode from 'jwt-decode';
 import useResponsive from '../../hooks/useResponsive';
@@ -13,6 +13,7 @@ import NavSection from './NavSection';
 //
 import { getNavConfig } from './NavConfig';
 import { getPayloadFromToken, getToken } from '../../services/User';
+import Logout from './Logout';
 
 // ----------------------------------------------------------------------
 
@@ -90,7 +91,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
             <Box>
               <Link underline="none" component={RouterLink} to="#">
                 <AccountStyle>
-                  <Avatar src='/static/mock-images/avatars/avatar_default.jpg' alt="photoURL" />
+                  <Avatar src="/static/mock-images/avatars/avatar_default.jpg" alt="photoURL" />
                   <Box sx={{ ml: 2 }}>
                     <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
                       {`${userDetails?.partner_first_name} ${userDetails?.partner_name}`}
@@ -98,6 +99,9 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
                     <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                       {userDetails?.partner_phone}
                     </Typography>
+                    <div style={{marginTop: 15}}>
+                      <Logout />
+                    </div>
                   </Box>
                 </AccountStyle>
               </Link>
