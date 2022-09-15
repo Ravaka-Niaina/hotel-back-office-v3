@@ -1,4 +1,5 @@
 import React from 'react';
+import {format} from 'date-fns';
 import { Popper, Slide , Stack,  FormControlLabel, RadioGroup  } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -19,13 +20,13 @@ const CellRoomEditorPopper = ({ open, anchorEl , setOpen , selected , setSelecte
                 {({ TransitionProps }) => (
                     <Slide {...TransitionProps} timeout={350}>
                         <div>
-                            <CustomizedPaperOutside sx={{ background: '#E3EDF7' , p: 2, width: '250px', height: '350px' }}>
+                            <CustomizedPaperOutside sx={{ background: '#E3EDF7' , p: 2, width: '250px', minHeight: '350px' }}>
                                 <Stack direction="column" spacing={2} justifyContent='flex-start'>
                                     <Stack>
                                         <h4>Chambre standard</h4>
                                         <h6>
                                             {
-                                                selected[0] && new Date(selected[0]).toDateString()
+                                                selected[0] && format(new Date(selected[0]), 'd MMMM yyyy')
                                             }
                                             {
                                                 selected.length > 1 && `  -  ${new Date(selected[selected.length - 1]).toDateString() }`

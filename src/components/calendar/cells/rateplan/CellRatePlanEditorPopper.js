@@ -19,7 +19,7 @@ const CellRatePlanEditorPopper = ({ open, anchorEl , setOpen , selected , setSel
                 {({ TransitionProps }) => (
                     <Slide {...TransitionProps} timeout={350}>
                         <div>
-                            <CustomizedPaperOutside sx={{ background: '#E3EDF7' , p: 2, width: '250px', height: '350px' }}>
+                            <CustomizedPaperOutside sx={{ background: '#E3EDF7' , p: 2, width: '250px', minHeight: '350px' }}>
                                 <Stack direction="column" spacing={2} justifyContent='flex-start'>
                                     <Stack>
                                         <h4>Chambre standard</h4>
