@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
 //
-import DashboardNavbar from './DashboardNavbar';
+// import DashboardNavbar from './DashboardNavbar';
 import DashboardSidebar from './DashboardSidebar';
 // ----------------------------------------------------------------------
 
@@ -39,7 +39,6 @@ export default function DashboardLayout() {
 
   return (
     <RootStyle>
-      <DashboardNavbar onOpenSidebar={() => setOpen(true)} />
       <DashboardSidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
       <MainStyle>
         <Outlet />

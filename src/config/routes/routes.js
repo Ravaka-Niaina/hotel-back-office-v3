@@ -22,6 +22,15 @@ import RapportApp from '../../views/RapportApp';
 import Protected from '../../components/protected/Protected';
 import { getAllowedRoles } from '../../services/AllowedRoles';
 // ----------------------------------------------------------------------
+/**
+ * @file routes
+ */
+
+/**
+ * @component
+ * @description A react component to configure the routes of the application
+ * @returns {hook}
+ */
 export default function Router() {
   const dashboardPath = '/dashboard'
   return useRoutes([
@@ -50,7 +59,7 @@ export default function Router() {
       path: '/',
       element: <Layout />,
       children: [
-        { path: '/', element: <Navigate to="/login" /> },
+        { path: '/', element: <Navigate to="/dashboard/app" /> },
         { path: 'login', element: <Login /> },
         { path: 'verifycode', element: <VerifyCode /> },
         { path: '404', element: <Navigate to="/dashboard/app" /> },

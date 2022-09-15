@@ -1,20 +1,19 @@
 import PropTypes from 'prop-types';
-import { useContext, useEffect, useState } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link as RouterLink,useLocation } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
-import { Box, Link, Drawer, Typography, Avatar, Stack } from '@mui/material';
-// mock
-import account from '../../_mock/account';
+import { Box, Drawer, Stack, Link,Avatar, Typography } from '@mui/material';
 // hooks
+import jwtDecode from 'jwt-decode';
 import useResponsive from '../../hooks/useResponsive';
 // components
 import Scrollbar from '../Scrollbar';
 import NavSection from './NavSection';
 //
 import { getNavConfig } from './NavConfig';
-import { ThemeContext } from '../context/Wrapper';
-import { getToken } from '../../services/User';
+import { getPayloadFromToken, getToken } from '../../services/User';
+
 // ----------------------------------------------------------------------
 
 const DRAWER_WIDTH = 280;
@@ -44,9 +43,15 @@ DashboardSidebar.propTypes = {
 
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
-  const context = useContext(ThemeContext);
   const isDesktop = useResponsive('up', 'lg');
   const [navConfig, setNavConfig] = useState(null);
+  const [userDetails, setUserDetails] = useState(null);
+
+  // useEffect to set the userDetails
+  useEffect(() => {
+    setUserDetails(getPayloadFromToken(jwtDecode, getToken()));
+  }, []);
+
   useEffect(() => {
     const initiateNavConfig = async () => {
       const newNavConfig = await getNavConfig(getToken());
@@ -77,27 +82,29 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         />
       </Box>
 
-      {navConfig && <NavSection navConfig={navConfig}/>}
+      {navConfig && <NavSection navConfig={navConfig} />}
       {/* <Box sx={{ flexGrow: 1 }} /> */}
-      <Box>
-        <Stack spacing={3} sx={{ borderRadius: 2, position: 'relative' }}>
-          <Box>
-            <Link underline="none" component={RouterLink} to="#">
-              <AccountStyle>
-                <Avatar src={account.photoURL} alt="photoURL" />
-                <Box sx={{ ml: 2 }}>
-                  <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                    {account.displayName}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    {account.role}
-                  </Typography>
-                </Box>
-              </AccountStyle>
-            </Link>
-          </Box>
-        </Stack>
-      </Box>
+      {userDetails && (
+        <Box>
+          <Stack spacing={3} sx={{ borderRadius: 2, position: 'relative' }}>
+            <Box>
+              <Link underline="none" component={RouterLink} to="#">
+                <AccountStyle>
+                  <Avatar src='/static/mock-images/avatars/avatar_default.jpg' alt="photoURL" />
+                  <Box sx={{ ml: 2 }}>
+                    <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
+                      {`${userDetails?.partner_first_name} ${userDetails?.partner_name}`}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      {userDetails?.partner_phone}
+                    </Typography>
+                  </Box>
+                </AccountStyle>
+              </Link>
+            </Box>
+          </Stack>
+        </Box>
+      )}
     </Scrollbar>
   );
 
