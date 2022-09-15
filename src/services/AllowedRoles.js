@@ -14,31 +14,31 @@ export const getAllowedRoles = (pageSectionPath) => {
     },
     {
       path: '/dashboard/ratePlan',
-      allowedRoles: ['admin','partner'],
+      allowedRoles: ['superAdmin','admin','partner'],
     },
     {
       path: '/dashboard/calendar',
-      allowedRoles: ['admin','partner'],
+      allowedRoles: ['superAdmin','admin','partner'],
     },
     {
       path: '/dashboard/accessRight',
-      allowedRoles: ['admin','partner'],
+      allowedRoles: ['superAdmin','admin','partner'],
     },
     {
       path: '/dashboard/user',
-      allowedRoles: ['admin','partner'],
+      allowedRoles: ['superAdmin','admin','partner'],
     },
     {
       path: '/dashboard/promotion',
-      allowedRoles: ['admin','partner'],
+      allowedRoles: ['superAdmin','admin','partner'],
     },
     {
       path: '/dashboard/typeChambre',
-      allowedRoles: ['admin','partner'],
+      allowedRoles: ['superAdmin','admin','partner'],
     },
     {
       path: '/dashboard/politic',
-      allowedRoles: ['admin','partner'],
+      allowedRoles: ['superAdmin','admin','partner'],
     },
     {
       path: '/dashboard/hotel',
