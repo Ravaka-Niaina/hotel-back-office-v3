@@ -15,7 +15,7 @@ const CellRoomEditorPopper = ({ open, anchorEl , setOpen , selected , setSelecte
     };
     return (
         <>
-            <Popper open={open} anchorEl={anchorEl} placement='top' transition {...others}>
+            <Popper open={open && selected.length>0} anchorEl={anchorEl} placement='top' transition {...others}>
                 {({ TransitionProps }) => (
                     <Slide {...TransitionProps} timeout={350}>
                         <div>

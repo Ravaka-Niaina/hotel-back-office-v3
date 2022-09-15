@@ -3,7 +3,7 @@ import debounce from 'lodash.debounce';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 
-const SelectableRoomCell = ({children,chambre,selected,setSelected,setAnchorEl,item,...others}) => {
+const SelectableRoomCell = ({children,item,chambre,selected,setSelected,setAnchorEl,setOpen,cleanOthers,...others}) => {
     const handleDragStart = (e, direction) => {
         const crt = document.createElement('div');
         crt.style.visibility = "hidden"; /* or visibility: hidden, or any of the above */
@@ -15,6 +15,16 @@ const SelectableRoomCell = ({children,chambre,selected,setSelected,setAnchorEl,i
     
     const allowDraggingArea = (e) => {
         e.preventDefault();
+    };
+    const openEditor = (target) => {
+        cleanOthers('rate_plan');
+        setOpen(false);
+            setTimeout(
+                () => {
+                    setAnchorEl(target);
+                    setOpen(true);
+                }, 420
+        );
     };
     const handleSelect = debounce((e, item, target, direction) => {
 
@@ -29,7 +39,7 @@ const SelectableRoomCell = ({children,chambre,selected,setSelected,setAnchorEl,i
         // console.log(`direction=${direction} , newItemIndex=${newItemIndex} et firstItemSelectedIndex=${firstItemSelectedIndex}`)
         if (direction === 'right' && !(newItemIndex < firstItemSelectedIndex)) {
             // console.log(`newItemIndex=${newItemIndex} > firstItemSelectedIndex=${firstItemSelectedIndex}`)
-            setAnchorEl(e.currentTarget);
+            openEditor(e.currentTarget);
             const isItemSelected = selected.includes(item);
             if (!isItemSelected) {
                 console.log('manova');
@@ -54,7 +64,7 @@ const SelectableRoomCell = ({children,chambre,selected,setSelected,setAnchorEl,i
             }
         }
         else if (direction === 'left' && !(newItemIndex > lastItemSelectedIndex)) {
-            setAnchorEl(e.currentTarget);
+            openEditor(e.currentTarget);
             if (!selected.includes(item)) {
 
                 setSelected(
@@ -74,14 +84,14 @@ const SelectableRoomCell = ({children,chambre,selected,setSelected,setAnchorEl,i
                 setSelected(oldSelected => (oldSelected.slice(oldSelected.indexOf(item), oldSelected.length)));
             }
         }
-    }, 500)
+    }, 0)
     return (
         <div 
             {...others} 
             className='SelectableCell' 
             style={{ background: selected.includes(item) ? "#b2d5f8" : "none", }}
             onDragOver={allowDraggingArea}
-            onDragEnter={(e) => {
+            onDrop={(e) => {
                 handleSelect(e, item, e.currentTarget, e.dataTransfer.types[0]);
             }}
         >

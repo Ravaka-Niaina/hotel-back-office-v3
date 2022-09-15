@@ -33,10 +33,18 @@ const CalendarEditor = () => {
     const [anchorElRatePlan, setAnchorElRatePlan] = React.useState(null);
     const [openRatePlanEditor, setOpenRatePlanEditor] = React.useState(false);
     
+    const cleanOthers = (name) => {
+        const setters = {
+            room:setSelectedRoom,
+            rate_plan:setSelectedRatePlan,
+        };
+        setters[name]?.call(setters,[]);
+    };
     const handleSelectOneRoom = (e, item) => {
         if (!selectedRoom.includes(item) || selectedRoom.length > 1) {
             const target = e.currentTarget;
             setSelectedRoom([item]);
+            setSelectedRatePlan([]);
             setOpenRoomEditor(false);
             setTimeout(
                 () => {
@@ -50,6 +58,7 @@ const CalendarEditor = () => {
         if (!selectedRatePlan.includes(item) || selectedRatePlan.length > 1) {
             const target = e.currentTarget;
             setSelectedRatePlan([item]);
+            setSelectedRoom([]);
             setOpenRatePlanEditor(false);
             setTimeout(
                 () => {
@@ -1477,6 +1486,8 @@ const CalendarEditor = () => {
                         selected={selectedRoom}
                         setSelected={setSelectedRoom}
                         setAnchorEl={setAnchorElRoom}
+                        setOpen={setOpenRoomEditor}
+                        cleanOthers={cleanOthers}
                         chambre={chambre}
                         onClick={(e) => handleSelectOneRoom(e, status.date)}
                     >
@@ -1526,18 +1537,21 @@ const CalendarEditor = () => {
                     <tr key={index}>
                         {
                             tarif.prixTarif.map((pt, i) => {
+                                const item = `${pt.date}@${j}@${index}`;
                                 return (
                                     <td
                                         key={`${index}-${i}`}
-                                        
+                                        style={{position:'relative'}}
                                     >
                                         <SelectableRatePlanCell 
-                                            item={pt.date}
+                                            item={item}
                                             chambre={chambre} 
                                             selected={selectedRatePlan} 
                                             setSelected={setSelectedRatePlan} 
-                                            setAnchorEl={setSelectedRatePlan}
-                                            onClick={(e) => handleSelectOneRatePlan(e, pt.date)}
+                                            setAnchorEl={ setAnchorElRatePlan}
+                                            setOpen={setOpenRatePlanEditor}
+                                            cleanOthers={cleanOthers}
+                                            onClick={(e) => handleSelectOneRatePlan(e, item)}
                                         >
                                             {pt.versions[index]?.prix}$
                                         </SelectableRatePlanCell>
