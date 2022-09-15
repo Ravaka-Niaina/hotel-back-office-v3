@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
@@ -14,6 +14,7 @@ import NavSection from './NavSection';
 import { getNavConfig } from './NavConfig';
 import { getPayloadFromToken, getToken } from '../../services/User';
 import Logout from './Logout';
+import { ThemeContext } from '../context/Wrapper';
 
 // ----------------------------------------------------------------------
 
@@ -43,6 +44,7 @@ DashboardSidebar.propTypes = {
 };
 
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
+  const context = useContext(ThemeContext);
   const { pathname } = useLocation();
   const isDesktop = useResponsive('up', 'lg');
   const [navConfig, setNavConfig] = useState(null);
@@ -55,7 +57,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
 
   useEffect(() => {
     const initiateNavConfig = async () => {
-      const newNavConfig = await getNavConfig(getToken());
+      const newNavConfig = await getNavConfig(context);
       setNavConfig(newNavConfig);
     };
     initiateNavConfig();
@@ -99,7 +101,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
                     <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                       {userDetails?.partner_phone}
                     </Typography>
-                    <div style={{marginTop: 15}}>
+                    <div style={{ marginTop: 15 }}>
                       <Logout />
                     </div>
                   </Box>
