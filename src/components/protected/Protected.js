@@ -59,7 +59,9 @@ const Protected = ({ child, allowedRoles }) => {
     const payloadFromToken = getPayloadFromToken(jwtDecode, token);
     if (!payloadFromToken) redirectToLoginPage();
     const partnerId = payloadFromToken?.partner_id;
-    getUserDetailsById(partnerId).then((results) => {
+    const userDetails = context.getUserDetails();
+
+    userDetails.then((results) => {
       // the attributedAccessRights from the payload
       const attributedAccessRights = results.data?.atribAR;
       // only getting the id field from the arrays of the payload and storing it inside an array

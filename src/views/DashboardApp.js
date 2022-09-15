@@ -27,7 +27,7 @@ export default function DashboardApp() {
     <Page title="AIOLIA | Tableau de bord">
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Hi, Welcome back
+          Tableau de bord
         </Typography>
 
         <Grid container spacing={3}>

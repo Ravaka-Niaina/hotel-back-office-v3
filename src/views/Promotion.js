@@ -17,14 +17,14 @@ import AddPromotionDialog from '../components/promotion/AddPromotionDialog';
 import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
 import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
-import CustomizedCard from '../components/CustomizedComponents/CustomizedCard';
 import TableCellStyled from '../components/CustomizedComponents/CustomizedTableCell';
 import PromotionMoreMenu from '../components/promotion/PromotionMoreMenu';
 import { ThemeContext } from '../components/context/Wrapper';
 import { UserListHead, UserListToolbar } from '../components/table';
 import { getPromotionList } from '../services/Promotion';
 import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
-
+import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
+import { lightBackgroundToTop } from '../components/CustomizedComponents/NeumorphismTheme';
 // mock
 
 // ----------------------------------------------------------------------
@@ -43,14 +43,14 @@ const Promotion = () => {
   const context = useContext(ThemeContext);
   const [promotionList, setPromotionList] = useState(new Array(0));
   useEffect(() => {
-    reload()
+    reload();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  useEffect(()=>{
+  useEffect(() => {
     // console.log(promotionList)
-  },[promotionList])
+  }, [promotionList]);
   const getAllPromotion = () => {
-    context.showLoader(true)
+    context.showLoader(true);
     const payload = {
       tableName: 'promotion',
       valuesToSearch: [],
@@ -76,8 +76,8 @@ const Promotion = () => {
           context.changeResultErrorMessage(`Une erreur est survenue lors du chargement de la liste de promotions.`);
           context.showResultError(true);
         })
-        .finally(()=>{
-          context.showLoader(false)
+        .finally(() => {
+          context.showLoader(false);
         });
     } catch (e) {
       context.changeResultErrorMessage(`Une erreur est survenue lors du chargement de la liste de promotions.`);
@@ -151,11 +151,19 @@ const Promotion = () => {
     <Page title="AIOLIA | Promotions">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <CustomizedTitle sx={{ color: '#787878' }} text='Promotion'/>
+          <CustomizedTitle sx={{ color: '#787878' }} text="Promotion" />
           <AddPromotionDialog reload={reload} />
         </Stack>
 
-        <CustomizedCard sx={{background:'#E3EDF7',p:5}}>
+        <CustomizedPaperOutside
+          sx={{
+            ...lightBackgroundToTop,
+            minHeight: '100vh',
+            border: '1px white solid',
+            color: 'white',
+            padding: 5,
+          }}
+        >
           <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
@@ -171,39 +179,43 @@ const Promotion = () => {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {promotionList && promotionList.map((row) => {
-                    const { _id, nom, sejourMin, planTarifaire, typeChambre, dateDebutS, dateFinS } = row;
-                    const isItemSelected = selected.indexOf(nom) !== -1;
+                  {promotionList &&
+                    promotionList.map((row) => {
+                      const { _id, nom, sejourMin, planTarifaire, typeChambre, dateDebutS, dateFinS } = row;
+                      const isItemSelected = selected.indexOf(nom) !== -1;
 
-                    return (
-                      <TableRow
-                        hover
-                        key={_id}
-                        tabIndex={-1}
-                        role="checkbox"
-                        selected={isItemSelected}
-                        aria-checked={isItemSelected}
-                      >
-                        <TableCellStyled padding="checkbox">
-                          <CustomizedCheckbox checked={isItemSelected} onChange={(event) => handleClick(event, nom)} />
-                        </TableCellStyled>
-                        <TableCellStyled component="th" scope="row" padding="none">
-                          <Typography variant="subtitle2" noWrap>
-                            {nom}
-                          </Typography>
-                        </TableCellStyled>
-                        <TableCellStyled align="left">{sejourMin}</TableCellStyled>
-                        <TableCellStyled align="left">{planTarifaire}</TableCellStyled>
-                        <TableCellStyled align="left">{typeChambre}</TableCellStyled>
-                        <TableCellStyled align="left">{dateDebutS}</TableCellStyled>
-                        <TableCellStyled align="left">{dateFinS}</TableCellStyled>
+                      return (
+                        <TableRow
+                          hover
+                          key={_id}
+                          tabIndex={-1}
+                          role="checkbox"
+                          selected={isItemSelected}
+                          aria-checked={isItemSelected}
+                        >
+                          <TableCellStyled padding="checkbox">
+                            <CustomizedCheckbox
+                              checked={isItemSelected}
+                              onChange={(event) => handleClick(event, nom)}
+                            />
+                          </TableCellStyled>
+                          <TableCellStyled component="th" scope="row" padding="none">
+                            <Typography variant="subtitle2" noWrap>
+                              {nom}
+                            </Typography>
+                          </TableCellStyled>
+                          <TableCellStyled align="left">{sejourMin}</TableCellStyled>
+                          <TableCellStyled align="left">{planTarifaire}</TableCellStyled>
+                          <TableCellStyled align="left">{typeChambre}</TableCellStyled>
+                          <TableCellStyled align="left">{dateDebutS}</TableCellStyled>
+                          <TableCellStyled align="left">{dateFinS}</TableCellStyled>
 
-                        <TableCellStyled align="right">
-                          <PromotionMoreMenu row={row} reload={reload} />
-                        </TableCellStyled>
-                      </TableRow>
-                    );
-                  })}
+                          <TableCellStyled align="right">
+                            <PromotionMoreMenu row={row} reload={reload} />
+                          </TableCellStyled>
+                        </TableRow>
+                      );
+                    })}
                   {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>
                       <TableCell colSpan={6} />
@@ -233,7 +245,7 @@ const Promotion = () => {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
-        </CustomizedCard>
+        </CustomizedPaperOutside>
       </Container>
     </Page>
   );

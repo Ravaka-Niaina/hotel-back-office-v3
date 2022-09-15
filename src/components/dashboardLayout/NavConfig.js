@@ -9,14 +9,13 @@ const getIcon = (name) => <Iconify icon={name} width={22} height={22} />;
 /**
  * @function getNavConfig
  * @description A function to get all the items to be displayed on the sidebar referring to the user roles
- * @param {string} idToken The jwt token of the user
+ * @param {hook} context A context from ThemeContext
  * @returns {array} An array of all the items of the navigation bar
  */
-export const getNavConfig = async (idToken) => {
-  const payloadFromToken = getPayloadFromToken(jwtDecode, idToken);
-  const partnerId = payloadFromToken?.partner_id;
-  const userDetails = await getUserDetailsById(partnerId);
-  const userAccessRights = userDetails.data?.atribAR;
+export const getNavConfig = async (context) => {
+  const userDetails = await context.getUserDetails();
+  // console.log(userDetails)
+  const userAccessRights = userDetails.data.atribAR;
   const userRoles = userAccessRights.map((accessRight) => accessRight?._id);
   const navConfig = [
     {
