@@ -30,6 +30,7 @@ export const getNavConfig = async (idToken) => {
       title: 'plan tarifaire',
       path: '/dashboard/ratePlan',
       icon: getIcon('eva:file-text-fill'),
+      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/ratePlan')),
       children: [
         {
           title: 'tarif',

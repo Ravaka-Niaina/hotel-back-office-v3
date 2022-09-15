@@ -50,7 +50,7 @@ export default function Router() {
       path: '/',
       element: <Layout />,
       children: [
-        { path: '/', element: <Navigate to="/login" /> },
+        { path: '/', element: <Navigate to="/dashboard/app" /> },
         { path: 'login', element: <Login /> },
         { path: 'verifycode', element: <VerifyCode /> },
         { path: '404', element: <Navigate to="/dashboard/app" /> },
