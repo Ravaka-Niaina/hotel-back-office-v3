@@ -16,7 +16,6 @@ import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
 import { UserListHead, UserListToolbar } from '../components/table';
 import UserMoreMenu from '../components/user/UserMoreMenu';
-import CustomizedCard from '../components/CustomizedComponents/CustomizedCard';
 import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
 import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
 import TableCellStyled from '../components/CustomizedComponents/CustomizedTableCell';
@@ -24,7 +23,8 @@ import AddUserDialog from '../components/user/AddUserDialog';
 import { ThemeContext } from '../components/context/Wrapper';
 import { getUserList } from '../services/User';
 import { getAccessRightList } from '../services/AccessRight';
-
+import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
+import { lightBackgroundToTop } from '../components/CustomizedComponents/NeumorphismTheme';
 // mock
 
 // ----------------------------------------------------------------------
@@ -163,7 +163,15 @@ export default function User() {
           <AddUserDialog />
         </Stack>
 
-        <CustomizedCard sx={{background:'#E3EDF7',p:5}}>
+        <CustomizedPaperOutside
+          sx={{
+            ...lightBackgroundToTop,
+            minHeight: '100vh',
+            border: '1px white solid',
+            color: 'white',
+            padding: 5,
+          }}
+        >
           <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
@@ -240,7 +248,7 @@ export default function User() {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
-        </CustomizedCard>
+        </CustomizedPaperOutside>
       </Container>
     </Page>
   );

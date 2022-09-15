@@ -1,18 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
-import {
-    Table,
-    Stack,
-    TableRow,
-    TableBody,
-    Container,
-    Typography,
-    TableContainer,
-} from '@mui/material';
+import { Table, Stack, TableRow, TableBody, Container, Typography, TableContainer } from '@mui/material';
 
 import AddRatePlanDialog from '../components/ratePlan/AddRatePlanDialog';
 import RatePlanMoreMenu from '../components/ratePlan/RatePlanMoreMenu';
 import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
-import CustomizedCard from '../components/CustomizedComponents/CustomizedCard';
 import TableCellStyled from '../components/CustomizedComponents/CustomizedTableCell';
 import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
@@ -20,121 +11,121 @@ import { ThemeContext } from '../components/context/Wrapper';
 import { getRatePlanList } from '../services/RatePlan';
 import { UserListHead, UserListToolbar } from '../components/table';
 import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
+import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
+import { lightBackgroundToTop } from '../components/CustomizedComponents/NeumorphismTheme';
 
 const TABLE_HEAD = [
-    { id: 'id', label: 'ID', alignRight: false },
-    { id: 'nom', label: 'Nom', alignRight: false },
+  { id: 'id', label: 'ID', alignRight: false },
+  { id: 'nom', label: 'Nom', alignRight: false },
 ];
 
 const RatePlan = () => {
-    const context = useContext(ThemeContext);
-    const order = 'asc';
-    const selected = [];
-    const orderBy = 'name';
-    const filterName = '';
+  const context = useContext(ThemeContext);
+  const order = 'asc';
+  const selected = [];
+  const orderBy = 'name';
+  const filterName = '';
 
-    const [ratePlanList, setRatePlanList] = useState(new Array(0));
+  const [ratePlanList, setRatePlanList] = useState(new Array(0));
 
-    const getAllRatePlan = (noLoading) => {
-        const payload = {
-            tableName: "tarif",
-            valuesToSearch: [],
-            fieldsToPrint: ["_id", "nom"],
-            nbContent: 100,
-            numPage: 1,
-        };
-        if(!noLoading){
-            context.showLoader(true);
-        } 
-        getRatePlanList(payload)
-            .then((fetch) => {
-                const status = 200;
-                if (status === 200) {
-                    setRatePlanList(fetch.data.list);
-                } else {
-                    context.changeResultErrorMessage('Cannot fetch data!');
-                    context.showResultError(true);
-                }
-            })
-            .catch((e) => {
-                context.changeResultErrorMessage(e.message);
-                context.showResultError(true);
-            })
-            .finally(() => {
-                context.showLoader(false);
-                context.setPartialLoading({ ...context.partialLoading, 'loading': false, 'identifier': '' });
-            });
+  const getAllRatePlan = (noLoading) => {
+    const payload = {
+      tableName: 'tarif',
+      valuesToSearch: [],
+      fieldsToPrint: ['_id', 'nom'],
+      nbContent: 100,
+      numPage: 1,
     };
+    if (!noLoading) {
+      context.showLoader(true);
+    }
+    getRatePlanList(payload)
+      .then((fetch) => {
+        const status = 200;
+        if (status === 200) {
+          setRatePlanList(fetch.data.list);
+        } else {
+          context.changeResultErrorMessage('Cannot fetch data!');
+          context.showResultError(true);
+        }
+      })
+      .catch((e) => {
+        context.changeResultErrorMessage(e.message);
+        context.showResultError(true);
+      })
+      .finally(() => {
+        context.showLoader(false);
+        context.setPartialLoading({ ...context.partialLoading, loading: false, identifier: '' });
+      });
+  };
 
-    const reload = (noLoading = false) => {
-        getAllRatePlan(noLoading);
-    };
+  const reload = (noLoading = false) => {
+    getAllRatePlan(noLoading);
+  };
 
-    useEffect(() => {
-        reload();
-        
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-    return (
-        <Page title="AIOLIA | Plans tarifaires">
-            <Container>
-                <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-                    <CustomizedTitle sx={{ color: '#787878'}} text='Plan tarifaire' />
-                    <AddRatePlanDialog reload={reload} />
-                </Stack>
+  useEffect(() => {
+    reload();
 
-                <CustomizedCard sx={{background:'#E3EDF7',p:5}}>
-                    <UserListToolbar numSelected={selected.length} filterName={filterName} />
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return (
+    <Page title="AIOLIA | Plans tarifaires">
+      <Container>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+          <CustomizedTitle sx={{ color: '#787878' }} text="Plan tarifaire" />
+          <AddRatePlanDialog reload={reload} />
+        </Stack>
+        <CustomizedPaperOutside sx={{ ...lightBackgroundToTop, background: '#E3EDF7', p: 5, minHeight:'100vh' }}>
+          <UserListToolbar numSelected={selected.length} filterName={filterName} />
+          <Scrollbar>
+            <TableContainer sx={{ minWidth: 800 }}>
+              <Table>
+                <UserListHead
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  rowCount={ratePlanList.length}
+                  numSelected={selected.length}
+                />
+                <TableBody>
+                  {ratePlanList.map((row) => {
+                    const { _id, nom, isActif } = row;
+                    console.log(isActif);
+                    const isItemSelected = selected.indexOf(nom) !== -1;
 
-                    <Scrollbar>
-                        <TableContainer sx={{ minWidth: 800 }}>
-                            <Table>
-                                <UserListHead
-                                    order={order}
-                                    orderBy={orderBy}
-                                    headLabel={TABLE_HEAD}
-                                    rowCount={ratePlanList.length}
-                                    numSelected={selected.length}
-                                />
-                                <TableBody>
-                                    {ratePlanList.map((row) => {
-                                        const { _id, nom,isActif} = row;
-                                        console.log(isActif)
-                                        const isItemSelected = selected.indexOf(nom) !== -1;
+                    return (
+                      <TableRow
+                        hover
+                        key={_id}
+                        tabIndex={-1}
+                        role="checkbox"
+                        selected={isItemSelected}
+                        aria-checked={isItemSelected}
+                      >
+                        <TableCellStyled padding="checkbox">
+                          <CustomizedCheckbox />
+                        </TableCellStyled>
+                        <TableCellStyled component="th" scope="row" padding="none">
+                          <Typography variant="subtitle2" noWrap>
+                            {_id}
+                          </Typography>
+                        </TableCellStyled>
+                        <TableCellStyled align="left">{nom}</TableCellStyled>
 
-                                        return (
-                                            <TableRow
-                                                hover
-                                                key={_id}
-                                                tabIndex={-1}
-                                                role="checkbox"
-                                                selected={isItemSelected}
-                                                aria-checked={isItemSelected}
-                                            >
-                                                <TableCellStyled padding="checkbox">
-                                                    <CustomizedCheckbox />
-                                                </TableCellStyled>
-                                                <TableCellStyled component="th" scope="row" padding="none">
-                                                    <Typography variant="subtitle2" noWrap>
-                                                        {_id}
-                                                    </Typography>
-                                                </TableCellStyled>
-                                                <TableCellStyled align="left">{nom}</TableCellStyled>
-
-                                                <TableCellStyled align="right">
-                                                    <RatePlanMoreMenu  reload={reload} ratePlanId={_id} isActif={isActif}/>
-                                                </TableCellStyled>
-                                            </TableRow>
-                                        );
-                                    })}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Scrollbar>
-                </CustomizedCard>
-            </Container>
-        </Page>
-    );
+                        <TableCellStyled align="right">
+                          <RatePlanMoreMenu reload={reload} ratePlanId={_id} isActif={isActif} />
+                        </TableCellStyled>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Scrollbar>
+        </CustomizedPaperOutside>
+      </Container>
+    </Page>
+  );
 };
 
 export default RatePlan;

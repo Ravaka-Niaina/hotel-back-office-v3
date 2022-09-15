@@ -5,7 +5,6 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 import AddPoliticDialog from '../components/politic/AddPoliticDialog';
 import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
-import CustomizedCard from '../components/CustomizedComponents/CustomizedCard';
 import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
 import TableCellStyled from '../components/CustomizedComponents/CustomizedTableCell';
 import Page from '../components/Page';
@@ -14,6 +13,8 @@ import { UserListHead, UserListToolbar } from '../components/table';
 import { getPolitics } from '../services/Politic';
 import { ThemeContext } from '../components/context/Wrapper';
 import PoliticMoreMenu from '../components/politic/PoliticMoreMenu';
+import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
+import { lightBackgroundToTop } from '../components/CustomizedComponents/NeumorphismTheme';
 
 const TABLE_HEAD = [
   { id: 'id', label: 'ID', alignRight: false },
@@ -75,7 +76,15 @@ const Politic = () => {
           <AddPoliticDialog reload={reload} />
         </Stack>
 
-        <CustomizedCard sx={{ background: '#E3EDF7', p: 5 }}>
+        <CustomizedPaperOutside
+          sx={{
+            ...lightBackgroundToTop,
+            minHeight: '100vh',
+            border: '1px white solid',
+            color: 'white',
+            padding: 5,
+          }}
+        >
           <UserListToolbar numSelected={selected.length} filterName={filterName} />
 
           <Scrollbar>
@@ -128,7 +137,7 @@ const Politic = () => {
               </Table>
             </TableContainer>
           </Scrollbar>
-        </CustomizedCard>
+        </CustomizedPaperOutside>
       </Container>
     </Page>
   );

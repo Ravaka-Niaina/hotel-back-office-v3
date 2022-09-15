@@ -1,12 +1,12 @@
-import { Button, MenuItem, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 const Logout = () => {
   const navigate = useNavigate();
   const logout = () => {
-    // localStorage.removeItem('partner_id');
-    // localStorage.removeItem('id_token');
-    // navigate('/login');
+    localStorage.removeItem('partner_id');
+    localStorage.removeItem('id_token');
+    navigate('/login');
   };
   return (
     <Button
