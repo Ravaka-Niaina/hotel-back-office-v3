@@ -1,4 +1,5 @@
-import React , {useState} from 'react';
+import React , { useState , useEffect , useContext} from 'react';
+import produce from 'immer';
 import { format } from 'date-fns';
 import moment from 'moment';
 import { Stack , Grid } from '@mui/material';
@@ -10,12 +11,25 @@ import CalendarEditor from '../components/calendar/CalendarEditor';
 import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
 import CustomizedIconButton from '../components/CustomizedComponents/CustomizedIconButton';
 
+import { ThemeContext } from '../components/context/Wrapper';
+
+import { getTcTarifPrix } from '../services/TCTarif';
+
 
 const Calendar = () => {
+    
     const page='CALENDAR';
-    const [value, setValue] = useState([ moment(new Date()) , moment(new Date(new Date().getDate()+30)) ]);
+    const context = useContext(ThemeContext);
+    const today = new Date();
+    const nextWeek = new Date(today);
+    nextWeek.setDate(nextWeek.getDate()+7);
+    const [dateRange, setDateRange] = useState([ moment(today) , moment(nextWeek) ]);
     const [open, setOpen] = useState(false);
-    console.log(format(value[0].toDate(), 'd MMMM yyyy'));
+    const [ roomList , setRoomList ] = useState([]);
+
+    const [reloadState , setReloadState] = useState(false);
+    console.log(roomList);
+    // console.log(format(value[0].toDate(), 'd MMMM yyyy'));
     // function getNDigits(number, digit){
     //     digit = `${digit}`;
     //     const remain = number - digit.length;
@@ -33,7 +47,46 @@ const Calendar = () => {
     //     date = `${year}-${month}-${day}`;
     //     return date;
     // }
-    
+    const fetchData = () => {
+        const payload = {
+            dateDebut: format(dateRange[0].toDate(), 'yyyy-MM-dd'),
+            dateFin: format(dateRange[1].toDate(), 'yyyy-MM-dd'),
+        };
+        context.showLoader(true);
+        getTcTarifPrix(payload)
+            .then((result) => {
+                if (result.data.status === 200) {
+                    console.log(result.data);
+                    setRoomList([]);
+                    setRoomList((prev)=>[...prev , ...result.data.typeChambre]);
+                    setReloadState((prev)=>!prev);
+                    console.log(roomList);
+                }
+                else {
+                    context.changeResultErrorMessage('Chargement des données  non autorisées');
+                    context.showResultError(true);
+                }
+            })
+            .catch((error) => {
+                context.changeResultErrorMessage(error.message);
+                context.showResultError(true);
+            })
+            .finally(()=>{
+                 context.showLoader(false);
+                // console.log('ol');
+            });
+    };
+    const handleClickOk = () => {
+        fetchData();
+        setOpen(false);
+    };
+    useEffect(() =>{
+        console.log('useEffect roomLIst');
+        console.log(roomList);
+    },[ reloadState ]);
+    useEffect(() => {
+        fetchData();
+    }, []);
     return (
             <Stack spacing={2} sx={{p:2}}> 
                 <h1>{page}</h1>
@@ -43,16 +96,16 @@ const Calendar = () => {
                         onClick={()=>setOpen((prev)=>!prev)}
                         editable={false}
                         open={open}
-                        onOk={()=>setOpen(false)}
+                        onOk={handleClickOk}
                         placement='autoVerticalStart'
                         style={{border:'2px #2476d2 solid',borderRadius:'8px',width:'200px'}}
-                        value={[value[0].toDate(), value[1].toDate()]}
+                        value={[dateRange[0].toDate(), dateRange[1].toDate()]}
                         onChange={(val) => {
                             const newValue = JSON.parse(JSON.stringify(val));
                             for(let i = 0; i < newValue.length; i+=1){
                                 newValue[i] = moment(new Date(newValue[i]));
                             }
-                            setValue(newValue);
+                            setDateRange(newValue);
                             // if(newValue !== undefined && newValue[0] !== null && newValue[1] !== null){
                             //     getPrix(newValue);
                             // }
@@ -104,7 +157,7 @@ const Calendar = () => {
                                             color: '#113A62',
                                         }}
                                    >
-                                        {format(value[0].toDate(), 'd MMMM yyyy')} - {format(value[1].toDate(), 'd MMMM yyyy')}
+                                    {format(dateRange[0].toDate(), 'd MMMM yyyy')} - {format(dateRange[1].toDate(), 'd MMMM yyyy')}
                                    </span>
                                 </div>
                             </Grid>
@@ -112,7 +165,12 @@ const Calendar = () => {
                         </Grid>
                     </CustomizedPaperOutside>
                 </Stack>
-                <CalendarEditor />
+                {
+                    roomList.map((room,i)=>
+                        <CalendarEditor chambre={room} dateRange={dateRange} key={i}/>
+                    )
+                }
+                
             </Stack>
     );
 };
