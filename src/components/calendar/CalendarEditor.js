@@ -1,4 +1,4 @@
-import React , { useEffect , useState } from 'react';
+import React , { useEffect , useState , useContext } from 'react';
 import debounce from 'lodash.debounce';
 import { Grid , Stack } from '@mui/material';
 
@@ -13,7 +13,7 @@ import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutsi
 import CalendarValueSide from './CalendarValueSide';
 import CalendarAttributeSide from './CalendarAttributeSide';
 
-import { getTcTarifPrix } from '../../services/TCTarif';
+import { ThemeContext } from '../context/Wrapper';
 
 import './index.css';
 
@@ -25,7 +25,7 @@ function dateDiff(a, b) {
 
     return Math.abs(Math.floor((utc2 - utc1) / _MS_PER_DAY));
 }
-const CalendarEditor = ({chambre , dateRange}) => {
+function initializeDateList(dateRange){
     const date = new Date(dateRange[0].toDate());
     date.setDate(date.getDate() - 1);
     const rangeGap = dateDiff(dateRange[0].toDate(), dateRange[1].toDate());  
@@ -33,6 +33,10 @@ const CalendarEditor = ({chambre , dateRange}) => {
         date.setDate(date.getDate() + 1);
         return new Date(date.getTime());
     });
+    return list;
+};
+const CalendarEditor = ({chambre , dateRange}) => {
+    const list = initializeDateList(dateRange);
     const [selectedRoom, setSelectedRoom] = useState(new Array(0));
     const [anchorElRoom, setAnchorElRoom] = React.useState(null);
     const [openRoomEditor, setOpenRoomEditor] = React.useState(false);

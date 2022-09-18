@@ -1,6 +1,6 @@
-import React , { useState , useEffect , useContext} from 'react';
+import React , { useState , useEffect , useContext , useRef} from 'react';
 import produce from 'immer';
-import { format } from 'date-fns';
+import { format, parse } from 'date-fns';
 import moment from 'moment';
 import { Stack , Grid } from '@mui/material';
 import { DateRangePicker } from 'rsuite';
@@ -8,6 +8,7 @@ import DateRangeIcon from '@mui/icons-material/DateRange';
 
 import "rsuite/dist/rsuite.min.css";
 import CalendarEditor from '../components/calendar/CalendarEditor';
+import CalendarEditorSkeleton from '../components/calendar/CalendarEditorSkeleton';
 import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
 import CustomizedIconButton from '../components/CustomizedComponents/CustomizedIconButton';
 
@@ -26,9 +27,7 @@ const Calendar = () => {
     const [dateRange, setDateRange] = useState([ moment(today) , moment(nextWeek) ]);
     const [open, setOpen] = useState(false);
     const [ roomList , setRoomList ] = useState([]);
-
-    const [reloadState , setReloadState] = useState(false);
-    console.log(roomList);
+    const [loading,setLoading]=useState(false);
     // console.log(format(value[0].toDate(), 'd MMMM yyyy'));
     // function getNDigits(number, digit){
     //     digit = `${digit}`;
@@ -47,20 +46,17 @@ const Calendar = () => {
     //     date = `${year}-${month}-${day}`;
     //     return date;
     // }
-    const fetchData = () => {
+    const fetchData = (dateR) => {
         const payload = {
-            dateDebut: format(dateRange[0].toDate(), 'yyyy-MM-dd'),
-            dateFin: format(dateRange[1].toDate(), 'yyyy-MM-dd'),
+            dateDebut: format(dateR[0].toDate(), 'yyyy-MM-dd'),
+            dateFin: format(dateR[1].toDate(), 'yyyy-MM-dd'),
         };
         context.showLoader(true);
+        setLoading(true);
         getTcTarifPrix(payload)
             .then((result) => {
                 if (result.data.status === 200) {
-                    console.log(result.data);
-                    setRoomList([]);
-                    setRoomList((prev)=>[...prev , ...result.data.typeChambre]);
-                    setReloadState((prev)=>!prev);
-                    console.log(roomList);
+                    setRoomList(result.data.typeChambre);
                 }
                 else {
                     context.changeResultErrorMessage('Chargement des données  non autorisées');
@@ -73,19 +69,17 @@ const Calendar = () => {
             })
             .finally(()=>{
                  context.showLoader(false);
+                 setLoading(false);
                 // console.log('ol');
             });
     };
-    const handleClickOk = () => {
-        fetchData();
+
+    const handleClickOk = (dateR) => {
+        fetchData(dateR.map((d)=>moment(new Date(d))));
         setOpen(false);
     };
-    useEffect(() =>{
-        console.log('useEffect roomLIst');
-        console.log(roomList);
-    },[ reloadState ]);
     useEffect(() => {
-        fetchData();
+        fetchData(dateRange);
     }, []);
     return (
             <Stack spacing={2} sx={{p:2}}> 
@@ -96,7 +90,7 @@ const Calendar = () => {
                         onClick={()=>setOpen((prev)=>!prev)}
                         editable={false}
                         open={open}
-                        onOk={handleClickOk}
+                        onOk={(e)=>handleClickOk(e)}
                         placement='autoVerticalStart'
                         style={{border:'2px #2476d2 solid',borderRadius:'8px',width:'200px'}}
                         value={[dateRange[0].toDate(), dateRange[1].toDate()]}
@@ -165,9 +159,12 @@ const Calendar = () => {
                         </Grid>
                     </CustomizedPaperOutside>
                 </Stack>
+
                 {
                     roomList.map((room,i)=>
-                        <CalendarEditor chambre={room} dateRange={dateRange} key={i}/>
+                        loading ? 
+                            (<CalendarEditorSkeleton/>) : 
+                            (<CalendarEditor chambre={room} dateRange={dateRange} key={i}/>)
                     )
                 }
                 
