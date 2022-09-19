@@ -35,8 +35,9 @@ function initializeDateList(dateRange){
     });
     return list;
 };
-const CalendarEditor = ({chambre , dateRange}) => {
+const CalendarEditor = ({room , dateRange}) => {
     const list = initializeDateList(dateRange);
+    const [chambre,setChambre] = useState(room);
     const [selectedRoom, setSelectedRoom] = useState(new Array(0));
     const [anchorElRoom, setAnchorElRoom] = React.useState(null);
     const [openRoomEditor, setOpenRoomEditor] = React.useState(false);
@@ -109,7 +110,13 @@ const CalendarEditor = ({chambre , dateRange}) => {
         chambre.statusDays.forEach((status,i)=>{
             roomStatus.push((
                 <td className='status' key={`roomStatus-${i}`}>
-                    <StatusCell available={!status.closed} />
+                    <StatusCell 
+                        available={!status.closed} 
+                        date={status.date}
+                        chambre={chambre}
+                        setChambre={setChambre}
+                        index={i}
+                    />
                 </td>
             ))
             roomToSell.push((
@@ -136,10 +143,9 @@ const CalendarEditor = ({chambre , dateRange}) => {
                 </td>
             ))
         })
-        setRoomDetails((oldRoomDetails) => ({
-            ...oldRoomDetails,
+        setRoomDetails({
             roomStatus,roomToSell,bookedRoom
-        }));
+        });
     };
     const loadRatePlanRows  = () => {
         const ratePlanListTemp = []; // [RatePlan values and information ] all the cells in the right side in the calendar(table)
@@ -247,8 +253,8 @@ const CalendarEditor = ({chambre , dateRange}) => {
     
     return (
         <CustomizedPaperOutside elevation={12} sx={{ background: '#E3EDF7', p: 5 }}>
-            <CellRoomEditorPopper open={openRoomEditor} setOpen={setOpenRoomEditor} anchorEl={anchorElRoom} sx={{ zIndex:16777270}} selected={selectedRoom} setSelected={setSelectedRoom}/>
-            <CellRatePlanEditorPopper open={openRatePlanEditor} setOpen={setOpenRatePlanEditor} anchorEl={anchorElRatePlan} sx={{ zIndex: 16777270 }} selected={selectedRatePlan} setSelected={setSelectedRatePlan} />
+            <CellRoomEditorPopper open={openRoomEditor} setOpen={setOpenRoomEditor} anchorEl={anchorElRoom} sx={{ zIndex:16777270}} selected={selectedRoom} setSelected={setSelectedRoom} chambre={chambre}/>
+            <CellRatePlanEditorPopper open={openRatePlanEditor} setOpen={setOpenRatePlanEditor} anchorEl={anchorElRatePlan} sx={{ zIndex: 16777270 }} selected={selectedRatePlan} setSelected={setSelectedRatePlan} chambre={chambre}/>
             <Grid container>
                 <Grid item xs={4} >
                     <CalendarAttributeSide 

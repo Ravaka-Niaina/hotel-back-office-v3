@@ -163,8 +163,8 @@ const Calendar = () => {
                 {
                     roomList.map((room,i)=>
                         loading ? 
-                            (<CalendarEditorSkeleton/>) : 
-                            (<CalendarEditor chambre={room} dateRange={dateRange} key={i}/>)
+                            (<CalendarEditorSkeleton key={i}/>) : 
+                            (<CalendarEditor room={room} dateRange={dateRange} key={i}/>)
                     )
                 }
                 

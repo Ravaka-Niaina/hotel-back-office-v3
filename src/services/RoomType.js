@@ -20,3 +20,9 @@ export const deleteRoomType = (payload) =>
       isPartner: true,
     },
   });
+export const changeOpenStatus = (payload) =>
+  axios.post(`${config.host}/typeChambre/saveAvailability`, payload, {
+    // headers: {
+    //   isPartner: true,
+    // },
+  })

@@ -6,3 +6,9 @@ export const getTcTarifPrix = (payload) =>
         
     }
 );
+
+export const configPrix = (payload) =>
+    axios.post(`${config.host}/TCTarif/configPrix`, payload, {
+        
+    }
+);
