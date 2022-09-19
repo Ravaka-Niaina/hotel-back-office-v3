@@ -1,10 +1,10 @@
 import axios from 'axios';
 import config from '../config/api';
 
-export const getPromotionList = (payload, partnerId) =>
+export const getPromotionList = (payload, idToken) =>
   axios.post(`${config.host}/promotion/search`, payload, {
     headers: {
-      partner_id: partnerId,
+      Authorization: idToken,
     },
   });
 export const createPromotion = (payload, idToken) =>
