@@ -39,7 +39,8 @@ const Politic = () => {
       nbContent: 200,
       numPage: 1,
     };
-    getPolitics({ ...payload })
+    const idToken = localStorage.getItem('id_token');
+    getPolitics({ ...payload }, idToken)
       .then((datas) => {
         try {
           const status = datas?.status;

@@ -1,11 +1,11 @@
 import axios from 'axios';
 import config from '../config/api';
 
-export const getPolitics = (payload) =>
+export const getPolitics = (payload, idToken) =>
   axios.post(`${config.host}/politique/list`, payload, {
-    // headers: {
-    //     partner_id: partnerId,
-    // },
+    headers: {
+      Authorization: idToken,
+    },
   });
 export const createPolitic = (payload, idToken) =>
   axios.post(`${config.host}/politique/insertionPolitique`, payload, {
