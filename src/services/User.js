@@ -17,13 +17,11 @@ export const verifyCode = (payload) =>
             Authorization: token,
         }, */
   });
-export const verifyToken = (token) => {
-  return axios.get(`${config.host}/verify_token`, {
+export const verifyToken = (token) => axios.get(`${config.host}/verify_token`, {
     headers: {
       Authorization: token,
     },
   });
-};
 export const resendCode = (payload) =>
   axios.post(`${config.host}/user/login/resendVerificationCode`, payload, {
     /* headers: {
@@ -39,11 +37,11 @@ export const register = (payload) =>
             Authorization: token,
         }, */
   });
-export const getUserList = (payload) =>
+export const getUserList = (payload, idToken) =>
   axios.post(`${config.host}/user/list`, payload, {
-    /* headers: {
-            Authorization: token,
-        }, */
+    headers: {
+      Authorization: idToken,
+    },
   });
 export const getUserDetails = (id) =>
   axios.get(`${config.host}/user/details/${id}`, {
@@ -58,16 +56,16 @@ export const updateUser = (payload) =>
         }, */
   });
 
-export const addAccessRight = (payload) => {
+export const addAccessRight = (payload) => 
   /**
    * @payload (raw json body) {
    *  idUser: xxx,
    *  idDroitAccess : xxx
    * }
    */
-  return axios.post(`${config.host}/user/addAccessRight`, payload, {
+   axios.post(`${config.host}/user/addAccessRight`, payload, {
     /* headers: {
             Authorization: token,
         }, */
   })
-}
+

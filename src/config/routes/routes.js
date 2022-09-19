@@ -37,7 +37,7 @@ export default function Router() {
         { path: 'promotion', element: <Protected child={<Promotion />} allowedRoles={['superAdmin','admin']} /> },
         { path: 'typeChambre', element: <Protected child={<TypeChambre />} allowedRoles={['superAdmin','admin', 'partner']} /> },
         { path: 'politic', element: <Protected child={<Politic />} allowedRoles={['superAdmin','admin', 'partner']} /> },
-        { path: 'hotel', element: <Protected child={<Hotel />} allowedRoles={['superAdmin','admin', 'partner']} /> },
+        { path: 'hotel', element: <Protected child={<Hotel />} allowedRoles={['superAdmin','admin', 'partner']} /> }
       ],
     },
     {
