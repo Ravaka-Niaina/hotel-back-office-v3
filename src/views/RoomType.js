@@ -79,8 +79,9 @@ const TypeChambre = () => {
       numPage: 1,
     };
 
+    const idToken = localStorage.getItem('id_token');
     try {
-      getRoomTypeList(payload)
+      getRoomTypeList(payload, idToken)
         .then((datas) => {
           if (datas.status === 200) {
             const roomTypeData = datas.data;

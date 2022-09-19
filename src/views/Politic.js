@@ -40,10 +40,12 @@ const Politic = () => {
       nbContent: 200,
       numPage: 1,
     };
-    getPolitics({ ...payload })
+    const idToken = localStorage.getItem('id_token');
+    getPolitics({ ...payload }, idToken)
       .then((datas) => {
         try {
           const status = datas?.status;
+          console.log(datas)
           if (status === 200) {
             const list = datas.data?.list;
             setPoliticList(list);
@@ -90,49 +92,52 @@ const Politic = () => {
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
-                <UserListHead
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={politicList.length}
-                  numSelected={selected.length}
-                />
+                {politicList && (
+                  <UserListHead
+                    order={order}
+                    orderBy={orderBy}
+                    headLabel={TABLE_HEAD}
+                    rowCount={politicList.length}
+                    numSelected={selected.length}
+                  />
+                )}
                 <TableBody>
-                  {politicList.map((row, index) => {
-                    // const { _id, nom, isActif } = row;
-                    // const isItemSelected = selected.indexOf(nom) !== -1;
-                    const i = index;
-                    return (
-                      <TableRow hover key={i} tabIndex={-1} role="checkbox">
-                        <TableCellStyled padding="checkbox">
-                          <CustomizedCheckbox />
-                        </TableCellStyled>
-                        <TableCellStyled component="th" scope="row" padding="none">
-                          <Typography variant="subtitle2" noWrap>
-                            {row._id}
-                          </Typography>
-                        </TableCellStyled>
-                        <TableCellStyled align="left">{row.nom}</TableCellStyled>
-                        <TableCellStyled component="th" scope="row" padding="none">
-                          {row.description}
-                        </TableCellStyled>
-                        <TableCellStyled component="th" scope="row" padding="none">
-                          {row.remboursable ? (
-                            <Typography color={'green'}>
-                              Remboursable <CheckCircleOutlineIcon />
+                  {politicList &&
+                    politicList.map((row, index) => {
+                      // const { _id, nom, isActif } = row;
+                      // const isItemSelected = selected.indexOf(nom) !== -1;
+                      const i = index;
+                      return (
+                        <TableRow hover key={i} tabIndex={-1} role="checkbox">
+                          <TableCellStyled padding="checkbox">
+                            <CustomizedCheckbox />
+                          </TableCellStyled>
+                          <TableCellStyled component="th" scope="row" padding="none">
+                            <Typography variant="subtitle2" noWrap>
+                              {row._id}
                             </Typography>
-                          ) : (
-                            <Typography color={'red'}>
-                              Non remboursable <HighlightOffIcon />
-                            </Typography>
-                          )}
-                        </TableCellStyled>
-                        <TableCellStyled align="right">
-                          <PoliticMoreMenu reload={reload} politic={row} ratePlanId={'_id'} isActif={'isActif'} />
-                        </TableCellStyled>
-                      </TableRow>
-                    );
-                  })}
+                          </TableCellStyled>
+                          <TableCellStyled align="left">{row.nom}</TableCellStyled>
+                          <TableCellStyled component="th" scope="row" padding="none">
+                            {row.description}
+                          </TableCellStyled>
+                          <TableCellStyled component="th" scope="row" padding="none">
+                            {row.remboursable ? (
+                              <Typography color={'green'}>
+                                Remboursable <CheckCircleOutlineIcon />
+                              </Typography>
+                            ) : (
+                              <Typography color={'red'}>
+                                Non remboursable <HighlightOffIcon />
+                              </Typography>
+                            )}
+                          </TableCellStyled>
+                          <TableCellStyled align="right">
+                            <PoliticMoreMenu reload={reload} politic={row} ratePlanId={'_id'} isActif={'isActif'} />
+                          </TableCellStyled>
+                        </TableRow>
+                      );
+                    })}
                 </TableBody>
               </Table>
             </TableContainer>

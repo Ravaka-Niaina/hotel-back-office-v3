@@ -1,7 +1,12 @@
 import axios from 'axios';
 import config from '../config/api';
 
-export const getRoomTypeList = (payload) => axios.post(`${config.host}/typeChambre/TC`, payload, {});
+export const getRoomTypeList = (payload, idToken) => 
+  axios.post(`${config.host}/typeChambre/TC`, payload, {
+    headers: {
+      Authorization: idToken,
+    },
+  });
 export const createRoomType = (payload, partnerId) =>
   axios.post(`${config.host}/roomType/search`, payload, {
     headers: {

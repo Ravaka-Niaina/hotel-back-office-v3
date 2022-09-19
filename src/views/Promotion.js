@@ -60,7 +60,8 @@ const Promotion = () => {
     };
     const user = JSON.parse(localStorage.getItem('partner_id'));
     try {
-      getPromotionList(payload, user)
+      const idToken = localStorage.getItem("id_token");
+      getPromotionList(payload, idToken)
         .then((datas) => {
           const dataStatus = 200;
           const dataList = datas.data.list;
