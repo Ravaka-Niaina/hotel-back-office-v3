@@ -46,7 +46,8 @@ const RatePlan = () => {
         if(!noLoading){
             context.showLoader(true);
         } 
-        getRatePlanList(payload)
+        const idToken = localStorage.getItem('id_token');
+        getRatePlanList(payload, idToken)
             .then((fetch) => {
                 const status = 200;
                 if (status === 200) {
