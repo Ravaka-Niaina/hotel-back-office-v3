@@ -9,11 +9,11 @@ import jwtDecode from 'jwt-decode';
 import useResponsive from '../../hooks/useResponsive';
 // components
 import Scrollbar from '../Scrollbar';
-import NavSection from './NavSection';
+import SidebarSection from './SidebarSection';
 //
-import { getNavConfig } from './NavConfig';
+import { getSidebarConfig } from './SidebarConfig';
 import { getPayloadFromToken, getToken } from '../../services/User';
-import Logout from './Logout';
+import Logout from '../dashboardLayout/Logout';
 import { ThemeContext } from '../context/Wrapper';
 
 // ----------------------------------------------------------------------
@@ -47,7 +47,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const context = useContext(ThemeContext);
   const { pathname } = useLocation();
   const isDesktop = useResponsive('up', 'lg');
-  const [navConfig, setNavConfig] = useState(null);
+  const [sidebarConfig, setSidebarConfig] = useState(null);
   const [userDetails, setUserDetails] = useState(null);
 
   // useEffect to set the userDetails
@@ -55,12 +55,16 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
     setUserDetails(getPayloadFromToken(jwtDecode, getToken()));
   }, []);
 
+  /**
+   * UseEffect to initiate the sidebarconfig
+   * @useEffect
+   */
   useEffect(() => {
-    const initiateNavConfig = async () => {
-      const newNavConfig = await getNavConfig(context);
-      setNavConfig(newNavConfig);
+    const initiateSidebarConfig = async () => {
+      const newSidebarConfig = await getSidebarConfig(context);
+      setSidebarConfig(newSidebarConfig);
     };
-    initiateNavConfig();
+    initiateSidebarConfig();
   }, []);
   useEffect(() => {
     if (isOpenSidebar) {
@@ -85,7 +89,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         />
       </Box>
 
-      {navConfig && <NavSection navConfig={navConfig} />}
+      {sidebarConfig && <SidebarSection sidebarConfig={sidebarConfig} />}
       {/* <Box sx={{ flexGrow: 1 }} /> */}
       {userDetails && (
         <Box>

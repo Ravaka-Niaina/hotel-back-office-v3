@@ -145,11 +145,11 @@ function NavItem({ item, active }) {
   );
 }
 
-NavSection.propTypes = {
-  navConfig: PropTypes.array,
+SidebarSection.propTypes = {
+  sidebarConfig: PropTypes.array,
 };
 
-export default function NavSection({ navConfig, ...other }) {
+export default function SidebarSection({ sidebarConfig, ...other }) {
   const { pathname } = useLocation();
 
   const match = (path) => (path ? !!matchPath({ path, end: false }, pathname) : false);
@@ -157,7 +157,7 @@ export default function NavSection({ navConfig, ...other }) {
   return (
     <Box {...other}>
       <List disablePadding sx={{ p: 1 }}>
-        {navConfig.map((item) => {
+        {sidebarConfig.map((item) => {
           if (item?.userIsAllowed)
             return <NavItem key={item.title} item={item} userIsAllowed={item?.userIsAllowed} active={match} />;
           return ''

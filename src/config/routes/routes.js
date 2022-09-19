@@ -49,6 +49,7 @@ export default function Router() {
         { path: 'typeChambre', element: <Protected child={<TypeChambre />} allowedRoles={getAllowedRoles(`${dashboardPath}/typeChambre`)} /> },
         { path: 'politic', element: <Protected child={<Politic />} allowedRoles={getAllowedRoles(`${dashboardPath}/politic`)} /> },
         { path: 'hotel', element: <Protected child={<Hotel />} allowedRoles={getAllowedRoles(`${dashboardPath}/hotel`)} /> },
+        { path: 'emailModel', element: <Protected child={<Hotel />} allowedRoles={getAllowedRoles(`${dashboardPath}/emailModel`)} /> },
       ],
     },
     {

@@ -53,6 +53,10 @@ export const getAllowedRoles = (pageSectionPath) => {
       path: '/dashboard/hotel',
       allowedRoles: ['superAdmin','admin','partner'],
     },
+    {
+      path: '/dashboard/emailModel',
+      allowedRoles: ['superAdmin','admin','partner'],
+    },
   ];
 
   const allowedRoles = paths.filter((section) => section.path === pageSectionPath)[0]?.allowedRoles || [];

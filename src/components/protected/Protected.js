@@ -58,9 +58,7 @@ const Protected = ({ child, allowedRoles }) => {
     const token = getToken();
     const payloadFromToken = getPayloadFromToken(jwtDecode, token);
     if (!payloadFromToken) redirectToLoginPage();
-    const partnerId = payloadFromToken?.partner_id;
     const userDetails = context.getUserDetails();
-
     userDetails.then((results) => {
       // the attributedAccessRights from the payload
       const attributedAccessRights = results.data?.atribAR;
@@ -96,7 +94,7 @@ const Protected = ({ child, allowedRoles }) => {
             justifyContent: 'center',
           }}
         >
-          {/* Please login first */}
+          Please login first
         </div>
       )}
     </>
