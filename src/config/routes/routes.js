@@ -13,31 +13,81 @@ import AccessRight from '../../views/AccessRight';
 import User from '../../views/User';
 import Login from '../../views/Login';
 import VerifyCode from '../../views/VerifyCode';
-// import NotFound from '../../views/Page404';
+import NotFound from '../../views/Page404';
 import DashboardApp from '../../views/DashboardApp';
 import TestSideBar from '../../views/TestSideBar';
 import TestFormulaire from '../../views/TestFormulaire';
 import HomeForm from '../../views/HomeForm';
 import RapportApp from '../../views/RapportApp';
+import EmailModel from '../../views/EmailModel';
 import Protected from '../../components/protected/Protected';
+import { getAllowedRoles } from '../../services/AllowedRoles';
 // ----------------------------------------------------------------------
+/**
+ * @file routes
+ */
+
+/**
+ * @component
+ * @description A react component to configure the routes of the application
+ * @returns {hook}
+ */
 export default function Router() {
+  const dashboardPath = '/dashboard';
   return useRoutes([
     {
-      path: '/dashboard',
+      path: dashboardPath,
       element: <DashboardLayout />,
       children: [
-        { path: 'app', element: <Protected child={<DashboardApp />} allowedRoles={['superAdmin','admin', 'partner']} /> },
-        { path: 'homeForm', element: <Protected child={<HomeForm />} allowedRoles={['superAdmin','admin', 'partner']} /> },
-        { path: 'rapport', element: <Protected child={<RapportApp />} allowedRoles={['superAdmin','admin', 'partner']} /> },
-        { path: 'ratePlan', element: <Protected child={<RatePlan />} allowedRoles={['superAdmin','admin', 'partner']} /> },
-        { path: 'calendar', element: <Protected child={<Calendar />} allowedRoles={['superAdmin','admin', 'partner']} /> },
-        { path: 'accessRight', element: <Protected child={<AccessRight />} allowedRoles={['superAdmin','admin', 'partner']} /> },
-        { path: 'user', element: <Protected child={<User />} allowedRoles={['superAdmin','admin']} /> },
-        { path: 'promotion', element: <Protected child={<Promotion />} allowedRoles={['superAdmin','admin']} /> },
-        { path: 'typeChambre', element: <Protected child={<TypeChambre />} allowedRoles={['superAdmin','admin', 'partner']} /> },
-        { path: 'politic', element: <Protected child={<Politic />} allowedRoles={['superAdmin','admin', 'partner']} /> },
-        { path: 'hotel', element: <Protected child={<Hotel />} allowedRoles={['superAdmin','admin', 'partner']} /> }
+        {
+          path: 'app',
+          element: <Protected child={<DashboardApp />} allowedRoles={getAllowedRoles(`${dashboardPath}/app`)} />,
+        },
+        {
+          path: 'homeForm',
+          element: <Protected child={<HomeForm />} allowedRoles={getAllowedRoles(`${dashboardPath}/homeForm`)} />,
+        },
+        {
+          path: 'rapport',
+          element: <Protected child={<RapportApp />} allowedRoles={getAllowedRoles(`${dashboardPath}/rapport`)} />,
+        },
+        {
+          path: 'ratePlan',
+          element: <Protected child={<RatePlan />} allowedRoles={getAllowedRoles(`${dashboardPath}/ratePlan`)} />,
+        },
+        {
+          path: 'calendar',
+          element: <Protected child={<Calendar />} allowedRoles={getAllowedRoles(`${dashboardPath}/calendar`)} />,
+        },
+        {
+          path: 'accessRight',
+          element: <Protected child={<AccessRight />} allowedRoles={getAllowedRoles(`${dashboardPath}/accessRight`)} />,
+        },
+        {
+          path: 'user',
+          element: <Protected child={<User />} allowedRoles={getAllowedRoles(`${dashboardPath}/user`)} />,
+        },
+        {
+          path: 'promotion',
+          element: <Protected child={<Promotion />} allowedRoles={getAllowedRoles(`${dashboardPath}/promotion`)} />,
+        },
+        {
+          path: 'typeChambre',
+          element: <Protected child={<TypeChambre />} allowedRoles={getAllowedRoles(`${dashboardPath}/typeChambre`)} />,
+        },
+        {
+          path: 'politic',
+          element: <Protected child={<Politic />} allowedRoles={getAllowedRoles(`${dashboardPath}/politic`)} />,
+        },
+        {
+          path: 'hotel',
+          element: <Protected child={<Hotel />} allowedRoles={getAllowedRoles(`${dashboardPath}/hotel`)} />,
+        },
+        {
+          path: 'emailModel',
+          element: <Protected child={<EmailModel />} allowedRoles={getAllowedRoles(`${dashboardPath}/emailModel`)} />,
+        },
+        { path: '*', element: <NotFound /> },
       ],
     },
     {
@@ -48,7 +98,7 @@ export default function Router() {
       path: '/',
       element: <Layout />,
       children: [
-        { path: '/', element: <Navigate to="/login" /> },
+        { path: '/', element: <Navigate to="/dashboard/app" /> },
         { path: 'login', element: <Login /> },
         { path: 'verifycode', element: <VerifyCode /> },
         { path: '404', element: <Navigate to="/dashboard/app" /> },

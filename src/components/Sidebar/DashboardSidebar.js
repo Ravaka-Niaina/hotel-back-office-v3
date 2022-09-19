@@ -1,18 +1,21 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
-import { Box, Link, Drawer, Typography, Avatar, Stack } from '@mui/material';
-// mock
-import account from '../../_mock/account';
+import { Box, Drawer, Stack, Link, Avatar, Typography } from '@mui/material';
 // hooks
+import jwtDecode from 'jwt-decode';
 import useResponsive from '../../hooks/useResponsive';
 // components
 import Scrollbar from '../Scrollbar';
-import NavSection from './NavSection';
+import SidebarSection from './SidebarSection';
 //
-import navConfig from './NavConfig';
+import { getSidebarConfig } from './SidebarConfig';
+import { getPayloadFromToken, getToken } from '../../services/User';
+import Logout from '../dashboardLayout/Logout';
+import { ThemeContext } from '../context/Wrapper';
+
 // ----------------------------------------------------------------------
 
 const DRAWER_WIDTH = 280;
@@ -41,10 +44,28 @@ DashboardSidebar.propTypes = {
 };
 
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
+  const context = useContext(ThemeContext);
   const { pathname } = useLocation();
-
   const isDesktop = useResponsive('up', 'lg');
+  const [sidebarConfig, setSidebarConfig] = useState(null);
+  const [userDetails, setUserDetails] = useState(null);
 
+  // useEffect to set the userDetails
+  useEffect(() => {
+    setUserDetails(getPayloadFromToken(jwtDecode, getToken()));
+  }, []);
+
+  /**
+   * UseEffect to initiate the sidebarconfig
+   * @useEffect
+   */
+  useEffect(() => {
+    const initiateSidebarConfig = async () => {
+      const newSidebarConfig = await getSidebarConfig(context);
+      setSidebarConfig(newSidebarConfig);
+    };
+    initiateSidebarConfig();
+  }, []);
   useEffect(() => {
     if (isOpenSidebar) {
       onCloseSidebar();
@@ -60,30 +81,40 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       }}
     >
       <Box>
-        <img src={`${process.env.PUBLIC_URL}/images/logo/logowcolor.png`} alt="logo_aiolia" width={200} style={{ margin: 'auto' }} />
+        <img
+          src={`${process.env.PUBLIC_URL}/images/logo/logowcolor.png`}
+          alt="logo_aiolia"
+          width={200}
+          style={{ margin: 'auto' }}
+        />
       </Box>
 
-      <NavSection navConfig={navConfig} />
+      {sidebarConfig && <SidebarSection sidebarConfig={sidebarConfig} />}
       {/* <Box sx={{ flexGrow: 1 }} /> */}
-      <Box>
-        <Stack spacing={3} sx={{ borderRadius: 2, position: 'relative' }}>
-          <Box>
-            <Link underline="none" component={RouterLink} to="#">
-              <AccountStyle>
-                <Avatar src={account.photoURL} alt="photoURL" />
-                <Box sx={{ ml: 2 }}>
-                  <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                    {account.displayName}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    {account.role}
-                  </Typography>
-                </Box>
-              </AccountStyle>
-            </Link>
-          </Box>
-        </Stack>
-      </Box>
+      {userDetails && (
+        <Box>
+          <Stack spacing={3} sx={{ borderRadius: 2, position: 'relative' }}>
+            <Box>
+              <Link underline="none" component={RouterLink} to="#">
+                <AccountStyle>
+                  <Avatar src="/static/mock-images/avatars/avatar_default.jpg" alt="photoURL" />
+                  <Box sx={{ ml: 2 }}>
+                    <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
+                      {`${userDetails?.partner_first_name} ${userDetails?.partner_name}`}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      {userDetails?.partner_phone}
+                    </Typography>
+                    <div style={{ marginTop: 15 }}>
+                      <Logout />
+                    </div>
+                  </Box>
+                </AccountStyle>
+              </Link>
+            </Box>
+          </Stack>
+        </Box>
+      )}
     </Scrollbar>
   );
 

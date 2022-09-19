@@ -1,31 +1,32 @@
 import React from 'react';
+import {format} from 'date-fns';
 import { Popper, Slide , Stack,  FormControlLabel, RadioGroup  } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-import CustomizedIconButton from '../../CustomizedComponents/CustomizedIconButton';
-import CustomizedPaperOutside from '../../CustomizedComponents/CustomizedPaperOutside';
-import CustomizedRadio from '../../CustomizedComponents/CustomizedRadio';
-import CustomizedInput from '../../CustomizedComponents/CustomizedInput';
+import CustomizedIconButton from '../../../CustomizedComponents/CustomizedIconButton';
+import CustomizedPaperOutside from '../../../CustomizedComponents/CustomizedPaperOutside';
+import CustomizedRadio from '../../../CustomizedComponents/CustomizedRadio';
+import CustomizedInput from '../../../CustomizedComponents/CustomizedInput';
 
-const CellEditorPopper = ({ open, anchorEl , setOpen , selected , setSelected , ...others}) => {
+const CellRoomEditorPopper = ({ open, anchorEl , setOpen , selected , setSelected , ...others}) => {
     const handleClose = () => {
         setSelected([]);
         setOpen(false);
     };
     return (
         <>
-            <Popper open={open} anchorEl={anchorEl} placement='top' transition {...others}>
+            <Popper open={open && selected.length>0} anchorEl={anchorEl} placement='top' transition {...others}>
                 {({ TransitionProps }) => (
                     <Slide {...TransitionProps} timeout={350}>
                         <div>
-                            <CustomizedPaperOutside sx={{ background: '#E3EDF7' , p: 2, width: '250px', height: '350px' }}>
+                            <CustomizedPaperOutside sx={{ background: '#E3EDF7' , p: 2, width: '250px', minHeight: '350px' }}>
                                 <Stack direction="column" spacing={2} justifyContent='flex-start'>
                                     <Stack>
                                         <h4>Chambre standard</h4>
                                         <h6>
                                             {
-                                                selected[0] && new Date(selected[0]).toDateString()
+                                                selected[0] && format(new Date(selected[0]), 'd MMMM yyyy')
                                             }
                                             {
                                                 selected.length > 1 && `  -  ${new Date(selected[selected.length - 1]).toDateString() }`
@@ -61,4 +62,4 @@ const CellEditorPopper = ({ open, anchorEl , setOpen , selected , setSelected , 
     );
 };
 
-export default CellEditorPopper;
+export default CellRoomEditorPopper;

@@ -1,7 +1,9 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, createContext, useEffect } from 'react';
+import jwtDecode from 'jwt-decode';
 import PropTypes from 'prop-types';
 import SimpleBackdrop from '../backdrop/Backdrop';
 import Message from '../snackbar/Message';
+import { getPayloadFromToken, getUserDetailsById } from '../../services/User';
 
 export const ThemeContext = createContext({
   showLoader: null,
@@ -10,10 +12,12 @@ export const ThemeContext = createContext({
   changeResultErrorMessage: null,
   showResultSuccess: null,
   changeResultSuccessMessage: null,
+  getIdToken: null,
+  getUserDetails: null,
 });
 
 const Wrapper = ({ children }) => {
-  const [partialLoading,setPartialLoading] = useState({loading:false,identifier:''});
+  const [partialLoading, setPartialLoading] = useState({ loading: false, identifier: '' });
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [disable, setDisable] = useState(false);
@@ -22,6 +26,13 @@ const Wrapper = ({ children }) => {
 
   const [openAlertError, setOpenAlertError] = React.useState(false);
   const [openAlertSuccess, setOpenAlertSuccess] = React.useState(false);
+
+  /**
+   * @function getIdToken
+   * @description A function to get the token of the current user
+   * @returns A jwt token
+   */
+  const getIdToken = () => localStorage.getItem('id_token') || '';
 
   const handleCloseSnackBar = (event, reason) => {
     if (reason === 'clickaway') {
@@ -59,6 +70,16 @@ const Wrapper = ({ children }) => {
     setOpenAlertSuccess(false);
   };
 
+  const idToken = getIdToken();
+  const payloadFromToken = getPayloadFromToken(jwtDecode, idToken);
+  const partnerId = payloadFromToken?.partner_id;
+  const details = getUserDetailsById(partnerId);
+
+  const getUserDetails = async () => {
+    const userDetails = await details;
+    return userDetails
+  };
+
   return (
     <ThemeContext.Provider
       value={{
@@ -69,6 +90,8 @@ const Wrapper = ({ children }) => {
         changeResultErrorMessage,
         showResultSuccess,
         changeResultSuccessMessage,
+        getIdToken,
+        getUserDetails,
       }}
     >
       <SimpleBackdrop open={disable} />

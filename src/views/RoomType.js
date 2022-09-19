@@ -2,7 +2,6 @@ import { useState, useContext, useEffect } from 'react';
 
 // material
 import {
-  Card,
   Table,
   Stack,
   Checkbox,
@@ -26,6 +25,8 @@ import AddRoomTypeDialog from '../components/roomType/AddRoomTypeDialog';
 import { ThemeContext } from '../components/context/Wrapper';
 import { getRoomTypeList } from '../services/RoomType';
 import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
+import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
+import { lightBackgroundToTop } from '../components/CustomizedComponents/NeumorphismTheme';
 
 // ----------------------------------------------------------------------
 
@@ -83,9 +84,9 @@ const TypeChambre = () => {
       getRoomTypeList(payload, idToken)
         .then((datas) => {
           if (datas.status === 200) {
-          const roomTypeData = datas.data;
-          setRoomTypeList(roomTypeData.list);
-          }else{
+            const roomTypeData = datas.data;
+            setRoomTypeList(roomTypeData.list);
+          } else {
             // console.log(datas)
           }
         })
@@ -152,21 +153,20 @@ const TypeChambre = () => {
     <Page title="AIOLIA | Types de chambres">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <CustomizedTitle sx={{ color: '#787878'}} text='Type de chambre'/>
+          <CustomizedTitle sx={{ color: '#787878' }} text="Type de chambre" />
           <AddRoomTypeDialog />
         </Stack>
 
-        <Card
+        <CustomizedPaperOutside
           sx={{
+            ...lightBackgroundToTop,
+            minHeight: '100vh',
             border: '1px white solid',
-            backgroundColor: '#E3EDF7',
             color: 'white',
             padding: 5,
-            boxShadow: 'inset 4px 4px 14px rgba(197, 215, 238, 1) ,inset -4px -4px 9px rgba(255, 255, 255, 0.6)',
           }}
         >
           <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
-
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
@@ -239,7 +239,7 @@ const TypeChambre = () => {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
-        </Card>
+        </CustomizedPaperOutside>
       </Container>
     </Page>
   );

@@ -4,7 +4,8 @@ import config from '../config/api';
 export const getPolitics = (payload, idToken) =>
   axios.post(`${config.host}/politique/list`, payload, {
     headers: {
-      Authorization: idToken,
+      Authorization: localStorage.getItem("id_token"),
+      partner_id: localStorage.getItem("partner_id")
     },
   });
 export const createPolitic = (payload, idToken) =>

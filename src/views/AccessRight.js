@@ -1,17 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import {
-  Table,
-  Stack,
-  TableRow,
-  TableBody,
-  Container,
-  Typography,
-  TableContainer,
-} from '@mui/material';
+import { Table, Stack, TableRow, TableBody, Container, Typography, TableContainer } from '@mui/material';
 import AccessRightMoreMenu from '../components/accessRight/AccessRightMoreMenu';
 import AddAccessRightDialog from '../components/accessRight/AddAccessRightDialog';
 import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
-import CustomizedCard from '../components/CustomizedComponents/CustomizedCard';
 import TableCellStyled from '../components/CustomizedComponents/CustomizedTableCell';
 import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
@@ -19,12 +10,13 @@ import { ThemeContext } from '../components/context/Wrapper';
 import { UserListHead, UserListToolbar } from '../components/table';
 import { getAccessRightList } from '../services/AccessRight';
 import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
+import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
+import { lightBackgroundToTop } from '../components/CustomizedComponents/NeumorphismTheme';
 
 const TABLE_HEAD = [
   { id: 'id', label: 'ID', alignRight: false },
   { id: 'nom', label: 'Nom', alignRight: false },
 ];
-
 
 const AccessRight = () => {
   const context = useContext(ThemeContext);
@@ -80,7 +72,15 @@ const AccessRight = () => {
           <AddAccessRightDialog reload={reload} />
         </Stack>
 
-        <CustomizedCard sx={{background:'#E3EDF7',p:5}}>
+        <CustomizedPaperOutside
+          sx={{
+            ...lightBackgroundToTop,
+            minHeight: '100vh',
+            border: '1px white solid',
+            color: 'white',
+            padding: 5,
+          }}
+        >
           <UserListToolbar numSelected={selected.length} filterName={filterName} />
 
           <Scrollbar>
@@ -108,7 +108,7 @@ const AccessRight = () => {
                         aria-checked={isItemSelected}
                       >
                         <TableCellStyled padding="checkbox">
-                          <CustomizedCheckbox  />
+                          <CustomizedCheckbox />
                         </TableCellStyled>
                         <TableCellStyled component="th" scope="row" padding="none">
                           <Typography variant="subtitle2" noWrap>
@@ -127,7 +127,7 @@ const AccessRight = () => {
               </Table>
             </TableContainer>
           </Scrollbar>
-        </CustomizedCard>
+        </CustomizedPaperOutside>
       </Container>
     </Page>
   );

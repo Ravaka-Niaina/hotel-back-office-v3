@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   Dialog,
@@ -35,8 +35,8 @@ const AddPoliticDialog = ({ reload }) => {
       refundable: false,
       datePrice: [],
       state: 1,
-    })
-  }
+    });
+  };
   // Open or close the dialog
   const [open, setOpen] = useState(false);
   // State of the politic to create (in english)
@@ -82,13 +82,22 @@ const AddPoliticDialog = ({ reload }) => {
   const formIsValid = (newPolitic) => {
     const testEveryField = () => {
       let test = false;
-      if (newPolitic.frenchName && newPolitic.englishName && newPolitic.englishDescription && newPolitic.frenchDescription && newPolitic.type && newPolitic.refundable !== null && newPolitic.refundable !== undefined && newPolitic.datePrice) {
-        test = true
+      if (
+        newPolitic.frenchName &&
+        newPolitic.englishName &&
+        newPolitic.englishDescription &&
+        newPolitic.frenchDescription &&
+        newPolitic.type &&
+        newPolitic.refundable !== null &&
+        newPolitic.refundable !== undefined &&
+        newPolitic.datePrice
+      ) {
+        test = true;
       } else {
         test = false;
       }
       return test;
-    }
+    };
     const isValid = testEveryField() && Object.values(errors).every((x) => x === '');
     return isValid;
   };
@@ -102,7 +111,7 @@ const AddPoliticDialog = ({ reload }) => {
     return datePricePayload;
   };
 
-  // State of the conditions (if it's refundable) 
+  // State of the conditions (if it's refundable)
   // NOTE : CONDITIONS SHOULD BE PASSED INSIDE POLITIC.DATEPRICE
   const [conditions, setConditions] = useState([
     {
@@ -145,31 +154,40 @@ const AddPoliticDialog = ({ reload }) => {
   };
   // Function that handles changes to conditions
   const handleChangeCondition = (index, e) => {
-    const { name, value } = e.target
-    setConditions([...(conditions.map((cond, key) => {
-      if (index === key) {
-        cond[name] = value
-      }
-      return cond;
-    }))])
-  }
+    const { name, value } = e.target;
+    setConditions([
+      ...conditions.map((cond, key) => {
+        if (index === key) {
+          cond[name] = value;
+        }
+        return cond;
+      }),
+    ]);
+  };
 
   // UseEffect to set politics.datePrice to be values from conditions
   useEffect(() => {
-    setPolitic((politic) => ({ ...politic, datePrice: [...conditions] }))
+    setPolitic((politic) => ({ ...politic, datePrice: [...conditions] }));
   }, [conditions]);
 
   // Function to format the payload to send to the politics state
   const formatPayloadToSend = async () => {
     const politicDatePrice = politic.datePrice;
     const politicRefundable = politic.refundable;
-    let newPoliticDatePrice = []
+    let newPoliticDatePrice = [];
     for (let i = 0; i < politicDatePrice.length; i += 1) {
-      if (politicRefundable === "true" || politicRefundable === true) {
-        if (politicDatePrice[i]?.date !== null && politicDatePrice[i]?.date > 0 && politicDatePrice[i]?.pourcentage !== null && politicDatePrice[i]?.pourcentage > 0) {
+      if (politicRefundable === 'true' || politicRefundable === true) {
+        if (
+          politicDatePrice[i]?.date !== null &&
+          politicDatePrice[i]?.date > 0 &&
+          politicDatePrice[i]?.pourcentage !== null &&
+          politicDatePrice[i]?.pourcentage > 0
+        ) {
           newPoliticDatePrice = [...newPoliticDatePrice, conditions[i]];
         } else {
-          throw Error("Le jour/heure et pourcentage doivent contenir une valeur supérieur à 0 et si la politique est remboursable")
+          throw Error(
+            'Le jour/heure et pourcentage doivent contenir une valeur supérieur à 0 et si la politique est remboursable'
+          );
         }
       } else {
         newPoliticDatePrice = [...newPoliticDatePrice, conditions[i]];
@@ -177,11 +195,13 @@ const AddPoliticDialog = ({ reload }) => {
     }
     // Si c'est vide
     if (newPoliticDatePrice.length <= 0) {
-      if (politicRefundable === "false") {
-        newPoliticDatePrice = [{
-          date: 1,
-          pourcentage: 1
-        }]
+      if (politicRefundable === 'false') {
+        newPoliticDatePrice = [
+          {
+            date: 1,
+            pourcentage: 1,
+          },
+        ];
       }
     }
 
@@ -189,7 +209,7 @@ const AddPoliticDialog = ({ reload }) => {
       datePrice.pourcentage = Number.parseFloat(datePrice.pourcentage);
     });
 
-    const newRefundableValue = politic.refundable === "true" || politic.refundable === true
+    const newRefundableValue = politic.refundable === 'true' || politic.refundable === true;
     // Formated Payload
     const formatedPayload = {
       nom: politic.frenchName,
@@ -211,9 +231,9 @@ const AddPoliticDialog = ({ reload }) => {
 
   // Function to format a string to have the first letter uppercase
   const formatLabel = (str) => {
-    const res = str.replace(str[0], str[0].toUpperCase())
-    return res
-  }
+    const res = str.replace(str[0], str[0].toUpperCase());
+    return res;
+  };
   // Function to close the dialog
   const handleClose = () => {
     setOpen(false);
@@ -223,54 +243,57 @@ const AddPoliticDialog = ({ reload }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setPolitic((politic) => ({ ...politic, [name]: value }));
-    validate({ [name]: value })
+    validate({ [name]: value });
   };
 
   // UseEffect to console politic state each time it changes
 
   // Fonction pour enregistrer un politique
   const addPolitic = () => {
-    validate(politic)
+    validate(politic);
     if (formIsValid(politic)) {
-      context.showLoader(true)
-      formatPayloadToSend().then((politicToAdd) => {
-        console.log(politicToAdd);
-        const idToken = JSON.parse(localStorage.getItem('id_token'));
-        createPolitic(politicToAdd, idToken).then((datas) => {
-          const status = datas?.data?.status
-          if (status) {
-            if (status === 200) {
-              context.changeResultSuccessMessage(`Politique ajoutée avec succès`)
-              context.showResultSuccess(true)
-              reinitializePolitic()
-              setOpen(false)
-              reload()
-            } else {
-              context.showLoader(false)
-              context.changeResultErrorMessage(`Veuillez renseigner tous les champs avant de valider`)
-              context.showResultError(true)
-            }
-          }
-        }).catch(() => {
-          context.showLoader(false)
-          context.changeResultErrorMessage('Veuillez renseigner tous les champs')
-          context.showResultError(true)
-        }).finally(() => {
-
+      context.showLoader(true);
+      formatPayloadToSend()
+        .then((politicToAdd) => {
+          const idToken = localStorage.getItem('id_token');
+          createPolitic(politicToAdd, idToken)
+            .then((datas) => {
+              console.log(datas)
+              const status = datas?.data?.status;
+              if (status) {
+                if (status === 200) {
+                  context.changeResultSuccessMessage(`Politique ajoutée avec succès`);
+                  context.showResultSuccess(true);
+                  reinitializePolitic();
+                  setOpen(false);
+                  reload();
+                } else {
+                  context.showLoader(false);
+                  context.changeResultErrorMessage(`Veuillez renseigner tous les champs avant de valider`);
+                  context.showResultError(true);
+                }
+              }
+            })
+            .catch(() => {
+              context.showLoader(false);
+              context.changeResultErrorMessage('Veuillez renseigner tous les champs');
+              context.showResultError(true);
+            })
+            .finally(() => {});
         })
-      }).catch(err => {
-        context.showLoader(false)
-        context.changeResultErrorMessage(err.message)
-        context.showResultError(true)
-      }).finally(() => {
-      })
+        .catch((err) => {
+          context.showLoader(false);
+          context.changeResultErrorMessage(err.message);
+          console.log(err);
+          context.showResultError(true);
+        })
+        .finally(() => {});
+    } else {
+      context.showLoader(false);
+      context.changeResultErrorMessage('Veuillez renseigner tous les champs');
+      context.showResultError(true);
     }
-    else {
-      context.showLoader(false)
-      context.changeResultErrorMessage('Veuillez renseigner tous les champs')
-      context.showResultError(true)
-    }
-  }
+  };
   // Composant à afficher remboursable est coché
   const PoliticConditionsComponent = (
     <>
@@ -288,8 +311,22 @@ const AddPoliticDialog = ({ reload }) => {
               data && (
                 <div key={key}>
                   <Stack direction="row" spacing={2} alignItems="center">
-                    {politic?.type && <CustomizedInput type="number" name="date" value={conditions[key]?.date} onChange={(e) => handleChangeCondition(key, e)} label={formatLabel(politic?.type)} />}
-                    <CustomizedInput type="number" name="pourcentage" value={conditions[key]?.pourcentage} onChange={(e) => handleChangeCondition(key, e)} label={'Pourcentage'} />
+                    {politic?.type && (
+                      <CustomizedInput
+                        type="number"
+                        name="date"
+                        value={conditions[key]?.date}
+                        onChange={(e) => handleChangeCondition(key, e)}
+                        label={formatLabel(politic?.type)}
+                      />
+                    )}
+                    <CustomizedInput
+                      type="number"
+                      name="pourcentage"
+                      value={conditions[key]?.pourcentage}
+                      onChange={(e) => handleChangeCondition(key, e)}
+                      label={'Pourcentage'}
+                    />
                     <CustomizedIconButton
                       // variant="contained"
                       onClick={() => {
@@ -302,7 +339,7 @@ const AddPoliticDialog = ({ reload }) => {
                 </div>
               )
           )}
-        <CustomizedButton text="+" onClick={addToConditions} component={RouterLink} to="#"/>
+        <CustomizedButton text="+" onClick={addToConditions} component={RouterLink} to="#" />
         <></>
       </Stack>
     </>
@@ -326,13 +363,21 @@ const AddPoliticDialog = ({ reload }) => {
             Informations sur la politique d'annulation
           </Typography>
           <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-            <CustomizedInput name="frenchName" value={politic?.frenchName} onChange={handleChange} label={'Nom en français'}
+            <CustomizedInput
+              name="frenchName"
+              value={politic?.frenchName}
+              onChange={handleChange}
+              label={'Nom en français'}
               {...(errors.frenchName && {
                 error: true,
                 helpertext: errors.frenchName,
               })}
             />
-            <CustomizedInput name="englishName" value={politic?.englishName} onChange={handleChange} label={'Nom en anglais'}
+            <CustomizedInput
+              name="englishName"
+              value={politic?.englishName}
+              onChange={handleChange}
+              label={'Nom en anglais'}
               {...(errors.englishName && {
                 error: true,
                 helpertext: errors.englishName,
@@ -340,13 +385,23 @@ const AddPoliticDialog = ({ reload }) => {
             />
           </Stack>
           <Stack sx={{ mb: 2 }}>
-            <CustomizedInput name="frenchDescription" value={politic?.frenchDescription} onChange={handleChange} label={'Description'} multiline
+            <CustomizedInput
+              name="frenchDescription"
+              value={politic?.frenchDescription}
+              onChange={handleChange}
+              label={'Description'}
+              multiline
               {...(errors.frenchDescription && {
                 error: true,
                 helpertext: errors.frenchDescription,
               })}
             />
-            <CustomizedInput name="englishDescription" value={politic?.englishDescription} onChange={handleChange} label={'Description en anglais'} multiline
+            <CustomizedInput
+              name="englishDescription"
+              value={politic?.englishDescription}
+              onChange={handleChange}
+              label={'Description en anglais'}
+              multiline
               {...(errors.englishDescription && {
                 error: true,
                 helpertext: errors.englishDescription,
@@ -358,7 +413,7 @@ const AddPoliticDialog = ({ reload }) => {
           <Button onClick={handleClose} sx={{ fontSize: 12 }}>
             Annuler
           </Button>
-          <CustomizedButton onClick={addPolitic} text="Enregistrer" component={RouterLink} to="#"/>
+          <CustomizedButton onClick={addPolitic} text="Enregistrer" component={RouterLink} to="#" />
         </DialogActions>
       </Dialog>
     </>
@@ -366,6 +421,6 @@ const AddPoliticDialog = ({ reload }) => {
 };
 
 AddPoliticDialog.propTypes = {
-  reload: PropTypes.any
-}
+  reload: PropTypes.any,
+};
 export default AddPoliticDialog;
