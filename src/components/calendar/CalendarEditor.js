@@ -211,7 +211,15 @@ const CalendarEditor = ({room , dateRange}) => {
                                     
                                     return (
                                         <td className='status' key={i}>
-                                            <StatusCell available={!p.closed} />
+                                            <StatusCell 
+                                                available={!p.closed} 
+                                                date={p.date}
+                                                chambre={chambre}
+                                                setChambre={setChambre}
+                                                index={j}
+                                                subIndex={i}
+                                                isRatePlan
+                                            />
                                         </td>
                                     );
                                 })

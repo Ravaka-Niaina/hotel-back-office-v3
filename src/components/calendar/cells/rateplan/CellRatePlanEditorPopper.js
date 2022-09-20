@@ -25,8 +25,6 @@ const getItemData = (item) => {
 };
 const CellRatePlanEditorPopper = ({ open, anchorEl , setOpen , selected , setSelected,chambre , ...others}) => {
     const [loading, setLoading] = useState(false);
-    const [modifyOpenStatus, setModifyOpenStatus] = useState(true);
-    const [openStatus, setOpenStatus] = useState(true);
     const [prix, setPrix] = useState('');
     const handleClickSave = () => {
         setLoading(true);
@@ -44,20 +42,13 @@ const CellRatePlanEditorPopper = ({ open, anchorEl , setOpen , selected , setSel
             forTarif: true,
             nbPers: chambre.planTarifaire[firstElement.rate_plan_index].prixTarif[0].versions[firstElement.version_index].nbPers,
             prix: Number.parseFloat(prix),
-            minSejour: 1
+            minSejour: 1,
         };
-        // const payload = {
-        //     idTypeChambre: chambre._id,
-        //     dateDebut: selected[0],
-        //     dateFin: selected[selected.length - 1],
-        //     toSell: Number.parseInt(roomToSell, 10),
-        //     isTypeChambreOpen: openStatus,
-        //     forTypeChambre: true,
-        //     forTarif: false,
-        //     modifierOuvertureChambre: modifyOpenStatus,
-        //     days,
-        // };
+    
         console.log(payload);
+        setTimeout(() => {
+                    setLoading(false);
+                }, 2000);
         configPrixNPers(payload)
             .then((result) => {
                 console.log(result.data);
@@ -81,7 +72,7 @@ const CellRatePlanEditorPopper = ({ open, anchorEl , setOpen , selected , setSel
                 {({ TransitionProps }) => (
                     <Slide {...TransitionProps} timeout={350}>
                         <div>
-                            <CustomizedPaperOutside sx={{ background: '#E3EDF7' , p: 2, width: '250px', minHeight: '350px' }}>
+                            <CustomizedPaperOutside sx={{ background: '#E3EDF7' , p: 2, width: '250px', minHeight: '250px' }}>
                                 <Stack direction="column" spacing={2} justifyContent='flex-start'>
                                     <Stack>
                                         <h4>{chambre.nom}</h4>
@@ -94,41 +85,7 @@ const CellRatePlanEditorPopper = ({ open, anchorEl , setOpen , selected , setSel
                                             }
                                         </h6>
                                     </Stack>
-                                    <FormControlLabel 
-                                        onClick={() => setModifyOpenStatus((prev) => !prev)}
-                                        control={<CustomizedRadio checked={modifyOpenStatus}/>} 
-                                        label="Modifier disponibilité tarif" 
-                                    />
-                                    <RadioGroup
-                                        aria-labelledby="demo-customized-radios"
-                                        name="customized-radios"
-                                        row
-                                        {
-                                        ...(!modifyOpenStatus && { value: "other" })
-                                        }
-                                        {
-                                        ...(modifyOpenStatus && { value: openStatus ? "open" : "close" })
-                                        }
-                                    >
-                                        <FormControlLabel 
-                                            disabled={!modifyOpenStatus} 
-                                            value="open" 
-                                            {
-                                            ...(modifyOpenStatus && { onClick: () => setOpenStatus(true) })
-                                            }
-                                            control={<CustomizedRadio />} 
-                                            label="Open"
-                                        />
-                                        <FormControlLabel 
-                                            disabled={!modifyOpenStatus} 
-                                            value="close" 
-                                            {
-                                            ...(modifyOpenStatus && { onClick: () => setOpenStatus(false) })
-                                            }
-                                            control={<CustomizedRadio />} 
-                                            label="Close" 
-                                        />
-                                    </RadioGroup>
+                                
                                     <CustomizedInput 
                                         placeholder="ex: 200" 
                                         variant="outlined" 
