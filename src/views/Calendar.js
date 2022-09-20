@@ -159,7 +159,9 @@ const Calendar = () => {
                         </Grid>
                     </CustomizedPaperOutside>
                 </Stack>
-
+                {
+                    loading && roomList.length<1 && (<CalendarEditorSkeleton />)
+                }
                 {
                     roomList.map((room,i)=>
                         loading ? 
