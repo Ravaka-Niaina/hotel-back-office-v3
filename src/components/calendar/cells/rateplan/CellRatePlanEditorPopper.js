@@ -9,6 +9,9 @@ import CustomizedPaperOutside from '../../../CustomizedComponents/CustomizedPape
 import CustomizedRadio from '../../../CustomizedComponents/CustomizedRadio';
 import CustomizedInput from '../../../CustomizedComponents/CustomizedInput';
 
+import { configPrixNPers } from '../../../../services/TCTarif';
+import { days } from '../../../../services/Util';
+
 const getItemData = (item) => {
     if (typeof item !== 'string') {
         return null;
@@ -27,9 +30,46 @@ const CellRatePlanEditorPopper = ({ open, anchorEl , setOpen , selected , setSel
     const [prix, setPrix] = useState('');
     const handleClickSave = () => {
         setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-        }, 2000);
+        const firstElement = getItemData(selected[0]);
+        const lastElement = getItemData(selected[selected.length-1]);
+        console.log(firstElement.date);
+        console.log(format(new Date(firstElement.date),'yyyy-MM-dd'))
+        const payload = {
+            idTypeChambre: chambre._id,
+            idTarif: chambre.planTarifaire[firstElement.rate_plan_index]._id,
+            dateDebut: format(new Date(firstElement.date), 'yyyy-MM-dd'),
+            dateFin: format(new Date(lastElement.date), 'yyyy-MM-dd'),
+            days,
+            forTypeChambre: false,
+            forTarif: true,
+            nbPers: chambre.planTarifaire[firstElement.rate_plan_index].prixTarif[0].versions[firstElement.version_index].nbPers,
+            prix: Number.parseFloat(prix),
+            minSejour: 1
+        };
+        // const payload = {
+        //     idTypeChambre: chambre._id,
+        //     dateDebut: selected[0],
+        //     dateFin: selected[selected.length - 1],
+        //     toSell: Number.parseInt(roomToSell, 10),
+        //     isTypeChambreOpen: openStatus,
+        //     forTypeChambre: true,
+        //     forTarif: false,
+        //     modifierOuvertureChambre: modifyOpenStatus,
+        //     days,
+        // };
+        console.log(payload);
+        configPrixNPers(payload)
+            .then((result) => {
+                console.log(result.data);
+            })
+            .catch((error) => {
+                console.log(error.message)
+            })
+            .finally(() => {
+                setTimeout(() => {
+                    setLoading(false);
+                }, 2000);
+            })
     };
     const handleClose = () => {
         setSelected([]);

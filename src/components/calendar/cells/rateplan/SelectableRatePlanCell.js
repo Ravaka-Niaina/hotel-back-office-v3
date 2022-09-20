@@ -13,7 +13,7 @@ const getItemData = (item) => {
             "date":dataSplited[0],
             "rate_plan_index":parseInt(dataSplited[1],10),
             "version_index":parseInt(dataSplited[2],10),
-    };
+};
 };
 const SelectableRatePlanCell = ({children, item, chambre, selected, setSelected, setAnchorEl, setOpen , setRoomSelected,cleanOthers, ...others}) => {
     const handleDragStart = (e, direction) => {
