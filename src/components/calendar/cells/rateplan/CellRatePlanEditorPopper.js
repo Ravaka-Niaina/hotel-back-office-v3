@@ -1,13 +1,15 @@
-import React , { useState } from 'react';
+import React , { useState , useContext} from 'react';
 import { format } from 'date-fns';
-import { Popper, Slide , Stack,  FormControlLabel, RadioGroup , LinearProgress  } from '@mui/material';
+import produce from 'immer';
+import { Popper, Slide , Stack, LinearProgress  } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 import CustomizedIconButton from '../../../CustomizedComponents/CustomizedIconButton';
 import CustomizedPaperOutside from '../../../CustomizedComponents/CustomizedPaperOutside';
-import CustomizedRadio from '../../../CustomizedComponents/CustomizedRadio';
 import CustomizedInput from '../../../CustomizedComponents/CustomizedInput';
+
+import { ThemeContext } from '../../../context/Wrapper';
 
 import { configPrixNPers } from '../../../../services/TCTarif';
 import { days } from '../../../../services/Util';
@@ -23,7 +25,8 @@ const getItemData = (item) => {
         "version_index": parseInt(dataSplited[2], 10),
     };
 };
-const CellRatePlanEditorPopper = ({ open, anchorEl , setOpen , selected , setSelected,chambre , ...others}) => {
+const CellRatePlanEditorPopper = ({ open, anchorEl , setOpen , selected , setSelected,chambre,setChambre , ...others}) => {
+    const context = useContext(ThemeContext);
     const [loading, setLoading] = useState(false);
     const [prix, setPrix] = useState('');
     const handleClickSave = () => {
@@ -46,12 +49,30 @@ const CellRatePlanEditorPopper = ({ open, anchorEl , setOpen , selected , setSel
         };
     
         console.log(payload);
-        setTimeout(() => {
-                    setLoading(false);
-                }, 2000);
         configPrixNPers(payload)
             .then((result) => {
-                console.log(result.data);
+                if(result.data.status === 200)
+                {
+                    setChambre((prev) => {
+                        return produce(prev, condition => {
+                            const firstItemIndex = 
+                                prev.planTarifaire[firstElement.rate_plan_index].prixTarif.findIndex((elem)=>
+                                    elem.date === firstElement.date);
+                            const lastItemIndex = 
+                                prev.planTarifaire[lastElement.rate_plan_index].prixTarif.findIndex((elem)=>
+                                    elem.date === lastElement.date);
+                            for(let i = firstItemIndex ; i <= lastItemIndex ; i+=1)
+                            {
+                                condition.planTarifaire[firstElement.rate_plan_index].prixTarif[i].versions[firstElement.version_index].prix=payload.prix;
+                            }
+                        });
+                    });
+                }
+                else
+                {
+                    context.changeResultErrorMessage(`Changements non enregistrés. Une erreur est servenue`);
+                    context.showResultError(true);
+                }
             })
             .catch((error) => {
                 console.log(error.message)

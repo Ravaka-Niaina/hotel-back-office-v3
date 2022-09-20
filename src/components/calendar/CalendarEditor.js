@@ -261,8 +261,8 @@ const CalendarEditor = ({room , dateRange}) => {
     
     return (
         <CustomizedPaperOutside elevation={12} sx={{ background: '#E3EDF7', p: 5 }}>
-            <CellRoomEditorPopper open={openRoomEditor} setOpen={setOpenRoomEditor} anchorEl={anchorElRoom} sx={{ zIndex:16777270}} selected={selectedRoom} setSelected={setSelectedRoom} chambre={chambre}/>
-            <CellRatePlanEditorPopper open={openRatePlanEditor} setOpen={setOpenRatePlanEditor} anchorEl={anchorElRatePlan} sx={{ zIndex: 16777270 }} selected={selectedRatePlan} setSelected={setSelectedRatePlan} chambre={chambre}/>
+            <CellRoomEditorPopper open={openRoomEditor} setOpen={setOpenRoomEditor} anchorEl={anchorElRoom} sx={{ zIndex:16777270}} selected={selectedRoom} setSelected={setSelectedRoom} chambre={chambre} setChambre={setChambre}/>
+            <CellRatePlanEditorPopper open={openRatePlanEditor} setOpen={setOpenRatePlanEditor} anchorEl={anchorElRatePlan} sx={{ zIndex: 16777270 }} selected={selectedRatePlan} setSelected={setSelectedRatePlan} chambre={chambre}  setChambre={setChambre}/>
             <Grid container>
                 <Grid item xs={4} >
                     <CalendarAttributeSide 

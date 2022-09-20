@@ -1,5 +1,6 @@
-import React , { useState } from 'react';
+import React , { useState , useContext} from 'react';
 import {format} from 'date-fns';
+import produce from 'immer';
 import { Popper, Slide , Stack,  FormControlLabel, RadioGroup ,LinearProgress  } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -9,14 +10,13 @@ import CustomizedPaperOutside from '../../../CustomizedComponents/CustomizedPape
 import CustomizedRadio from '../../../CustomizedComponents/CustomizedRadio';
 import CustomizedInput from '../../../CustomizedComponents/CustomizedInput';
 
+import { ThemeContext } from '../../../context/Wrapper';
+
 import {configPrix} from '../../../../services/TCTarif';
 import {days} from '../../../../services/Util';
 
-const CellRoomEditorPopper = ({ open, anchorEl , setOpen , selected , setSelected ,chambre , ...others}) => {
-    const handleClose = () => {
-        setSelected([]);
-        setOpen(false);
-    };
+const CellRoomEditorPopper = ({ open, anchorEl , setOpen , selected , setSelected ,chambre,setChambre , ...others}) => {
+    const context = useContext(ThemeContext);
     const [ loading , setLoading ] = useState(false);
     const [ modifyOpenStatus, setModifyOpenStatus ] = useState(true);
     const [ roomToSell , setRoomToSell ] = useState('');
@@ -29,7 +29,7 @@ const CellRoomEditorPopper = ({ open, anchorEl , setOpen , selected , setSelecte
             dateDebut: selected[0],
             dateFin: selected[selected.length - 1],
             toSell: Number.parseInt(roomToSell,10),
-            isTypeChambreOpen: openStatus,
+            isTypeChambreOpen: !modifyOpenStatus ? true : openStatus,
             forTypeChambre: true,
             forTarif: false,
             modifierOuvertureChambre: modifyOpenStatus,
@@ -39,15 +39,40 @@ const CellRoomEditorPopper = ({ open, anchorEl , setOpen , selected , setSelecte
         configPrix(payload)
             .then((result) => {
                 console.log(result.data);
+                if(result.data.status === 200)
+                {
+                    setChambre((prev) => {
+                        return produce(prev, condition => {
+                            const firstItemIndex = prev.statusDays.findIndex((elem)=>elem.date === selected[0]);
+                            const lastItemIndex = prev.statusDays.findIndex((elem)=>elem.date === selected[selected.length-1]);
+                            for(let i = firstItemIndex ; i <= lastItemIndex ; i+=1)
+                            {
+                                condition.statusDays[i].toSell = payload.toSell;
+                                condition.statusDays[i].closed = !payload.isTypeChambreOpen;
+                                
+                            }
+                        });
+                    });
+                }
+                else
+                {
+                    context.changeResultErrorMessage(`Changements non enregistrés. Une erreur est servenue`);
+                    context.showResultError(true);
+                }
             })
             .catch((error) => {
-                console.log(error.message)
+                context.changeResultErrorMessage(error.message);
+                context.showResultError(true);
             })
             .finally(() => {
                 setTimeout(() => {
                     setLoading(false);
                 }, 2000);
             })
+    };
+    const handleClose = () => {
+        setSelected([]);
+        setOpen(false);
     };
     return (
         <>
@@ -78,7 +103,7 @@ const CellRoomEditorPopper = ({ open, anchorEl , setOpen , selected , setSelecte
                                         name="customized-radios"
                                         row
                                         {
-                                        ...(!modifyOpenStatus && { value:"other" })
+                                        ...(!modifyOpenStatus && { value:"open" })
                                         }
                                         {
                                         ...(modifyOpenStatus && { value:openStatus?"open": "close"  })
