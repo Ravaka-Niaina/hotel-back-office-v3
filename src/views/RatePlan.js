@@ -77,7 +77,7 @@ const RatePlan = () => {
         </Stack>
         <CustomizedPaperOutside sx={{ ...lightBackgroundToTop, background: '#E3EDF7', p: 5, minHeight:'100vh' }}>
           <UserListToolbar numSelected={selected.length} filterName={filterName} />
-          <Scrollbar>
+          {ratePlanList && <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
                 <UserListHead
@@ -121,7 +121,7 @@ const RatePlan = () => {
                 </TableBody>
               </Table>
             </TableContainer>
-          </Scrollbar>
+          </Scrollbar>}
         </CustomizedPaperOutside>
       </Container>
     </Page>
