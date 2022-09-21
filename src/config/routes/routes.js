@@ -30,7 +30,7 @@ import { getAllowedRoles } from '../../services/AllowedRoles';
 /**
  * @component
  * @description A react component to configure the routes of the application
- * @returns {hook}
+ * @returns {hook} useRoutes hook
  */
 export default function Router() {
   const dashboardPath = '/dashboard';
