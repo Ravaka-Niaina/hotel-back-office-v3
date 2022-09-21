@@ -1,4 +1,4 @@
-const hosturl = 'http://localhost:3001';
+const hosturl = 'http://localhost:3000';
 // const hosturl = 'https://adr-hotel-back.herokuapp.com';
 
 
