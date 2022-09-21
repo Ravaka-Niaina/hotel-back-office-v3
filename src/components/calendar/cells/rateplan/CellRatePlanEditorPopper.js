@@ -29,12 +29,31 @@ const CellRatePlanEditorPopper = ({ open, anchorEl , setOpen , selected , setSel
     const context = useContext(ThemeContext);
     const [loading, setLoading] = useState(false);
     const [prix, setPrix] = useState('');
-    const handleClickSave = () => {
+    const [errors, setErrors] = useState(false);
+    const validate = (fields) => {
+        const temp = { ...errors };
+        if ('prix' in fields) {
+            temp.prix = '';
+            const number = parseInt(fields.prix, 10)
+            if (Number.isNaN(number)) {
+                temp.prix = 'Ce champ est requis';
+            }
+            else if (number <= 0) {
+                temp.prix = 'Veuillez choisir un nombre positif';
+            }
+        }
+        setErrors(temp);
+    };
+    const formIsValid = () => {
+        const isValid = Object.values(errors).every((x) => x === '');
+        return isValid;
+    };
+    const save = () => {
         setLoading(true);
         const firstElement = getItemData(selected[0]);
-        const lastElement = getItemData(selected[selected.length-1]);
+        const lastElement = getItemData(selected[selected.length - 1]);
         console.log(firstElement.date);
-        console.log(format(new Date(firstElement.date),'yyyy-MM-dd'))
+        console.log(format(new Date(firstElement.date), 'yyyy-MM-dd'))
         const payload = {
             idTypeChambre: chambre._id,
             idTarif: chambre.planTarifaire[firstElement.rate_plan_index]._id,
@@ -47,29 +66,27 @@ const CellRatePlanEditorPopper = ({ open, anchorEl , setOpen , selected , setSel
             prix: Number.parseFloat(prix),
             minSejour: 1,
         };
-    
+
         console.log(payload);
         configPrixNPers(payload)
             .then((result) => {
-                if(result.data.status === 200)
-                {
+                console.log(result);
+                if (result.data.status === 200) {
                     setChambre((prev) => {
                         return produce(prev, condition => {
-                            const firstItemIndex = 
-                                prev.planTarifaire[firstElement.rate_plan_index].prixTarif.findIndex((elem)=>
+                            const firstItemIndex =
+                                prev.planTarifaire[firstElement.rate_plan_index].prixTarif.findIndex((elem) =>
                                     elem.date === firstElement.date);
-                            const lastItemIndex = 
-                                prev.planTarifaire[lastElement.rate_plan_index].prixTarif.findIndex((elem)=>
+                            const lastItemIndex =
+                                prev.planTarifaire[lastElement.rate_plan_index].prixTarif.findIndex((elem) =>
                                     elem.date === lastElement.date);
-                            for(let i = firstItemIndex ; i <= lastItemIndex ; i+=1)
-                            {
-                                condition.planTarifaire[firstElement.rate_plan_index].prixTarif[i].versions[firstElement.version_index].prix=payload.prix;
+                            for (let i = firstItemIndex; i <= lastItemIndex; i += 1) {
+                                condition.planTarifaire[firstElement.rate_plan_index].prixTarif[i].versions[firstElement.version_index].prix = payload.prix;
                             }
                         });
                     });
                 }
-                else
-                {
+                else {
                     context.changeResultErrorMessage(`Changements non enregistrés. Une erreur est servenue`);
                     context.showResultError(true);
                 }
@@ -82,6 +99,15 @@ const CellRatePlanEditorPopper = ({ open, anchorEl , setOpen , selected , setSel
                     setLoading(false);
                 }, 2000);
             })
+    };
+    const handleClickSave = () => {
+        validate({
+            prix,
+        })
+        if(formIsValid()){
+            save();
+        }
+        
     };
     const handleClose = () => {
         setSelected([]);
@@ -116,7 +142,14 @@ const CellRatePlanEditorPopper = ({ open, anchorEl , setOpen , selected , setSel
                                             type: 'number',
                                             min: 0,
                                         }}
-                                        onChange={(e) => setPrix(e.target.value)}
+                                        onChange={(e) => {
+                                            setPrix(e.target.value);
+                                            validate({ 'prix': e.target.value});
+                                        }}
+                                        {...(errors.prix && {
+                                            error: true,
+                                            helpertext: errors.prix,
+                                        })}
                                     />
                                     <Stack direction="row" spacing={2} justifyContent='space-evenly' alignItems='center'>
                                         <CustomizedIconButton onClick={handleClickSave} disabled={loading}>

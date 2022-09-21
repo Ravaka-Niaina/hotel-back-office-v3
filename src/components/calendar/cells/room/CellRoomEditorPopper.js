@@ -21,14 +21,32 @@ const CellRoomEditorPopper = ({ open, anchorEl , setOpen , selected , setSelecte
     const [ modifyOpenStatus, setModifyOpenStatus ] = useState(true);
     const [ roomToSell , setRoomToSell ] = useState('');
     const [ openStatus , setOpenStatus ] = useState(true);
-    const handleClickSave = () =>{
+    const [ errors , setErrors ] = useState(false);
+    const validate = (fields) => {
+        const temp = {...errors};
+        if('roomToSell' in fields){
+            temp.roomToSell = '';
+            const number = parseInt(fields.roomToSell, 10)
+            if(Number.isNaN(number)){
+                temp.roomToSell = 'Ce champ est requis';
+            }
+            else if(number <= 0){
+                temp.roomToSell = 'Veuillez choisir un nombre positif';
+            }
+        }
+        setErrors(temp);
+    };
+    const formIsValid = () => {
+        const isValid = Object.values(errors).every((x) => x === '');
+        return isValid;
+    };
+    const save = () => {
         setLoading(true);
-        
         const payload = {
             idTypeChambre: chambre._id,
             dateDebut: selected[0],
             dateFin: selected[selected.length - 1],
-            toSell: Number.parseInt(roomToSell,10),
+            toSell: Number.parseInt(roomToSell, 10),
             isTypeChambreOpen: !modifyOpenStatus ? true : openStatus,
             forTypeChambre: true,
             forTarif: false,
@@ -39,23 +57,20 @@ const CellRoomEditorPopper = ({ open, anchorEl , setOpen , selected , setSelecte
         configPrix(payload)
             .then((result) => {
                 console.log(result.data);
-                if(result.data.status === 200)
-                {
+                if (result.data.status === 200) {
                     setChambre((prev) => {
                         return produce(prev, condition => {
-                            const firstItemIndex = prev.statusDays.findIndex((elem)=>elem.date === selected[0]);
-                            const lastItemIndex = prev.statusDays.findIndex((elem)=>elem.date === selected[selected.length-1]);
-                            for(let i = firstItemIndex ; i <= lastItemIndex ; i+=1)
-                            {
+                            const firstItemIndex = prev.statusDays.findIndex((elem) => elem.date === selected[0]);
+                            const lastItemIndex = prev.statusDays.findIndex((elem) => elem.date === selected[selected.length - 1]);
+                            for (let i = firstItemIndex; i <= lastItemIndex; i += 1) {
                                 condition.statusDays[i].toSell = payload.toSell;
                                 condition.statusDays[i].closed = !payload.isTypeChambreOpen;
-                                
+
                             }
                         });
                     });
                 }
-                else
-                {
+                else {
                     context.changeResultErrorMessage(`Changements non enregistrés. Une erreur est servenue`);
                     context.showResultError(true);
                 }
@@ -69,6 +84,14 @@ const CellRoomEditorPopper = ({ open, anchorEl , setOpen , selected , setSelecte
                     setLoading(false);
                 }, 2000);
             })
+    };
+    const handleClickSave = () =>{
+        validate({
+            roomToSell,
+        })
+        if(formIsValid()){
+            save();
+        }
     };
     const handleClose = () => {
         setSelected([]);
@@ -130,7 +153,6 @@ const CellRoomEditorPopper = ({ open, anchorEl , setOpen , selected , setSelecte
                                         />
                                     </RadioGroup>
                                     <CustomizedInput 
-                                       
                                         type="number" 
                                         inputProps={{
                                             type:'number',
@@ -139,7 +161,14 @@ const CellRoomEditorPopper = ({ open, anchorEl , setOpen , selected , setSelecte
                                         placeholder="ex: 20" 
                                         variant="outlined" 
                                         label="Room to sell" 
-                                        onChange={(e)=>setRoomToSell(e.target.value)}
+                                        onChange={(e)=>{
+                                            setRoomToSell(e.target.value);
+                                            validate({ 'roomToSell': e.target.value })
+                                        }}
+                                        {...(errors.roomToSell && {
+                                            error: true,
+                                            helpertext: errors.roomToSell,
+                                        })}
                                     />
                                     <Stack direction="row" spacing={2} justifyContent='space-evenly' alignItems='center'>
                                             <CustomizedIconButton 

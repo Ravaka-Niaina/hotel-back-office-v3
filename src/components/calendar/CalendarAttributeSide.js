@@ -3,6 +3,8 @@ import {  Stack } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
 
+import EditorCustomizingDialog from './EditorCustomizingDialog';
+
 const CalendarAttributeSide = ({chambre,ratePlanAttributeList}) => {
     return (
         <div className='calendarEditor'>
@@ -18,9 +20,7 @@ const CalendarAttributeSide = ({chambre,ratePlanAttributeList}) => {
                             >
                                 <h3>{chambre.nom}</h3>
                                 <Stack direction='row' spacing={1} alignItems='center'>
-                                    <CustomizedIconButton >
-                                        <EditIcon sx={{ width: 20, height: 20 }} />
-                                    </CustomizedIconButton>
+                                    <EditorCustomizingDialog chambre={chambre}/>
                                     <span>customize</span>
                                 </Stack>
 
