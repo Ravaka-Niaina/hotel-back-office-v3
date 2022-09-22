@@ -70,6 +70,14 @@ const CellRoomEditorPopper = ({ open, anchorEl , setOpen , selected , setSelecte
                         });
                     });
                 }
+                else if(result.data.errors)
+                {
+                    const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+                    const indication = result.data.errors[item];
+                    const message = `${item}: ${indication}`;
+                    context.changeResultErrorMessage(message);
+                    context.showResultError(true);
+                }
                 else {
                     context.changeResultErrorMessage(`Changements non enregistrés. Une erreur est servenue`);
                     context.showResultError(true);
@@ -89,7 +97,7 @@ const CellRoomEditorPopper = ({ open, anchorEl , setOpen , selected , setSelecte
         validate({
             roomToSell,
         })
-        if(formIsValid()){
+        if(formIsValid() && roomToSell !== ''){
             save();
         }
     };

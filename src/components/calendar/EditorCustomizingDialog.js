@@ -1,4 +1,4 @@
-import React , { useEffect, useState } from 'react';
+import React , { useEffect, useState , useContext } from 'react';
 import produce from 'immer';
 import moment from 'moment';
 import { Dialog, DialogActions, DialogContent, Button, Stack, FormControlLabel, RadioGroup , Grid } from '@mui/material';
@@ -13,18 +13,25 @@ import CustomizedCheckbox from '../CustomizedComponents/CustomizedCheckbox';
 import CustomizedRadio from '../CustomizedComponents/CustomizedRadio';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 
+import { ThemeContext } from '../context/Wrapper';
+
+import {configPrix} from '../../services/TCTarif';
+
 import './index.css';
 
-const EditorCustomizingDialog = ({chambre}) => {
+const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
     const today = new Date();
     const nextWeek = new Date(today);
     nextWeek.setDate(nextWeek.getDate() + 7);
+    const context = useContext(ThemeContext);
     const [dateRange, setDateRange] = useState([moment(today), moment(nextWeek)]);
     const [openPicker,setOpenPicker] = useState(false);
-    const [ open , setOpen ] = useState(false);
+    const [open , setOpen ] = useState(false);
+    const [isRoomOpen , setIsRoomOpen ] = useState(true);
     const [ratePlans , setRatePlans] = useState([]);
     const [versions , setVersions] = useState([]);
     const [roomToSell,setRoomToSell] = useState('');
+    const [errors,setErrors] = useState(false);
     const [days, setDays] = React.useState([
         { value: 1, checked: true, label: "Mon" },
         { value: 2, checked: true, label: "Tue" },
@@ -34,6 +41,76 @@ const EditorCustomizingDialog = ({chambre}) => {
         { value: 6, checked: true, label: "Sat" },
         { value: 7, checked: true, label: "Sun" },
     ]);
+    const validate = (fields , required = true) => {
+        const temp = {...errors};
+        if('roomToSell' in fields){
+            temp.roomToSell = '';
+            const number = parseInt(fields.roomToSell, 10)
+            if(Number.isNaN(number) && required){
+                temp.roomToSell = 'Ce champ est requis';
+            }
+            else if(number <= 0){
+                temp.roomToSell = 'Veuillez choisir un nombre positif';
+            }
+        }
+        setErrors((prev)=>({...prev,...temp}));
+    };
+    const formIsValid = () => {
+        const isValid = Object.values(errors).every((x) => x === '');
+        return isValid;
+    };
+    const saveRoomType = () => {
+        validate({ roomToSell });
+        const save = () => {
+            if( formIsValid() && roomToSell !== '')
+            {
+                console.log('wtf');
+                const payload = {
+                    idTypeChambre: chambre._id,
+                    days,
+                    dateDebut: dateRange[0].format('YYYY-MM-DD'),
+                    dateFin: dateRange[1].format('YYYY-MM-DD'),
+                    toSell: parseInt(roomToSell,10),
+                    isTypeChambreOpen:isRoomOpen,
+                    forTypeChambre: true,
+                    forTarif: false
+                };
+                console.log(payload);
+                configPrix(payload)
+                    .then((result) => {
+                        console.log(result.data);
+                        if(result.data.status === 200)
+                        {
+                            reloadRoom(chambre._id);
+                        }
+                        else if(result.data.errors)
+                        {
+                            const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+                            const indication = result.data.errors[item];
+                            const message = `${item}: ${indication}`;
+                            context.changeResultErrorMessage(message);
+                            context.showResultError(true);
+                        }
+                        else{
+                            context.changeResultErrorMessage(`Une erreur inconnue s'est produite. Veuillez contacter l'administrateur`);
+                            context.showResultError(true);
+                        }
+                    })
+                    .catch((e) => {
+                        context.changeResultErrorMessage(e.message);
+                        context.showResultError(true);
+                    })
+                    .finally(() => {
+                        console.log('finally');
+                        console.log(errors);
+                    })
+            }
+        }
+        setTimeout(()=>{
+            save();
+        },1000);
+
+    };
     const handleChangeDays = (index) => {
         setDays((prev)=>{
             return produce(prev,condition=>{
@@ -128,14 +205,22 @@ const EditorCustomizingDialog = ({chambre}) => {
                         >
                             <h4>Type chambre</h4>
                             <Stack spacing={2}>
-                                <RadioGroup row aria-labelledby="demo-controlled-radio-buttons-group" name="controlled-radio-buttons-group">
+                                <RadioGroup 
+                                    row aria-labelledby="demo-controlled-radio-buttons-group"
+                                    name="controlled-radio-buttons-group"
+                                    value={isRoomOpen ? "open" : "close"}
+                                >
                                     <FormControlLabel
                                         control={<CustomizedRadio  />}
                                         label="Open"
+                                        value="open"
+                                        onClick={()=>setIsRoomOpen(true)}
                                     />
                                     <FormControlLabel
                                         control={<CustomizedRadio />}
                                         label="Close"
+                                        value="close"
+                                        onClick={()=>setIsRoomOpen(false)}
                                     />
                                 </RadioGroup>
                                 <CustomizedInput
@@ -144,8 +229,16 @@ const EditorCustomizingDialog = ({chambre}) => {
                                     variant="outlined"
                                     label="Rooms to sell"
                                     placeholder="ex: 10"
+                                    onChange={(e)=>{
+                                        setRoomToSell(e.target.value);
+                                        validate({ 'roomToSell': e.target.value },false)
+                                    }}
+                                    {...(errors.roomToSell && {
+                                        error: true,
+                                        helpertext: errors.roomToSell,
+                                    })}
                                 />
-                                <CustomizedButton text="Sauvegarder" component={RouterLink} to="#" />
+                                <CustomizedButton onClick={saveRoomType} text="Sauvegarder" component={RouterLink} to="#" />
                             </Stack>
                         </div>
 
@@ -205,12 +298,6 @@ const EditorCustomizingDialog = ({chambre}) => {
                         </div>
                     </Stack>
                 </DialogContent>
-                <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px' }}>
-                    <Button onClick={handleClose} sx={{ fontSize: 12 }}>
-                        Annuler
-                    </Button>
-                    <CustomizedButton  text="Valider" component={RouterLink} to="#" />
-                </DialogActions>
             </Dialog>
         </>
     );

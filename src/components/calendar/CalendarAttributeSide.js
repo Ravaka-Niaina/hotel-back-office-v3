@@ -5,7 +5,7 @@ import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
 
 import EditorCustomizingDialog from './EditorCustomizingDialog';
 
-const CalendarAttributeSide = ({chambre,ratePlanAttributeList}) => {
+const CalendarAttributeSide = ({chambre, ratePlanAttributeList , reloadRoom}) => {
     return (
         <div className='calendarEditor'>
             <table >
@@ -20,7 +20,7 @@ const CalendarAttributeSide = ({chambre,ratePlanAttributeList}) => {
                             >
                                 <h3>{chambre.nom}</h3>
                                 <Stack direction='row' spacing={1} alignItems='center'>
-                                    <EditorCustomizingDialog chambre={chambre}/>
+                                    <EditorCustomizingDialog chambre={chambre} reloadRoom={reloadRoom}/>
                                     <span>customize</span>
                                 </Stack>
 

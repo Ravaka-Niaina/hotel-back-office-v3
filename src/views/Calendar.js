@@ -27,7 +27,9 @@ const Calendar = () => {
     const [dateRange, setDateRange] = useState([ moment(today) , moment(nextWeek) ]);
     const [open, setOpen] = useState(false);
     const [ roomList , setRoomList ] = useState([]);
-    const [loading,setLoading]=useState(false);
+    const [loading, setLoading]=useState(false);
+    const [partialRoomLoading, setPartialRoomLoading] = useState('');
+    console.log(roomList);
     // console.log(format(value[0].toDate(), 'd MMMM yyyy'));
     // function getNDigits(number, digit){
     //     digit = `${digit}`;
@@ -46,6 +48,56 @@ const Calendar = () => {
     //     date = `${year}-${month}-${day}`;
     //     return date;
     // }
+    const reloadOneRoom = (id) => {
+        const roomIndex = roomList.findIndex((elem)=>elem._id === id); 
+        if(roomIndex > -1)
+        {
+            setPartialRoomLoading(id);
+            const payload = {
+                dateDebut: format(dateRange[0].toDate(), 'yyyy-MM-dd'),
+                dateFin: format(dateRange[1].toDate(), 'yyyy-MM-dd'),
+            };
+            console.log(payload);
+            context.showLoader(true);
+            getTcTarifPrix(payload)
+                .then((result) => {
+                    if (result.data.status === 200) {
+                        const resultIndex = result.data.typeChambre.findIndex((elem)=>elem._id === id);
+                        console.log(resultIndex);
+                        if(resultIndex > -1)
+                        {
+                            console.log('hahah');
+                            setRoomList((prev) => {
+                                return produce(prev,condition => {
+                                   condition[roomIndex] = JSON.parse(JSON.stringify(result.data.typeChambre[resultIndex]));
+                                });
+                            });
+                        }
+                    }
+                    else if(result.data.errors){
+                        const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+                        const indication = result.data.errors[item];
+                        const message = `${item}: ${indication}`;
+                        context.changeResultErrorMessage(message);
+                        context.showResultError(true);
+                    }
+                    else {
+                        context.changeResultErrorMessage('Une erreur est survenue lors du chargement des données');
+                        context.showResultError(true);
+                    }
+                })
+                .catch((error) => {
+                    context.changeResultErrorMessage(error.message);
+                    context.showResultError(true);
+                })
+                .finally(()=>{
+                    context.showLoader(false);
+                    setTimeout(() => {
+                        setPartialRoomLoading('');
+                    },1000);
+                });
+        }
+    };
     const fetchData = (dateR) => {
         const payload = {
             dateDebut: format(dateR[0].toDate(), 'yyyy-MM-dd'),
@@ -164,9 +216,9 @@ const Calendar = () => {
                 }
                 {
                     roomList.map((room,i)=>
-                        loading ? 
+                        loading || partialRoomLoading === room._id? 
                             (<CalendarEditorSkeleton key={i}/>) : 
-                            (<CalendarEditor room={room} dateRange={dateRange} key={i}/>)
+                            (<CalendarEditor room={room} dateRange={dateRange} key={i} reloadRoom={reloadOneRoom}/>)
                     )
                 }
                 
