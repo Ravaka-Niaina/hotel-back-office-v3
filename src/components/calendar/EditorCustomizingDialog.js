@@ -8,10 +8,13 @@ import { DateRangePicker } from 'rsuite';
 import EditIcon from '@mui/icons-material/Edit';
 import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
+import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedCheckbox from '../CustomizedComponents/CustomizedCheckbox';
 import CustomizedRadio from '../CustomizedComponents/CustomizedRadio';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
+import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
+import InvisibleBackdrop from '../CustomizedComponents/InvisibleBackdrop';
 
 import { ThemeContext } from '../context/Wrapper';
 
@@ -161,9 +164,21 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
             <CustomizedIconButton onClick={handleClickOpen}>
                 <EditIcon sx={{ width: 20, height: 20 }} />
             </CustomizedIconButton>
-            <Dialog open={open} onClose={handleClose} maxWidth={'sm'}>
-                <CustomizedDialogTitle text={`Editor (${chambre.nom})`}/>
-                <DialogContent style={{ backgroundColor: '#E8F0F8', paddingTop: 15 }}>
+            <Dialog 
+                open={open} 
+                onClose={handleClose} 
+                maxWidth={'sm'} 
+                BackdropComponent={InvisibleBackdrop}
+                PaperComponent={CustomizedPaperOutside}
+    
+            >
+                <CustomizedDialogTitle   text={`Editor (${chambre.nom})`} />
+                <DialogContent 
+                    style={{ 
+                        background: 'linear-gradient(308.48deg, rgba(255, 255, 255, 0.53) 2.36%, rgba(255, 255, 255, 0) 61.95%), #E3EDF7',
+                        paddingTop: 15 
+                    }}
+                >
                     <Stack spacing={5} style={{ paddingLeft: '2em', paddingRight: '2em' }}>
                         <DateRangePicker
                             open={openPicker}
@@ -203,7 +218,7 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
                                 textAlign:'center',
                             }}
                         >
-                            <h4>Type chambre</h4>
+                            <CustomizedTitle text='Type chambre'  level={2}/>
                             <Stack spacing={2}>
                                 <RadioGroup 
                                     row aria-labelledby="demo-controlled-radio-buttons-group"
@@ -249,7 +264,7 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
                                 textAlign: 'center',
                             }}
                         >
-                            <h4>Plan tarifaire</h4>
+                            <CustomizedTitle text='Plan tarifaire' level={2}/>
                             <Stack spacing={2}>
                                 <div style={{textAlign: 'left'}}>
                                     {ratePlans.map((r, index) => (

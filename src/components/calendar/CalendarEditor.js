@@ -2,13 +2,16 @@ import React , { useEffect , useState , useContext } from 'react';
 import debounce from 'lodash.debounce';
 import { Grid , Stack } from '@mui/material';
 
-import PeopleIcon from '@mui/icons-material/People';
+
+import EditIcon from '@mui/icons-material/Edit';
+import PersonIcon from '@mui/icons-material/Person';
 
 import StatusCell from './cells/StatusCell';
 
 import { CellRoomEditorPopper, SelectableRoomCell } from './cells/room';
 import { CellRatePlanEditorPopper , SelectableRatePlanCell } from './cells/rateplan';
 
+import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
 import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
 import CalendarValueSide from './CalendarValueSide';
 import CalendarAttributeSide from './CalendarAttributeSide';
@@ -159,15 +162,29 @@ const CalendarEditor = ({room , dateRange , reloadRoom}) => {
                     <tr key={index}>
                         <td style={{ paddingLeft:'50% !important',letterSpacing:'0.2em'}}>
                             
-                            <Stack direction='row' spacing={1} alignItems='center' justifyContent='space-evenly'>
-                                <span>
-                                    ›   
-                                </span>
-                                <span style={{ fontSize: '16px' }}>
-                                    (x {tarif.prixTarif[0]?.versions[index]?.nbPers})
-                                </span>
-                                <PeopleIcon />
-                            </Stack>
+                            <Grid direction='row' spacing={1} justifyContent='space-around' container alignItems='center'>
+                                <Grid item xs={8}>
+                                    <Stack sx={{ p: 1 }} direction='row' spacing={0} alignItems='center' justifyContent='flex-start'>
+                                        {
+                                            [...new Array(tarif.prixTarif[0]?.versions[index]?.nbPers)].map((e, i) => {
+                                                return (
+                                                    <PersonIcon key={i} />
+                                                )
+                                            })
+                                        }
+                                    </Stack>
+                                </Grid>
+                                <Grid item xs={2}>
+                                    <Stack justifyContent='flex-end'>
+                                        <CustomizedIconButton sx={{ width: 25, height: 25 }}>
+                                            <EditIcon sx={{ width: 12, height: 12 }} />
+                                        </CustomizedIconButton>
+                                    </Stack>          
+                                </Grid>
+                                
+                                
+                            </Grid>
+                            
                                 
                         </td>
                     </tr>
@@ -235,7 +252,7 @@ const CalendarEditor = ({room , dateRange , reloadRoom}) => {
             ratePlanAttributeListTemp.push((
                 <React.Fragment key={j}>
                     <tr key='ratePlan attribute status'>
-                        <td className='status'>
+                        <td className='status' style={{ textAlign: 'right', paddingRight: '10px' }}>
                             <span style={{letterSpacing:'5px'}}>
                                 • 
                             </span>

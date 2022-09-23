@@ -1,7 +1,8 @@
 import React from 'react';
-import {  Stack } from '@mui/material';
+import {Grid , Stack} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
+import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
 
 import EditorCustomizingDialog from './EditorCustomizingDialog';
 
@@ -18,10 +19,9 @@ const CalendarAttributeSide = ({chambre, ratePlanAttributeList , reloadRoom}) =>
                                 justifyContent="center"
                                 alignItems="center"
                             >
-                                <h3>{chambre.nom}</h3>
+                                <CustomizedTitle text={chambre.nom} />
                                 <Stack direction='row' spacing={1} alignItems='center'>
                                     <EditorCustomizingDialog chambre={chambre} reloadRoom={reloadRoom}/>
-                                    <span>customize</span>
                                 </Stack>
 
                             </Stack>
@@ -30,15 +30,30 @@ const CalendarAttributeSide = ({chambre, ratePlanAttributeList , reloadRoom}) =>
                 </thead>
                 <tbody>
                     <tr>
-                        <td className='status'>
+                        <td className='status' style={{textAlign:'right',paddingRight:'10px'}}>
                             Status (Open or Closed)
                         </td>
                     </tr>
                     <tr>
-                        <td>Room to sell</td>
+                        <td style={{ textAlign: 'right', paddingRight: '10px' }}>
+                            <Grid direction='row' spacing={1} justifyContent='space-around' container alignItems='center'>
+                                <Grid item xs={8}>
+                                    <Stack justifyContent='flex-start'>
+                                        <p> Room to sell</p>
+                                    </Stack>
+                                </Grid>
+                                <Grid item xs={2}>
+                                    <Stack justifyContent='flex-end'>
+                                        <CustomizedIconButton sx={{ width: 25, height: 25 }}>
+                                            <EditIcon sx={{ width: 12, height: 12 }} />
+                                        </CustomizedIconButton>
+                                    </Stack>
+                                </Grid>
+                            </Grid>
+                        </td>
                     </tr>
                     <tr>
-                        <td>Booked</td>
+                        <td style={{ textAlign: 'right', paddingRight: '10px' }}>Booked</td>
                     </tr>
                     {
                         ratePlanAttributeList.map((element)=>{

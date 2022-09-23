@@ -139,7 +139,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           PaperProps={{
             sx: {
               zIndex: 20,
-              boxShadow: '0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22)',
+              boxShadow: '0 0 0 rgba(0, 0, 0, 0.30), 1px 0px 12px  rgba(0, 0, 0, 0.22)',
               width: DRAWER_WIDTH,
               // bgcolor:'background.default',
               backgroundColor: '#E8F0F8',

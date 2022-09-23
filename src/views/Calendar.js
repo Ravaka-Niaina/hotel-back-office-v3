@@ -11,6 +11,7 @@ import CalendarEditor from '../components/calendar/CalendarEditor';
 import CalendarEditorSkeleton from '../components/calendar/CalendarEditorSkeleton';
 import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
 import CustomizedIconButton from '../components/CustomizedComponents/CustomizedIconButton';
+import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
 
 import { ThemeContext } from '../components/context/Wrapper';
 
@@ -134,9 +135,9 @@ const Calendar = () => {
         fetchData(dateRange);
     }, []);
     return (
-            <Stack spacing={2} sx={{p:2}}> 
-                <h1>{page}</h1>
-                <Stack direction='row' spacing={2} justifyContent='center'  alignItems='flex-end' >
+            <Stack spacing={4} sx={{p:2}}> 
+                <CustomizedTitle text={page} />
+                <Stack direction='row' spacing={4} justifyContent='center'  alignItems='flex-end' >
                     
                     <DateRangePicker
                         onClick={()=>setOpen((prev)=>!prev)}
