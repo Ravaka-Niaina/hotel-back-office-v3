@@ -2,7 +2,7 @@ import React , { useEffect , useState , useContext } from 'react';
 import debounce from 'lodash.debounce';
 import { Grid , Stack } from '@mui/material';
 
-import PeopleIcon from '@mui/icons-material/People';
+import PersonIcon from '@mui/icons-material/Person';
 
 import StatusCell from './cells/StatusCell';
 
@@ -159,14 +159,16 @@ const CalendarEditor = ({room , dateRange , reloadRoom}) => {
                     <tr key={index}>
                         <td style={{ paddingLeft:'50% !important',letterSpacing:'0.2em'}}>
                             
-                            <Stack direction='row' spacing={1} alignItems='center' justifyContent='space-evenly'>
-                                <span>
-                                    ›   
-                                </span>
-                                <span style={{ fontSize: '16px' }}>
-                                    (x {tarif.prixTarif[0]?.versions[index]?.nbPers})
-                                </span>
-                                <PeopleIcon />
+                            <Stack sx={{p:1}}direction='row' spacing={0} alignItems='center' justifyContent='center'>
+                                
+                                {
+                                    [...new Array(tarif.prixTarif[0]?.versions[index]?.nbPers)].map((e, i) => {
+                                        return (
+                                            <PersonIcon key={i} />
+                                        )
+                                    })
+                                }
+    
                             </Stack>
                                 
                         </td>
@@ -235,7 +237,7 @@ const CalendarEditor = ({room , dateRange , reloadRoom}) => {
             ratePlanAttributeListTemp.push((
                 <React.Fragment key={j}>
                     <tr key='ratePlan attribute status'>
-                        <td className='status'>
+                        <td className='status' style={{ textAlign: 'right', paddingRight: '10px' }}>
                             <span style={{letterSpacing:'5px'}}>
                                 • 
                             </span>

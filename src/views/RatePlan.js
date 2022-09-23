@@ -74,7 +74,7 @@ const RatePlan = () => {
     <Page title="AIOLIA | Plans tarifaires">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <CustomizedTitle sx={{ color: '#787878' }} text="Plan tarifaire" />
+          <CustomizedTitle text="Plan tarifaire" size={20}/>
           <AddRatePlanDialog reload={reload} />
         </Stack>
         <CustomizedPaperOutside sx={{ ...lightBackgroundToTop, background: '#E3EDF7', p: 5, minHeight:'100vh' }}>

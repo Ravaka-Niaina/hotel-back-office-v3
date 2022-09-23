@@ -1,7 +1,7 @@
 import { useContext, useMemo, useState } from 'react';
 import {Link as RouterLink} from "react-router-dom";
 import PropTypes from 'prop-types'
-import { Typography, MenuItem, FormControlLabel, RadioGroup, Stack } from '@mui/material';
+import { Grid, MenuItem, FormControlLabel, RadioGroup, Stack } from '@mui/material';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -11,6 +11,7 @@ import CustomizedRadio from '../CustomizedComponents/CustomizedRadio';
 import CustomizedSelect from '../CustomizedComponents/CustomizedSelect';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
+import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
 import { formatDate } from '../../services/Util';
 import { ThemeContext } from '../context/Wrapper';
 
@@ -85,9 +86,7 @@ const RapportForm = ({ setStateDataSalesReport }) => {
     <>
       <Stack spacing={3}>
         <CustomizedPaperOutside elevation={12} sx={{background:'#E3EDF7',p:5}}>
-          <Typography sx={{ color: '#787878', fontWeight: '500' }} variant="h4" gutterBottom>
-            Rapport prévisionnel de performance
-          </Typography>
+          <CustomizedTitle text='Rapport prévisionnel de performance'/>
           <p>
             Gardez un oeil sur vos réservations futures et comparez votre performance a celle des années précedentes.
             Vous pouvez aussi vous situer par rapport à vos concurrents directs, à votre groupe de concurrents et au
@@ -96,46 +95,59 @@ const RapportForm = ({ setStateDataSalesReport }) => {
         </CustomizedPaperOutside>
         <CustomizedPaperOutside elevation={12}  sx={{background:'#E3EDF7',p:5}}>
           <Stack spacing={2} alignItems="flex-start">
-            <h4>Vue:</h4>
-            <RadioGroup defaultValue="jour" aria-labelledby="demo-controlled-radio-buttons-group">
-              {formIntervals.map((formInterval) => (
-                <FormControlLabel
-                  key={formInterval.value}
-                  value={formInterval.value}
-                  control={<CustomizedRadio />}
-                  label={formInterval.label}
-                  onChange={(e) => handleChange(e, 'view')}
-                />
-              ))}
-            </RadioGroup>
-            <h4>Réservations effectuées:</h4>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <Stack
-                justifyContent="flex-star"
-                alignItems="center"
-                direction={{ xs: 'column', sm: 'row' }}
-                spacing={{ xs: 1, sm: 2, md: 4 }}
-              >
-                <MobileDatePicker
-                  label="Debut"
-                  inputFormat="dd/MM/yyyy"
-                  value={new Date(salesReport.startDate)}
-                  onChange={(e) => handleChange(e, 'startDate')}
-                  // onChange={(e) => setDate(formatDate(e.toLocaleDateString('en-US')))}
-                  renderInput={(params) => <CustomizedInput sx={{ width: 1 }} {...params} />}
-                />
-                <MobileDatePicker
-                  label="Fin"
-                  inputFormat="dd/MM/yyyy"
-                  value={new Date(salesReport.endDate)}
-                  onChange={(e) => handleChange(e, 'endDate')}
-                  // onChange={(e) => setDate(formatDate(e.toLocaleDateString('en-US')))}
-                  renderInput={(params) => <CustomizedInput sx={{ width: 1 }} {...params} />}
-                />
-              </Stack>
-            </LocalizationProvider>
+            <Grid container direction='row' spacing={2} alignItems='center'>
+              <Grid item xs={4}>
+                <CustomizedTitle text='Vue:' level={0}  />
+              </Grid>
+              <Grid item xs={8}>
+                <CustomizedTitle text='Réservations effectuées:' level={0}  />
+              </Grid>
+              <Grid item xs={4}>
+                <RadioGroup row defaultValue="jour" aria-labelledby="demo-controlled-radio-buttons-group">
+                  {formIntervals.map((formInterval) => (
+                    <FormControlLabel
+                      key={formInterval.value}
+                      value={formInterval.value}
+                      control={<CustomizedRadio />}
+                      label={formInterval.label}
+                      onChange={(e) => handleChange(e, 'view')}
+                    />
+                  ))}
+                </RadioGroup>
+              </Grid>
+              <Grid item xs={8}>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <Stack
+                    justifyContent="flex-star"
+                    alignItems="center"
+                    direction={{ xs: 'column', sm: 'row' }}
+                    spacing={{ xs: 1, sm: 2, md: 4 }}
+                  >
+                    <MobileDatePicker
+                      label="Debut"
+                      inputFormat="dd/MM/yyyy"
+                      value={new Date(salesReport.startDate)}
+                      onChange={(e) => handleChange(e, 'startDate')}
+                      // onChange={(e) => setDate(formatDate(e.toLocaleDateString('en-US')))}
+                      renderInput={(params) => <CustomizedInput sx={{ width: 1 }} {...params} />}
+                    />
+                    <MobileDatePicker
+                      label="Fin"
+                      inputFormat="dd/MM/yyyy"
+                      value={new Date(salesReport.endDate)}
+                      onChange={(e) => handleChange(e, 'endDate')}
+                      // onChange={(e) => setDate(formatDate(e.toLocaleDateString('en-US')))}
+                      renderInput={(params) => <CustomizedInput sx={{ width: 1 }} {...params} />}
+                    />
+                  </Stack>
+                </LocalizationProvider>
+              </Grid>
+            </Grid>
+            
+            
+            
 
-            <h4>Comparaison avec:</h4>
+            <CustomizedTitle text='Comparaison avec:' level={0} />
             <div>
               <CustomizedSelect label="Annee">
                 <MenuItem disabled value="">

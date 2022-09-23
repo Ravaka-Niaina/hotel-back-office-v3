@@ -97,7 +97,7 @@ const Hotel = () => {
     <Page title="AIOLIA | Hotels">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <CustomizedTitle sx={{ color: '#787878' }} text="Hotel" />
+          <CustomizedTitle size={20} text="Hotel" />
           <AddHotelDialog reload={reload} />
         </Stack>
 
