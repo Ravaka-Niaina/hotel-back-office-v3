@@ -1,4 +1,9 @@
+import { useState } from 'react';
 import { Stack, Container } from '@mui/material';
+import { Editor, EditorState } from "react-draft-wysiwyg";
+import { convertToRaw } from 'draft-js';
+import draftToHtmlPuri from 'draftjs-to-html'
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Page from '../components/Page';
 import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
 import { UserListToolbar } from '../components/table';
@@ -6,7 +11,24 @@ import Scrollbar from '../components/Scrollbar';
 import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
 import { lightBackgroundToTop } from '../components/CustomizedComponents/NeumorphismTheme';
 
+
 export default function EmailModel() {
+  const [editorState, setEditorState] = useState(EditorState)
+  const onEditorStateChange = (e) => {
+    setEditorState(e)
+  }
+
+  const getHtmlFromDraft = () => {
+    // const rawContentState = convertToRaw(editorState.getCurrentContent())
+    // const markup = draftToHtml(
+    //   rawContentState
+    // )
+
+    const htmlPuri = draftToHtmlPuri(
+      convertToRaw(editorState.getCurrentContent())
+    )
+    console.log(htmlPuri)
+  }
   return (
     <Page title="AOLIA | Modèle Email">
       <Container>
@@ -23,7 +45,15 @@ export default function EmailModel() {
           }}
         >
           <UserListToolbar />
-          <Scrollbar>Scroll</Scrollbar>
+          <Scrollbar>
+            <Editor
+              editorStyle={{ backgroundColor: "white", padding: 20 }}
+              editorState={editorState}
+              onEditorStateChange={onEditorStateChange}
+            />;
+            <button onClick={()=> getHtmlFromDraft()}>Hey</button>
+          </Scrollbar>
+          
         </CustomizedPaperOutside>
       </Container>
     </Page>
