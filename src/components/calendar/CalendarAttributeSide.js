@@ -1,5 +1,5 @@
 import React from 'react';
-import {  Stack } from '@mui/material';
+import {Grid , Stack} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
 import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
@@ -35,7 +35,22 @@ const CalendarAttributeSide = ({chambre, ratePlanAttributeList , reloadRoom}) =>
                         </td>
                     </tr>
                     <tr>
-                        <td style={{ textAlign: 'right', paddingRight: '10px' }}>Room to sell</td>
+                        <td style={{ textAlign: 'right', paddingRight: '10px' }}>
+                            <Grid direction='row' spacing={1} justifyContent='space-around' container alignItems='center'>
+                                <Grid item xs={8}>
+                                    <Stack justifyContent='flex-start'>
+                                        <p> Room to sell</p>
+                                    </Stack>
+                                </Grid>
+                                <Grid item xs={2}>
+                                    <Stack justifyContent='flex-end'>
+                                        <CustomizedIconButton sx={{ width: 25, height: 25 }}>
+                                            <EditIcon sx={{ width: 12, height: 12 }} />
+                                        </CustomizedIconButton>
+                                    </Stack>
+                                </Grid>
+                            </Grid>
+                        </td>
                     </tr>
                     <tr>
                         <td style={{ textAlign: 'right', paddingRight: '10px' }}>Booked</td>

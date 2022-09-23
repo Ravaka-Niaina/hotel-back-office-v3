@@ -2,6 +2,8 @@ import React , { useEffect , useState , useContext } from 'react';
 import debounce from 'lodash.debounce';
 import { Grid , Stack } from '@mui/material';
 
+
+import EditIcon from '@mui/icons-material/Edit';
 import PersonIcon from '@mui/icons-material/Person';
 
 import StatusCell from './cells/StatusCell';
@@ -9,6 +11,7 @@ import StatusCell from './cells/StatusCell';
 import { CellRoomEditorPopper, SelectableRoomCell } from './cells/room';
 import { CellRatePlanEditorPopper , SelectableRatePlanCell } from './cells/rateplan';
 
+import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
 import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
 import CalendarValueSide from './CalendarValueSide';
 import CalendarAttributeSide from './CalendarAttributeSide';
@@ -159,17 +162,29 @@ const CalendarEditor = ({room , dateRange , reloadRoom}) => {
                     <tr key={index}>
                         <td style={{ paddingLeft:'50% !important',letterSpacing:'0.2em'}}>
                             
-                            <Stack sx={{p:1}}direction='row' spacing={0} alignItems='center' justifyContent='center'>
+                            <Grid direction='row' spacing={1} justifyContent='space-around' container alignItems='center'>
+                                <Grid item xs={8}>
+                                    <Stack sx={{ p: 1 }} direction='row' spacing={0} alignItems='center' justifyContent='flex-start'>
+                                        {
+                                            [...new Array(tarif.prixTarif[0]?.versions[index]?.nbPers)].map((e, i) => {
+                                                return (
+                                                    <PersonIcon key={i} />
+                                                )
+                                            })
+                                        }
+                                    </Stack>
+                                </Grid>
+                                <Grid item xs={2}>
+                                    <Stack justifyContent='flex-end'>
+                                        <CustomizedIconButton sx={{ width: 25, height: 25 }}>
+                                            <EditIcon sx={{ width: 12, height: 12 }} />
+                                        </CustomizedIconButton>
+                                    </Stack>          
+                                </Grid>
                                 
-                                {
-                                    [...new Array(tarif.prixTarif[0]?.versions[index]?.nbPers)].map((e, i) => {
-                                        return (
-                                            <PersonIcon key={i} />
-                                        )
-                                    })
-                                }
-    
-                            </Stack>
+                                
+                            </Grid>
+                            
                                 
                         </td>
                     </tr>
