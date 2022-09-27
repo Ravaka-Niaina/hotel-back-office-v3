@@ -1,14 +1,11 @@
 import PropTypes from 'prop-types';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-  Dialog,
-  DialogActions,
   FormControlLabel,
   RadioGroup,
   FormGroup,
   FormLabel,
-  DialogContent,
   Button,
   Stack,
 } from '@mui/material';
@@ -16,19 +13,18 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
-import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedRadio from '../CustomizedComponents/CustomizedRadio';
 import CustomizedCheckbox from '../CustomizedComponents/CustomizedCheckbox';
-import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
-import Iconify from '../Iconify';
+import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
+import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
+import { lightBackgroundToTop } from '../CustomizedComponents/NeumorphismTheme';
 import { ThemeContext } from '../context/Wrapper';
 import { formatDate } from '../../services/Util';
 import { getRoomTypeAndCancelingPoliticList, getRatePlanDetails, updateRatePlan } from '../../services/RatePlan';
 
-const ModifyRatePlanDialog = ({ reload, ratePlanId }) => {
+const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
   const context = useContext(ThemeContext);
-  const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState(false);
   const [ratePlan, setRatePlan] = useState({
     _id: ratePlanId,
@@ -208,7 +204,7 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId }) => {
       updateRatePlan(formatPayloadToSend(), idToken)
         .then((result) => {
           if (result.data.status === 200) {
-            setOpen(false);
+            handleClose();
             reload();
             context.changeResultSuccessMessage('Enregistrement effectué');
             context.showResultSuccess(true);
@@ -232,28 +228,26 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId }) => {
     }
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
-    getItems();
-  };
-
   const handleClose = () => {
-    setOpen(false);
+    navigate('list')
   };
+  useEffect(() => {
+    getItems();
+  },[])
   return (
     <>
-      <CustomizedIconButton variant="contained" onClick={handleClickOpen}>
-        <Iconify icon="eva:edit-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
-      </CustomizedIconButton>
-      <Dialog open={open} onClose={handleClose} maxWidth={'md'}>
-        <CustomizedDialogTitle text="Modifier le plan tarifaire" />
-        <DialogContent sx={{ backgroundColor: '#E8F0F8', pt: 20, pr: 2, pl: 2 }}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <CustomizedTitle text="Modifier le plan tarifaire" size={20} />
+        <CustomizedButton onClick={handleClose} text='retour' component={RouterLink} to="#" />
+      </Stack>
+      <CustomizedPaperOutside sx={{ ...lightBackgroundToTop, background: '#E3EDF7', p: 5, minHeight: '100vh' }}>
+        <Stack justifyContent='flex-start' spacing={2} >
+          <CustomizedTitle text="Nom" size={16} />
           <Stack
             justifyContent="space-between"
             alignItems="center"
             direction={{ xs: 'column', sm: 'row' }}
             spacing={{ xs: 1, sm: 2, md: 4 }}
-            sx={{ p: 2, width: 1 }}
           >
             <CustomizedInput
               value={ratePlan.french_name}
@@ -292,8 +286,8 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId }) => {
               })}
             />
           </Stack>
-          <h4>Description</h4>
-          <Stack sx={{ p: 2 }} direction="column" spacing={3}>
+          <CustomizedTitle text="Description" size={16} />
+          <Stack  direction="column" spacing={3}>
             <CustomizedInput
               value={ratePlan.french_description}
               onChange={handleChange}
@@ -337,8 +331,8 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId }) => {
               })}
             />
           </Stack>
-          <h4>Date de réservation</h4>
-          <Stack sx={{ p: 2 }} direction="column" spacing={3}>
+          <CustomizedTitle text="Date de réservation" size={16} />
+          <Stack  direction="column" spacing={3}>
             <FormGroup>
               <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
                 Quand les clients peuvent-ils réserver chez vous pour bénéficier de ce tarif?
@@ -399,8 +393,8 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId }) => {
               </LocalizationProvider>
             </FormGroup>
           </Stack>
-          <h4>Date de séjour</h4>
-          <Stack sx={{ p: 2 }} direction="column" spacing={3}>
+          <CustomizedTitle text="Date de séjour" size={16} />
+          <Stack direction="column" spacing={3}>
             <FormGroup>
               <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
                 Quand les clients peuvent-ils séjourner chez vous pour bénéficier de ce tarif ? Sélectionner une période
@@ -447,8 +441,8 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId }) => {
               </RadioGroup>
             </FormGroup>
           </Stack>
-          <h4>Lead</h4>
-          <Stack sx={{ p: 2 }} direction="column" spacing={3}>
+          <CustomizedTitle text="Lead" size={16} />
+          <Stack direction="column" spacing={3}>
             <FormGroup>
               <RadioGroup aria-labelledby="demo-controlled-radio-buttons-group" name="controlled-radio-buttons-group">
                 <FormControlLabel
@@ -556,7 +550,7 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId }) => {
               </RadioGroup>
             </FormGroup>
           </Stack>
-          <h4>Chambres attribuées</h4>
+          <CustomizedTitle text="Chambres attribuées" size={16} />
           <Stack sx={{ p: 2 }} direction="column" spacing={3}>
             <FormGroup>
               <div style={{ paddingLeft: '2em', paddingRight: '2em' }}>
@@ -575,7 +569,7 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId }) => {
               </div>
             </FormGroup>
           </Stack>
-          <h4>Politiques d'annulation</h4>
+          <CustomizedTitle text="Politiques d'annulation" size={16} />
           <Stack sx={{ p: 2 }} direction="column" spacing={3}>
             <FormGroup>
               <div style={{ paddingLeft: '2em', paddingRight: '2em' }}>
@@ -594,14 +588,12 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId }) => {
               </div>
             </FormGroup>
           </Stack>
-        </DialogContent>
-        <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px'}}>
-          <Button onClick={handleClose} sx={{ fontSize: 12 }}>
+          <Button onClick={handleClose} sx={{ fontSize: 12 , textTransform:'none' }}>
             Annuler
           </Button>
           <CustomizedButton text="Enregistrer modification" onClick={modifyRatePlan} component={RouterLink} to="#"/>
-        </DialogActions>
-      </Dialog>
+        </Stack>  
+      </CustomizedPaperOutside>
     </>
   );
 };

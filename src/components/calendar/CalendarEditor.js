@@ -164,11 +164,18 @@ const CalendarEditor = ({room , dateRange , reloadRoom}) => {
                             
                             <Grid direction='row' spacing={1} justifyContent='space-around' container alignItems='center'>
                                 <Grid item xs={8}>
-                                    <Stack sx={{ p: 1 }} direction='row' spacing={0} alignItems='center' justifyContent='flex-start'>
+                                    <Stack sx={{ p: 1 }} direction='row' spacing={0} alignItems='flex-end' justifyContent='flex-start'>
                                         {
-                                            [...new Array(tarif.prixTarif[0]?.versions[index]?.nbPers)].map((e, i) => {
+                                            [...new Array(tarif.prixTarif[0]?.versions[index]?.adultsNum)].map((e, i) => {
                                                 return (
                                                     <PersonIcon key={i} />
+                                                )
+                                            })
+                                        }
+                                        {
+                                            [...new Array(tarif.prixTarif[0]?.versions[index]?.childrenNum)].map((e, i) => {
+                                                return (
+                                                    <PersonIcon key={i} sx={{ fontSize: 15 }} />
                                                 )
                                             })
                                         }

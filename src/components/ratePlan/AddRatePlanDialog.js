@@ -2,13 +2,10 @@ import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-  Dialog,
-  DialogActions,
   FormControlLabel,
   RadioGroup,
   FormGroup,
   FormLabel,
-  DialogContent,
   Button,
   Stack,
 } from '@mui/material';
@@ -17,16 +14,17 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { ThemeContext } from '../context/Wrapper';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
-import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedRadio from '../CustomizedComponents/CustomizedRadio';
 import CustomizedCheckbox from '../CustomizedComponents/CustomizedCheckbox';
+import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
+import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
+import { lightBackgroundToTop } from '../CustomizedComponents/NeumorphismTheme';
 import { formatDate } from '../../services/Util';
 import { getRoomTypeAndCancelingPoliticList, createRatePlan } from '../../services/RatePlan';
 
-const AddRatePlanDialog = ({ reload }) => {
+const AddRatePlanDialog = ({ reload , navigate}) => {
   const context = useContext(ThemeContext);
-  const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState(false);
   const [ratePlan, setRatePlan] = useState({
     french_name: '',
@@ -54,6 +52,7 @@ const AddRatePlanDialog = ({ reload }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const getItems = () => {
+    context.showLoader(true);
     getRoomTypeAndCancelingPoliticList()
       .then((result) => {
         if (result.data.listType) {
@@ -64,6 +63,9 @@ const AddRatePlanDialog = ({ reload }) => {
       .catch(() => {
         context.changeResultErrorMessage(`La liste des type de chambre  n'a pas pu être chargé`);
         context.showResultError(true);
+      })
+      .finally(() => {
+        context.showLoader(false);
       });
   };
   const handleChangeAssignedList = (id, field) => {
@@ -119,7 +121,6 @@ const AddRatePlanDialog = ({ reload }) => {
       (newRatePlan.lead_min || newRatePlan.no_lead_min) &&
       (newRatePlan.lead_max || newRatePlan.no_lead_min) &&
       Object.values(errors).every((x) => x === '');
-
     return isValid;
   };
 
@@ -150,372 +151,371 @@ const AddRatePlanDialog = ({ reload }) => {
   };
 
   const addNewRatePlan = () => {
-    validate(ratePlan);
-    if (formIsValid(ratePlan)) {
-      const idToken = JSON.parse(localStorage.getItem('id_token'));
-      context.showLoader(true);
-      createRatePlan(formatPayloadToSend(), idToken)
-        .then((result) => {
-          if (result.data.status === 200) {
-            setOpen(false);
-            reload();
-            context.changeResultSuccessMessage('Enregistrement effectué');
-            context.showResultSuccess(true);
-          } else if (result.data.message) {
-            const { message } = result.data
-            context.changeResultErrorMessage(message);
+    try{
+      validate(ratePlan);
+      if (formIsValid(ratePlan)) {
+        const idToken = localStorage.getItem('id_token')
+        context.showLoader(true);
+        createRatePlan(formatPayloadToSend(), idToken)
+          .then((result) => {
+            if (result.data.status === 200) {
+              handleClose();
+              reload();
+              context.changeResultSuccessMessage('Enregistrement effectué');
+              context.showResultSuccess(true);
+            } else if (result.data.message) {
+              const { message } = result.data
+              context.changeResultErrorMessage(message);
+              context.showResultError(true);
+            } else if (result.data.errors) {
+              const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+              const indication = result.data.errors[item];
+              const message = `${item}: ${indication}`;
+              context.changeResultErrorMessage(message);
+              context.showResultError(true);
+            }
+          })
+          .catch(() => {
+            context.changeResultErrorMessage('Enregistrement non effectué');
             context.showResultError(true);
-          } else if (result.data.errors) {
-            const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
-            const indication = result.data.errors[item];
-            const message = `${item}: ${indication}`;
-            context.changeResultErrorMessage(message);
-            context.showResultError(true);
-          }
-        })
-        .catch(() => {
-          context.changeResultErrorMessage('Enregistrement non effectué');
-          context.showResultError(true);
-        })
-        .finally(() => {
-          context.showLoader(false);
-        });
+          })
+          .finally(() => {
+            context.showLoader(false);
+          });
+      }
+    }catch(e){
+      context.changeResultErrorMessage(`Veuillez contacter l'administrateur: ${e.message}`);
+      context.showResultError(true);
     }
   };
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
-    setOpen(false);
+    navigate('list');
   };
   return (
     <>
-      <CustomizedButton onClick={handleClickOpen} text={`Ajouter`} component={RouterLink} to="#" />
-      <Dialog open={open} onClose={handleClose} maxWidth={'md'}>
-        <CustomizedDialogTitle text="Ajouter un nouveau plan tarifaire" />
-        <DialogContent sx={{ backgroundColor: '#E8F0F8', pt: 20, pr: 2, pl: 2 }}>
-          <Stack
-            justifyContent="space-between"
-            alignItems="center"
-            direction={{ xs: 'column', sm: 'row' }}
-            spacing={{ xs: 1, sm: 2, md: 4 }}
-            sx={{ p: 2, width: 1 }}
-          >
-            <CustomizedInput
-              value={ratePlan.french_name}
-              onChange={handleChange}
-              placeholder="Nom"
-              sx={{ width: 1 }}
-              error={false}
-              margin="dense"
-              id="nom"
-              name="french_name"
-              label="Nom"
-              type="text"
-              fullWidth
-              required
-              {...(errors.french_name && {
-                error: true,
-                helpertext: errors.french_name,
-              })}
-            />
-            <CustomizedInput
-              value={ratePlan.english_name}
-              onChange={handleChange}
-              placeholder="Name"
-              sx={{ width: 1 }}
-              error={false}
-              margin="dense"
-              id="name"
-              name="english_name"
-              label="Name"
-              type="text"
-              fullWidth
-              required
-              {...(errors.english_name && {
-                error: true,
-                helpertext: errors.english_name,
-              })}
-            />
-          </Stack>
-          <h4>Description</h4>
-          <Stack sx={{ p: 2 }} direction="column" spacing={3}>
-            <CustomizedInput
-              value={ratePlan.french_description}
-              onChange={handleChange}
-              sx={{ width: 1 }}
-              placeholder="Votre description"
-              multiline
-              rows={2}
-              rowsmax={2}
-              error={false}
-              margin="dense"
-              id="nom"
-              name="french_description"
-              label="Description"
-              type="text"
-              fullWidth
-              required
-              {...(errors.french_description && {
-                error: true,
-                helpertext: errors.french_description,
-              })}
-            />
-            <CustomizedInput
-              value={ratePlan.english_description}
-              onChange={handleChange}
-              sx={{ width: 1 }}
-              placeholder="Votre descripiton..."
-              multiline
-              rows={2}
-              rowsmax={2}
-              error={false}
-              margin="dense"
-              id="english_description"
-              name="english_description"
-              label="Description en anglais"
-              type="text"
-              fullWidth
-              required
-              {...(errors.english_description && {
-                error: true,
-                helpertext: errors.english_description,
-              })}
-            />
-          </Stack>
-          <h4>Date de réservation</h4>
-          <Stack sx={{ p: 2 }} direction="column" spacing={3}>
-            <FormGroup>
-              <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
-                Quand les clients peuvent-ils réserver chez vous pour bénéficier de ce tarif?
-              </FormLabel>
-              <RadioGroup
-                defaultValue="true"
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <CustomizedTitle text="Ajouter plan tarifaire" size={20} />
+        <CustomizedButton onClick={handleClose} text='retour' component={RouterLink} to="#" />
+      </Stack>
+      <CustomizedPaperOutside sx={{ ...lightBackgroundToTop, background: '#E3EDF7', p: 5, minHeight: '100vh' }}>
+        <Stack justifyContent='flex-start' spacing={2} >
+          <CustomizedTitle text="Nom" size={16} />
+            <Stack
+              justifyContent="space-between"
+              alignItems="center"
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={{ xs: 1, sm: 2, md: 4 }}
+            >
+              <CustomizedInput
+                value={ratePlan.french_name}
                 onChange={handleChange}
-                name="booking_all_time"
-                aria-labelledby="demo-controlled-radio-buttons-group"
-              >
-                <FormControlLabel value="true" control={<CustomizedRadio />} label="A tout moment" />
-                <FormControlLabel value="false" control={<CustomizedRadio />} label="Sélectionner une période" />
-              </RadioGroup>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                placeholder="Nom"
+                sx={{ width: 1 }}
+                error={false}
+                margin="dense"
+                id="nom"
+                name="french_name"
+                label="Nom"
+                type="text"
+                fullWidth
+                required
+                {...(errors.french_name && {
+                  error: true,
+                  helpertext: errors.french_name,
+                })}
+              />
+              <CustomizedInput
+                value={ratePlan.english_name}
+                onChange={handleChange}
+                placeholder="Name"
+                sx={{ width: 1 }}
+                error={false}
+                margin="dense"
+                id="name"
+                name="english_name"
+                label="Name"
+                type="text"
+                fullWidth
+                required
+                {...(errors.english_name && {
+                  error: true,
+                  helpertext: errors.english_name,
+                })}
+              />
+            </Stack>
+            <CustomizedTitle text="Description" size={16} />
+            <Stack  direction="column" spacing={3}>
+              <CustomizedInput
+                value={ratePlan.french_description}
+                onChange={handleChange}
+                sx={{ width: 1 }}
+                placeholder="Votre description"
+                multiline
+                rows={2}
+                rowsmax={2}
+                error={false}
+                margin="dense"
+                id="nom"
+                name="french_description"
+                label="Description"
+                type="text"
+                fullWidth
+                required
+                {...(errors.french_description && {
+                  error: true,
+                  helpertext: errors.french_description,
+                })}
+              />
+              <CustomizedInput
+                value={ratePlan.english_description}
+                onChange={handleChange}
+                sx={{ width: 1 }}
+                placeholder="Votre descripiton..."
+                multiline
+                rows={2}
+                rowsmax={2}
+                error={false}
+                margin="dense"
+                id="english_description"
+                name="english_description"
+                label="Description en anglais"
+                type="text"
+                fullWidth
+                required
+                {...(errors.english_description && {
+                  error: true,
+                  helpertext: errors.english_description,
+                })}
+              />
+            </Stack>
+            <CustomizedTitle text="Date de réservation" size={16} />
+            <Stack  direction="column" spacing={3}>
+              <FormGroup>
+                <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
+                  Quand les clients peuvent-ils réserver chez vous pour bénéficier de ce tarif?
+                </FormLabel>
+                <RadioGroup
+                  defaultValue="true"
+                  onChange={handleChange}
+                  name="booking_all_time"
+                  aria-labelledby="demo-controlled-radio-buttons-group"
+                >
+                  <FormControlLabel value="true" control={<CustomizedRadio />} label="A tout moment" />
+                  <FormControlLabel value="false" control={<CustomizedRadio />} label="Sélectionner une période" />
+                </RadioGroup>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <Stack
+                    justifyContent="space-between"
+                    alignItems="center"
+                    direction={{ xs: 'column', sm: 'row' }}
+                    spacing={{ xs: 1, sm: 2, md: 4 }}
+                    sx={{ p: 2, width: 1 }}
+                  >
+                    <MobileDatePicker
+                      disabled={ratePlan.booking_all_time === 'true'}
+                      label="Debut reservation"
+                      inputFormat="dd/MM/yyyy"
+                      value={new Date(ratePlan.start_date_of_booking !== '' && ratePlan.start_date_of_booking)}
+                      onChange={(e) =>
+                        setRatePlan({ ...ratePlan, start_date_of_booking: formatDate(e.toLocaleDateString('en-US')) })
+                      }
+                      renderInput={(params) => <CustomizedInput sx={{ width: 1 }} {...params} />}
+                    />
+                    <MobileDatePicker
+                      disabled={ratePlan.booking_all_time === 'true'}
+                      label="Fin reservation"
+                      inputFormat="dd/MM/yyyy"
+                      value={new Date(ratePlan.end_date_of_booking !== '' && ratePlan.end_date_of_booking)}
+                      onChange={(e) =>
+                        setRatePlan({ ...ratePlan, end_date_of_booking: formatDate(e.toLocaleDateString('en-US')) })
+                      }
+                      renderInput={(params) => <CustomizedInput sx={{ width: 1 }} {...params} />}
+                    />
+                  </Stack>
+                </LocalizationProvider>
+              </FormGroup>
+            </Stack>
+            <CustomizedTitle text="Date de séjour" size={16} />
+            <Stack  direction="column" spacing={3}>
+              <FormGroup>
+                <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
+                  Quand les clients peuvent-ils séjourner chez vous pour bénéficier de ce tarif ? Sélectionner une période
+                </FormLabel>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <Stack
+                    justifyContent="space-between"
+                    alignItems="center"
+                    direction={{ xs: 'column', sm: 'row' }}
+                    spacing={{ xs: 1, sm: 2, md: 4 }}
+                    sx={{ p: 2, width: 1 }}
+                  >
+                    <MobileDatePicker
+                      label="Date debut sejour"
+                      inputFormat="dd/MM/yyyy"
+                      value={new Date(ratePlan.start_date_of_stay !== '' && ratePlan.start_date_of_stay)}
+                      onChange={(e) =>
+                        setRatePlan({ ...ratePlan, start_date_of_stay: formatDate(e.toLocaleDateString('en-US')) })
+                      }
+                      renderInput={(params) => <CustomizedInput sx={{ width: 1 }} {...params} />}
+                    />
+                    <MobileDatePicker
+                      disabled={ratePlan.no_end_date_of_stay}
+                      label="Date fin sejours"
+                      inputFormat="dd/MM/yyyy"
+                      value={new Date(ratePlan.end_date_of_stay !== '' && ratePlan.end_date_of_stay)}
+                      onChange={(e) =>
+                        setRatePlan({ ...ratePlan, end_date_of_stay: formatDate(e.toLocaleDateString('en-US')) })
+                      }
+                      renderInput={(params) => <CustomizedInput sx={{ width: 1 }} {...params} />}
+                    />
+                  </Stack>
+                </LocalizationProvider>
+                <RadioGroup aria-labelledby="demo-controlled-radio-buttons-group" name="controlled-radio-buttons-group">
+                  <FormControlLabel
+                    control={
+                      <CustomizedRadio
+                        onClick={() => setRatePlan({ ...ratePlan, no_end_date_of_stay: !ratePlan.no_end_date_of_stay })}
+                        checked={ratePlan.no_end_date_of_stay}
+                      />
+                    }
+                    label="Pas de fin"
+                  />
+                </RadioGroup>
+              </FormGroup>
+            </Stack>
+            <CustomizedTitle text="Lead" size={16} />
+            <Stack sx={{ p: 2 }} direction="column" spacing={3}>
+              <FormGroup>
+                <RadioGroup aria-labelledby="demo-controlled-radio-buttons-group" name="controlled-radio-buttons-group">
+                  <FormControlLabel
+                    control={
+                      <CustomizedRadio
+                        onClick={() => {
+                          if (ratePlan.no_lead_min) {
+                            setRatePlan({
+                              ...ratePlan,
+                              no_lead_min: !ratePlan.no_lead_min,
+                              lead_min: 0,
+                              lead_max: 0,
+                            });
+                          } else {
+                            setRatePlan({
+                              ...ratePlan,
+                              no_lead_min: !ratePlan.no_lead_min,
+                              lead_min: 99999,
+                              lead_max: 0,
+                            });
+                          }
+                        }}
+                        checked={ratePlan.no_lead_min}
+                      />
+                    }
+                    label="Pas de fin"
+                  />
+                </RadioGroup>
                 <Stack
                   justifyContent="space-between"
                   alignItems="center"
                   direction={{ xs: 'column', sm: 'row' }}
                   spacing={{ xs: 1, sm: 2, md: 4 }}
-                  sx={{ p: 2, width: 1 }}
                 >
-                  <MobileDatePicker
-                    disabled={ratePlan.booking_all_time === 'true'}
-                    label="Debut reservation"
-                    inputFormat="dd/MM/yyyy"
-                    value={new Date(ratePlan.start_date_of_booking !== '' && ratePlan.start_date_of_booking)}
-                    onChange={(e) =>
-                      setRatePlan({ ...ratePlan, start_date_of_booking: formatDate(e.toLocaleDateString('en-US')) })
-                    }
-                    renderInput={(params) => <CustomizedInput sx={{ width: 1 }} {...params} />}
+                  <CustomizedInput
+                    value={ratePlan.lead_min === '' || ratePlan.lead_min === null ? '' : parseInt(ratePlan.lead_min, 10)}
+                    onChange={handleChange}
+                    disabled={ratePlan.no_lead_min}
+                    sx={{ width: 1 }}
+                    placeholder="Lead minimum"
+                    error={false}
+                    margin="dense"
+                    id="english_description"
+                    name="lead_min"
+                    label="Lead minimum"
+                    type="number"
+                    fullWidth
+                    required
+                    {...(errors.lead_min &&
+                      !ratePlan.no_lead_min && {
+                        error: true,
+                        helpertext: errors.lead_min,
+                      })}
                   />
-                  <MobileDatePicker
-                    disabled={ratePlan.booking_all_time === 'true'}
-                    label="Fin reservation"
-                    inputFormat="dd/MM/yyyy"
-                    value={new Date(ratePlan.end_date_of_booking !== '' && ratePlan.end_date_of_booking)}
-                    onChange={(e) =>
-                      setRatePlan({ ...ratePlan, end_date_of_booking: formatDate(e.toLocaleDateString('en-US')) })
-                    }
-                    renderInput={(params) => <CustomizedInput sx={{ width: 1 }} {...params} />}
+                  <CustomizedInput
+                    value={ratePlan.lead_max === '' || ratePlan.lead_max === null ? '' : parseInt(ratePlan.lead_max, 10)}
+                    onChange={handleChange}
+                    disabled={ratePlan.no_lead_min}
+                    sx={{ width: 1 }}
+                    placeholder="lead maximum avant l’arrivée"
+                    error={false}
+                    margin="dense"
+                    id="english_description"
+                    name="lead_max"
+                    label="lead maximum avant l’arrivée"
+                    type="number"
+                    fullWidth
+                    required
+                    {...(errors.lead_max &&
+                      !ratePlan.no_lead_min && {
+                        error: true,
+                        helpertext: errors.lead_max,
+                      })}
                   />
                 </Stack>
-              </LocalizationProvider>
-            </FormGroup>
-          </Stack>
-          <h4>Date de séjour</h4>
-          <Stack sx={{ p: 2 }} direction="column" spacing={3}>
-            <FormGroup>
-              <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
-                Quand les clients peuvent-ils séjourner chez vous pour bénéficier de ce tarif ? Sélectionner une période
-              </FormLabel>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <Stack
-                  justifyContent="space-between"
-                  alignItems="center"
-                  direction={{ xs: 'column', sm: 'row' }}
-                  spacing={{ xs: 1, sm: 2, md: 4 }}
-                  sx={{ p: 2, width: 1 }}
+                <RadioGroup
+                  row
+                  defaultValue="true"
+                  onChange={handleChange}
+                  name="is_lead_hour"
+                  aria-labelledby="demo-controlled-radio-buttons-group"
                 >
-                  <MobileDatePicker
-                    label="Date debut sejour"
-                    inputFormat="dd/MM/yyyy"
-                    value={new Date(ratePlan.start_date_of_stay !== '' && ratePlan.start_date_of_stay)}
-                    onChange={(e) =>
-                      setRatePlan({ ...ratePlan, start_date_of_stay: formatDate(e.toLocaleDateString('en-US')) })
-                    }
-                    renderInput={(params) => <CustomizedInput sx={{ width: 1 }} {...params} />}
-                  />
-                  <MobileDatePicker
-                    disabled={ratePlan.no_end_date_of_stay}
-                    label="Date fin sejours"
-                    inputFormat="dd/MM/yyyy"
-                    value={new Date(ratePlan.end_date_of_stay !== '' && ratePlan.end_date_of_stay)}
-                    onChange={(e) =>
-                      setRatePlan({ ...ratePlan, end_date_of_stay: formatDate(e.toLocaleDateString('en-US')) })
-                    }
-                    renderInput={(params) => <CustomizedInput sx={{ width: 1 }} {...params} />}
-                  />
-                </Stack>
-              </LocalizationProvider>
-              <RadioGroup aria-labelledby="demo-controlled-radio-buttons-group" name="controlled-radio-buttons-group">
-                <FormControlLabel
-                  control={
-                    <CustomizedRadio
-                      onClick={() => setRatePlan({ ...ratePlan, no_end_date_of_stay: !ratePlan.no_end_date_of_stay })}
-                      checked={ratePlan.no_end_date_of_stay}
+                  <FormControlLabel value="true" control={<CustomizedRadio />} label="hour" />
+                  <FormControlLabel value="false" control={<CustomizedRadio />} label="day" />
+                </RadioGroup>
+              </FormGroup>
+            </Stack>
+            <CustomizedTitle text="Chambres attribuées" size={16} />
+            <Stack sx={{ p: 2 }} direction="column" spacing={3}>
+              <FormGroup>
+                <div style={{ paddingLeft: '2em', paddingRight: '2em' }}>
+                  {listRoom.map((k) => (
+                    <FormControlLabel
+                      key={k._id}
+                      control={
+                        <CustomizedCheckbox
+                          checked={ratePlan.assigned_room.find((elem) => elem === k._id) !== undefined}
+                          onClick={() => handleChangeAssignedList(k._id, 'assigned_room')}
+                        />
+                      }
+                      label={k.nom}
                     />
-                  }
-                  label="Pas de fin"
-                />
-              </RadioGroup>
-            </FormGroup>
-          </Stack>
-          <h4>Lead</h4>
-          <Stack sx={{ p: 2 }} direction="column" spacing={3}>
-            <FormGroup>
-              <RadioGroup aria-labelledby="demo-controlled-radio-buttons-group" name="controlled-radio-buttons-group">
-                <FormControlLabel
-                  control={
-                    <CustomizedRadio
-                      onClick={() => {
-                        if (ratePlan.no_lead_min) {
-                          setRatePlan({
-                            ...ratePlan,
-                            no_lead_min: !ratePlan.no_lead_min,
-                            lead_min: 0,
-                            lead_max: 0,
-                          });
-                        } else {
-                          setRatePlan({
-                            ...ratePlan,
-                            no_lead_min: !ratePlan.no_lead_min,
-                            lead_min: 99999,
-                            lead_max: 0,
-                          });
-                        }
-                      }}
-                      checked={ratePlan.no_lead_min}
+                  ))}
+                </div>
+              </FormGroup>
+            </Stack>
+            <CustomizedTitle text="Politiques d'annulation" size={16} />
+            <Stack sx={{ p: 2 }} direction="column" spacing={3}>
+              <FormGroup>
+                <div style={{ paddingLeft: '2em', paddingRight: '2em' }}>
+                  {listPolitic.map((k) => (
+                    <FormControlLabel
+                      key={k._id}
+                      control={
+                        <CustomizedCheckbox
+                          checked={ratePlan.assigned_canceling_politic.find((elem) => elem === k._id) !== undefined}
+                          onClick={() => handleChangeAssignedList(k._id, 'assigned_canceling_politic')}
+                        />
+                      }
+                      label={k.nom}
                     />
-                  }
-                  label="Pas de fin"
-                />
-              </RadioGroup>
-              <Stack
-                justifyContent="space-between"
-                alignItems="center"
-                direction={{ xs: 'column', sm: 'row' }}
-                spacing={{ xs: 1, sm: 2, md: 4 }}
-                sx={{ p: 2, width: 1 }}
-              >
-                <CustomizedInput
-                  value={ratePlan.lead_min === '' || ratePlan.lead_min === null ? '' : parseInt(ratePlan.lead_min, 10)}
-                  onChange={handleChange}
-                  disabled={ratePlan.no_lead_min}
-                  sx={{ width: 1 }}
-                  placeholder="Lead minimum"
-                  error={false}
-                  margin="dense"
-                  id="english_description"
-                  name="lead_min"
-                  label="Lead minimum"
-                  type="number"
-                  fullWidth
-                  required
-                  {...(errors.lead_min &&
-                    !ratePlan.no_lead_min && {
-                      error: true,
-                      helpertext: errors.lead_min,
-                    })}
-                />
-                <CustomizedInput
-                  value={ratePlan.lead_max === '' || ratePlan.lead_max === null ? '' : parseInt(ratePlan.lead_max, 10)}
-                  onChange={handleChange}
-                  disabled={ratePlan.no_lead_min}
-                  sx={{ width: 1 }}
-                  placeholder="lead maximum avant l’arrivée"
-                  error={false}
-                  margin="dense"
-                  id="english_description"
-                  name="lead_max"
-                  label="lead maximum avant l’arrivée"
-                  type="number"
-                  fullWidth
-                  required
-                  {...(errors.lead_max &&
-                    !ratePlan.no_lead_min && {
-                      error: true,
-                      helpertext: errors.lead_max,
-                    })}
-                />
-              </Stack>
-              <RadioGroup
-                row
-                defaultValue="true"
-                onChange={handleChange}
-                name="is_lead_hour"
-                aria-labelledby="demo-controlled-radio-buttons-group"
-              >
-                <FormControlLabel value="true" control={<CustomizedRadio />} label="hour" />
-                <FormControlLabel value="false" control={<CustomizedRadio />} label="day" />
-              </RadioGroup>
-            </FormGroup>
-          </Stack>
-          <h4>Chambres attribuées</h4>
-          <Stack sx={{ p: 2 }} direction="column" spacing={3}>
-            <FormGroup>
-              <div style={{ paddingLeft: '2em', paddingRight: '2em' }}>
-                {listRoom.map((k) => (
-                  <FormControlLabel
-                    key={k._id}
-                    control={
-                      <CustomizedCheckbox
-                        checked={ratePlan.assigned_room.find((elem) => elem === k._id) !== undefined}
-                        onClick={() => handleChangeAssignedList(k._id, 'assigned_room')}
-                      />
-                    }
-                    label={k.nom}
-                  />
-                ))}
-              </div>
-            </FormGroup>
-          </Stack>
-          <h4>Politiques d'annulation</h4>
-          <Stack sx={{ p: 2 }} direction="column" spacing={3}>
-            <FormGroup>
-              <div style={{ paddingLeft: '2em', paddingRight: '2em' }}>
-                {listPolitic.map((k) => (
-                  <FormControlLabel
-                    key={k._id}
-                    control={
-                      <CustomizedCheckbox
-                        checked={ratePlan.assigned_canceling_politic.find((elem) => elem === k._id) !== undefined}
-                        onClick={() => handleChangeAssignedList(k._id, 'assigned_canceling_politic')}
-                      />
-                    }
-                    label={k.nom}
-                  />
-                ))}
-              </div>
-            </FormGroup>
-          </Stack>
-        </DialogContent>
-        <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px' }}>
-          <Button onClick={handleClose} sx={{ fontSize: 12 }}>
-            Annuler
-          </Button>
-          <CustomizedButton text="Enregistrer" onClick={addNewRatePlan} component={RouterLink} to="#"/>
-        </DialogActions>
-      </Dialog>
+                  ))}
+                </div>
+              </FormGroup>
+            </Stack>
+            <Button onClick={handleClose} sx={{ fontSize: 12,textTransform:'none !important' }}>
+              Annuler
+            </Button>
+            <CustomizedButton text="Enregistrer" onClick={addNewRatePlan} component={RouterLink} to="#"/>
+          </Stack>  
+        </CustomizedPaperOutside>
     </>
   );
 };

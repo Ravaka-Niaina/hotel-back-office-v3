@@ -21,24 +21,30 @@ export const getSidebarConfig = async (context) => {
     {
       title: 'tableau de bord',
       path: '/dashboard/app',
-      icon: getIcon('eva:pie-chart-2-fill'),
+      icon: getIcon('wpf:statistics'),
       userIsAllowed: getAllowedRoles('/dashboard/app'),
       isAuthorized: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/app')),
     },
     {
-      title: 'rapport',
+      title: 'rapports',
       path: '/dashboard/rapport',
       icon: getIcon('eva:pie-chart-2-fill'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/rapport')),
     },
     {
-      title: 'plan tarifaire',
+      title: 'reservations',
+      path: '/dashboard/booking',
+      icon: getIcon('teenyicons:appointments-solid'),
+      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/booking')),
+    },
+    {
+      title: 'plans tarifaires',
       path: '/dashboard/ratePlan',
       icon: getIcon('eva:file-text-fill'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/ratePlan')),
       children: [
         {
-          title: 'tarif',
+          title: 'tarifs',
           path: '/dashboard/ratePlan',
           userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/ratePlan')),
         },
@@ -62,7 +68,7 @@ export const getSidebarConfig = async (context) => {
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/promotion')),
     },
     {
-      title: 'politique',
+      title: 'politiques',
       path: '/dashboard/politic',
       icon: getIcon('bxs:shield-alt-2'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/politic')),

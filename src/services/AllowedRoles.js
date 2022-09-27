@@ -18,6 +18,10 @@ export const getAllowedRoles = (pageSectionPath) => {
       allowedRoles: ['superAdmin', 'admin','partner'],
     },
     {
+      path: '/dashboard/booking',
+      allowedRoles: ['superAdmin', 'admin', 'partner'],
+    },
+    {
       path: '/dashboard/rapport',
       allowedRoles: ['superAdmin', 'admin','partner'],
     },

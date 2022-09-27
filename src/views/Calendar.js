@@ -108,6 +108,7 @@ const Calendar = () => {
         setLoading(true);
         getTcTarifPrix(payload)
             .then((result) => {
+                console.log(result);
                 if (result.data.status === 200) {
                     setRoomList(result.data.typeChambre);
                 }

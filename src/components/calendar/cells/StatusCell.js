@@ -36,13 +36,20 @@ const StatusCell = ({available,chambre,date,setChambre,index,isRatePlan = false,
         console.log(payload);
         saveRatePlanAvailability(payload)
             .then((result) => {
-                // console.log(result.data);
+                console.log(result.data);
                 if (result.data.status === 200) {
                     setChambre((prev) => {
                         return produce(prev, condition => {
                             condition.planTarifaire[index].prixTarif[subIndex].closed = !prev.planTarifaire[index].prixTarif[subIndex].closed;
                         });
                     });
+                }
+                else if(result.data.errors){
+                    const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+                    const indication = result.data.errors[item];
+                    const message = `${item}: ${indication}`;
+                    context.changeResultErrorMessage(message);
+                    context.showResultError(true);
                 }
                 else {
                     context.changeResultErrorMessage(`Changement du status impossible.`);

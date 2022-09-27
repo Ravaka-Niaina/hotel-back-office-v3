@@ -20,6 +20,7 @@ import TestFormulaire from '../../views/TestFormulaire';
 import HomeForm from '../../views/HomeForm';
 import RapportApp from '../../views/RapportApp';
 import EmailModel from '../../views/EmailModel';
+import Booking from '../../views/Booking';
 import Protected from '../../components/protected/Protected';
 import { getAllowedRoles } from '../../services/AllowedRoles';
 // ----------------------------------------------------------------------
@@ -46,6 +47,10 @@ export default function Router() {
         {
           path: 'homeForm',
           element: <Protected child={<HomeForm />} allowedRoles={getAllowedRoles(`${dashboardPath}/homeForm`)} />,
+        },
+        {
+          path: 'booking',
+          element: <Protected child={<Booking/>} allowedRoles={getAllowedRoles(`${dashboardPath}/booking`)} />,
         },
         {
           path: 'rapport',
