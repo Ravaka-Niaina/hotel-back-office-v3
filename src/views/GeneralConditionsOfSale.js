@@ -15,7 +15,7 @@ const GeneralConditionsOfSale = () => (
           <Stack spacing={2}>
             <div>
               <div>Conditions générales de vente</div>
-              <div>(Nom de l’hotel) variable</div>
+              <div>{JSON.parse(localStorage.getItem("user_attr")).hotel_name}</div>
             </div>
             <div>1.Objet</div>
             <div>Les présentes conditions générales définissent les droits et obligations des parties dans le cadre de la réservation à distance de services proposés notre établissement dont les coordonnées sont précisées dans le présent document de confirmation de réservation. Elles régissent toutes les étapes nécessaires à la réservation et au suivi de la réservation entre les parties contractantes. Le client reconnaît avoir pris connaissance et accepté les présentes conditions générales de vente et les conditions de vente du tarif réservé accessibles sur notre plateforme de réservation. Les présentes conditions générales de vente s'appliquent à toutes les réservations conclues par internet, via notre plateforme de réservation.</div>
