@@ -66,8 +66,6 @@ const CalendarEditor = ({room , dateRange , reloadRoom}) => {
     }, [selectedRatePlan]);
 
     useEffect(() => {
-        console.log('LOAd');
-        console.log(chambre);
         loadCells();
     }, [chambre]);
 
@@ -164,11 +162,18 @@ const CalendarEditor = ({room , dateRange , reloadRoom}) => {
                             
                             <Grid direction='row' spacing={1} justifyContent='space-around' container alignItems='center'>
                                 <Grid item xs={8}>
-                                    <Stack sx={{ p: 1 }} direction='row' spacing={0} alignItems='center' justifyContent='flex-start'>
+                                    <Stack sx={{ p: 1 }} direction='row' spacing={0} alignItems='flex-end' justifyContent='flex-start'>
                                         {
-                                            [...new Array(tarif.prixTarif[0]?.versions[index]?.nbPers)].map((e, i) => {
+                                            [...new Array(tarif.prixTarif[0]?.versions[index]?.adultsNum)].map((e, i) => {
                                                 return (
                                                     <PersonIcon key={i} />
+                                                )
+                                            })
+                                        }
+                                        {
+                                            [...new Array(tarif.prixTarif[0]?.versions[index]?.childrenNum)].map((e, i) => {
+                                                return (
+                                                    <PersonIcon key={i} sx={{ fontSize: 15 }} />
                                                 )
                                             })
                                         }
@@ -224,9 +229,7 @@ const CalendarEditor = ({room , dateRange , reloadRoom}) => {
                     <React.Fragment key={j}>
                         <tr key='ratePlan status'>
                             {
-                                tarif.prixTarif.map((p, i) => {
-                                    
-                                    return (
+                                tarif.prixTarif.map((p, i) => (
                                         <td className='status' key={i}>
                                             <StatusCell 
                                                 available={!p.closed} 
@@ -238,14 +241,11 @@ const CalendarEditor = ({room , dateRange , reloadRoom}) => {
                                                 isRatePlan
                                             />
                                         </td>
-                                    );
-                                })
+                                    ))
                             }
                         </tr>
                         {
-                            prixTarifList.map((prixElement)=>{
-                                return prixElement;
-                            })
+                            prixTarifList.map((prixElement)=>prixElement)
                         }
                     </React.Fragment>
                 ))
@@ -260,9 +260,7 @@ const CalendarEditor = ({room , dateRange , reloadRoom}) => {
                         </td>
                     </tr>
                     {
-                        prixTarifAttributeList.map((element)=>{
-                            return element;
-                        })
+                        prixTarifAttributeList.map((element)=>element)
                     }
                 </React.Fragment>
             ));

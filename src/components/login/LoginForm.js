@@ -70,6 +70,7 @@ export default function LoginForm() {
       .then((datas) => {
         const dataMessage = datas.data.message;
         const dataPartnerId = datas.data.partner_id;
+        console.log(datas);
         if (dataMessage === 'OK') {
           localStorage.setItem('partner_id', JSON.stringify(dataPartnerId));
           navigate('/verifycode');

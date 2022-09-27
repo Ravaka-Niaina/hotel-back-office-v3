@@ -2,23 +2,22 @@ import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 
-import { Dialog, DialogActions, DialogContent, Button, Stack, RadioGroup, FormControlLabel } from '@mui/material';
+import { Button, Stack, RadioGroup, FormControlLabel } from '@mui/material';
 
 import MapDialog from './MapDialog';
 import ListPicturePreview from './ListPicturePreview';
-import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedRadio from '../CustomizedComponents/CustomizedRadio';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
-import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
-import Iconify from '../Iconify';
+import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
+import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
+import { lightBackgroundToTop } from '../CustomizedComponents/NeumorphismTheme';
 import { ThemeContext } from '../context/Wrapper';
 import { updateHotel } from '../../services/Hotel';
 
 const ModifyHotelDialog = (props) => {
-  const { row, reload } = props;
+  const { row, reload , navigate } = props;
   const context = useContext(ThemeContext);
-  const [open, setOpen] = useState(false);
   const [pictureList, setPictureList] = useState(new Array(0));
   const [logo, setLogo] = useState(new Array(0));
   const [banner, setBanner] = useState(new Array(0));
@@ -189,31 +188,33 @@ const ModifyHotelDialog = (props) => {
       const idToken = localStorage.getItem('id_token');
       updateHotel(formatPayloadToSend(), idToken)
         .then((result) => {
+          console.log(result.data);
           if (result.data.status === 200) {
-            setOpen(false);
-            cleanHotelState();
-            reload();
+            handleClose();
             context.changeResultSuccessMessage('Enregistrement effectué');
             context.showResultSuccess(true);
           } else if (result.data.errors) {
             const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
             const indication = result.data.errors[item];
             const message = `${item}: ${indication}`;
-            context.showLoader(false);
             context.changeResultErrorMessage(message);
             context.showResultError(true);
           }
+          else{
+            context.changeResultErrorMessage("Une erreur est servenue, Veuillez contacter l'administrateur.");
+            context.showResultError(true);
+          }
         })
-        .catch(() => {
-          context.showLoader(false);
-          context.changeResultErrorMessage('Enregistrement non effectué');
+        .catch((e) => {
+          context.changeResultErrorMessage(e.message);
           context.showResultError(true);
+        })
+        .finally(()=>{
+          context.showLoader(false);
         });
     }
   };
-  const handleClickOpen = () => {
-    setOpen(true);
-
+  useEffect(()=>{
     setHotel({
       name: row.name,
       link: row.link,
@@ -235,10 +236,12 @@ const ModifyHotelDialog = (props) => {
       typography_h2: row.typography_h2,
       typography_h3: row.typography_h3,
     });
-  };
+    console.log(row);
+  },[]);    
+  
 
   const handleClose = () => {
-    setOpen(false);
+    navigate('list');
     cleanHotelState();
     reload();
   };
@@ -259,20 +262,29 @@ const ModifyHotelDialog = (props) => {
 
   return (
     <>
-      <CustomizedIconButton variant="contained" onClick={handleClickOpen}>
-        <Iconify icon="eva:edit-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
-      </CustomizedIconButton>
-      <Dialog open={open} onClose={handleClose} maxWidth={'md'} sx={{ overflowY: 'inherit !important' }}>
-        <CustomizedDialogTitle text="Modifier hotel" />
-        <DialogContent sx={{ backgroundColor: '#E8F0F8', pr: 2, pl: 2, overflowX: 'inherit !important' }}>
-          <Stack
-            justifyContent="space-between"
-            alignItems="flex-start"
-            direction={{ xs: 'column' }}
-            spacing={{ xs: 1, sm: 2, md: 4 }}
-            sx={{ p: 2, width: 1 }}
-          >
-            <Stack direction="row" spacing={2} alignItems="flex-start">
+      
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <CustomizedTitle size={20} text="Modifier cet hotel" />
+        <CustomizedButton onClick={handleClose} text="retour" variant="contained" component={RouterLink} to="#" />
+      </Stack>
+      <CustomizedPaperOutside
+        sx={{
+          ...lightBackgroundToTop,
+          minHeight: '100vh',
+          border: '1px white solid',
+          padding: 5,
+          width: 0.75,
+          margin: 'auto'
+        }}
+      >
+        <Stack
+          justifyContent="flex-start"
+          alignItems="strech"
+          direction={{ xs: 'column' }}
+          spacing={{ xs: 1, sm: 2, md: 4 }}
+        >
+            <CustomizedTitle text='Information hotel' />
+            <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent='space-between'>
               <CustomizedInput
                 defaultValue={row.name}
                 placeholder="nom"
@@ -306,7 +318,7 @@ const ModifyHotelDialog = (props) => {
                 })}
               />
             </Stack>
-            <Stack direction="row" spacing={2} alignItems="flex-start">
+            <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent='space-between'>
               <CustomizedInput
                 defaultValue={row.phoneNum}
                 placeholder="telephone"
@@ -340,7 +352,8 @@ const ModifyHotelDialog = (props) => {
                 })}
               />
             </Stack>
-            <Stack direction="row" spacing={2} alignItems="flex-start">
+            <CustomizedTitle text='Photos' />
+            <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent='space-between'>
               <CustomizedInput
                 defaultValue={row.address}
                 placeholder="ex:  Alarobia Antananarivo Antananarivo, 101"
@@ -374,8 +387,8 @@ const ModifyHotelDialog = (props) => {
                 })}
               />
             </Stack>
-            <h4>Photos</h4>
-            <Stack direction="row" spacing={2} alignItems="center">
+            <CustomizedTitle text='Photos' />
+            <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent='space-between'>
               <CustomizedInput
                 sx={{ width: 1 }}
                 id="photos"
@@ -391,8 +404,8 @@ const ModifyHotelDialog = (props) => {
             </Stack>
             <ListPicturePreview itemData={pictureList} setPictureList={setPictureList} />
 
-            <h4>Horaire</h4>
-            <Stack direction="row" spacing={2} alignItems="flex-start">
+            <CustomizedTitle text='Horaire' />
+            <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent='space-between'>
               <CustomizedInput
                 defaultValue={row.checkIn}
                 sx={{ width: 1 }}
@@ -423,7 +436,7 @@ const ModifyHotelDialog = (props) => {
               />
             </Stack>
 
-            <h4>Votre tarifs inclus déjà la TVA ?</h4>
+            <CustomizedTitle text='Votre tarifs inclus déjà la TVA ?' />
             <Stack spacing={1} alignItems="flex-start">
               <RadioGroup aria-labelledby="demo-controlled-radio-buttons-group" name="is_tva_included">
                 <FormControlLabel
@@ -457,10 +470,10 @@ const ModifyHotelDialog = (props) => {
                 />
               )}
             </Stack>
-            <h4>Age</h4>
+            <CustomizedTitle text='Age' />
             <Stack spacing={1}>
-              <h5>Enfant:</h5>
-              <Stack direction="row" spacing={2} alignItems="flex-start">
+              <CustomizedTitle text='Enfant' level={0} size={15} />
+              <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent='space-between'>
                 <CustomizedInput
                   defaultValue={row.minKidAge}
                   placeholder="ex: 4 ans"
@@ -493,10 +506,10 @@ const ModifyHotelDialog = (props) => {
                 />
               </Stack>
             </Stack>
-            <h4>Coordonnées gps</h4>
+            <CustomizedTitle text='Coordonnées gps' />
             <Stack spacing={1}>
               <MapDialog hotel={hotel} setHotel={setHotel} />
-              <Stack direction="row" spacing={2} alignItems="center">
+              <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent='space-between'>
                 <CustomizedInput
                   sx={{ width: 1 }}
                   value={hotel.location_lat}
@@ -546,6 +559,7 @@ const ModifyHotelDialog = (props) => {
               </Stack>
               <ListPicturePreview itemData={logo} setPictureList={setLogo} />
             </Stack>
+            <CustomizedTitle text='Themes (contenu front-office)' />
             <Stack spacing={1}>
               <Stack direction="row" spacing={2} alignItems="center">
                 <CustomizedInput
@@ -563,9 +577,9 @@ const ModifyHotelDialog = (props) => {
               </Stack>
               <ListPicturePreview itemData={banner} setPictureList={setBanner} />
             </Stack>
+          <CustomizedTitle text='Thème principal' size={15} level={0} />
             <Stack spacing={1}>
-              <MapDialog hotel={hotel} setHotel={setHotel} />
-              <Stack direction="row" spacing={2} alignItems="center">
+              <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent='space-between'>
                 <CustomizedInput
                   sx={{ width: 1 }}
                   value={hotel.primary_button_color}
@@ -598,8 +612,9 @@ const ModifyHotelDialog = (props) => {
                 />
               </Stack>
             </Stack>
+            <CustomizedTitle text='Typography' size={15} level={0} />
             <Stack spacing={1}>
-              <Stack direction="row" spacing={2} alignItems="center">
+              <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent='space-between'>
                 <CustomizedInput
                   sx={{ width: 1 }}
                   value={hotel.typography_h1}
@@ -615,10 +630,6 @@ const ModifyHotelDialog = (props) => {
                     helpertext: errors.typography_h1,
                   })}
                 />
-              </Stack>
-            </Stack>
-            <Stack spacing={1}>
-              <Stack direction="row" spacing={2} alignItems="center">
                 <CustomizedInput
                   sx={{ width: 1 }}
                   value={hotel.typography_h2}
@@ -655,17 +666,12 @@ const ModifyHotelDialog = (props) => {
                 />
               </Stack>
             </Stack>
-          </Stack>
-        </DialogContent>
-        <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px' }}>
-          <Stack direction="row" spacing={2} alignItems="flex-end">
             <Button onClick={handleClose} sx={{ fontSize: 12, height: '100%' }}>
               Annuler
             </Button>
             <CustomizedButton text="Enregistrer" component={RouterLink} onClick={modifyHotel} to="#" />
           </Stack>
-        </DialogActions>
-      </Dialog>
+        </CustomizedPaperOutside>
     </>
   );
 };

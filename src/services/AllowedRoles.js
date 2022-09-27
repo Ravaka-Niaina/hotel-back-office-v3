@@ -18,6 +18,10 @@ export const getAllowedRoles = (pageSectionPath) => {
       allowedRoles: ['superAdmin', 'admin','partner'],
     },
     {
+      path: '/dashboard/booking',
+      allowedRoles: ['superAdmin', 'admin', 'partner'],
+    },
+    {
       path: '/dashboard/rapport',
       allowedRoles: ['superAdmin', 'admin','partner'],
     },
@@ -55,6 +59,14 @@ export const getAllowedRoles = (pageSectionPath) => {
     },
     {
       path: '/dashboard/emailModel',
+      allowedRoles: ['superAdmin','admin','partner'],
+    },
+    {
+      path: '/dashboard/generalConditionsOfSale',
+      allowedRoles: ['superAdmin','admin','partner'],
+    },
+    {
+      path: '/dashboard/legalNotice',
       allowedRoles: ['superAdmin','admin','partner'],
     },
   ];

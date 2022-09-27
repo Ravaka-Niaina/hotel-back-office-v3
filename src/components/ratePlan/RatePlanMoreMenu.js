@@ -3,14 +3,12 @@ import PropTypes from 'prop-types';
 import { Stack } from '@mui/material';
 // component
 
-import ModifyRatePlanDialog from './ModifyRatePlanDialog';
 import DeleteRatePlanDialog from './DeleteRatePlanDialog';
 import RatePlanStatus from './RatePlanStatus';
 
 const RatePlanMoreMenu = ({ reload, ratePlanId, isActif }) => (
   <>
     <Stack direction="row" spacing={2}>
-      <ModifyRatePlanDialog reload={reload} ratePlanId={ratePlanId} />
       <DeleteRatePlanDialog reload={reload} ratePlanId={ratePlanId} />
       <RatePlanStatus reload={reload} ratePlanId={ratePlanId} isActif={isActif} />
     </Stack>

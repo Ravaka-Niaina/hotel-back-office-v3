@@ -55,22 +55,51 @@ const Protected = ({ child, allowedRoles }) => {
    * @description An useEffect that triggers everytime we load protected pages
    */
   useEffect(() => {
-    const token = getToken();
-    const payloadFromToken = getPayloadFromToken(jwtDecode, token);
-    if (!payloadFromToken) redirectToLoginPage();
-    const userDetails = context.getUserDetails();
-    userDetails.then((results) => {
-      // the attributedAccessRights from the payload
-      const attributedAccessRights = results.data?.atribAR;
-      // only getting the id field from the arrays of the payload and storing it inside an array
-      const accessRightsIds = attributedAccessRights.map((accessRight) => accessRight?._id);
-      // checking if the user has the right access (returns true or false)
-      const checkAuth = checkAuthWithRole(accessRightsIds, allowedRoles);
-      // Redirect to login page if the user doesn't have permissions
-      if (!checkAuth) redirectToLoginPage();
-      setIsAuth(checkAuth);
-    });
-    setChildComponent(child);
+    try{
+      const token = getToken();
+      const payloadFromToken = getPayloadFromToken(jwtDecode, token);
+      if (!payloadFromToken) redirectToLoginPage();
+      const userDetails = context.getUserDetails();
+      userDetails.then((results) => {
+        // the attributedAccessRights from the payload
+        if(results.data.status === 200){
+          const attributedAccessRights = results.data?.atribAR;
+          // only getting the id field from the arrays of the payload and storing it inside an array
+          const accessRightsIds = attributedAccessRights.map((accessRight) => accessRight?._id);
+          // checking if the user has the right access (returns true or false)
+          const checkAuth = checkAuthWithRole(accessRightsIds, allowedRoles);
+          // Redirect to login page if the user doesn't have permissions
+          if (!checkAuth) redirectToLoginPage();
+          setIsAuth(checkAuth);
+        }
+        else if(results.data.errors){
+          const item = Object.keys(results.data.errors).filter((e, i) => i === 0)[0];
+          const indication = results.data.errors[item];
+          const message = `${item}: ${indication}`;
+          context.showLoader(false);
+          context.changeResultErrorMessage(message);
+          context.showResultError(true);
+        }
+        else{
+          context.showLoader(false);
+          context.changeResultErrorMessage(`Une erreur est survenue, Veuillez contacter l'administrateur.`);
+          context.showResultError(true);
+        }
+        console.log(results.data);
+      })
+      .catch((e)=>{
+        context.showLoader(false);
+        context.changeResultErrorMessage(e.message);
+        context.showResultError(true);
+      })
+      setChildComponent(child);
+    }
+    catch(e){
+      context.showLoader(false);
+      context.changeResultErrorMessage(e.message);
+      context.showResultError(true);
+    }
+    
   }, [allowedRoles, child]);
 
   /**

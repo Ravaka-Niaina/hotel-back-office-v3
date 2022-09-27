@@ -10,7 +10,6 @@ const HotelMoreMenu = (props) => {
   return (
     <>
       <Stack direction="row" spacing={2}>
-        <ModifyHotelDialog row={row} reload={reload} />
         <DeleteHotelDialog hotelId={row._id} reload={reload} />
       </Stack>
     </>

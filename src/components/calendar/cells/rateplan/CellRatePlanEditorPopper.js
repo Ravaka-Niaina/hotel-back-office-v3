@@ -62,7 +62,8 @@ const CellRatePlanEditorPopper = ({ open, anchorEl , setOpen , selected , setSel
             days,
             forTypeChambre: false,
             forTarif: true,
-            nbPers: chambre.planTarifaire[firstElement.rate_plan_index].prixTarif[0].versions[firstElement.version_index].nbPers,
+            adultsNum: chambre.planTarifaire[firstElement.rate_plan_index].prixTarif[0].versions[firstElement.version_index].adultsNum,
+            childrenNum: chambre.planTarifaire[firstElement.rate_plan_index].prixTarif[0].versions[firstElement.version_index].childrenNum,
             prix: Number.parseFloat(prix),
             minSejour: 1,
         };
