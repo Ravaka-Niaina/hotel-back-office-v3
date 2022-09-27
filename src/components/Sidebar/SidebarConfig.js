@@ -72,9 +72,6 @@ export const getSidebarConfig = async (context) => {
       path: '/dashboard/politic',
       icon: getIcon('bxs:shield-alt-2'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/politic')),
-      // children: [
-
-      // ],
     },
     {
       title: 'utilisateurs',
@@ -99,6 +96,18 @@ export const getSidebarConfig = async (context) => {
       path: '/dashboard/emailModel',
       icon: getIcon('bx:mail-send'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/emailModel')),
+    },
+    {
+      title: "conditions générales de vente",
+      path: '/dashboard/generalConditionsOfSale',
+      icon: getIcon('bx:book-content'),
+      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/generalConditionsOfSale')),
+    },
+    {
+      title: "Mentions légales",
+      path: '/dashboard/legalNotice',
+      icon: getIcon('emojione-monotone:balance-scale'),
+      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/legalNotice')),
     },
     {
       title: 'login',

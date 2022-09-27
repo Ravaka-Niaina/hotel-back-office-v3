@@ -54,11 +54,10 @@ const VerifyCodeForm = () => {
       idUser: user,
       verificationCode: e.code,
     };
-    console.log(payload)
     const verifyResult = await verifyCode(payload);
-    console.log(verifyResult)
     if (verifyResult.data.status === 200) {
       localStorage.setItem('id_token', removeDoubleQuotes(verifyResult.data.id_token));
+      localStorage.setItem('user_attr', JSON.stringify(verifyResult.data.user_attr));
       window.location = "/dashboard/app"
     } else {
       context.changeResultErrorMessage(verifyResult.data.message);
