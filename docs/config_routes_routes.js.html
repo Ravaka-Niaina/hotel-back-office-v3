@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: config/routes/routes.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: config/routes/routes.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { Navigate, useRoutes } from 'react-router-dom';
+// layouts
+import DashboardLayout from '../../components/dashboardLayout';
+import Layout from '../../components/Layout';
+//
+import Politic from '../../views/Politic';
+import Hotel from '../../views/Hotel';
+import RatePlan from '../../views/RatePlan';
+import Calendar from '../../views/Calendar';
+import Promotion from '../../views/Promotion';
+import TypeChambre from '../../views/RoomType';
+import AccessRight from '../../views/AccessRight';
+import User from '../../views/User';
+import Login from '../../views/Login';
+import VerifyCode from '../../views/VerifyCode';
+import NotFound from '../../views/Page404';
+import DashboardApp from '../../views/DashboardApp';
+import TestSideBar from '../../views/TestSideBar';
+import TestFormulaire from '../../views/TestFormulaire';
+import HomeForm from '../../views/HomeForm';
+import RapportApp from '../../views/RapportApp';
+import EmailModel from '../../views/EmailModel';
+import Protected from '../../components/protected/Protected';
+import { getAllowedRoles } from '../../services/AllowedRoles';
+// ----------------------------------------------------------------------
+/**
+ * @file routes
+ */
+
+/**
+ * @component
+ * @description A react component to configure the routes of the application
+ * @returns {hook} useRoutes hook
+ */
+export default function Router() {
+  const dashboardPath = '/dashboard';
+  return useRoutes([
+    {
+      path: dashboardPath,
+      element: &lt;DashboardLayout />,
+      children: [
+        {
+          path: 'app',
+          element: &lt;Protected child={&lt;DashboardApp />} allowedRoles={getAllowedRoles(`${dashboardPath}/app`)} />,
+        },
+        {
+          path: 'homeForm',
+          element: &lt;Protected child={&lt;HomeForm />} allowedRoles={getAllowedRoles(`${dashboardPath}/homeForm`)} />,
+        },
+        {
+          path: 'rapport',
+          element: &lt;Protected child={&lt;RapportApp />} allowedRoles={getAllowedRoles(`${dashboardPath}/rapport`)} />,
+        },
+        {
+          path: 'ratePlan',
+          element: &lt;Protected child={&lt;RatePlan />} allowedRoles={getAllowedRoles(`${dashboardPath}/ratePlan`)} />,
+        },
+        {
+          path: 'calendar',
+          element: &lt;Protected child={&lt;Calendar />} allowedRoles={getAllowedRoles(`${dashboardPath}/calendar`)} />,
+        },
+        {
+          path: 'accessRight',
+          element: &lt;Protected child={&lt;AccessRight />} allowedRoles={getAllowedRoles(`${dashboardPath}/accessRight`)} />,
+        },
+        {
+          path: 'user',
+          element: &lt;Protected child={&lt;User />} allowedRoles={getAllowedRoles(`${dashboardPath}/user`)} />,
+        },
+        {
+          path: 'promotion',
+          element: &lt;Protected child={&lt;Promotion />} allowedRoles={getAllowedRoles(`${dashboardPath}/promotion`)} />,
+        },
+        {
+          path: 'typeChambre',
+          element: &lt;Protected child={&lt;TypeChambre />} allowedRoles={getAllowedRoles(`${dashboardPath}/typeChambre`)} />,
+        },
+        {
+          path: 'politic',
+          element: &lt;Protected child={&lt;Politic />} allowedRoles={getAllowedRoles(`${dashboardPath}/politic`)} />,
+        },
+        {
+          path: 'hotel',
+          element: &lt;Protected child={&lt;Hotel />} allowedRoles={getAllowedRoles(`${dashboardPath}/hotel`)} />,
+        },
+        {
+          path: 'emailModel',
+          element: &lt;Protected child={&lt;EmailModel />} allowedRoles={getAllowedRoles(`${dashboardPath}/emailModel`)} />,
+        },
+        { path: '*', element: &lt;NotFound /> },
+      ],
+    },
+    {
+      path: '/testform',
+      element: &lt;TestFormulaire />,
+    },
+    {
+      path: '/',
+      element: &lt;Layout />,
+      children: [
+        { path: '/', element: &lt;Navigate to="/dashboard/app" /> },
+        { path: 'login', element: &lt;Login /> },
+        { path: 'verifycode', element: &lt;VerifyCode /> },
+        { path: '404', element: &lt;Navigate to="/dashboard/app" /> },
+        { path: '*', element: &lt;Navigate to="/404" /> },
+      ],
+    },
+    {
+      path: '/TestSideBar',
+      element: &lt;TestSideBar />,
+    },
+    { path: '*', element: &lt;Navigate to="/404" replace /> },
+  ]);
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#checkAuthWithRole">checkAuthWithRole</a></li><li><a href="global.html#getAllowedRoles">getAllowedRoles</a></li><li><a href="global.html#getIdToken">getIdToken</a></li><li><a href="global.html#getPayloadFromToken">getPayloadFromToken</a></li><li><a href="global.html#getSidebarConfig">getSidebarConfig</a></li><li><a href="global.html#getToken">getToken</a></li><li><a href="global.html#getUserDetailsById">getUserDetailsById</a></li><li><a href="global.html#redirectToLoginPage">redirectToLoginPage</a></li><li><a href="global.html#register">register</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Sun Sep 25 2022 14:56:16 GMT+0300 (East Africa Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

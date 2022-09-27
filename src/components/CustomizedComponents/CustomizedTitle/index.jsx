@@ -20,7 +20,6 @@ const CustomTitle = styled(Typography)((props) => ({
 }));
 
 const CustomizedTitle = (props) => {
-  console.log(props);
   return (
     <CustomTitle {...props} variant="h5" gutterBottom>
       {props.text}

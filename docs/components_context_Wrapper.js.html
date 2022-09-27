@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/context/Wrapper.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/context/Wrapper.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, createContext, useEffect } from 'react';
+import jwtDecode from 'jwt-decode';
+import PropTypes from 'prop-types';
+import SimpleBackdrop from '../backdrop/Backdrop';
+import Message from '../snackbar/Message';
+import { getPayloadFromToken, getUserDetailsById } from '../../services/User';
+
+export const ThemeContext = createContext({
+  showLoader: null,
+  showError: null,
+  showResultError: null,
+  changeResultErrorMessage: null,
+  showResultSuccess: null,
+  changeResultSuccessMessage: null,
+  getIdToken: null,
+  getUserDetails: null,
+});
+
+const Wrapper = ({ children }) => {
+  const [partialLoading, setPartialLoading] = useState({ loading: false, identifier: '' });
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [disable, setDisable] = useState(false);
+
+  const [openSnackBar, setOpenSnackBar] = React.useState(false);
+
+  const [openAlertError, setOpenAlertError] = React.useState(false);
+  const [openAlertSuccess, setOpenAlertSuccess] = React.useState(false);
+
+  /**
+   * @function getIdToken
+   * @description A function to get the token of the current user
+   * @returns A jwt token
+   */
+  const getIdToken = () => localStorage.getItem('id_token') || '';
+
+  const handleCloseSnackBar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackBar(false);
+  };
+
+  const showLoader = (show) => {
+    setDisable(show);
+  };
+
+  const showResultError = (show) => {
+    setOpenAlertError(show);
+  };
+  const changeResultErrorMessage = (message) => {
+    setErrorMessage(message);
+  };
+  const showResultSuccess = (show) => {
+    setOpenAlertSuccess(show);
+  };
+  const changeResultSuccessMessage = (message) => {
+    setSuccessMessage(message);
+  };
+  const handleCloseAlertError = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenAlertError(false);
+  };
+  const handleCloseAlertSuccess = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenAlertSuccess(false);
+  };
+
+  const idToken = getIdToken();
+  const payloadFromToken = getPayloadFromToken(jwtDecode, idToken);
+  const partnerId = payloadFromToken?.partner_id;
+  const details = getUserDetailsById(partnerId);
+
+  const getUserDetails = async () => {
+    const userDetails = await details;
+    return userDetails
+  };
+
+  return (
+    &lt;ThemeContext.Provider
+      value={{
+        partialLoading,
+        setPartialLoading,
+        showLoader,
+        showResultError,
+        changeResultErrorMessage,
+        showResultSuccess,
+        changeResultSuccessMessage,
+        getIdToken,
+        getUserDetails,
+      }}
+    >
+      &lt;SimpleBackdrop open={disable} />
+      &lt;Message
+        vertical="top"
+        horizontal="center"
+        message={'An error occurred on the server when processing the URL. Please contact the system administrator'}
+        autoHideDuration={2000}
+        severity="error"
+        handleClose={handleCloseSnackBar}
+        open={openSnackBar}
+      />
+
+      &lt;Message
+        vertical="top"
+        horizontal="center"
+        message={errorMessage}
+        autoHideDuration={5000}
+        severity="error"
+        handleClose={handleCloseAlertError}
+        open={openAlertError}
+      />
+      &lt;Message
+        vertical="top"
+        horizontal="center"
+        message={successMessage}
+        autoHideDuration={7000}
+        severity="success"
+        handleClose={handleCloseAlertSuccess}
+        open={openAlertSuccess}
+      />
+
+      {children}
+    &lt;/ThemeContext.Provider>
+  );
+};
+
+Wrapper.propTypes = {
+  children: PropTypes.any,
+};
+
+export default Wrapper;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#checkAuthWithRole">checkAuthWithRole</a></li><li><a href="global.html#getAllowedRoles">getAllowedRoles</a></li><li><a href="global.html#getIdToken">getIdToken</a></li><li><a href="global.html#getPayloadFromToken">getPayloadFromToken</a></li><li><a href="global.html#getSidebarConfig">getSidebarConfig</a></li><li><a href="global.html#getToken">getToken</a></li><li><a href="global.html#getUserDetailsById">getUserDetailsById</a></li><li><a href="global.html#redirectToLoginPage">redirectToLoginPage</a></li><li><a href="global.html#register">register</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Sun Sep 25 2022 14:56:16 GMT+0300 (East Africa Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

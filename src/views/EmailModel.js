@@ -1,39 +1,92 @@
-import { useEffect, useState } from 'react';
-import { Stack, Container } from '@mui/material';
-import { Editor, EditorState } from "react-draft-wysiwyg";
-import { convertToRaw } from 'draft-js';
+import { useState } from 'react';
+import { Stack } from '@mui/material';
+import { Editor } from "react-draft-wysiwyg";
+import { convertToRaw, EditorState, ContentState } from 'draft-js';
 import draftToHtmlPuri from 'draftjs-to-html'
+import htmlToDraft from 'html-to-draftjs';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 import Page from '../components/Page';
 import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
-import { UserListToolbar } from '../components/table';
 import Scrollbar from '../components/Scrollbar';
 import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
-import { lightBackgroundToTop } from '../components/CustomizedComponents/NeumorphismTheme';
+import { lightBackgroundToTop, shadowInset, linearBorderOutside, linearBorderInset, shadowOutside } from '../components/CustomizedComponents/NeumorphismTheme';
+import CustomizedInput from '../components/CustomizedComponents/CustomizedInput';
 
+/**
+ * @style The style of the menu to choose between draft or html modification
+ */
+const chooseModificationTypeStyle = {
+  ...shadowInset, padding: 10,
+  backgroundColor: "inherit",
+  cursor: 'pointer'
+}
 
+/**
+ * @style The draft modification menu style
+ */
+const draftModificationMenuStyle = {
+  ...chooseModificationTypeStyle
+}
+
+/**
+ * @style The html modification menu style
+ */
+const htmlModificationMenuStyle = {
+  ...chooseModificationTypeStyle
+}
+
+/**
+ * @file 
+ * @component EmailModel
+ * @description The component that renders the page to modify email model
+ */
 export default function EmailModel() {
-  const [editorState, setEditorState] = useState(EditorState)
-  const [htmlPreview, setHtmlPreview] = useState('<p></p>')
+  /**
+   * @state The state of the editor (draft)
+   */
+  const [editorState, setEditorState] = useState(EditorState.createEmpty())
 
+  /**
+   * @state The state of the html value of the email
+   */
+  const [htmlPreview, setHtmlPreview] = useState('<html></html>')
+
+  /**
+   * @state The state that handles if the draft editor should be opened or not
+   */
+  const [openDraftEditor, setOpenDraftEditor] = useState(true)
+
+  /**
+   * @state The state that handles if the html editor should be opened or not
+   */
+  const [openHtmlEditor, setOpenHtmlEditor] = useState(false)
+
+  /**
+   * @object An object that contains test variables to test in the email
+   */
   const VARIABLES = {
-    hotel_name: 'Hotel Colbert',
+    hotel_name: 'Colbert',
     hotel_phone_number: "+261 34 78 711 04",
     hotel_email_address: "colbert@gmail.com",
-    // reservation_link: '<a href="https://${env.FrontURL}/booking-summary/${reservation._id}">lien</a>',
-    // logo: "<img style='width: 35%;' src='https://www.hotel-restaurant-colbert.com/wp-content/uploads/2012/06/Logo-Colbert1-Copier.jpg' alt='logo'\/>`",
-    client_firstname: "Cedric",
-    client_lastname: "Rabarijohn",
-    itinerary_index: "666",
+    reservation_link: 'https://adr-hotel-front/booking-summary/1234',
+    logo_link: "http://localhost:3000/images/logo/logowcolor.png",
+    client_firstname: "Rabekoto",
+    client_lastname: "Jean Paul",
+    client_address: 'Lot 512B Manjakandriana',
+    client_phone_number: '+261 34 78 711 04',
+    itinerary_index: "v214bf5",
     itinerary_number: "52033214"
   }
-  // TEST
-  const testVariables = ['hotel_name', 'hotel_phone_number', 'hotel_email_address', 'client_firstname', 'client_lastname', 'itinerary_index', 'itinerary_number']
 
-  const onEditorStateChange = (e) => {
-    setEditorState(e)
-  }
+  /**
+   * @function convertVariablesToValues
+   * @description A function that handles the convertion of variables defined in the <variables> param to their values
+   * @param {object} variables An object that will contain some key value pairs to determine which variables should be converted to their value 
+   * (ex : const VARIABLES = { hotel_name: "Colbert" } Every word in the content to convert that is equal to [hotel_name] would be converted to "Colbert")
+   * @param {string} contentToConvert A raw string version of the content to convert
+   * @returns {string} A string of the converted content
+   */
   const convertVariablesToValues = (variables, contentToConvert) => {
     let convertedContent = contentToConvert;
     Object.keys(variables).forEach(variable => {
@@ -41,47 +94,119 @@ export default function EmailModel() {
     })
     return convertedContent;
   }
-  const getHtmlFromDraft = () => {
+
+  /**
+   * @function handleOpenDraftEditor
+   * @description A function that handles the opening state of the draft editor
+   */
+  const handleOpenDraftEditor = () => {
+    if (!openDraftEditor) {
+      setOpenDraftEditor(true)
+      setOpenHtmlEditor(false)
+    }
+  }
+  /**
+   * @function handleOpenDraftEditor
+   * @description A function that handles the opening state of the html editor
+   */
+  const handleOpenHtmlEditor = () => {
+    if (!openHtmlEditor) {
+      setOpenHtmlEditor(true)
+      setOpenDraftEditor(false)
+    }
+  }
+
+  /**
+   * @function getHtmlFromDraft
+   * @description A function to get the html value from the draft state
+   * @param {any} draftEditorStateFromEvent The draft value to convert to html
+   * @returns {any} The html value of the draft 
+   */
+  const getHtmlFromDraft = (draftEditorStateFromEvent) => {
+    setEditorState(draftEditorStateFromEvent)
     const htmlPuri = draftToHtmlPuri(
-      convertToRaw(editorState.getCurrentContent())
+      convertToRaw(draftEditorStateFromEvent.getCurrentContent())
     )
-    const newHtmlPuri = convertVariablesToValues(VARIABLES, htmlPuri)
-    console.log(newHtmlPuri)
-    setHtmlPreview(newHtmlPuri)
+    setHtmlPreview(htmlPuri)
+  }
+
+  /**
+   * @function getDraftFromHtml
+   * @description A function to get the draft value from an html state
+   * @param {any} htmlEditorStateFromEvent The html value to convert to draft
+   * @returns {any} The draft value of the html
+   */
+  const getDraftFromHtml = (htmlEditorStateFromEvent) => {
+    const blocksFromHtml = htmlToDraft(htmlEditorStateFromEvent)
+    const { contentBlocks, entityMap } = blocksFromHtml
+    const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap)
+    const newEditorState = EditorState.createWithContent(contentState)
+    setEditorState(newEditorState)
+  }
+
+  /**
+   * @function onDraftEditorStateChange
+   * @description A function that handles the changes of the draft editor field
+   * @param {event} e Event from the editor field (Exclusively from the <Editor> component)
+   */
+  const onDraftEditorStateChange = (e) => {
+    getHtmlFromDraft(e)
+  }
+  /**
+   * @function onHtmlEditorStateChange
+   * @description A function that handles the changes of the html editor field
+   * @param {event} e Event from the input field of the html editor
+   */
+  const onHtmlEditorStateChange = (e) => {
+    // setHtmlPreview(e.target.value)
+    setHtmlPreview(e.target.value)
+    getDraftFromHtml(e.target.value)
   }
   return (
     <Page title="AOLIA | Modèle Email">
-      <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <CustomizedTitle size={20} text="Modèle d'email" />
-        </Stack>
-        <CustomizedPaperOutside
-          sx={{
-            ...lightBackgroundToTop,
-            minHeight: '100vh',
-            border: '1px white solid',
-            color: '#787878',
-            padding: 2,
-          }}
-        >
-          <UserListToolbar />
-          <Scrollbar>
-            <div>
-              <h3><b>Variables to test</b></h3>
-              {testVariables && testVariables.map(testVariable => (
-                <div>{`[${testVariable}]`}</div>
-              ))}
-            </div>
-            <Editor
-              editorStyle={{ backgroundColor: "white", padding: 20 }}
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <CustomizedTitle size={20} text="Modèle d'email" />
+      </Stack>
+
+      <CustomizedPaperOutside
+        sx={{
+          ...lightBackgroundToTop,
+          minHeight: '100vh',
+          border: '1px white solid',
+          color: '#787878',
+          padding: 6,
+        }}
+      >
+        {/* <UserListToolbar /> */}
+        <Scrollbar>
+          <div>
+            <h4><b>Variables de test</b></h4> <br />
+            {Object.keys(VARIABLES).map(variable => `[${variable}] : ${VARIABLES[variable]} --- `)}
+          </div>
+          <br />
+          <Stack direction="row">
+            {openDraftEditor ? <button style={{ ...draftModificationMenuStyle }} onClick={handleOpenDraftEditor}>Modification via draft</button> : <button style={{ ...draftModificationMenuStyle, ...shadowOutside }} onClick={handleOpenDraftEditor}>Modification via draft</button>}
+            {openHtmlEditor ? <button style={{ ...htmlModificationMenuStyle }} onClick={handleOpenHtmlEditor}>Modification via html</button> : <button style={{ ...htmlModificationMenuStyle, ...shadowOutside }} onClick={handleOpenHtmlEditor}>Modification via html</button>}
+          </Stack>
+          {openDraftEditor &&
+            <><Editor
+              stripPastedStyles={{ backgroundColor: 'green' }}
+              toolbarStyle={{ ...lightBackgroundToTop, ...shadowInset, ...linearBorderOutside, ...linearBorderInset, padding: 10 }}
+              editorStyle={{ ...lightBackgroundToTop, ...shadowInset, ...linearBorderOutside, ...linearBorderInset, padding: 10, minHeight: '150px' }}
               editorState={editorState}
-              onEditorStateChange={onEditorStateChange}
-            />;
-            <button style={{border:'1px solid black', padding:'10px', marginTop:'10px'}} onClick={() => getHtmlFromDraft()}>Preview</button>
-            {htmlPreview && <div style={{backgroundColor:'white', marginTop:'20px', padding:10}} dangerouslySetInnerHTML={{ __html: htmlPreview }} />}
-          </Scrollbar>
-        </CustomizedPaperOutside>
-      </Container>
+              onEditorStateChange={onDraftEditorStateChange}
+            />
+            </>
+          }
+          {openHtmlEditor &&
+            <>
+              <CustomizedInput type='text' style={{ ...shadowInset, minHeight: '150px' }} value={htmlPreview} onChange={onHtmlEditorStateChange} multiline />
+            </>
+          }
+          <h2 style={{textAlign:'center'}}>Apercu de l'email</h2>
+          {htmlPreview && <div style={{ ...shadowInset, backgroundColor: 'white', marginTop: '20px', padding: 20 }} dangerouslySetInnerHTML={{ __html: convertVariablesToValues(VARIABLES, htmlPreview) }} />}
+        </Scrollbar>
+      </CustomizedPaperOutside>
     </Page>
   );
 }

@@ -1,0 +1,36 @@
+# Simple
+
+Hotel [hotel_name] 
+Cliquez sur le lien suivant pour acceder a votre reservation
+Confirmation numero : [itinerary_number]
+Cher(e) [client_firstname] [client_lastname],
+Nous vous remercions d'avoir choisi l'hotel [hotel_name] pour votre reservation. Nous vous confirmons que nous avons bien recu votre reservation.
+VOTRE SEJOUR EN DETAILS
+Informations sur le client
+Nom: [client_firstname] [client_lastname]
+Adresse: [client_address]
+Numero de telephone: [client_phone_number]
+Details de la reservation
+[reservation_details]
+-----------------------------------------------------------------------------------
+Pour toute question concernant votre reservation, veuillez appeler le departement de reservation de l'hotel [hotel_name] sur le numero [hotel_phone_number] ou envoyer un email au [hotel_email_address]
+Salutations,
+Hotel [hotel_name]
+
+
+# HTML
+
+<p><span style="color: rgb(163,143,132);font-size: 36px;"><strong>Hotel [hotel_name]</strong></span></p>
+<p>Cliquez sur le <a href="http://www.test.com" target="_blank">lien</a> suivant pour acceder a votre reservation</p>
+<p style="text-align:right;"><span style="font-size: 16px;"><strong><ins>Confirmation numero</ins></strong> : [itinerary_number]</span></p>
+<p><span style="font-size: 16px;">Cher(e) [client_firstname] [client_lastname],<br><br>Nous vous remercions d'avoir choisi l'hotel </span><span style="color: rgb(163,143,132);font-size: 16px;"><strong>[hotel_name]</strong></span><span style="font-size: 16px;"> pour votre reservation. Nous vous confirmons que nous avons bien recu votre reservation.</span></p>
+<p style="text-align:center;"><span style="color: rgb(163,143,132);font-size: 18px;"><strong><ins>VOTRE SEJOUR EN DETAILS</ins></strong></span></p>
+<p><span style="color: rgb(163,143,132);font-size: 18px;"><strong><ins>Informations sur le client</ins></strong></span></p>
+<p><span style="font-size: 16px;"><strong><ins>Nom:</ins></strong> [client_firstname] [client_lastname]</span></p>
+<p><span style="font-size: 16px;"><strong><ins>Adresse:</ins></strong> [client_address]</span></p>
+<p><span style="font-size: 16px;"><strong><ins>Numero de telephone:</ins></strong> [client_phone_number]</span></p>
+<p><span style="color: rgb(163,143,132);font-size: 18px;"><strong><ins>Details de la reservation</ins></strong></span></p>
+<p><span style="font-size: 16px;">[reservation_details]</span></p>
+<p><span style="font-size: 16px;">-----------------------------------------------------------------------------------</span></p>
+<p><span style="font-size: 14px;">Pour toute question concernant votre reservation, veuillez appeler le departement de reservation de l'hotel </span><span style="color: rgb(163,143,132);font-size: 14px;"><strong>[hotel_name]</strong></span><span style="font-size: 14px;"> sur le numero [hotel_phone_number] ou envoyer un email au </span><span style="color: rgb(44,130,201);font-size: 14px;"><strong>[hotel_email_address]</strong></span><span style="font-size: 14px;">.</span></p>
+<p style="text-align:right;"><span style="font-size: 16px;">Salutations,<br>Hotel [hotel_name]</span></p>
