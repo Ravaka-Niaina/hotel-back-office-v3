@@ -1,5 +1,6 @@
 import { Navigate, useRoutes } from 'react-router-dom';
 // layouts
+import GeneralConditionsOfSale from '../../views/GeneralConditionsOfSale';
 import DashboardLayout from '../../components/dashboardLayout';
 import Layout from '../../components/Layout';
 //
@@ -86,6 +87,10 @@ export default function Router() {
         {
           path: 'emailModel',
           element: <Protected child={<EmailModel />} allowedRoles={getAllowedRoles(`${dashboardPath}/emailModel`)} />,
+        },
+        {
+          path: 'generalConditionsOfSale',
+          element: <Protected child={<GeneralConditionsOfSale />} allowedRoles={getAllowedRoles(`${dashboardPath}/generalConditionsOfSale`)} />,
         },
         { path: '*', element: <NotFound /> },
       ],

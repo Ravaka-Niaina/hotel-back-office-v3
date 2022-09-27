@@ -1,37 +1,52 @@
 .calendarEditor table,
 td,
 th {
-    border: 1px solid #e0e0e0;
+  border: 1px solid #e0e0e0;
 }
-.calendarEditor{
-    padding: 10px;
+.calendarEditor {
+  padding: 10px;
 }
 .calendarEditor table {
-    width: 100%;
-    border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
 }
 .calendarEditor tbody {
-    font-size: 12px;
+  font-size: 12px;
 }
-.calendarEditor  td {
-    height: 50px;
+.calendarEditor td {
+  height: 50px;
 }
 
-.calendarEditor .status{
-    height: 25px;
-    padding: 0px;
-    padding-left: 10px;
-    padding-right: 10px;
+.calendarEditor .status {
+  height: 25px;
+  padding: 0px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 .value td {
-    min-width:50px;
-    text-align: center;
+  min-width: 50px;
+  text-align: center;
 }
 .value .status {
-    padding-left: 0px;
-    padding-right: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 .SelectableCell {
-    padding: 10px;
+  padding: 10px;
+}
+
+.hyperlinkAIOLIA {
+  text-decoration: none !important;
+}
+.yellowAIOLIA {
+  color: #daae10;
+}
+.boldAIOLIA {
+  font-weight: 900;
+}
+
+.boldSocieteGenerale {
+  font-size: 18px;
+  font-weight: 900;
 }
