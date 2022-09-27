@@ -152,7 +152,7 @@ const Promotion = () => {
     <Page title="AIOLIA | Promotions">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <CustomizedTitle sx={{ color: '#787878' }} text="Promotion" />
+          <CustomizedTitle  text="Promotion" size={20}/>
           <AddPromotionDialog reload={reload} />
         </Stack>
 

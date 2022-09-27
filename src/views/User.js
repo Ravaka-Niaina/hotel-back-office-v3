@@ -160,7 +160,7 @@ export default function User() {
     <Page title="AIOLIA | Utilisateurs">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <CustomizedTitle sx={{ color: '#787878'}} text='Utilisateur'/>
+          <CustomizedTitle size={20} text='Utilisateur'/>
           <AddUserDialog />
         </Stack>
 

@@ -11,7 +11,7 @@ export default function EmailModel() {
     <Page title="AOLIA | Modèle Email">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <CustomizedTitle sx={{ color: '#787878' }} text="Modèle d'email" />
+          <CustomizedTitle size={20} text="Modèle d'email" />
         </Stack>
         <CustomizedPaperOutside
           sx={{

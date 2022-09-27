@@ -74,7 +74,7 @@ const Politic = () => {
     <Page title="AIOLIA | Politiques d'annulation">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <CustomizedTitle sx={{ color: '#787878' }} text="Politique" />
+          <CustomizedTitle size={20} text="Politique" />
           <AddPoliticDialog reload={reload} />
         </Stack>
 
