@@ -50,3 +50,16 @@ th {
   font-size: 18px;
   font-weight: 900;
 }
+
+.headerLegalNotice {
+  color: #10306e;
+}
+
+.h2LegalNotice {
+  color: #10306e;
+  font-size: 22px;
+}
+
+.listLegalNotice > li {
+  margin-left: 18px;
+}

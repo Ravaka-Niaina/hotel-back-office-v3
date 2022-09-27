@@ -14,7 +14,7 @@ const GeneralConditionsOfSale = () => (
         <CustomizedPaperOutside sx={{ ...lightBackgroundToTop, background: '#E3EDF7', p: 5, minHeight:'100vh' }}>
           <Stack spacing={2}>
             <div>
-              <div>Conditions générales de vente</div>
+              <div className="headerLegalNotice">Conditions générales de vente</div>
               <div>{JSON.parse(localStorage.getItem("user_attr")).hotel_name}</div>
             </div>
             <div>1.Objet</div>
