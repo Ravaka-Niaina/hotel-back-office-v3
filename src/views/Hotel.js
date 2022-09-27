@@ -18,7 +18,6 @@ import CustomizedIconButton from '../components/CustomizedComponents/CustomizedI
 import { lightBackgroundToTop } from '../components/CustomizedComponents/NeumorphismTheme';
 import Iconify from '../components/Iconify';
 
-
 const TABLE_HEAD = [
   { id: 'nom', label: 'Nom', alignRight: false },
   { id: 'adresse', label: 'Adresse', alignRight: false },
@@ -115,85 +114,87 @@ const Hotel = () => {
       <Container>
         {
           location === 'addForm' && (
-            <AddHotelDialog/>
+            <AddHotelDialog reload={reload} navigate={navigate}/>
           )
         }
         {
-          location === 'modifyForm' && currentRow !== null (
-            <ModifyHotelDialog/>
+          location === 'modifyForm' && currentRow !== null && (
+            <ModifyHotelDialog reload={reload} row={currentRow} navigate={navigate}/>
           )
         }
         {
           location === 'list' && (
-            <></>
+            <>
+              <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+                <CustomizedTitle size={20} text="Hotel" />
+                <CustomizedButton onClick={() => navigate('addForm')} text="Ajouter" variant="contained" component={RouterLink} to="#" />
+              </Stack>
+              <CustomizedPaperOutside
+                sx={{
+                  ...lightBackgroundToTop,
+                  minHeight: '100vh',
+                  border: '1px white solid',
+                  color: 'white',
+                  padding: 5,
+                }}
+              >
+                <UserListToolbar numSelected={selected.length} filterName={filterName} />
+                <Scrollbar>
+                  <TableContainer sx={{ minWidth: 800 }}>
+                    <Table>
+                      <UserListHead
+                        order={order}
+                        orderBy={orderBy}
+                        headLabel={TABLE_HEAD}
+                        rowCount={hotelList.length}
+                        numSelected={selected.length}
+                      />
+                      <TableBody>
+                        {hotelList.map((row) => {
+                          const { _id, name, address, link } = row;
+
+                          const isItemSelected = selected.indexOf(name) !== -1;
+
+                          return (
+                            <TableRow
+                              hover
+                              key={_id}
+                              tabIndex={-1}
+                              role="checkbox"
+                              selected={isItemSelected}
+                              aria-checked={isItemSelected}
+                            >
+                              <TableCellStyled padding="checkbox">
+                                <CustomizedCheckbox />
+                              </TableCellStyled>
+                              <TableCellStyled align="left">{name}</TableCellStyled>
+                              <TableCellStyled align="left">{address}</TableCellStyled>
+                              <TableCellStyled align="left">
+                                <a href={`https://${link}`} target="_blank" rel="noreferrer noopener">
+                                  {link}
+                                </a>
+                              </TableCellStyled>
+                              <TableCellStyled align="right">
+                                <Stack direction="row" spacing={2}>
+                                  <CustomizedIconButton variant="contained" onClick={() => navigate('modifyForm', row)}>
+                                    <Iconify icon="eva:edit-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
+                                  </CustomizedIconButton>
+                                  <HotelMoreMenu row={row} reload={reload} />
+                                </Stack>
+
+                              </TableCellStyled>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Scrollbar>
+              </CustomizedPaperOutside>
+            </>
           )
         }
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <CustomizedTitle size={20} text="Hotel" />
-          <CustomizedButton onClick={()=>navigate('addForm')} text="Ajouter" variant="contained" component={RouterLink} to="#" />
-        </Stack>
-        <CustomizedPaperOutside
-          sx={{
-            ...lightBackgroundToTop,
-            minHeight: '100vh',
-            border: '1px white solid',
-            color: 'white',
-            padding: 5,
-          }}
-        >
-          <UserListToolbar numSelected={selected.length} filterName={filterName} />
-          <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
-              <Table>
-                <UserListHead
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={hotelList.length}
-                  numSelected={selected.length}
-                />
-                <TableBody>
-                  {hotelList.map((row) => {
-                    const { _id, name, address, link } = row;
-
-                    const isItemSelected = selected.indexOf(name) !== -1;
-
-                    return (
-                      <TableRow
-                        hover
-                        key={_id}
-                        tabIndex={-1}
-                        role="checkbox"
-                        selected={isItemSelected}
-                        aria-checked={isItemSelected}
-                      >
-                        <TableCellStyled padding="checkbox">
-                          <CustomizedCheckbox />
-                        </TableCellStyled>
-                        <TableCellStyled align="left">{name}</TableCellStyled>
-                        <TableCellStyled align="left">{address}</TableCellStyled>
-                        <TableCellStyled align="left">
-                          <a href={`https://${link}`} target="_blank" rel="noreferrer noopener">
-                            {link}
-                          </a>
-                        </TableCellStyled>
-                        <TableCellStyled align="right">
-                          <Stack direction="row" spacing={2}>
-                            <CustomizedIconButton variant="contained" onClick={()=>navigate('modifyForm',row)}>
-                              <Iconify icon="eva:edit-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
-                            </CustomizedIconButton>                            
-                            <HotelMoreMenu row={row} reload={reload} />
-                          </Stack>
-                          
-                        </TableCellStyled>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Scrollbar>
-        </CustomizedPaperOutside>
+        
       </Container>
     </Page>
   );

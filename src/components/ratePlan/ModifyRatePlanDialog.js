@@ -240,7 +240,7 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
         <CustomizedTitle text="Modifier le plan tarifaire" size={20} />
         <CustomizedButton onClick={handleClose} text='retour' component={RouterLink} to="#" />
       </Stack>
-      <CustomizedPaperOutside sx={{ ...lightBackgroundToTop, background: '#E3EDF7', p: 5, minHeight: '100vh' }}>
+      <CustomizedPaperOutside sx={{ ...lightBackgroundToTop, background: '#E3EDF7', p: 5, minHeight: '100vh',width: 0.75, margin: 'auto' }}>
         <Stack justifyContent='flex-start' spacing={2} >
           <CustomizedTitle text="Nom" size={16} />
           <Stack
