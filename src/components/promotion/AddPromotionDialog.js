@@ -1,8 +1,8 @@
 import { useEffect, useState, useContext } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-
 // material
 import {
+  Box,
   Stack,
   Divider,
   FormGroup,
@@ -10,27 +10,24 @@ import {
   FormLabel,
   RadioGroup,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
   FormControlLabel,
 } from '@mui/material';
-import { Box } from '@mui/system';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 // components
-import CustomizedButton from '../CustomizedComponents/CustomizedButton';
+import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
 import CustomizedCheckbox from '../CustomizedComponents/CustomizedCheckbox';
 import CustomizedRadio from '../CustomizedComponents/CustomizedRadio';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
-import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
-import Iconify from '../Iconify';
+import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
+import CustomizedButton from '../CustomizedComponents/CustomizedButton';
+import { lightBackgroundToTop } from '../CustomizedComponents/NeumorphismTheme';
 import { createPromotion, getListTarifAndRoom } from '../../services/Promotion';
 import { ThemeContext } from '../context/Wrapper';
 import { formatDate } from '../../services/Util';
 
-const AddPromotionDialog = () => {
+const AddPromotionDialog = ({reload,navigate}) => {
   const context = useContext(ThemeContext);
 
   const [listTarif, setListTarif] = useState([]);
@@ -125,14 +122,8 @@ const AddPromotionDialog = () => {
         context.showLoader(false);
       });
   };
-
-  const handleClickOpen = () => {
-    setOpen(true);
-    fetchData();
-  };
-
   const handleClose = () => {
-    setOpen(false);
+    navigate('list');
   };
 
   // const handleChange = (e) => {
@@ -387,51 +378,61 @@ const AddPromotionDialog = () => {
       createPromotion(formatPayloadToSend(), idToken)
         .then((result) => {
           // console.log(result);
-          if (result.data.status === 200) {
-            context.showLoader(false);
+          if (result.data.status === 200){
             setOpen(false);
             context.changeResultSuccessMessage('Enregistrement inséré avec succès');
             context.showResultSuccess(true);
+            reload();
             cleanPromotion();
           } else if (result.data.errors) {
-            context.showLoader(false);
             const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
             const indication = result.data.errors[item];
             const message = `${item}: ${indication}`;
             context.changeResultErrorMessage(message);
             context.showResultError(true);
           }
+          else {
+            context.changeResultErrorMessage("Une erreur interne s'est produite");
+            context.showResultError(true);
+          }
         })
-        .catch(() => {
-          context.showLoader(false);
-          context.changeResultErrorMessage("Une erreur interne s'est produite");
+        .catch((e) => {
+          context.changeResultErrorMessage(e.message);
           context.showResultError(true);
-        });
+        })
+        .finally(()=>{
+          context.showLoader(false);
+        })
     }
   };
 
-  // const validate = (fieldValues) => {
-  //   const temp = { ...errors };
-
-  //   if ('name' in fieldValues) temp.name = fieldValues.name ? '' : 'Ce champ est requis.';
-
-  //   setErrors({
-  //     ...temp,
-  //   });
-  // };
-
-  // const formIsValid = (newPromotion) => {
-  //   const isValid = newPromotion.name && Object.values(errors).every((x) => x === '');
-  //   setDisabledAddButton(isValid);
-  // };
-
+  useEffect(()=>{
+    fetchData();
+  },[]);
   return (
     <>
-      <CustomizedButton text="Ajouter" onClick={handleClickOpen} variant="contained" component={RouterLink} to="#" />
-      <Dialog open={open} onClose={handleClose} maxWidth={'md'}>
-        <CustomizedDialogTitle text="Ajouter une nouvelle promotion" />
-        <DialogContent sx={{ backgroundColor: '#E8F0F8', pt: 20, pl: 2 }}>
-          <h3>Détails de la promotion</h3>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <CustomizedTitle text="Ajouter une nouvelle promotion" size={20} />
+        <CustomizedButton text="retour" onClick={handleClose} variant="contained" component={RouterLink} to="#" />
+      </Stack>
+
+      <CustomizedPaperOutside
+        sx={{
+          ...lightBackgroundToTop,
+          minHeight: '100vh',
+          border: '1px white solid',
+          width: 0.75,
+          margin:'auto',
+          padding: 5,
+        }}
+      >
+        <Stack
+          justifyContent="flex-start"
+          alignItems="strech"
+          direction={{ xs: 'column' }}
+          spacing={{ xs: 1, sm: 2, md: 4 }}
+        >
+          <CustomizedTitle text='Détails de la promotion' size={22} level={0}/>
           <FormControl>
             <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               À quels plans tarifaires cette promotion s'appliquera-t-elle ?
@@ -504,7 +505,7 @@ const AddPromotionDialog = () => {
             </FormGroup>
           </Box>
           <Divider />
-          <h4>Valeur de la promotion</h4>
+          <CustomizedTitle text='Valeur de la promotion' size={22} level={0} />
           <FormControl>
             <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Veuillez sélectionnez au moins 1 plan tarifaire
@@ -549,8 +550,7 @@ const AddPromotionDialog = () => {
               </RadioGroup>
             </Stack>
           </FormControl>
-
-          <h4>Dates de séjour</h4>
+          <CustomizedTitle text='Dates de séjour' size={22} level={0} />
           <FormControl>
             <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Quand les clients peuvent-ils séjourner chez vous en bénéficiant de cette promotion ?
@@ -574,7 +574,7 @@ const AddPromotionDialog = () => {
               </Stack>
             </LocalizationProvider>
           </FormControl>
-          <h4>Période de réservation - facultatif</h4>
+          <CustomizedTitle text='Période de réservation - facultatif' size={22} level={0} />
           <FormControl>
             <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Quand les clients peuvent-ils réserver cette promotion?
@@ -626,7 +626,7 @@ const AddPromotionDialog = () => {
               </Stack>
             </LocalizationProvider>
           </FormControl>
-          <h4>Séjour minimum</h4>
+          <CustomizedTitle text='Séjour minimum' size={22} level={0} />
           <FormControl>
             <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Combien de temps les clients doivent-ils séjourner dans votre établissement pour bénéficier de cette
@@ -649,7 +649,7 @@ const AddPromotionDialog = () => {
               <p>nuits ou plus</p>
             </Stack>
           </FormControl>
-          <h4>Période réservable (Min lead et Max lead)</h4>
+          <CustomizedTitle text='Période réservable (Min lead et Max lead)' size={22} level={0} />
           <FormControl>
             <FormControlLabel
               value={promotion.is_with_lead ? 'false' : 'true'}
@@ -732,8 +732,7 @@ const AddPromotionDialog = () => {
               </Stack>
             </Stack>
           </FormControl>
-
-          <h4>Nombre de jour d'attribution de la promotion</h4>
+          <CustomizedTitle text="Nombre de jour d'attribution de la promotion" size={22} level={0} />
           <FormControl>
             <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Par défaut, la promotion est attribuée à tous les jours
@@ -800,8 +799,7 @@ const AddPromotionDialog = () => {
               ))}
             </div>
           </FormControl>
-
-          <h4>Nom de la promotion</h4>
+          <CustomizedTitle text='Nom de la promotion' size={22} level={0} />
           <FormControl>
             <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Comment voulez-vous nommer cette promotion ?
@@ -834,29 +832,10 @@ const AddPromotionDialog = () => {
               />
             </Stack>
           </FormControl>
-          {/*
-          <TextField
-            onChange={handleChange}
-            error={errors?.name}
-            margin="dense"
-            id="name"
-            name="name"
-            label="Nom"
-            type="text"
-            fullWidth
-            variant="standard"
-            required
-            {...(errors.name && {
-              error: true,
-              helperText: errors.name,
-            })}
-          /> */}
-        </DialogContent>
-        <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px' }}>
           <Button onClick={handleClose}>Annuler</Button>
           <CustomizedButton text="Enregistrer" onClick={addPromotion} />
-        </DialogActions>
-      </Dialog>
+        </Stack>
+      </CustomizedPaperOutside>
     </>
   );
 };

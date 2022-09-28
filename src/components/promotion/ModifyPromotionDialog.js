@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-
+import {Link as RouterLink} from 'react-router-dom';
 // material
 import {
   Stack,
@@ -10,9 +10,6 @@ import {
   FormLabel,
   RadioGroup,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
   FormControlLabel,
 } from '@mui/material';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
@@ -23,14 +20,15 @@ import { Box } from '@mui/system';
 import { getListTarifAndRoom, getPromotionDetail, updatePromotion } from '../../services/Promotion';
 import { formatDate } from '../../services/Util';
 import { ThemeContext } from '../context/Wrapper';
-import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
+import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
 import CustomizedCheckbox from '../CustomizedComponents/CustomizedCheckbox';
 import CustomizedRadio from '../CustomizedComponents/CustomizedRadio';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
-import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
-import Iconify from '../Iconify';
+import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
+import CustomizedButton from '../CustomizedComponents/CustomizedButton';
+import { lightBackgroundToTop } from '../CustomizedComponents/NeumorphismTheme';
 
-const ModifyPromotionDialog = ({ row, reload }) => {
+const ModifyPromotionDialog = ({ row, reload , navigate}) => {
   const context = useContext(ThemeContext);
   const [open, setOpen] = React.useState(false);
   const [errors, setErrors] = useState({});
@@ -75,7 +73,7 @@ const ModifyPromotionDialog = ({ row, reload }) => {
   // const roomSelected = [];
 
   useEffect(() => {
-
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -162,24 +160,9 @@ const ModifyPromotionDialog = ({ row, reload }) => {
       });
 
   };
-  const handleClickOpen = () => {
-    setOpen(true);
-    fetchData();
-  };
-
   const handleClose = () => {
-    setOpen(false);
+    navigate('list');
   };
-
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setPromotion((promotion) => ({ ...promotion, [name]: value }));
-  //   validate({ [name]: value });
-  //   formIsValid({
-  //     ...promotion,
-  //     [name]: value,
-  //   });
-  // };
 
   const handleChangeSpecificDay = () => {
     const weekDaysTemp = promotion.week_days;
@@ -421,7 +404,13 @@ const ModifyPromotionDialog = ({ row, reload }) => {
             context.showResultSuccess(true);
             setOpen(false);
             reload();
-          } else {
+          }else if (result.data.errors) {
+            const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+            const indication = result.data.errors[item];
+            const message = `${item}: ${indication}`;
+            context.changeResultErrorMessage(message);
+            context.showResultError(true);
+          }else {
             context.changeResultErrorMessage('Une erreur est survenue lors du modification.');
             context.showResultError(true);
           }
@@ -435,40 +424,30 @@ const ModifyPromotionDialog = ({ row, reload }) => {
         });
     }
   };
-
-  // const validate = (fieldValues) => {
-  //   const temp = { ...errors };
-
-  //   if ('name' in fieldValues) temp.name = fieldValues.name ? '' : 'Ce champ est requis.';
-
-  //   setErrors({
-  //     ...temp,
-  //   });
-  // };
-
-  // const isPromotionEqual = (object1, object2) => {
-  //   const isEqual = object1.name === object2.name;
-  //   return isEqual;
-  // };
-
-  // const formIsValid = (newPromotion) => {
-  //   // const isEqual = isPromotionEqual(oldPromotion, newPromotion);
-  //   // if (!isEqual) {
-  //   //   const isValid = promotion.name && Object.values(errors).every((x) => x === '');
-  //   //   setDisabledModifyButton(isValid);
-  //   // } else {
-  //   //   setDisabledModifyButton(false);
-  //   // }
-  // };
-
   return (
     <>
-      <CustomizedIconButton variant="contained" onClick={handleClickOpen}>
-        <Iconify icon="eva:edit-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
-      </CustomizedIconButton >
-      <Dialog open={open} onClose={handleClose} maxWidth={'md'}>
-        <CustomizedDialogTitle text="Modifier promotion" />
-        <DialogContent sx={{ backgroundColor: '#E8F0F8', pt: 20, pl: 2 }}>
+      
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <CustomizedTitle text="Modififer promotion" size={20} />
+        <CustomizedButton text="retour" onClick={handleClose} variant="contained" component={RouterLink} to="#" />
+      </Stack>
+
+      <CustomizedPaperOutside
+        sx={{
+          ...lightBackgroundToTop,
+          minHeight: '100vh',
+          border: '1px white solid',
+          width: 0.75,
+          margin: 'auto',
+          padding: 5,
+        }}
+      >
+        <Stack
+          justifyContent="flex-start"
+          alignItems="strech"
+          direction={{ xs: 'column' }}
+          spacing={{ xs: 1, sm: 2, md: 4 }}
+        >
           <h3>Détails de la promotion</h3>
           <FormControl>
             <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
@@ -868,31 +847,11 @@ const ModifyPromotionDialog = ({ row, reload }) => {
               />
             </Stack>
           </FormControl>
-          {/*
-          <TextField
-            onChange={handleChange}
-            error={errors?.name}
-            margin="dense"
-            id="name"
-            name="name"
-            label="Nom"
-            type="text"
-            fullWidth
-            variant="standard"
-            required
-            {...(errors.name && {
-              error: true,
-              helperText: errors.name,
-            })}
-          /> */}
-        </DialogContent>
-        <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px' }}>
+          
           <Button onClick={handleClose}>Annuler</Button>
-          <Button disabled={!disabledModifyButton} onClick={modifyPromotion}>
-            OK
-          </Button>
-        </DialogActions>
-      </Dialog>
+          <CustomizedButton onClick={modifyPromotion} text='Enregistrer' />
+        </Stack>
+      </CustomizedPaperOutside>
     </>
   );
 };

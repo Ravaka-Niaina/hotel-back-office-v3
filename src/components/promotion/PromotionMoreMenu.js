@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 // material
 import {Stack} from '@mui/material';
 // component
-
-import ModifyPromotionDialog from './ModifyPromotionDialog';
 import DeletePromotionDialog from './DeletePromotionDialog';
 
 // ----------------------------------------------------------------------
@@ -17,7 +15,6 @@ export default function PromotionMoreMenu({ row, reload }) {
   return (
     <>
       <Stack direction='row' spacing={2}>
-        <ModifyPromotionDialog row={row} reload={reload} />
         <DeletePromotionDialog promotionId={row._id} reload={reload} />
       </Stack>
     </>
