@@ -30,7 +30,6 @@ import { lightBackgroundToTop } from '../CustomizedComponents/NeumorphismTheme';
 
 const ModifyPromotionDialog = ({ row, reload , navigate}) => {
   const context = useContext(ThemeContext);
-  const [open, setOpen] = React.useState(false);
   const [errors, setErrors] = useState({});
   const [disabledModifyButton, setDisabledModifyButton] = React.useState(true);
   // const [errors, setErrors] = React.useState({});
@@ -72,10 +71,7 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
   // const tarifSelected = [];
   // const roomSelected = [];
 
-  useEffect(() => {
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  
 
   const [specificDay, setSpecificDay] = useState(false);
 
@@ -97,9 +93,14 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
   
   const fetchData = async () => {
     context.showLoader(true);
+    let fetchPromotionFinished = false;
+    let fetchItemsFinished = false;
     const user = JSON.parse(localStorage.getItem('partner_id'));
+    console.log(row._id);
+    console.log(user);
     getPromotionDetail(row._id, user)
       .then((promotionDetail) => {
+        // console.log(promotionDetail.data);
         if (promotionDetail.data.status === 200) {
           const oldPromotion = promotionDetail.data.promotion;
           delete oldPromotion.userIdInsert;
@@ -138,11 +139,12 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
         context.changeResultErrorMessage('Une erreur interne est survenue lors du chargemenent des données.');
         context.showResultError(true);
       }).finally(() => {
-        context.showLoader(false);
+        fetchPromotionFinished = true;
+        if(fetchItemsFinished) context.showLoader(false);
       });
-    context.showLoader(true);
     getListTarifAndRoom()
       .then((fetch) => {
+        console.log(fetch.data);
         if (fetch.data.status === 200) {
           setListTarif(fetch.data.listTarif);
           setListRoom(fetch.data.listTypeChambre);
@@ -156,7 +158,8 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
         context.changeResultErrorMessage('Une erreur interne est survenue lors du chargemenent des données.');
         context.showResultError(true);
       }).finally(() => {
-        context.showLoader(false);
+        fetchItemsFinished = true;
+        if (fetchPromotionFinished) context.showLoader(false);
       });
 
   };
@@ -302,6 +305,8 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
     if (promotion[field]?.find((elem) => elem === id) === undefined) {
       newSelected.push(id);
     }
+    console.log(promotion);
+    console.log(promotion[field])
     promotion[field].forEach((e) => {
       if (e !== id) {
         newSelected.push(e);
@@ -394,15 +399,15 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
     validate(promotion);
     if(formIsValid(promotion) || true) {
       console.log('here');
-      // context.showLoader(true);
+      context.showLoader(true);
       const idToken = localStorage.getItem('id_token');
       updatePromotion(formatPayloadToSend(), idToken)
         .then((result) => {
-          console.log(result);
+          // console.log(result);
           if (result.data.status === 200) {
+            handleClose();
             context.changeResultSuccessMessage('Enregistrement mis à jour avec succès.');
             context.showResultSuccess(true);
-            setOpen(false);
             reload();
           }else if (result.data.errors) {
             const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
@@ -424,6 +429,10 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
         });
     }
   };
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <>
       
@@ -448,7 +457,7 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
           direction={{ xs: 'column' }}
           spacing={{ xs: 1, sm: 2, md: 4 }}
         >
-          <h3>Détails de la promotion</h3>
+          <CustomizedTitle text='Détails de la promotion' size={22} level={0} />
           <FormControl>
             <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               À quels plans tarifaires cette promotion s'appliquera-t-elle ?
@@ -521,7 +530,7 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
             </FormGroup>
           </Box>
           <Divider />
-          <h4>Valeur de la promotion</h4>
+          <CustomizedTitle text='Valeur de la promotion' size={22} level={0} />
           <FormControl>
             <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Veuillez sélectionnez au moins 1 plan tarifaire
@@ -532,9 +541,9 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
             <Stack sx={{ p: 2 }} direction="row" spacing={3}>
               <CustomizedInput
                 name='discount'
+                value={promotion.discount}
                 type="number"
                 variant="outlined"
-                value={promotion.discount}
                 onChange={(e) => handleChangeInputs(e, 'discount')}
                 label="remise"
                 {...(errors.discount && {
@@ -566,8 +575,7 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
               </RadioGroup>
             </Stack>
           </FormControl>
-
-          <h4>Dates de séjour</h4>
+          <CustomizedTitle text='Dates de séjour' size={22} level={0} />
           <FormControl>
             <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Quand les clients peuvent-ils séjourner chez vous en bénéficiant de cette promotion ?
@@ -591,7 +599,7 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
               </Stack>
             </LocalizationProvider>
           </FormControl>
-          <h4>Période de réservation - facultatif</h4>
+          <CustomizedTitle text='Période de réservation - facultatif' size={22} level={0} />
           <FormControl>
             <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Quand les clients peuvent-ils réserver cette promotion?
@@ -643,7 +651,7 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
               </Stack>
             </LocalizationProvider>
           </FormControl>
-          <h4>Séjour minimum</h4>
+          <CustomizedTitle text='Séjour minimum' size={22} level={0} />
           <FormControl>
             <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Combien de temps les clients doivent-ils séjourner dans votre établissement pour bénéficier de cette
@@ -666,7 +674,7 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
               <p>nuits ou plus</p>
             </Stack>
           </FormControl>
-          <h4>Période réservable (Min lead et Max lead)</h4>
+          <CustomizedTitle text='Période réservable (Min lead et Max lead)Détails de la promotion' size={22} level={0} />
           <FormControl>
             <FormControlLabel
               value={promotion.is_with_lead ? 'false' : 'true'}
@@ -714,7 +722,8 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
               <Stack direction="row" spacing={3} alignItems='center'>
                 <CustomizedInput
                   name='lead_min'
-                  value={promotion.lead && promotion.lead.min}
+                  value={promotion.lead.min}
+
                   onChange={(e) => handleChangeInputs2(e, 'lead', 'min')}
                   type="number"
                   disabled={!promotion.is_with_lead}
@@ -731,7 +740,7 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
               <Stack direction="row" spacing={3} alignItems='center'>
                 <CustomizedInput
                   name='lead_max'
-                  value={promotion.lead && promotion.lead.max}
+                  value={promotion.lead.max}
                   onChange={(e) => handleChangeInputs2(e, 'lead', 'max')}
                   type="number"
                   disabled={!promotion.is_with_lead}
@@ -747,8 +756,7 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
               </Stack>
             </Stack>
           </FormControl>
-
-          <h4>Nombre de jour d'attribution de la promotion</h4>
+          <CustomizedTitle text="Nombre de jour d'attribution de la promotionDétails de la promotion" size={22} level={0} />
           <FormControl>
             <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Par défaut, la promotion est attribuée à tous les jours
@@ -813,8 +821,7 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
               ))}
             </div>
           </FormControl>
-
-          <h4>Nom de la promotion</h4>
+          <CustomizedTitle text='Nom de la promotion' size={22} level={0} />
           <FormControl>
             <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
               Comment voulez-vous nommer cette promotion ?
@@ -858,6 +865,7 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
 ModifyPromotionDialog.propTypes = {
   row: PropTypes.any,
   reload: PropTypes.func,
+  navigate: PropTypes.func,
 };
 
 export default ModifyPromotionDialog;
