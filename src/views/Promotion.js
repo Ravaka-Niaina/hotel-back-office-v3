@@ -40,7 +40,7 @@ const TABLE_HEAD = [
   { id: 'typeChambre', label: 'Type Chambre', alignRight: false },
   { id: 'debutSejour', label: 'Debut Sejour', alignRight: false },
   { id: 'finSejour', label: 'Fin Sejour', alignRight: false },
-  { id: '' },
+  { id: 'action', label: 'Actions', alignRight: false },
 ];
 
 const Promotion = () => {

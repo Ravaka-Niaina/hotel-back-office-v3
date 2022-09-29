@@ -86,6 +86,8 @@ const CellRatePlanEditorPopper = ({ open, anchorEl , setOpen , selected , setSel
                             }
                         });
                     });
+                    context.changeResultSuccessMessage('vos changements ont été enregistrés.');
+                    context.showResultSuccess(true);
                 }
                 else if(result.data.errors)
                 {

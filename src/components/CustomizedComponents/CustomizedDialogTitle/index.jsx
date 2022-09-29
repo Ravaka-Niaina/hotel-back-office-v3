@@ -13,11 +13,16 @@ const CustomizedDialogTitle = (props) => (
     }}
   >
     <Typography variant="h4" component="div" gutterBottom>
-      <CustomizedTitle text={props.text} size={24}/>
+      <CustomizedTitle text={props.text} size={props.size}/>
     </Typography>
   </DialogTitle>
 );
+CustomizedDialogTitle.defaultProps = {
+  text: '',
+   size: 24,
+}
 CustomizedDialogTitle.propTypes = {
   text: PropTypes.any,
+  size:PropTypes.any,
 };
 export default CustomizedDialogTitle;

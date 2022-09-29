@@ -21,6 +21,7 @@ import Iconify from '../components/Iconify';
 const TABLE_HEAD = [
   { id: 'id', label: 'ID', alignRight: false },
   { id: 'nom', label: 'Nom', alignRight: false },
+  { id: 'action', label: 'Actions', alignRight: false },
 ];
 
 const RatePlan = () => {

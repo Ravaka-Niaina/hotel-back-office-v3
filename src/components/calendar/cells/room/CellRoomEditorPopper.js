@@ -69,6 +69,8 @@ const CellRoomEditorPopper = ({ open, anchorEl , setOpen , selected , setSelecte
                             }
                         });
                     });
+                    context.changeResultSuccessMessage('vos changements ont été enregistrés.');
+                    context.showResultSuccess(true);
                 }
                 else if(result.data.errors)
                 {
@@ -154,7 +156,6 @@ const CellRoomEditorPopper = ({ open, anchorEl , setOpen , selected , setSelecte
                                             {
                                                 ...(modifyOpenStatus && { onClick:() => setOpenStatus(false) })
                                             }
-                                            onClick={() => setOpenStatus(false)} 
                                             value="close" 
                                             control={<CustomizedRadio />} 
                                             label="Close" 

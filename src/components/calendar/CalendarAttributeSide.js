@@ -35,7 +35,7 @@ const CalendarAttributeSide = ({chambre, ratePlanAttributeList , reloadRoom}) =>
                         </td>
                     </tr>
                     <tr>
-                        <td style={{ textAlign: 'right', paddingRight: '10px' }}>
+                        <td>
                             <Grid direction='row' spacing={1} justifyContent='space-around' container alignItems='center'>
                                 <Grid item xs={8}>
                                     <Stack justifyContent='flex-start'>
@@ -44,8 +44,8 @@ const CalendarAttributeSide = ({chambre, ratePlanAttributeList , reloadRoom}) =>
                                 </Grid>
                                 <Grid item xs={2}>
                                     <Stack justifyContent='flex-end'>
-                                        <CustomizedIconButton sx={{ width: 25, height: 25 }}>
-                                            <EditIcon sx={{ width: 12, height: 12 }} />
+                                        <CustomizedIconButton sx={{ width: 22, height: 22 }}>
+                                            <EditIcon sx={{ width: 10, height: 10 }} />
                                         </CustomizedIconButton>
                                     </Stack>
                                 </Grid>
@@ -53,7 +53,7 @@ const CalendarAttributeSide = ({chambre, ratePlanAttributeList , reloadRoom}) =>
                         </td>
                     </tr>
                     <tr>
-                        <td style={{ textAlign: 'right', paddingRight: '10px' }}>Booked</td>
+                        <td style={{paddingLeft:'16px'}}>Booked</td>
                     </tr>
                     {
                         ratePlanAttributeList.map((element)=>{

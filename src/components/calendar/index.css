@@ -1,6 +1,6 @@
-.calendarEditor table,
+.calendarEditor table, .calendarEditor
 td,
-th {
+.calendarEditor th {
   border: 1px solid #e0e0e0;
 }
 .calendarEditor {
@@ -18,10 +18,9 @@ th {
 }
 
 .calendarEditor .status {
-  height: 25px;
+  height:30px;
+  max-height: 25px;
   padding: 0px;
-  padding-left: 10px;
-  padding-right: 10px;
 }
 .value td {
   min-width: 50px;

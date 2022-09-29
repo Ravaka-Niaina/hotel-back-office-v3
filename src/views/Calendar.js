@@ -67,7 +67,7 @@ const Calendar = () => {
                         console.log(resultIndex);
                         if(resultIndex > -1)
                         {
-                            console.log('hahah');
+                            // console.log('hahah');
                             setRoomList((prev) => {
                                 return produce(prev,condition => {
                                    condition[roomIndex] = JSON.parse(JSON.stringify(result.data.typeChambre[resultIndex]));
@@ -170,7 +170,7 @@ const Calendar = () => {
                         >
                             <Grid item xs={2}>
                                 <CustomizedIconButton
-                                    onClick={()=>setOpen(true)}
+                                    onClick={()=>setOpen((prev)=>!prev)}
                                     sx={{
                                         background: '#E3EDF7',
                                         opacity: 0.7,
