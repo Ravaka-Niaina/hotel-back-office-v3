@@ -1,8 +1,7 @@
 import React,{ useState , useContext} from 'react';
-import { format } from 'date-fns';
-import produce from 'immer';
+import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Stack, LinearProgress, FormControlLabel, RadioGroup } from '@mui/material';
+import { Stack, LinearProgress } from '@mui/material';
 import { DateRangePicker } from 'rsuite';
 import PersonIcon from '@mui/icons-material/Person';
 
@@ -40,6 +39,7 @@ const VersionRowEditor = ({ handleClose, chambre, item, reloadRoom, ...others })
         })
         if (formIsValid() && prix !== '') {
             save();
+            
         }
     };
     const save = () => {
@@ -84,7 +84,9 @@ const VersionRowEditor = ({ handleClose, chambre, item, reloadRoom, ...others })
             .finally(() => {
                 setTimeout(() => {
                     setLoading(false);
+                    handleClose();
                 }, 2000);
+                
             })
     }
     const validate = (fields) => {
@@ -107,7 +109,7 @@ const VersionRowEditor = ({ handleClose, chambre, item, reloadRoom, ...others })
     };
     
     return (
-        <div>
+        <div {...others}>
             <Stack spacing={2} justifyContent='space-evenly' alignItems='stretch' sx={{ p: 1, minHeight: '350px' }}>
                 <div style={{ maxWidth: '250px', textAlign: 'center' }}>
                     <CustomizedTitle text='Modifier le tarif de cette version' />
@@ -121,11 +123,9 @@ const VersionRowEditor = ({ handleClose, chambre, item, reloadRoom, ...others })
                         />
                         <Stack direction='row' spacing={0} justifyContent='flex-start' alignItems='flex-start'>
                             {
-                                [... new Array(item.adultsNum)].map((e, i) => {
-                                    return (
+                                [... new Array(item.adultsNum)].map((e, i) => (
                                         <PersonIcon key={i} />
-                                    )
-                                })
+                                ))
                             }
                         </Stack>
                         
@@ -139,11 +139,9 @@ const VersionRowEditor = ({ handleClose, chambre, item, reloadRoom, ...others })
                         />
                         <Stack direction='row' spacing={0} justifyContent='flex-start' alignItems='flex-start'>
                             {
-                                [... new Array(item.childrenNum)].map((e, i) => {
-                                    return (
+                                [... new Array(item.childrenNum)].map((e, i) => (
                                         <PersonIcon key={i} sx={{ fontSize: 15 }} />
-                                    )
-                                })
+                                ))
                             }
                         </Stack>
                     </Stack>
@@ -197,5 +195,11 @@ const VersionRowEditor = ({ handleClose, chambre, item, reloadRoom, ...others })
         </div>
     );
 };
+VersionRowEditor.propTypes = {
+    handleClose: PropTypes.any,
+    chambre: PropTypes.any,
+    item: PropTypes.any,
+    reloadRoom: PropTypes.any,
 
+};
 export default VersionRowEditor;

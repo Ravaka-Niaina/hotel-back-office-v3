@@ -1,5 +1,6 @@
 import React from 'react';
 import { Dialog, DialogContent } from '@mui/material';
+import PropTypes from 'prop-types';
 import AvailabilityRowEditor from './cells/rateplan/AvailabilityRowEditor';
 import VersionRowEditor from './cells/rateplan/VersionRowEditor';
 import RoomRowEditor from './cells/room/RoomRowEditor';
@@ -28,7 +29,7 @@ const RowEditorPopper = ({ open, setOpen, chambre, item, reloadRoom, ...others})
                         paddingTop: 15
                     }}
                 >
-                        <div>
+                        <div {...others}>
                             {
                                 item.name === 'availability' && (
                                     <AvailabilityRowEditor handleClose={handleClose} chambre={chambre} item={item} reloadRoom={reloadRoom}/>
@@ -50,5 +51,11 @@ const RowEditorPopper = ({ open, setOpen, chambre, item, reloadRoom, ...others})
         </>
     );
 };
-
+RowEditorPopper.propTypes = {
+    open: PropTypes.any,
+    setOpen: PropTypes.any,
+    chambre: PropTypes.any,
+    item: PropTypes.any,
+    reloadRoom: PropTypes.any,
+}
 export default RowEditorPopper;

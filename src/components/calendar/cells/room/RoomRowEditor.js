@@ -1,9 +1,10 @@
 import React from 'react';
 
 const RoomRowEditor = () => {
+    const a = 'Not available';
     return (
         <div>
-            rs
+            {a}
         </div>
     );
 };

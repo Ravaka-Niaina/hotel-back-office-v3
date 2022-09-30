@@ -1,4 +1,5 @@
 import React , { useState , useContext} from 'react';
+import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import produce from 'immer';
 import { Popper, Slide , Stack, LinearProgress  } from '@mui/material';
@@ -73,8 +74,8 @@ const CellRatePlanEditorPopper = ({ open, anchorEl , setOpen , selected , setSel
             .then((result) => {
                 console.log(result);
                 if (result.data.status === 200) {
-                    setChambre((prev) => {
-                        return produce(prev, condition => {
+                    setChambre((prev) => (
+                        produce(prev, condition => {
                             const firstItemIndex =
                                 prev.planTarifaire[firstElement.rate_plan_index].prixTarif.findIndex((elem) =>
                                     elem.date === firstElement.date);
@@ -84,8 +85,8 @@ const CellRatePlanEditorPopper = ({ open, anchorEl , setOpen , selected , setSel
                             for (let i = firstItemIndex; i <= lastItemIndex; i += 1) {
                                 condition.planTarifaire[firstElement.rate_plan_index].prixTarif[i].versions[firstElement.version_index].prix = payload.prix;
                             }
-                        });
-                    });
+                        })
+                    ));
                     context.changeResultSuccessMessage('vos changements ont été enregistrés.');
                     context.showResultSuccess(true);
                 }
@@ -184,5 +185,13 @@ const CellRatePlanEditorPopper = ({ open, anchorEl , setOpen , selected , setSel
         </>
     );
 };
-
+CellRatePlanEditorPopper.propTypes = {
+    open: PropTypes.any,
+    anchorEl: PropTypes.any,
+    setOpen: PropTypes.any,
+    selected: PropTypes.any,
+    setSelected: PropTypes.any,
+    chambre: PropTypes.any,
+    setChambre: PropTypes.any,
+}
 export default CellRatePlanEditorPopper;

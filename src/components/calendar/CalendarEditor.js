@@ -1,7 +1,6 @@
-import React , { useEffect , useState , useContext } from 'react';
-import debounce from 'lodash.debounce';
+import React , { useEffect , useState } from 'react';
 import { Grid , Stack } from '@mui/material';
-
+import PropTypes from 'prop-types';
 
 import EditIcon from '@mui/icons-material/Edit';
 import PersonIcon from '@mui/icons-material/Person';
@@ -15,8 +14,6 @@ import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
 import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
 import CalendarValueSide from './CalendarValueSide';
 import CalendarAttributeSide from './CalendarAttributeSide';
-
-import { ThemeContext } from '../context/Wrapper';
 
 import './index.css';
 import RowEditorPopper from './RowEditorPopper';
@@ -33,7 +30,7 @@ function initializeDateList(dateRange){
     const date = new Date(dateRange[0].toDate());
     date.setDate(date.getDate() - 1);
     const rangeGap = dateDiff(dateRange[0].toDate(), dateRange[1].toDate());  
-    const list = [...new Array(rangeGap+1)].map((e,i)=>{
+    const list = [...new Array(rangeGap+1)].map(()=>{
         date.setDate(date.getDate() + 1);
         return new Date(date.getTime());
     });
@@ -68,14 +65,18 @@ const CalendarEditor = ({room , dateRange , reloadRoom}) => {
     
     useEffect(() => {
         loadRoomDetailsRows();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedRoom]);
 
     useEffect(() => {
         loadRatePlanRows();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedRatePlan]);
+    
 
     useEffect(() => {
         loadCells();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [chambre]);
 
     const cleanOthers = (name) => {
@@ -172,18 +173,16 @@ const CalendarEditor = ({room , dateRange , reloadRoom}) => {
                                 <Grid item xs={8}>
                                     <Stack sx={{ p: 1 }} direction='row' spacing={0} alignItems='flex-end' justifyContent='flex-start'>
                                         {
-                                            [...new Array(tarif.prixTarif[0]?.versions[index]?.adultsNum)].map((e, i) => {
-                                                return (
+                                            [...new Array(tarif.prixTarif[0]?.versions[index]?.adultsNum)].map((e, i) => (
                                                     <PersonIcon key={i} />
                                                 )
-                                            })
+                                            )
                                         }
                                         {
-                                            [...new Array(tarif.prixTarif[0]?.versions[index]?.childrenNum)].map((e, i) => {
-                                                return (
+                                            [...new Array(tarif.prixTarif[0]?.versions[index]?.childrenNum)].map((e, i) => (
                                                     <PersonIcon key={i} sx={{ fontSize: 15 }} />
                                                 )
-                                            })
+                                            )
                                         }
                                     </Stack>
                                 </Grid>
@@ -191,7 +190,7 @@ const CalendarEditor = ({room , dateRange , reloadRoom}) => {
                                     <Stack justifyContent='flex-end'>
                                         <CustomizedIconButton 
                                             sx={{ width: 22, height: 22 }}
-                                            onClick={(e) => {
+                                            onClick={() => {
                                                 setOpenRowEditor(true);
                                                 setRowEditorItem((prev) => (
                                                     {
@@ -287,7 +286,7 @@ const CalendarEditor = ({room , dateRange , reloadRoom}) => {
                                     <Stack justifyContent='flex-end'>
                                         <CustomizedIconButton 
                                             sx={{ width: 22, height: 22 }}
-                                            onClick={(e) => {
+                                            onClick={() => {
                                                 setOpenRowEditor(true);
                                                 setRowEditorItem((prev)=>(
                                                     {
@@ -345,5 +344,10 @@ const CalendarEditor = ({room , dateRange , reloadRoom}) => {
         </CustomizedPaperOutside>
     );
 };
+CalendarEditor.propTypes = {
+    room: PropTypes.any,
+    dateRange: PropTypes.any,
+    reloadRoom: PropTypes.any,
 
+};
 export default CalendarEditor;

@@ -1,6 +1,5 @@
 import React , { useState , useContext} from 'react';
-import { format } from 'date-fns';
-import produce from 'immer';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Stack, LinearProgress, FormControlLabel,RadioGroup } from '@mui/material';
 import { DateRangePicker } from 'rsuite';
@@ -18,6 +17,7 @@ const AvailabilityRowEditor = ({ handleClose, chambre, item, reloadRoom, ...othe
     const today = new Date();
     const nextWeek = new Date(today);
     nextWeek.setDate(nextWeek.getDate() + 7);
+    
     const context = useContext(ThemeContext);
     const [dateRange, setDateRange] = useState([moment(today), moment(nextWeek)]);
     const [openStatus,setOpenStatus] = useState(true);
@@ -59,12 +59,13 @@ const AvailabilityRowEditor = ({ handleClose, chambre, item, reloadRoom, ...othe
             })
             .finally(() => {
                 setLoading(false);
+                handleClose();
             })
     };
     
     return (
         <>
-            <div >
+            <div {...others}>
                 <Stack spacing={2} justifyContent='space-evenly' alignItems='stretch' sx={{ p: 1, minHeight: '350px' }}>
                     <div style={{maxWidth:'250px',textAlign:'center'}}>
                         <CustomizedTitle text='Modifier la disponibilite du plan tarifaire' />
@@ -123,5 +124,10 @@ const AvailabilityRowEditor = ({ handleClose, chambre, item, reloadRoom, ...othe
         </>
     );
 };
-
+AvailabilityRowEditor.propTypes = {
+    handleClose: PropTypes.any,
+    chambre: PropTypes.any,
+    item: PropTypes.any,
+    reloadRoom: PropTypes.any,
+};
 export default AvailabilityRowEditor;

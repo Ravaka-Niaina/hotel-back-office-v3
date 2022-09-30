@@ -1,4 +1,5 @@
 import React , { useEffect, useState , useContext } from 'react';
+import PropTypes from 'prop-types';
 import produce from 'immer';
 import moment from 'moment';
 import { Dialog,DialogContent, Alert, Stack, FormControlLabel, RadioGroup , Grid } from '@mui/material';
@@ -183,26 +184,26 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
         
     };
     const handleChangeDays = (index) => {
-        setDays((prev)=>{
-            return produce(prev,condition=>{
+        setDays((prev)=>(
+            produce(prev,condition=>{
                 condition[index].checked = !prev[index].checked;
-            });
-        })
+            })
+        ))
     };
     const handleChangeRatePlans = (index) => {
-        setRatePlans((prev) => {
-            return produce(prev, condition => {
+        setRatePlans((prev) => (
+            produce(prev, condition => {
                 condition[index].checked = !prev[index].checked;
-            });
-        })
+            })
+        ))
     };
     const handleChangeVersions = (e,index) => {
         setNoVersionFilledError(false);
-        setVersions((prev)=>{
-            return produce(prev,changes=>{
+        setVersions((prev)=>(
+            produce(prev,changes=>{
                 changes[index].prix = e.target.value !== '' ? Number.parseInt(e.target.value,10):'';   
             })
-        });
+        ));
     };
     const handleClickOpen = () => {
         setOpen(true);
@@ -211,14 +212,15 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
         setOpen(false);
     };
     useEffect(()=>{
+        setOpenPicker(false);
         setRatePlans(
-            chambre.planTarifaire.map((oneRP)=>{
-                return {
+            chambre.planTarifaire.map((oneRP)=>(
+                {
                     _id:oneRP._id,
                     nom:oneRP.nom,
                     checked:false,
-                };
-            })
+                }
+            ))
         );
         const v = [];
         for (let a = 1; a <= chambre.nbAdulte;a+=1){
@@ -235,6 +237,7 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
             }
         }
         setVersions(v);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
     return (
         <>
@@ -379,8 +382,7 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
                                 
                                 <Grid container wrap='wrap' spacing={1} direction='row'>
                                     {
-                                        versions.map((v,i)=>{
-                                            return (
+                                        versions.map((v,i)=> (
                                                 <Grid item xs={6} key={i}> 
                                                     <CustomizedInput
                                                         name="roomToSell"
@@ -391,8 +393,7 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
                                                         onChange={(e)=>handleChangeVersions(e,i)}
                                                     />
                                                 </Grid>    
-                                            )
-                                        })
+                                        ))
                                     }
                                 </Grid>
                                 {
@@ -416,4 +417,8 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
     );
 };
 
+EditorCustomizingDialog.propTypes = {
+    chambre: PropTypes.any,
+    reloadRoom: PropTypes.any,
+};
 export default EditorCustomizingDialog;

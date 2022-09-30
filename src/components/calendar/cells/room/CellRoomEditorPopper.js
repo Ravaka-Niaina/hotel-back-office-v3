@@ -1,4 +1,5 @@
 import React , { useState , useContext} from 'react';
+import PropTypes from 'prop-types';
 import {format} from 'date-fns';
 import produce from 'immer';
 import { Popper, Slide , Stack,  FormControlLabel, RadioGroup ,LinearProgress  } from '@mui/material';
@@ -58,8 +59,8 @@ const CellRoomEditorPopper = ({ open, anchorEl , setOpen , selected , setSelecte
             .then((result) => {
                 console.log(result.data);
                 if (result.data.status === 200) {
-                    setChambre((prev) => {
-                        return produce(prev, condition => {
+                    setChambre((prev) => 
+                        produce(prev, condition => {
                             const firstItemIndex = prev.statusDays.findIndex((elem) => elem.date === selected[0]);
                             const lastItemIndex = prev.statusDays.findIndex((elem) => elem.date === selected[selected.length - 1]);
                             for (let i = firstItemIndex; i <= lastItemIndex; i += 1) {
@@ -67,8 +68,9 @@ const CellRoomEditorPopper = ({ open, anchorEl , setOpen , selected , setSelecte
                                 condition.statusDays[i].closed = !payload.isTypeChambreOpen;
 
                             }
-                        });
-                    });
+                        })
+                    )
+                
                     context.changeResultSuccessMessage('vos changements ont été enregistrés.');
                     context.showResultSuccess(true);
                 }
@@ -206,5 +208,14 @@ const CellRoomEditorPopper = ({ open, anchorEl , setOpen , selected , setSelecte
         </>
     );
 };
-
+CellRoomEditorPopper.propTypes = {
+    open: PropTypes.any,
+    anchorEl: PropTypes.any,
+    setOpen: PropTypes.any,
+    selected: PropTypes.any,
+    setSelected: PropTypes.any,
+    chambre: PropTypes.any,
+    setChambre: PropTypes.any,
+    
+};
 export default CellRoomEditorPopper;
