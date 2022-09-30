@@ -8,7 +8,7 @@ import InvisibleBackdrop from '../CustomizedComponents/InvisibleBackdrop';
 
 
 
-const RowEditorPopper = ({ open, setOpen, anchorEl, chambre, item, ...others}) => {
+const RowEditorPopper = ({ open, setOpen, chambre, item, reloadRoom, ...others}) => {
     const handleClose = () => {
         setOpen(false);
     }
@@ -31,17 +31,17 @@ const RowEditorPopper = ({ open, setOpen, anchorEl, chambre, item, ...others}) =
                         <div>
                             {
                                 item.name === 'availability' && (
-                                    <AvailabilityRowEditor handleClose={handleClose} />
+                                    <AvailabilityRowEditor handleClose={handleClose} chambre={chambre} item={item} reloadRoom={reloadRoom}/>
                                 )
                             }
                             {
                                 item.name === 'version' && (
-                                    <VersionRowEditor />
+                                    <VersionRowEditor handleClose={handleClose} chambre={chambre} item={item} reloadRoom={reloadRoom}/>
                                 )
                             }
                             {
                                 item.name === 'room' && (
-                                    <RoomRowEditor />
+                                    <RoomRowEditor handleClose={handleClose} item={item} />
                                 )
                             }
                         </div>

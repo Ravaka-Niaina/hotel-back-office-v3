@@ -50,10 +50,12 @@ const CalendarEditor = ({room , dateRange , reloadRoom}) => {
     const [anchorElRatePlan, setAnchorElRatePlan] = React.useState(null);
     const [openRatePlanEditor, setOpenRatePlanEditor] = React.useState(false);
 
-    const [anchorElRow, setAnchorElRow] = useState(null);
     const [openRowEditor, setOpenRowEditor] = useState(false);
     const [rowEditorItem , setRowEditorItem] = useState({
         name:'',
+        tarif_index:'',
+        adultsNum:'',
+        childrenNum:'',
     });
 
     const [roomDetails, setRoomDetails] = useState({
@@ -187,7 +189,21 @@ const CalendarEditor = ({room , dateRange , reloadRoom}) => {
                                 </Grid>
                                 <Grid item xs={2}>
                                     <Stack justifyContent='flex-end'>
-                                        <CustomizedIconButton sx={{ width: 22, height: 22 }}>
+                                        <CustomizedIconButton 
+                                            sx={{ width: 22, height: 22 }}
+                                            onClick={(e) => {
+                                                setOpenRowEditor(true);
+                                                setRowEditorItem((prev) => (
+                                                    {
+                                                        ...prev,
+                                                        name: 'version',
+                                                        tarif_index:j,
+                                                        adultsNum: tarif.prixTarif[0]?.versions[index]?.adultsNum,
+                                                        childrenNum: tarif.prixTarif[0]?.versions[index]?.childrenNum,
+                                                    }
+                                                ));
+                                            }}
+                                        >
                                             <EditIcon sx={{ width: 10, height: 10 }} />
                                         </CustomizedIconButton>
                                     </Stack>          
@@ -272,13 +288,14 @@ const CalendarEditor = ({room , dateRange , reloadRoom}) => {
                                         <CustomizedIconButton 
                                             sx={{ width: 22, height: 22 }}
                                             onClick={(e) => {
-                                                console.log(e.currentTarget);
-                                                setAnchorElRow(e.currentTarget);
                                                 setOpenRowEditor(true);
-                                                setRowEditorItem({
-                                                    name:'availability',
-
-                                                });
+                                                setRowEditorItem((prev)=>(
+                                                    {
+                                                        ...prev,
+                                                        name:'availability',
+                                                        tarif_index: j,
+                                                    }
+                                                ));
                                             }}
                                         > 
                                             <EditIcon sx={{ width: 10, height: 10}} />
@@ -307,7 +324,7 @@ const CalendarEditor = ({room , dateRange , reloadRoom}) => {
         <CustomizedPaperOutside elevation={12} sx={{ background: '#E3EDF7', p: 5 }}>
             <CellRoomEditorPopper open={openRoomEditor} setOpen={setOpenRoomEditor} anchorEl={anchorElRoom} sx={{ zIndex:16777270}} selected={selectedRoom} setSelected={setSelectedRoom} chambre={chambre} setChambre={setChambre}/>
             <CellRatePlanEditorPopper open={openRatePlanEditor} setOpen={setOpenRatePlanEditor} anchorEl={anchorElRatePlan} sx={{ zIndex: 16777270 }} selected={selectedRatePlan} setSelected={setSelectedRatePlan} chambre={chambre}  setChambre={setChambre}/>
-            <RowEditorPopper open={openRowEditor} setOpen={setOpenRowEditor} anchorEl={anchorElRow} chambre={chambre} item={rowEditorItem}/>
+            <RowEditorPopper open={openRowEditor} setOpen={setOpenRowEditor}  chambre={chambre} item={rowEditorItem} reloadRoom={reloadRoom}/>
             <Grid container>
                 <Grid item xs={4} >
                     <CalendarAttributeSide 

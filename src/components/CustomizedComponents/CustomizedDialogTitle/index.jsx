@@ -19,7 +19,7 @@ const CustomizedDialogTitle = (props) => (
 );
 CustomizedDialogTitle.defaultProps = {
   text: '',
-   size: 24,
+  size: 24,
 }
 CustomizedDialogTitle.propTypes = {
   text: PropTypes.any,
