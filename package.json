@@ -45,8 +45,8 @@
     ]
   },
   "overrides": {
-    "autoprefixer": "10.4.5"
-  }, 
+    "@svgr/webpack": "^6.2.1"
+  },
   "dependencies": {
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
@@ -60,6 +60,7 @@
     "@testing-library/jest-dom": "^5.16.4",
     "apexcharts": "^3.35.3",
     "axios": "^0.27.2",
+    "base64-blob": "^1.4.1",
     "change-case": "^4.1.2",
     "date-fns": "^2.29.3",
     "dayjs": "^1.11.5",
@@ -116,8 +117,5 @@
     "eslint-plugin-react": "^7.30.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "^2.7.1"
-  },
-  "overrides": {
-    "@svgr/webpack": "^6.2.1"
   }
 }
