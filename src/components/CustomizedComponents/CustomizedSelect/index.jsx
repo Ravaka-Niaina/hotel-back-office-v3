@@ -25,7 +25,7 @@ const CustomizedSelect = (props) => (
     <CustomizedLabel label={props.label} />
     <CustomSelect 
       {
-       ...( props.sx && {sx:props.sx})
+       ...(props.sx && {sx:props.sx})
       }
       inputprops={{ ...props, shrink: false }} 
       children={props.children} 
