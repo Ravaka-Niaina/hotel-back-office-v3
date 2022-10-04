@@ -23,12 +23,19 @@ const CustomSelect = styled(Select)({
 const CustomizedSelect = (props) => (
   <Stack spacing={1} direction="column">
     <CustomizedLabel label={props.label} />
-    <CustomSelect inputprops={{ ...props, shrink: false }} children={props.children} />
+    <CustomSelect 
+      {
+       ...( props.sx && {sx:props.sx})
+      }
+      inputprops={{ ...props, shrink: false }} 
+      children={props.children} 
+    />
   </Stack>
 );
 
 CustomizedSelect.propTypes = {
   children: PropTypes.any,
   label:PropTypes.any,
+  sx:PropTypes.any,
 };
 export default CustomizedSelect;
