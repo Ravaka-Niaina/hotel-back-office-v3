@@ -34,7 +34,6 @@ const AddPromotionDialog = ({reload,navigate}) => {
 
   const [listRoom, setListRoom] = useState([]);
 
-  const [open, setOpen] = useState(false);
 
   const [errors, setErrors] = useState({});
 
@@ -108,13 +107,11 @@ const AddPromotionDialog = ({reload,navigate}) => {
           });
           setPromotion({ ...promotionTemp, room_type: [...roomSelected], rate_plan: [...tarifSelected] });
         } else {
-          setOpen(false);
           context.changeResultErrorMessage('Une erreur est interne survenue lors du chargement des  listes.');
           context.showResultError(true);
         }
       })
       .catch(() => {
-        setOpen(false);
         context.changeResultErrorMessage('Une erreur est interne survenue lors du chargement des  listes.');
         context.showResultError(true);
       })
@@ -373,13 +370,12 @@ const AddPromotionDialog = ({reload,navigate}) => {
     validate(promotion);
     if (formIsValid(promotion)) {
       context.showLoader(true);
-      const idToken = JSON.parse(localStorage.getItem('id_token'));
-      setOpen(true);
+      const idToken = localStorage.getItem('id_token');
       createPromotion(formatPayloadToSend(), idToken)
         .then((result) => {
           // console.log(result);
           if (result.data.status === 200){
-            setOpen(false);
+            handleClose();
             context.changeResultSuccessMessage('Enregistrement inséré avec succès');
             context.showResultSuccess(true);
             reload();
@@ -518,7 +514,6 @@ const AddPromotionDialog = ({reload,navigate}) => {
                 name="discount"
                 type="number"
                 variant="outlined"
-                value={promotion.discount}
                 onChange={(e) => handleChangeInputs(e, 'discount')}
                 label="remise"
                 {...(errors.discount && {
@@ -635,7 +630,6 @@ const AddPromotionDialog = ({reload,navigate}) => {
             <Stack sx={{ p: 2 }} direction="row" spacing={3} alignItems="center">
               <CustomizedInput
                 name="min_stay"
-                value={promotion.min_stay}
                 onChange={(e) => handleChangeInputs(e, 'min_stay')}
                 type="number"
                 id="outlined-basic"
@@ -697,7 +691,6 @@ const AddPromotionDialog = ({reload,navigate}) => {
               <Stack direction="row" spacing={3} alignItems="center">
                 <CustomizedInput
                   name="lead_min"
-                  value={promotion.lead.min}
                   onChange={(e) => handleChangeInputs2(e, 'lead', 'min')}
                   type="number"
                   disabled={!promotion.is_with_lead}
@@ -715,7 +708,6 @@ const AddPromotionDialog = ({reload,navigate}) => {
               <Stack direction="row" spacing={3} alignItems="center">
                 <CustomizedInput
                   name="lead_max"
-                  value={promotion.lead.max}
                   onChange={(e) => handleChangeInputs2(e, 'lead', 'max')}
                   type="number"
                   disabled={!promotion.is_with_lead}
@@ -749,7 +741,6 @@ const AddPromotionDialog = ({reload,navigate}) => {
             <Stack sx={{ p: 2 }} direction="row" spacing={3}>
               <CustomizedInput
                 name="first_day"
-                value={promotion.first_day}
                 onChange={(e) => handleChangeInputs3(e, 'first_day')}
                 id={promotion.specific_days_of_stay ? 'outlined-basic' : 'filled-disabled'}
                 type="number"
@@ -808,7 +799,6 @@ const AddPromotionDialog = ({reload,navigate}) => {
             <Stack sx={{ p: 2 }} direction="row" spacing={3}>
               <CustomizedInput
                 name="french_name"
-                // value={promotion.french_name}
                 onChange={(e) => handleChangeInputs(e, 'french_name')}
                 id="outlined-basic"
                 label="Nom"

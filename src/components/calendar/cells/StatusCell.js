@@ -131,8 +131,8 @@ const StatusCell = ({available,chambre,date,setChambre,index,isRatePlan = false,
             }
             {
                 !loading && (
-                    available ?(<EventAvailableIcon style={{ color: 'white', width: '18px', height: '18px' }} />):
-                    (<EventBusyIcon style={{ color: 'white', width: '18px', height: '18px' }} />)
+                    available ?(<EventAvailableIcon style={{ color: 'white', width: '22px', height: '22px' }} />):
+                    (<EventBusyIcon style={{ color: 'white', width: '22px', height: '22px' }} />)
                 )
             }
         </div>

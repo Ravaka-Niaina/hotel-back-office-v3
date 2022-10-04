@@ -36,7 +36,7 @@ const TABLE_HEAD = [
   { id: 'nombreEnfants', label: 'Nombre Enfants', alignRight: false },
   { id: 'chambresTotal', label: 'Chambres Total', alignRight: false },
   { id: 'superficie', label: 'Superficie', alignRight: false },
-  { id: '' },
+  { id: 'action', label: 'Actions', alignRight: false },
 ];
 
 const TableCellStyled = styled(TableCell)({

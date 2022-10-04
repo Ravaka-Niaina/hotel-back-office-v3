@@ -22,6 +22,7 @@ const TABLE_HEAD = [
   { id: 'nom', label: 'Nom', alignRight: false },
   { id: 'adresse', label: 'Adresse', alignRight: false },
   { id: 'lien', label: 'Lien', alignRight: false },
+  { id: 'action', label: 'Actions', alignRight: false },
 ];
 
 const Hotel = () => {

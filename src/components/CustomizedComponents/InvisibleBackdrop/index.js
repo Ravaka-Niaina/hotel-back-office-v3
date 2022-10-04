@@ -10,5 +10,5 @@ const CustomBackdrop = styled(Backdrop,
             return styles.backdrop; 
         }, 
     })({ zIndex: -1, })
-const InvisibleBackdrop = () => <CustomBackdrop invisible />;
+const InvisibleBackdrop = (props) => <CustomBackdrop invisible {...props} />;
 export default InvisibleBackdrop;

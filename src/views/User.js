@@ -35,7 +35,7 @@ const TABLE_HEAD = [
   { id: 'prenom', label: 'Prenom', alignRight: false },
   { id: 'telephone', label: 'Telephone', alignRight: false },
   { id: 'active', label: 'Actif', alignRight: false },
-  { id: '' },
+  { id: 'action', label: 'Actions', alignRight: false },
 ];
 
 // ----------------------------------------------------------------------

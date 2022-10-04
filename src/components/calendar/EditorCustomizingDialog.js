@@ -1,7 +1,8 @@
 import React , { useEffect, useState , useContext } from 'react';
+import PropTypes from 'prop-types';
 import produce from 'immer';
 import moment from 'moment';
-import { Dialog, DialogActions, DialogContent, Button, Stack, FormControlLabel, RadioGroup , Grid } from '@mui/material';
+import { Dialog,DialogContent, Alert, Stack, FormControlLabel, RadioGroup , Grid } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { DateRangePicker } from 'rsuite';
 
@@ -31,10 +32,12 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
     const [openPicker,setOpenPicker] = useState(false);
     const [open , setOpen ] = useState(false);
     const [isRoomOpen , setIsRoomOpen ] = useState(true);
+    const [isRatePlanOpen, setIsRatePlanOpen] = useState(true);
     const [ratePlans , setRatePlans] = useState([]);
     const [versions , setVersions] = useState([]);
     const [roomToSell,setRoomToSell] = useState('');
     const [errors,setErrors] = useState(false);
+    const [noVersionFilledError,setNoVersionFilledError] = useState(false);
     const [days, setDays] = React.useState([
         { value: 1, checked: true, label: "Mon" },
         { value: 2, checked: true, label: "Tue" },
@@ -44,6 +47,11 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
         { value: 6, checked: true, label: "Sat" },
         { value: 7, checked: true, label: "Sun" },
     ]);
+    const isAllVersionNotFilled = () => {
+        const allNotFilled = versions.every((v) => v.prix === "")
+        setNoVersionFilledError(allNotFilled);
+        return allNotFilled;
+    }
     const validate = (fields , required = true) => {
         const temp = {...errors};
         if('roomToSell' in fields){
@@ -58,6 +66,7 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
         }
         setErrors((prev)=>({...prev,...temp}));
     };
+
     const formIsValid = () => {
         const isValid = Object.values(errors).every((x) => x === '');
         return isValid;
@@ -67,7 +76,7 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
         const save = () => {
             if( formIsValid() && roomToSell !== '')
             {
-                console.log('wtf');
+                context.showLoader(true);
                 const payload = {
                     idTypeChambre: chambre._id,
                     days,
@@ -78,13 +87,15 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
                     forTypeChambre: true,
                     forTarif: false
                 };
-                console.log(payload);
+                // console.log(payload);
                 configPrix(payload)
                     .then((result) => {
                         console.log(result.data);
                         if(result.data.status === 200)
                         {
                             reloadRoom(chambre._id);
+                            context.changeResultSuccessMessage('vos changements ont été enregistrés.');
+                            context.showResultSuccess(true);
                         }
                         else if(result.data.errors)
                         {
@@ -104,29 +115,95 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
                         context.showResultError(true);
                     })
                     .finally(() => {
-                        console.log('finally');
-                        console.log(errors);
+                        // console.log('finally');
+                        context.showLoader(false);
                     })
             }
         }
-        setTimeout(()=>{
-            save();
-        },1000);
+        save();
 
     };
+
+    const saveRatePlan = (all=false) =>{
+
+        const isValid = !(isAllVersionNotFilled());
+        if (all) validate({ roomToSell });
+        if (isValid && (!all || roomToSell !== ''))
+        {
+            context.showLoader(true);
+            const payload = {
+                idTypeChambre: chambre._id,
+                tabIdTarif: ratePlans.reduce((stack, next) => {
+                    if (next.checked) stack.push(next._id);
+                    return stack;
+                }, []),
+                versions: versions.reduce((stack, next) => {
+                    if (next.prix !== "") stack.push(next);
+                    return stack;
+                }, []),
+                dateDebut: dateRange[0].format('YYYY-MM-DD'),
+                dateFin: dateRange[1].format('YYYY-MM-DD'),
+                isTarifOpen: isRatePlanOpen,
+                forTypeChambre: all,
+                forTarif:true,
+                toSell: parseInt(roomToSell, 10),
+                isTypeChambreOpen: isRoomOpen,
+                minSejour: 1,
+                days,
+            };
+            console.log(payload);
+            configPrix(payload)
+                .then((result) => {
+                    console.log(result.data);
+                    if (result.data.status === 200) {
+                        reloadRoom(chambre._id);
+                        context.changeResultSuccessMessage('vos changements ont été enregistrés.');
+                        context.showResultSuccess(true);
+                    }
+                    else if (result.data.errors) {
+                        const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+                        const indication = result.data.errors[item];
+                        const message = `${item}: ${indication}`;
+                        context.changeResultErrorMessage(message);
+                        context.showResultError(true);
+                    }
+                    else {
+                        context.changeResultErrorMessage(`Une erreur inconnue s'est produite. Veuillez contacter l'administrateur`);
+                        context.showResultError(true);
+                    }
+                })
+                .catch((e) => {
+                    context.changeResultErrorMessage(e.message);
+                    context.showResultError(true);
+                })
+                .finally(() => {
+                    // console.log('finally');
+                    context.showLoader(false);
+                })
+        }
+        
+    };
     const handleChangeDays = (index) => {
-        setDays((prev)=>{
-            return produce(prev,condition=>{
+        setDays((prev)=>(
+            produce(prev,condition=>{
                 condition[index].checked = !prev[index].checked;
-            });
-        })
+            })
+        ))
     };
     const handleChangeRatePlans = (index) => {
-        setRatePlans((prev) => {
-            return produce(prev, condition => {
+        setRatePlans((prev) => (
+            produce(prev, condition => {
                 condition[index].checked = !prev[index].checked;
-            });
-        })
+            })
+        ))
+    };
+    const handleChangeVersions = (e,index) => {
+        setNoVersionFilledError(false);
+        setVersions((prev)=>(
+            produce(prev,changes=>{
+                changes[index].prix = e.target.value !== '' ? Number.parseInt(e.target.value,10):'';   
+            })
+        ));
     };
     const handleClickOpen = () => {
         setOpen(true);
@@ -135,14 +212,15 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
         setOpen(false);
     };
     useEffect(()=>{
+        setOpenPicker(false);
         setRatePlans(
-            chambre.planTarifaire.map((oneRP)=>{
-                return {
+            chambre.planTarifaire.map((oneRP)=>(
+                {
                     _id:oneRP._id,
                     nom:oneRP.nom,
                     checked:false,
-                };
-            })
+                }
+            ))
         );
         const v = [];
         for (let a = 1; a <= chambre.nbAdulte;a+=1){
@@ -151,13 +229,15 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
                     {
                         nbPers:a+e,
                         prix:"",
-                        nbAdulte:a,
-                        nbEnfant:e,
+                        adultsNum:a,
+                        childrenNum:e,
                     }
                 );
+                
             }
         }
         setVersions(v);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
     return (
         <>
@@ -196,7 +276,7 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
                                 // }
                             }}
                         />
-                        <div >
+                        <div>
                             {days.map((k,index) => (
                                 <FormControlLabel
                                     key={k.value}
@@ -253,7 +333,7 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
                                         helpertext: errors.roomToSell,
                                     })}
                                 />
-                                <CustomizedButton onClick={saveRoomType} text="Sauvegarder" component={RouterLink} to="#" />
+                                <CustomizedButton onClick={saveRoomType} text="Sauvegarder chambre" component={RouterLink} to="#" />
                             </Stack>
                         </div>
 
@@ -280,37 +360,56 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
                                         />
                                     ))}
                                 </div>
-                                <RadioGroup row aria-labelledby="demo-controlled-radio-buttons-group" name="controlled-radio-buttons-group">
+                                <RadioGroup 
+                                    row 
+                                    aria-labelledby="demo-controlled-radio-buttons-group" 
+                                    name="controlled-radio-buttons-group"
+                                    value={isRatePlanOpen ? "open" : "close"}
+                                >
                                     <FormControlLabel
                                         control={<CustomizedRadio />}
                                         label="Open"
+                                        value="open"
+                                        onClick={()=>setIsRatePlanOpen(true)}
                                     />
                                     <FormControlLabel
                                         control={<CustomizedRadio />}
                                         label="Close"
+                                        value="close"
+                                        onClick={()=>setIsRatePlanOpen(false)}
                                     />
                                 </RadioGroup>
+                                
                                 <Grid container wrap='wrap' spacing={1} direction='row'>
                                     {
-                                        versions.map((v,i)=>{
-                                            return (
+                                        versions.map((v,i)=> (
                                                 <Grid item xs={6} key={i}> 
                                                     <CustomizedInput
                                                         name="roomToSell"
                                                         type="number"
                                                         variant="outlined"
-                                                        label={`Adulte(x${v.nbAdulte}) - Enfant(x${v.nbEnfant})`}
+                                                        label={`Adulte : ${v.adultsNum}  ______ Enfant : ${v.childrenNum} `}
                                                         placeholder="ex: 10"
+                                                        onChange={(e)=>handleChangeVersions(e,i)}
                                                     />
                                                 </Grid>    
-                                            )
-                                        })
+                                        ))
                                     }
                                 </Grid>
+                                {
+                                    noVersionFilledError && (
+                                        <Alert severity="error" sx={{ background: "#FF647C", color: "white" }}>
+                                            Veuillez remplir au moins un champ ci-dessus.
+                                        </Alert>
+                                    )
+                                }
                                 
-                                <CustomizedButton text="Sauvegarder" component={RouterLink} to="#" />
+                                <CustomizedButton text="Sauvegarder tarif" onClick={()=>saveRatePlan()} component={RouterLink} to="#" />
+                                
                             </Stack>
+
                         </div>
+                        <CustomizedButton text="Sauvegarder tous" onClick={()=>saveRatePlan(true)} component={RouterLink} to="#" />
                     </Stack>
                 </DialogContent>
             </Dialog>
@@ -318,4 +417,8 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
     );
 };
 
+EditorCustomizingDialog.propTypes = {
+    chambre: PropTypes.any,
+    reloadRoom: PropTypes.any,
+};
 export default EditorCustomizingDialog;
