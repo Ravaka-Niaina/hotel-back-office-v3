@@ -7,6 +7,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 import Page from '../components/Page';
 import ReservationRow from '../components/reservation/ReservationRow';
+import ReservationDetails from '../components/reservation/ReservationDetails';
 
 import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
 import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
@@ -14,13 +15,18 @@ import CustomizedPaperInset from '../components/CustomizedComponents/CustomizedP
 import CustomizedInput from '../components/CustomizedComponents/CustomizedInput';
 import CustomizedSelect from '../components/CustomizedComponents/CustomizedSelect';
 import CustomizedButton from '../components/CustomizedComponents/CustomizedButton';
-import { lightBackgroundToTop } from '../components/CustomizedComponents/NeumorphismTheme';
-import { getReservationList } from '../services/Reservation';
 import {ThemeContext} from '../components/context/Wrapper';
+import { lightBackgroundToTop } from '../components/CustomizedComponents/NeumorphismTheme';
+
+import { getReservationList } from '../services/Reservation';
+import { formatDate } from '../services/Util';
 
 
 const Booking = () => {
     const context = useContext(ThemeContext);
+    const [ location, setLocation] = useState('list');
+    const [ currentReservation, setCurrentDetails] = useState(null);
+    const [ currentRoomIndex, setCurrentRoomIndex] = useState(-1);
     const [reservationList, setReservationList] = useState([]);
     const [filter, setFilter] = useState({
         dateOf: 'check-in',
@@ -28,7 +34,27 @@ const Booking = () => {
         dateUntil: '',
         status: 'ok',
     });
-    console.log(reservationList);
+    console.log(filter);
+    const navigate = (itinerary,detailsData = null,detailsIndex = -1) => {
+        setCurrentDetails(detailsData);
+        setCurrentRoomIndex(detailsIndex);
+        if(itinerary === 'details')
+        {
+            setLocation('details');
+        }
+        else if(itinerary === 'list')
+        {
+            setLocation('list');
+        }
+    };
+    const handleChangeFilters = (value,field) => {
+        setFilter((prev)=>(
+            {
+                ...prev,
+                [field]:value,
+            }
+        ));
+    }
     const fetchReservationList = () => {
         context.showLoader(true);
         const payload = {
@@ -71,111 +97,115 @@ const Booking = () => {
     return (
         <Page title="AIOLIA | Reservations">
             <Container>
-                <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-                    <CustomizedTitle size={20} text="Reservations" />
-                </Stack>
+                {
+                    location === 'details' && currentReservation !== null && currentRoomIndex >-1 &&(
+                        <ReservationDetails reservation={currentReservation} index={currentRoomIndex} navigate={navigate}/>
+                    )
+                }
+                {
+                    location === 'list' && (
+                        <>
+                            <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+                                <CustomizedTitle size={20} text="Reservations" />
+                            </Stack>
 
-                <CustomizedPaperOutside
-                    sx={{
-                        ...lightBackgroundToTop,
-                        minHeight: '100vh',
-                        border: '1px white solid',
-                        color: 'white',
-                        padding: 5,
-                    }}
-                >
-                    <Stack spacing={2}>
-                        <Grid container direction='row' justifyContent='flex-start' alignItems='flex-end' spacing={1}>
-                            <Grid item xs={2}>
-                                <CustomizedSelect
-                                    label="Date de"
-                                    sx={{ width: '150px' }}
-                                    onChange={(e) => { console.log(e) }}
-                                    onClick={() => { console.log('click') }}
-                                >
-                                    <MenuItem disabled value="">
-                                        <em>Date de</em>
-                                    </MenuItem>
-                                    <MenuItem selected value='check-in'>
-                                        depart
-                                    </MenuItem>
-                                    <MenuItem value='check-out'>arrive</MenuItem>
-                                    <MenuItem value='reservatifdson'>reservation</MenuItem>
-                                </CustomizedSelect>
-                            </Grid>
-                            <Grid item xs={2}>
-                                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <CustomizedPaperOutside
+                                sx={{
+                                    ...lightBackgroundToTop,
+                                    minHeight: '100vh',
+                                    border: '1px white solid',
+                                    color: 'white',
+                                    padding: 5,
+                                }}
+                            >
+                                <Stack spacing={2}>
+                                    <Grid container direction='row' justifyContent='flex-start' alignItems='flex-end' spacing={4}>
+                                        <Grid item xs={2}>
+                                            <CustomizedSelect
+                                                label="Date de"
+                                                sx={{ width: '150px' }}
+                                                onChange={(e)=>handleChangeFilters(e.target.value,'dateOf')}
+                                                value={filter.dateOf}
+                                            >
+                                                <MenuItem disabled value="">
+                                                    <em>Date de</em>
+                                                </MenuItem>
+                                                <MenuItem value='check-in'>
+                                                    depart
+                                                </MenuItem>
+                                                <MenuItem value='check-out'>arrive</MenuItem>
+                                                <MenuItem value='reservation'>reservation</MenuItem>
+                                            </CustomizedSelect>
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <LocalizationProvider dateAdapter={AdapterDateFns}>
 
-                                    <MobileDatePicker
-                                        label="Debut"
-                                        inputFormat="dd/MM/yyyy"
-                                        value={new Date()}
-                                        // onChange={(e) =>
-                                        //     setRatePlan({ ...ratePlan, start_date_of_booking: formatDate(e.toLocaleDateString('en-US')) })
-                                        // }
-                                        renderInput={(params) => <CustomizedInput sx={{ width: '150px' }} {...params} />}
-                                    />
+                                                <MobileDatePicker
+                                                    label="Debut"
+                                                    inputFormat="dd/MM/yyyy"
+                                                    value={filter.dateFrom ? new Date(filter.dateFrom) : new Date()}
+                                                    onChange={(e) => handleChangeFilters(formatDate(e.toLocaleDateString('en-US')),"dateFrom")}
+                                                    renderInput={(params) => <CustomizedInput sx={{ width: '150px' }} {...params} />}
+                                                />
 
-                                </LocalizationProvider>
-                            </Grid>
-                            <Grid item xs={2}>
-                                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                            </LocalizationProvider>
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <LocalizationProvider dateAdapter={AdapterDateFns}>
 
-                                    <MobileDatePicker
-                                        label="Fin"
-                                        inputFormat="dd/MM/yyyy"
-                                        value={new Date()}
-                                        // onChange={(e) =>
-                                        //     setRatePlan({ ...ratePlan, end_date_of_booking: formatDate(e.toLocaleDateString('en-US')) })
-                                        // }
-                                        renderInput={(params) => <CustomizedInput sx={{ width: '150px' }} {...params} />}
-                                    />
+                                                <MobileDatePicker
+                                                    label="Fin"
+                                                    inputFormat="dd/MM/yyyy"
+                                                    value={filter.dateUntil ? new Date(filter.dateUntil) : new Date()}
+                                                    onChange={(e) => handleChangeFilters(formatDate(e.toLocaleDateString('en-US')),"dateUntil")}
+                                                    renderInput={(params) => <CustomizedInput sx={{ width: '150px' }} {...params} />}
+                                                />
 
-                                </LocalizationProvider>
-                            </Grid>
-                            <Grid item xs={2}>
-                                <CustomizedSelect
-                                    label="Status"
-                                    sx={{ width: '150px' }}
-                                    onChange={(e) => { console.log(e) }}
-                                    onClick={() => { console.log('click') }}
-                                >
-                                    <MenuItem disabled value="">
-                                        <em>Status</em>
-                                    </MenuItem>
-                                    <MenuItem selected value='check-in'>
-                                        ok
-                                    </MenuItem>
-                                    <MenuItem value='check-out'>Annulé</MenuItem>
-                                    <MenuItem value='reservatifdson'>Valide</MenuItem>
-                                </CustomizedSelect>
-                            </Grid>
-                            <Grid item xs={2}>
-                                <CustomizedButton text='filtrer' sx={{ width: '150px' }} />
-                            </Grid>
-                        </Grid>
-                        <TableContainer component={CustomizedPaperInset}>
-                            <Table aria-label="collapsible table">
-                                <TableHead sx={{background:'black',height:'100px'}}>
-                                    <TableRow>
-                                        <TableCell />
-                                        <TableCell>
-                                            <CustomizedTitle text='Reservateur' level={0} />
-                                        </TableCell>
-                                        <TableCell>
-                                            <CustomizedTitle text='Date de reservation' level={0} />
-                                        </TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {reservationList.map((row,i) => (
-                                        <ReservationRow key={i} row={row} />
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Stack>
-                </CustomizedPaperOutside>
+                                            </LocalizationProvider>
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <CustomizedSelect
+                                                label="Status"
+                                                sx={{ width: '150px' }}
+                                                onChange={(e) =>handleChangeFilters(e.target.value,"status")}
+                                                value={filter.status}
+                                            >
+                                                <MenuItem disabled value="">
+                                                    <em>Status</em>
+                                                </MenuItem>
+                                                <MenuItem selected value='ok'>ok</MenuItem>
+                                                <MenuItem value='canceled'>Annulé</MenuItem>
+                                            </CustomizedSelect>
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <CustomizedButton text='filtrer' sx={{ width: '150px' }} />
+                                        </Grid>
+                                    </Grid>
+                                    <TableContainer component={CustomizedPaperInset}>
+                                        <Table aria-label="collapsible table">
+                                            <TableHead sx={{background:'black',height:'100px'}}>
+                                                <TableRow>
+                                                    <TableCell />
+                                                    <TableCell>
+                                                        <CustomizedTitle text='Reservateur' level={0} />
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <CustomizedTitle text='Date de reservation' level={0} />
+                                                    </TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {reservationList.map((row,i) => (
+                                                    <ReservationRow key={i} row={row} navigate={navigate}/>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                </Stack>
+                            </CustomizedPaperOutside>
+                        </>
+                    )
+                }
             </Container>
         </Page>
     );

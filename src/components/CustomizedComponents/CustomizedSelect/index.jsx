@@ -27,6 +27,9 @@ const CustomizedSelect = (props) => (
       {
        ...(props.sx && {sx:props.sx})
       }
+      {
+        ...props
+      }
       inputprops={{ ...props, shrink: false }} 
       children={props.children} 
     />

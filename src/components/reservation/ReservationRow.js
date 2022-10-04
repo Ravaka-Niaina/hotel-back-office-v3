@@ -5,6 +5,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
 
+
 function getNumberOfNights(date1, date2) {
     const d1 = new Date(date1);
     const d2 = new Date(date2);
@@ -12,8 +13,7 @@ function getNumberOfNights(date1, date2) {
     const daydiff = (diff / 86400000);
     return daydiff;
 }
-const ReservationRow = (props) => {
-    const { row } = props;
+const ReservationRow = ({row,navigate}) => {
     const [open, setOpen] = useState(false);
 
     return (
@@ -75,10 +75,10 @@ const ReservationRow = (props) => {
                                             <TableCell >
                                                 <ul>
                                                     {
-                                                        itineraire.tarifReserves.map(tarif => {
+                                                        itineraire.tarifReserves.map((tarif,i) => {
                                                             return (
-                                                                <li>
-                                                                    <Link href="#" underline="hover">
+                                                                <li key={i}>
+                                                                    <Link href="#" underline="hover" onClick={()=>navigate('details',row,i)}>
                                                                         {tarif.nomTypeChambre}
                                                                     </Link>
                                                                     <ul style={{ marginLeft: '10%' }}>
