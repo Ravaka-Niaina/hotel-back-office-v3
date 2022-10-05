@@ -191,14 +191,14 @@ const Booking = () => {
                                     </Grid>
                                     <TableContainer component={CustomizedPaperInset}>
                                         <Table aria-label="collapsible table">
-                                            <TableHead sx={{background:'black',height:'100px'}}>
+                                            <TableHead sx={{background: `linear-gradient(270deg, #33647E 0%, #59A2BE 100%);`,height:'100px'}}>
                                                 <TableRow>
                                                     <TableCell />
                                                     <TableCell>
-                                                        <CustomizedTitle text='Reservateur' level={0} />
+                                                        <CustomizedTitle text='Reservateur' level={0} color="white"/>
                                                     </TableCell>
                                                     <TableCell>
-                                                        <CustomizedTitle text='Date de reservation' level={0} />
+                                                        <CustomizedTitle text='Date de reservation' level={0} color="white"/>
                                                     </TableCell>
                                                 </TableRow>
                                             </TableHead>
