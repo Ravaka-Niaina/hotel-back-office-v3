@@ -29,7 +29,7 @@ const CustomizedButton = (props) => (
         letterSpacing: '-0.4px',
       }}
     >
-      {formatText(props.text)}
+      {props.text}
     </p>
   </ButtonStyled>
 );

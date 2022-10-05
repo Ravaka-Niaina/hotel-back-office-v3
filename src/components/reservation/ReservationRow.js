@@ -75,10 +75,10 @@ const ReservationRow = ({row,navigate}) => {
                                             <TableCell >
                                                 <ul>
                                                     {
-                                                        itineraire.tarifReserves.map((tarif,i) => {
+                                                        itineraire.tarifReserves.map((tarif,j) => {
                                                             return (
-                                                                <li key={i}>
-                                                                    <Link href="#" underline="hover" onClick={()=>navigate('details',row,i)}>
+                                                                <li key={j}>
+                                                                    <Link href="#" underline="hover" onClick={()=>navigate('details',row,i,j)}>
                                                                         {tarif.nomTypeChambre}
                                                                     </Link>
                                                                     <ul style={{ marginLeft: '10%' }}>

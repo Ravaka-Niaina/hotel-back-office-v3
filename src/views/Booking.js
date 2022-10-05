@@ -26,7 +26,8 @@ const Booking = () => {
     const context = useContext(ThemeContext);
     const [ location, setLocation] = useState('list');
     const [ currentReservation, setCurrentDetails] = useState(null);
-    const [ currentRoomIndex, setCurrentRoomIndex] = useState(-1);
+    const [ currentItineraireIndex, setCurrentItineraireIndex] = useState(-1);
+    const [ currentTarifIndex, setCurrentTarifIndex] = useState(-1);
     const [reservationList, setReservationList] = useState([]);
     const [filter, setFilter] = useState({
         dateOf: 'check-in',
@@ -35,9 +36,10 @@ const Booking = () => {
         status: 'ok',
     });
     console.log(filter);
-    const navigate = (itinerary,detailsData = null,detailsIndex = -1) => {
+    const navigate = (itinerary,detailsData = null,itineraireIndex = -1,tarifIndex = -1) => {
         setCurrentDetails(detailsData);
-        setCurrentRoomIndex(detailsIndex);
+        setCurrentItineraireIndex(itineraireIndex);
+        setCurrentTarifIndex(tarifIndex);
         if(itinerary === 'details')
         {
             setLocation('details');
@@ -98,8 +100,14 @@ const Booking = () => {
         <Page title="AIOLIA | Reservations">
             <Container>
                 {
-                    location === 'details' && currentReservation !== null && currentRoomIndex >-1 &&(
-                        <ReservationDetails reservation={currentReservation} index={currentRoomIndex} navigate={navigate}/>
+                    location === 'details' && currentReservation !== null && currentItineraireIndex >-1 && 
+                    currentTarifIndex >-1 && (
+                        <ReservationDetails 
+                            reservation={currentReservation} 
+                            itineraireIndex={currentItineraireIndex} 
+                            tarifIndex={currentTarifIndex}
+                            navigate={navigate}
+                        />
                     )
                 }
                 {
@@ -196,7 +204,7 @@ const Booking = () => {
                                             </TableHead>
                                             <TableBody>
                                                 {reservationList.map((row,i) => (
-                                                    <ReservationRow key={i} row={row} navigate={navigate}/>
+                                                    <ReservationRow key={i+1} row={row} navigate={navigate}/>
                                                 ))}
                                             </TableBody>
                                         </Table>
