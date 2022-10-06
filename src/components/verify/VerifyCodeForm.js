@@ -20,7 +20,6 @@ const VerifyCodeForm = () => {
     const toReplace = '"';
     return str.replaceAll(toReplace, '');
   };
-
   const validate = (fields) => {
     const temp = { ...errors };
     if ('code' in fields) {

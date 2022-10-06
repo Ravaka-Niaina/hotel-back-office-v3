@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useState } from 'react';
 import { Stack } from '@mui/material';
 import { Editor } from "react-draft-wysiwyg";

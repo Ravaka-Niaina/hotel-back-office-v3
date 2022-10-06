@@ -7,6 +7,7 @@ import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import AddImageCrop from './AddImageCrop';
+import Galerie from './Galerie';
 
 const AddRoomTypeDialog = () => {
   const [open, setOpen] = useState(false);
@@ -28,6 +29,7 @@ const AddRoomTypeDialog = () => {
     photo: [],
     imgCrop: '',
   });
+  const [showGalerie, setShowGalerie] = useState(false);
 
   const addCropedImage = useCallback((cropedImage) => {
     setRoomType((roomType) => ({ ...roomType, imgCrop: cropedImage }));
@@ -227,9 +229,13 @@ const AddRoomTypeDialog = () => {
           </Stack>
           <h4>Images de la chambre</h4>
           <Stack sx={{ p: 2 }} direction="row" spacing={2}>
-            <CustomizedButton text={`Choisir à partir de la gallerie`} component={RouterLink} to="#"/>
+            <CustomizedButton text={`Choisir à partir de la gallerie`} onClick={() => setShowGalerie(true)} component={RouterLink} to="#"/>
             <CustomizedButton text={`Uploader une image`} component={RouterLink} to="#"/>
           </Stack>
+          <Galerie 
+            showGalerie={showGalerie} 
+            setShowGalerie={setShowGalerie}
+          />
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px' }}>
           <Button onClick={handleClose}>Annuler</Button>

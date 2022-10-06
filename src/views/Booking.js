@@ -216,7 +216,7 @@ const Booking = () => {
                 }
             </Container>
         </Page>
-    );
+      );
 };
 
 export default Booking;

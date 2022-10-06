@@ -96,8 +96,6 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
     let fetchPromotionFinished = false;
     let fetchItemsFinished = false;
     const user = JSON.parse(localStorage.getItem('partner_id'));
-    console.log(row._id);
-    console.log(user);
     getPromotionDetail(row._id, user)
       .then((promotionDetail) => {
         // console.log(promotionDetail.data);
@@ -144,7 +142,6 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
       });
     getListTarifAndRoom()
       .then((fetch) => {
-        console.log(fetch.data);
         if (fetch.data.status === 200) {
           setListTarif(fetch.data.listTarif);
           setListRoom(fetch.data.listTypeChambre);
