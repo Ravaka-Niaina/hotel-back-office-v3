@@ -98,14 +98,6 @@ export default function Router() {
           path: 'emailModel',
           element: <EmailModel />,
         },
-        {
-          path: 'generalConditionsOfSale',
-          element: <Protected child={<GeneralConditionsOfSale />} allowedRoles={getAllowedRoles(`${dashboardPath}/generalConditionsOfSale`)} />,
-        },
-        {
-          path: 'legalNotice',
-          element: <Protected child={<LegalNotice />} allowedRoles={getAllowedRoles(`${dashboardPath}/legalNotice`)} />,
-        },
         { path: '*', element: <NotFound /> },
       ],
     },
