@@ -62,6 +62,7 @@ const Calendar = () => {
             context.showLoader(true);
             getTcTarifPrix(payload)
                 .then((result) => {
+                    console.log(result);
                     if (result.data.status === 200) {
                         const resultIndex = result.data.typeChambre.findIndex((elem)=>elem._id === id);
                         console.log(resultIndex);
@@ -76,6 +77,7 @@ const Calendar = () => {
                         }
                     }
                     else if(result.data.errors){
+                    
                         const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
                         const indication = result.data.errors[item];
                         const message = `${item}: ${indication}`;
