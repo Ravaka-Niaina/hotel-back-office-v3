@@ -24,15 +24,15 @@ export default function LoginForm() {
   const [form, setForm] = useState({
     is_partner: true,
     email: '',
-    mdp: '',
+    password: '',
     browser: 'temp',
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState(false);
 
-  const formIsValid = (newAccessRight) => {
-    const isValid = newAccessRight.name && Object.values(errors).every((x) => x === '');
+  const formIsValid = () => {
+    const isValid = form.email && form.password && Object.values(errors).every((x) => x === '');
     return isValid;
   };
 
@@ -47,12 +47,8 @@ export default function LoginForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((form) => ({ ...form, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value }));
     validate({ [name]: value });
-    formIsValid({
-      ...form,
-      [name]: value,
-    });
   };
   const formatPayloadToSend = () => {
     const payload = {
@@ -64,28 +60,31 @@ export default function LoginForm() {
     return payload;
   };
   const handleSubmit = () => {
-    context.showLoader(true);
-    const payloads = formatPayloadToSend();
-    login(payloads)
-      .then((datas) => {
-        const dataMessage = datas.data.message;
-        const dataPartnerId = datas.data.partner_id;
-        console.log(datas);
-        if (dataMessage === 'OK') {
-          localStorage.setItem('partner_id', JSON.stringify(dataPartnerId));
-          navigate('/verifycode');
-        } else {
-          context.changeResultErrorMessage('Vos identifiants sont incorrects,veuillez réessayer.');
+    validate({form});
+    if(formIsValid()){
+      context.showLoader(true);
+      const payloads = formatPayloadToSend();
+      login(payloads)
+        .then((datas) => {
+          const dataMessage = datas.data.message;
+          const dataPartnerId = datas.data.partner_id;
+          console.log(datas);
+          if (dataMessage === 'OK') {
+            localStorage.setItem('partner_id', JSON.stringify(dataPartnerId));
+            navigate('/verifycode');
+          } else {
+            context.changeResultErrorMessage('Vos identifiants sont incorrects,veuillez réessayer.');
+            context.showResultError(true);
+          }
+        })
+        .catch(() => {
+          context.changeResultErrorMessage(`Une erreur s'est produite,veuillez réessayer plus tard.`);
           context.showResultError(true);
-        }
-      })
-      .catch(() => {
-        context.changeResultErrorMessage(`Une erreur s'est produite,veuillez réessayer plus tard.`);
-        context.showResultError(true);
-      })
-      .finally(() => {
-        context.showLoader(false);
-      });
+        })
+        .finally(() => {
+          context.showLoader(false);
+        });
+    }
   };
   return (
     <form>
