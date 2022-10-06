@@ -49,7 +49,6 @@ const ReservationDetails = ({reservation,itineraireIndex,tarifIndex,navigate}) =
         setTarif(tarifTemp);
         setMailObject(`Réponse à la demande concernant votre réservation à nom de l'hotel, ${tarifTemp.nomTypeChambre}, ${tarifTemp.nomTarif}`);
         setMailBody(`Votre demande: ${tarifTemp.reservateurWithEmail.messageParticulier === null ? '' : tarifTemp.reservateurWithEmail.messageParticulier}`);
-        console.log(reservation);
     },[]);
     
     return (

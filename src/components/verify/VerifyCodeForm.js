@@ -1,4 +1,4 @@
-import React , { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 // form
 // @mui
@@ -13,14 +13,13 @@ import { ThemeContext } from '../context/Wrapper';
 
 const VerifyCodeForm = () => {
   const context = useContext(ThemeContext);
-  const [code,setCode] = useState('');
+  const [code, setCode] = useState('');
   const [errors, setErrors] = useState(false);
   const navigate = useNavigate();
   const removeDoubleQuotes = (str) => {
     const toReplace = '"';
     return str.replaceAll(toReplace, '');
   };
-  
   const validate = (fields) => {
     const temp = { ...errors };
     if ('code' in fields) {
@@ -40,8 +39,8 @@ const VerifyCodeForm = () => {
     return isValid;
   };
   const onSubmit = async (e) => {
-    validate({code});
-    if(formIsValid() && code !== ''){
+    validate({ code });
+    if (formIsValid() && code !== '') {
       context.showLoader(true);
       const user = JSON.parse(localStorage.getItem('partner_id'));
       const payload = {
@@ -90,7 +89,7 @@ const VerifyCodeForm = () => {
       .catch(() => {
         context.changeResultErrorMessage('Une erreur est survenue lors du verification.');
         context.showResultError(true);
-      }).finally(()=>{
+      }).finally(() => {
         context.showLoader(false);
       });
   };
@@ -98,23 +97,23 @@ const VerifyCodeForm = () => {
   return (
     <>
       <Stack spacing={3}>
-          <Stack spacing={3}>
-            <CustomizedInput 
-              placeholder='Entrer le code'
-              label='Code'
-              type='number'
-              onChange={(e) => {
-                setCode(e.target.value);
-                validate({ 'code': e.target.value })
-              }}
-              {...(errors.code && {
-                error: true,
-                helpertext: errors.code,
-              })}
-            />
-            <CustomizedButton text='Verifier' onClick={onSubmit} />
-          </Stack>
-        <CustomizedButton text='Renvoyer le code' onClick={onSubmitResend}/>
+        <Stack spacing={3}>
+          <CustomizedInput
+            placeholder='Entrer le code'
+            label='Code'
+            type='number'
+            onChange={(e) => {
+              setCode(e.target.value);
+              validate({ 'code': e.target.value })
+            }}
+            {...(errors.code && {
+              error: true,
+              helpertext: errors.code,
+            })}
+          />
+          <CustomizedButton text='Verifier' onClick={onSubmit} />
+        </Stack>
+        <CustomizedButton text='Renvoyer le code' onClick={onSubmitResend} />
 
       </Stack>
     </>
