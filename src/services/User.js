@@ -43,10 +43,11 @@ export const getUserList = (payload, idToken) =>
       Authorization: idToken,
     },
   });
-export const getUserDetails = (id) =>
+export const getUserDetails = (id,idToken) =>
   axios.get(`${config.host}/user/details/${id}`, {
     headers: {
       ispartner: true,
+      Authorization: idToken,
     },
   });
 export const updateUser = (payload) =>
@@ -110,7 +111,7 @@ export const getPayloadFromToken = (jwtDecode, token) => {
  * @param {string} id The id of an user (generally we get it from the payload)
  * @returns {object} The payload of the user
  */
-export const getUserDetailsById = async (id) => {
-  const userDetails = await getUserDetails(id);
+export const getUserDetailsById = async (id,idToken) => {
+  const userDetails = await getUserDetails(id,idToken);
   return userDetails;
 };
