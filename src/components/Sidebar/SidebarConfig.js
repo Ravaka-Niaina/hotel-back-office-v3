@@ -98,18 +98,6 @@ export const getSidebarConfig = async (context) => {
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/emailModel')),
     },
     {
-      title: "conditions générales de vente",
-      path: '/dashboard/generalConditionsOfSale',
-      icon: getIcon('bx:book-content'),
-      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/generalConditionsOfSale')),
-    },
-    {
-      title: "Mentions légales",
-      path: '/dashboard/legalNotice',
-      icon: getIcon('emojione-monotone:balance-scale'),
-      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/legalNotice')),
-    },
-    {
       title: 'login',
       path: '/login',
       icon: getIcon('eva:lock-fill'),

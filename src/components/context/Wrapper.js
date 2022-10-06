@@ -32,7 +32,11 @@ const Wrapper = ({ children }) => {
    * @description A function to get the token of the current user
    * @returns A jwt token
    */
-  const getIdToken = () => localStorage.getItem('id_token') || '';
+  const getIdToken = () => {
+    const token = localStorage.getItem('id_token') || '';
+    return token;
+  }
+    
 
   const handleCloseSnackBar = (event, reason) => {
     if (reason === 'clickaway') {
@@ -70,10 +74,10 @@ const Wrapper = ({ children }) => {
     setOpenAlertSuccess(false);
   };
 
-  const idToken = getIdToken();
-  const payloadFromToken = getPayloadFromToken(jwtDecode, idToken);
+
+  const payloadFromToken = getPayloadFromToken(jwtDecode, getIdToken());
   const partnerId = payloadFromToken?.partner_id;
-  const details = getUserDetailsById(partnerId);
+  const details = getUserDetailsById(partnerId, getIdToken());
 
   const getUserDetails = async () => {
     const userDetails = await details;
