@@ -7,10 +7,11 @@ export const getRoomTypeList = (payload, idToken) =>
       Authorization: idToken,
     },
   });
-export const createRoomType = (payload, partnerId) =>
-  axios.post(`${config.host}/roomType/search`, payload, {
+export const createRoomType = (payload) =>
+  axios.post(`${config.host}/typeChambre/insert`, payload, {
     headers: {
-      partner_id: partnerId,
+      Authorization: localStorage.getItem("id_token"),
+      partner_id: localStorage.getItem("partner_id")
     },
   });
 export const updateRoomType = (payload, partnerId) =>

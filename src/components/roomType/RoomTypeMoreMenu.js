@@ -9,12 +9,12 @@ import DeleteRoomTypeDialog from './DeleteRoomTypeDialog';
 
 // ----------------------------------------------------------------------
 
-export default function RoomTypeMoreMenu({ row }) {
+export default function RoomTypeMoreMenu({ row, reload, }) {
   return (
     <>
       <Stack direction='row' spacing={2}>
           <ModifyRoomTypeDialog row={row} />
-          <DeleteRoomTypeDialog row={row} />
+          <DeleteRoomTypeDialog row={row} reload={reload} />
       </Stack>
     </>
   );

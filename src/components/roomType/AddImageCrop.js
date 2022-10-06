@@ -13,7 +13,7 @@ import { ThemeContext } from '../context/Wrapper';
 const maxWidth = 350;
 const maxHeight = 350;
 
-const AddImageCrop = ({addCropedImage}) => {
+const AddImageCrop = ({addCropedImage, output, setOutput,}) => {
   const context = useContext(ThemeContext);
   const [open, setOpen] = useState(false);
   // functions to close and open the dialog of the image crop
@@ -24,7 +24,6 @@ const AddImageCrop = ({addCropedImage}) => {
   const handleClose = () => {
     setOpen(false);
     setSrc(null);
-    setOutput(null);
     setImage(null);
   };
   const removePreviewedImage = () => {
@@ -33,7 +32,6 @@ const AddImageCrop = ({addCropedImage}) => {
   const [previewedImage, setPreviewedImage] = useState(null);
   const [src, setSrc] = useState(null);
   const [image, setImage] = useState(null);
-  const [output, setOutput] = useState(null);
   const [crop, setCrop] = useState({
     unit: 'px',
     x: 25,

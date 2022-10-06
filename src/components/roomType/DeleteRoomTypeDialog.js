@@ -1,7 +1,5 @@
 import { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
-
-// material
 import {
   Dialog,
   DialogTitle,
@@ -10,13 +8,16 @@ import {
   DialogActions,
   Button,
 } from '@mui/material';
+import { deleteRoomType } from '../../services/RoomType';
+
+// material
 
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
 import { ThemeContext } from '../context/Wrapper';
 import Iconify from '../Iconify';
 
-const DeleteRoomTypeDialog = ({ row }) => {
+const DeleteRoomTypeDialog = ({ row, reload, }) => {
   const [open, setOpen] = useState(false);
   const context = useContext(ThemeContext);
   const handleClickOpen = () => {
@@ -27,18 +28,21 @@ const DeleteRoomTypeDialog = ({ row }) => {
     setOpen(false);
   };
 
-  const deleteRoomType = () => {
-    // deleteOnePromotion(promotionId, type)
-    //   .then(() => {
-    setOpen(false);
-    // reload();
-    context.changeResultSuccessMessage('Enregistrement supprimé avec succès');
-    context.showResultSuccess(true);
-    //   })
-    //   .catch((error) => {
-    //     setOpen(false);
-    //     handleClickSnackBar();
-    //   });
+  const sendDeleteRoomType = () => {
+    deleteRoomType({ _id: row._id, tableName: 'typeChambre' })
+    .then((result) => {
+      if (result.status === 200) {
+        setOpen(false);
+        reload();
+        context.changeResultSuccessMessage('Enregistrement supprimé avec succès');
+        context.showResultSuccess(true);
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      setOpen(false);
+      // handleClickSnackBar();
+    });
   };
   return (
     <>
@@ -59,7 +63,7 @@ const DeleteRoomTypeDialog = ({ row }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Annuler</Button>
-          <CustomizedButton onClick={deleteRoomType} text={'Supprimer'} />
+          <CustomizedButton onClick={sendDeleteRoomType} text={'Supprimer'} />
         </DialogActions>
       </Dialog>
     </>

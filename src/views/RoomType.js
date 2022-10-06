@@ -154,7 +154,7 @@ const TypeChambre = () => {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <CustomizedTitle size={20} text="Type de chambre" />
-          <AddRoomTypeDialog />
+          <AddRoomTypeDialog reload={reload} />
         </Stack>
 
         <CustomizedPaperOutside
@@ -205,7 +205,7 @@ const TypeChambre = () => {
                         <TableCellStyled align="left">{chambresTotal}</TableCellStyled>
                         <TableCellStyled align="left">{superficie}</TableCellStyled>
                         <TableCellStyled align="right">
-                          <RoomTypeMoreMenu row={row} />
+                          <RoomTypeMoreMenu row={row} reload={reload} />
                         </TableCellStyled>
                       </TableRow>
                     );

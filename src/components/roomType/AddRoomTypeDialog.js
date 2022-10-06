@@ -3,13 +3,15 @@ import { Link as RouterLink } from 'react-router-dom';
 // material
 import { Stack, Button, Dialog, DialogActions, DialogContent } from '@mui/material';
 // components
+import { createRoomType } from '../../services/RoomType';
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import AddImageCrop from './AddImageCrop';
 import Galerie from './Galerie';
 
-const AddRoomTypeDialog = () => {
+const imgCrop = null;
+const AddRoomTypeDialog = ({ reload, }) => {
   const [open, setOpen] = useState(false);
   // const [errors, setErrors] = useState({});
   const errors = {};
@@ -30,6 +32,7 @@ const AddRoomTypeDialog = () => {
     imgCrop: '',
   });
   const [showGalerie, setShowGalerie] = useState(false);
+  const [output, setOutput] = useState(null);
 
   const addCropedImage = useCallback((cropedImage) => {
     setRoomType((roomType) => ({ ...roomType, imgCrop: cropedImage }));
@@ -57,7 +60,39 @@ const AddRoomTypeDialog = () => {
   }, [roomType]);
 
   const addRoomType = () => {
-    setOpen(false);
+    const payload = {
+      toSend: {
+        nom: roomType.nameInFrench,
+        name: roomType.nameInEnglish,
+        chambreTotal: roomType.numberOfRoom,
+        superficie: roomType.areaSize,
+        etage: roomType.stageNumber,
+        nbAdulte: roomType.adultNumber,
+        nbEnfant: roomType.childNumber,
+        description: roomType.descriptionInFrench,
+        desc: roomType.descriptionInEnglish,
+        imgCrop: output,
+        photo: [output], 
+        equipements: [], 
+        planTarifaire: [], 
+        videos: [],
+      }
+    };
+    console.log(payload);
+    createRoomType(payload)
+    .then(result => {
+      console.log(result);
+      if (result.data.status === 200) {
+        setOpen(false);
+        reload();
+      } else {
+        console.error("Une erreur s'est produite");
+      }
+    })
+    .catch(err => console.error(err));
+
+    // reload()
+    // setOpen(false);
   };
 
   return (
@@ -225,7 +260,11 @@ const AddRoomTypeDialog = () => {
           </Stack>
           <h4>Choisir une image pour l'aperçu de la chambre</h4>
           <Stack sx={{ p: 2 }} direction="row" spacing={2}>
-            <AddImageCrop addCropedImage={addCropedImage} />
+            <AddImageCrop 
+              addCropedImage={addCropedImage}
+              output={output}
+              setOutput={setOutput}
+            />
           </Stack>
           <h4>Images de la chambre</h4>
           <Stack sx={{ p: 2 }} direction="row" spacing={2}>
