@@ -47,7 +47,7 @@ const VerifyCodeForm = () => {
       const payload = {
         isPartner: true,
         idUser: user,
-        verificationCode: e.code,
+        verificationCode: code,
       };
       verifyCode(payload)
         .then((verifyResult) => {
