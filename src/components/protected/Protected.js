@@ -83,6 +83,11 @@ const Protected = ({ child, allowedRoles }) => {
           context.changeResultErrorMessage(message);
           context.showResultError(true);
         }
+        else if (results.data.message) {
+          context.showLoader(false);
+          context.changeResultErrorMessage(results.data.message);
+          context.showResultError(true);
+        }
         else{
           context.showLoader(false);
           context.changeResultErrorMessage(`Une erreur est survenue, Veuillez contacter l'administrateur.`);
