@@ -6,6 +6,7 @@ import { Card, Link, Container, Typography } from '@mui/material';
 import useResponsive from '../hooks/useResponsive';
 // components
 import Page from '../components/Page';
+import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
 // sections
 import { VerifyCodeForm } from '../components/verify';
 
@@ -64,43 +65,23 @@ const VerifyCode = () => {
   const mdUp = useResponsive('up', 'md');
 
   return (
-    <Page title="AIOLIA | Verification de code">
+    <Page title="AIOLIA | Verification de code" sx={{ backgroundColor: '#E8F0F8' }}> 
       <RootStyle>
         <HeaderStyle>
-          {/* <Logo /> */}
+          <div> </div>
         </HeaderStyle>
-
-        {mdUp && (
-          <SectionStyle>
-            <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Verification
-            </Typography>
-            <img src="/static/illustrations/illustration_login.png" alt="login" />
-          </SectionStyle>
-        )}
-
         <Container maxWidth="sm">
           <ContentStyle>
-            <Typography variant="h4" gutterBottom>
-              Code de vérification
-            </Typography>
-
+            {/* <img src={`${process.env.PUBLIC_URL}/images/logo/logowcolor.png`} alt={`login_logo`} style={{ margin: 'auto' }} width={250} height={250} /> */}
+            <CustomizedTitle text='Code de vérification' size='34' level={2}/>
             <Typography sx={{ color: 'text.secondary', mb: 5 }}>Entrez le code que nous avons envoyé à +261-XXX-XXX-XX-XX pour vous connecter.</Typography>
 
-
             <VerifyCodeForm />
-
-            {!smUp && (
-              <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-                Vous n'avez pas de compte?{' '}
-                <Link variant="subtitle2" component={RouterLink} to="/register">
-                  S'inscrire
-                </Link>
-              </Typography>
-            )}
+            
           </ContentStyle>
         </Container>
       </RootStyle>
+  
     </Page>
   );
 }
