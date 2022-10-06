@@ -111,7 +111,6 @@ export const getPayloadFromToken = (jwtDecode, token) => {
  * @returns {object} The payload of the user
  */
 export const getUserDetailsById = async (id) => {
-  console.log(id);
   const userDetails = await getUserDetails(id);
   return userDetails;
 };
