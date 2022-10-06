@@ -64,6 +64,7 @@ const Protected = ({ child, allowedRoles }) => {
       userDetails.then((results) => {
         // the attributedAccessRights from the payload
         console.log(results);
+        console.log(results);
         if(results.data.status === 200){
           const attributedAccessRights = results.data?.atribAR;
           // only getting the id field from the arrays of the payload and storing it inside an array
