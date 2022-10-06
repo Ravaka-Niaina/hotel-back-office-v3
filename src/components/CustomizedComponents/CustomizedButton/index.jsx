@@ -20,7 +20,7 @@ const CustomizedButton = (props) => (
       className="depth"
       title={formatText(props.text)}
       style={{
-        fontFamily: 'RalewayLight',
+        fontFamily: 'RalewayLight' ,
         fontWeight: 800,
         fontSize: '16px',
         fontStyle: 'normal',
