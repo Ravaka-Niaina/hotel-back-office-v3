@@ -20,6 +20,10 @@ const CalendarAttributeSide = ({chambre, ratePlanAttributeList , reloadRoom}) =>
                                 alignItems="center"
                             >
                                 <CustomizedTitle text={chambre.nom} />
+                                <Stack direction='row' spacing={1} alignItems='center'>
+                                    <EditorCustomizingDialog chambre={chambre} reloadRoom={reloadRoom}/>
+                                </Stack>
+
                             </Stack>
                         </th>
                     </tr>
