@@ -42,13 +42,6 @@ const CalendarAttributeSide = ({chambre, ratePlanAttributeList , reloadRoom}) =>
                                         <p> Room to sell</p>
                                     </Stack>
                                 </Grid>
-                                <Grid item xs={2}>
-                                    <Stack justifyContent='flex-end'>
-                                        <CustomizedIconButton sx={{ width: 22, height: 22 }}>
-                                            <EditIcon sx={{ width: 10, height: 10 }} />
-                                        </CustomizedIconButton>
-                                    </Stack>
-                                </Grid>
                             </Grid>
                         </td>
                     </tr>
