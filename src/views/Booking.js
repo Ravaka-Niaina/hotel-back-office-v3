@@ -30,10 +30,10 @@ const Booking = () => {
     const [ currentTarifIndex, setCurrentTarifIndex] = useState(-1);
     const [reservationList, setReservationList] = useState([]);
     const [filter, setFilter] = useState({
-        dateOf: 'check-in',
-        dateFrom: '',
-        dateUntil: '',
-        status: 'ok',
+        dateOf: 'none',
+        dateFrom: formatDate(new Date().toLocaleDateString()),
+        dateUntil: formatDate(new Date().toLocaleDateString()),
+        status: 'none',
     });
     console.log(filter);
     const navigate = (itinerary,detailsData = null,itineraireIndex = -1,tarifIndex = -1) => {
@@ -57,14 +57,30 @@ const Booking = () => {
             }
         ));
     }
+    const fetchFilter = () => {
+        console.log(filter);
+        const payload = {
+            "filter": {
+                "statut": filter.status,
+                "dateToFind": filter.dateOf,
+                "dateDebut": filter.dateFrom,
+                "dateFin": filter.dateUntil,
+            },
+            "numPage":1,
+            "nbContent":1,
+        };
+    };
     const fetchReservationList = () => {
         context.showLoader(true);
         const payload = {
-            tableName: 'reservation',
-            valuesToSearch: [],
-            fieldsToPrint: [],
-            nbContent: 5,
-            numPage: 1,
+            "filter": {
+                "statut": "",
+                "dateToFind": "dateReservation",
+                "dateDebut": "2022-10-10",
+                "dateFin": "2022-10-10"
+            },
+            "nbContent": 1,
+            "numPage": 1
         };
         getReservationList(payload)
             .then((result) => {
@@ -138,55 +154,69 @@ const Booking = () => {
                                                 <MenuItem disabled value="">
                                                     <em>Date de</em>
                                                 </MenuItem>
-                                                <MenuItem value='check-in'>
-                                                    depart
+                                                <MenuItem value='none'>
+                                                    Pas de filtre
                                                 </MenuItem>
-                                                <MenuItem value='check-out'>arrive</MenuItem>
-                                                <MenuItem value='reservation'>reservation</MenuItem>
+                                                <MenuItem value='dateDepart'>
+                                                    Depart
+                                                </MenuItem>
+                                                <MenuItem value='dateArrive'>Arrive</MenuItem>
+                                                <MenuItem value='dateReservation'>Reservation</MenuItem>
                                             </CustomizedSelect>
                                         </Grid>
-                                        <Grid item xs={2}>
-                                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                        {
+                                            filter.dateOf !== 'none' && (
+                                                <>
+                                                    <Grid item xs={2}>
+                                                        <LocalizationProvider dateAdapter={AdapterDateFns}>
 
-                                                <MobileDatePicker
-                                                    label="Debut"
-                                                    inputFormat="dd/MM/yyyy"
-                                                    value={filter.dateFrom ? new Date(filter.dateFrom) : new Date()}
-                                                    onChange={(e) => handleChangeFilters(formatDate(e.toLocaleDateString('en-US')),"dateFrom")}
-                                                    renderInput={(params) => <CustomizedInput sx={{ width: '150px' }} {...params} />}
-                                                />
+                                                            <MobileDatePicker
+                                                                disabled={filter.dateOf === 'none'}
+                                                                label="Debut"
+                                                                inputFormat="dd/MM/yyyy"
+                                                                value={filter.dateFrom ? new Date(filter.dateFrom) : new Date()}
+                                                                onChange={(e) => handleChangeFilters(formatDate(e.toLocaleDateString('en-US')), "dateFrom")}
+                                                                renderInput={(params) => <CustomizedInput sx={{ width: '150px' }} {...params} />}
+                                                            />
 
-                                            </LocalizationProvider>
-                                        </Grid>
-                                        <Grid item xs={2}>
-                                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                                        </LocalizationProvider>
+                                                    </Grid>
+                                                    <Grid item xs={2}>
+                                                        <LocalizationProvider dateAdapter={AdapterDateFns}>
 
-                                                <MobileDatePicker
-                                                    label="Fin"
-                                                    inputFormat="dd/MM/yyyy"
-                                                    value={filter.dateUntil ? new Date(filter.dateUntil) : new Date()}
-                                                    onChange={(e) => handleChangeFilters(formatDate(e.toLocaleDateString('en-US')),"dateUntil")}
-                                                    renderInput={(params) => <CustomizedInput sx={{ width: '150px' }} {...params} />}
-                                                />
+                                                            <MobileDatePicker
+                                                                disabled={filter.dateOf === 'none'}
+                                                                label="Fin"
+                                                                inputFormat="dd/MM/yyyy"
+                                                                value={filter.dateUntil ? new Date(filter.dateUntil) : new Date()}
+                                                                onChange={(e) => handleChangeFilters(formatDate(e.toLocaleDateString('en-US')), "dateUntil")}
+                                                                renderInput={(params) => <CustomizedInput sx={{ width: '150px' }} {...params} />}
+                                                            />
 
-                                            </LocalizationProvider>
-                                        </Grid>
+                                                        </LocalizationProvider>
+                                                    </Grid>
+                                                    
+                                                </>
+                                            )
+                                        }
                                         <Grid item xs={2}>
                                             <CustomizedSelect
                                                 label="Status"
                                                 sx={{ width: '150px' }}
-                                                onChange={(e) =>handleChangeFilters(e.target.value,"status")}
+                                                onChange={(e) => handleChangeFilters(e.target.value, "status")}
                                                 value={filter.status}
                                             >
                                                 <MenuItem disabled value="">
                                                     <em>Status</em>
                                                 </MenuItem>
+                                                <MenuItem value='none'>Tous</MenuItem>
                                                 <MenuItem selected value='ok'>ok</MenuItem>
-                                                <MenuItem value='canceled'>Annulé</MenuItem>
+                                                <MenuItem value='annulé'>Annulé</MenuItem>
+
                                             </CustomizedSelect>
                                         </Grid>
                                         <Grid item xs={2}>
-                                            <CustomizedButton text='filtrer' sx={{ width: '150px' }} />
+                                            <CustomizedButton text='filtrer' sx={{ width: '150px' }} onClick={fetchFilter}/>
                                         </Grid>
                                     </Grid>
                                     <TableContainer component={CustomizedPaperInset}>
