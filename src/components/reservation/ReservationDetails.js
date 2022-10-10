@@ -49,6 +49,7 @@ const ReservationDetails = ({reservation,itineraireIndex,tarifIndex,navigate}) =
         setTarif(tarifTemp);
         setMailObject(`Réponse à la demande concernant votre réservation à nom de l'hotel, ${tarifTemp.nomTypeChambre}, ${tarifTemp.nomTarif}`);
         setMailBody(`Votre demande: ${tarifTemp.reservateurWithEmail.messageParticulier === null ? '' : tarifTemp.reservateurWithEmail.messageParticulier}`);
+        console.log(reservation);
     },[]);
     
     return (
@@ -93,16 +94,16 @@ const ReservationDetails = ({reservation,itineraireIndex,tarifIndex,navigate}) =
                                     <CustomizedTitle text={`#${itineraire.NumeroITineraire}`} level={2} size={14} color="#e20026" />
                                 </Stack>
                                 {
-                                    reservation.etat === 0 ? (
-                                        <Stack justifyContent='flext-end' direction='row' alignItems='center' spacing={2}>
-                                            <VerifiedIcon sx={{ color: '#9bd219' }} />
-                                            <CustomizedTitle text='CONFIRMÉ' level={2} size={14} color="#9bd219" />
-                                        </Stack>
-                                    ):(
+                                    (reservation.etat === 0 || reservation.dateAnnulation) ? (
                                         <Stack justifyContent='flext-end' direction='row' alignItems='center' spacing={2}>
                                             <CancelIcon sx={{ color:'#e20026'}}/>
                                             <CustomizedTitle text='ANNULÉ' level={2} size={14} color="#e20026" />
                                         </Stack>
+                                    ):(
+                                            <Stack justifyContent='flext-end' direction='row' alignItems='center' spacing={2}>
+                                                <VerifiedIcon sx={{ color: '#9bd219' }} />
+                                                <CustomizedTitle text='CONFIRMÉ' level={2} size={14} color="#9bd219" />
+                                            </Stack>
                                     )
                                 }
                                 

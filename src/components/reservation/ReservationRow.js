@@ -32,7 +32,7 @@ const ReservationRow = ({row,navigate}) => {
                     {`${row.reservateur.nom} ${row.reservateur.prenom}`}
                 </TableCell>
                 <TableCell component="th" scope="row">
-                    {format(new Date(row.dateCreation), 'dd MMMM yyyy ~ HH:mm:SS')}
+                    {format(new Date(row.dateValidation), 'dd MMMM yyyy ~ HH:mm:SS')}
                 </TableCell>
             </TableRow>
             <TableRow>
