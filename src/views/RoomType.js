@@ -235,7 +235,7 @@ const TypeChambre = () => {
             component="div"
             count={roomTypeList.length}
             rowsPerPage={rowsPerPage}
-            page={page-1}
+            page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
