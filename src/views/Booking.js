@@ -298,7 +298,7 @@ const Booking = () => {
                                         onRowsPerPageChange={handleChangeRowsPerPage}
                                         labelRowsPerPage='Lignes par page'
                                         labelDisplayedRows={({ from, to, count, page })=>{
-                                            return `Page ${page+1}:   ${from}-${to} sur ${count}`
+                                            return `Page ${page+1}:   ${from} - ${to} sur ${count}`
                                         }}
                                     />
                                     
