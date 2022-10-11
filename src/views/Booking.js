@@ -181,7 +181,7 @@ const Booking = () => {
                                 }}
                             >
                                 <Stack spacing={2}>
-                                    <Grid container direction='row' justifyContent='flex-start' alignItems='flex-end' spacing={4}>
+                                    <Grid container direction='row' justifyContent='space-between' alignItems='flex-end'>
                                         <Grid item xs={2}>
                                             <CustomizedSelect
                                                 label="Date de"
