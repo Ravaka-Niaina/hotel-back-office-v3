@@ -11,7 +11,7 @@ const CalendarAttributeSide = ({chambre, ratePlanAttributeList , reloadRoom}) =>
         <div className='calendarEditor'>
             <table >
                 <thead>
-                    <tr style={{ height: "150px" }}>
+                    <tr style={{ height: "170px" }}>
                         <th>
                             <Stack
                                 spacing={1}
