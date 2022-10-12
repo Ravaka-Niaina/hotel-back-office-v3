@@ -3,13 +3,14 @@ import { Link as RouterLink } from 'react-router-dom';
 // material
 import { Stack, Button, Dialog, DialogActions, DialogContent, Checkbox } from '@mui/material';
 // components
-import { createRoomType, fetchListEquipments } from '../../services/RoomType';
+import { createRoomType, fetchListEquipments, fetchListRatePlans } from '../../services/RoomType';
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import AddImageCrop from './AddImageCrop';
 import Galerie from './Galerie';
 import Equipments from './Equipments';
+import RatePlans from './RatePlans';
 
 const imgCrop = null;
 const AddRoomTypeDialog = ({ reload, }) => {
@@ -35,6 +36,7 @@ const AddRoomTypeDialog = ({ reload, }) => {
   const [showGalerie, setShowGalerie] = useState(false);
   const [output, setOutput] = useState(null);
   const [equipments, setEquipments] = useState([]);
+  const [ratePlans, setRatePlans] = useState([]);
 
   const addCropedImage = useCallback((cropedImage) => {
     setRoomType((roomType) => ({ ...roomType, imgCrop: cropedImage }));
@@ -46,7 +48,20 @@ const AddRoomTypeDialog = ({ reload, }) => {
 
   const handleClose = () => {
     setOpen(false);
+    
+    const equipmentsTemp = [ ...equipments ];
+    equipmentsTemp.forEach(equipment => {
+      equipment.checked = false
+    });
+    setEquipments(equipmentsTemp);
+
+    const ratePlansTemp = [ ...ratePlans ];
+    ratePlansTemp.forEach(ratePlan => {
+      ratePlan.checked = false;
+    });
+    setRatePlans(ratePlansTemp);
   };
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     // console.log(value);
@@ -62,7 +77,6 @@ const AddRoomTypeDialog = ({ reload, }) => {
     fetchListEquipments()
     .then(result => {
       const equipmentsTemp = [ ...result.data.data ];
-      console.log(equipmentsTemp);
       equipmentsTemp.forEach(equipment => {
         equipment.checked = false
       });
@@ -71,12 +85,36 @@ const AddRoomTypeDialog = ({ reload, }) => {
     .catch(err => console.error(err));
   };
 
+  const getListRatePlans = () => {
+    fetchListRatePlans({
+      tableName: 'tarif',
+      valuesToSearch: [],
+      fieldsToPrint: ['_id', 'nom'],
+      nbContent: 1000,
+      numPage: 1,
+    })
+    .then(result => {
+      console.log(result.data);
+      const ratePlansTemp = [];
+      result.data.list.forEach(({ _id, nom, }) => {
+        ratePlansTemp.push({
+          _id,
+          name: nom,
+          checked: false,
+        });
+      });
+      setRatePlans(ratePlansTemp);
+    })
+    .catch(err => console.error(err))
+  };
+
   useEffect(() => {
     // console.log(roomType)
   }, [roomType]);
 
   useEffect(() => {
     getListEquipments();
+    getListRatePlans();
   }, []);
 
   const addRoomType = () => {
@@ -84,6 +122,13 @@ const AddRoomTypeDialog = ({ reload, }) => {
     equipments.forEach(equipment => {
       if (equipment.checked) {
         equipmentsId.push(equipment._id);
+      }
+    });
+
+    const ratePlansId = [];
+    ratePlans.forEach(ratePlan => {
+      if (ratePlan.checked) {
+        ratePlansId.push(ratePlan._id);
       }
     });
 
@@ -101,7 +146,7 @@ const AddRoomTypeDialog = ({ reload, }) => {
         imgCrop: output,
         photo: [output], 
         equipements: equipmentsId,
-        planTarifaire: [], 
+        planTarifaire: ratePlansId, 
         videos: [],
       }
     };
@@ -287,6 +332,10 @@ const AddRoomTypeDialog = ({ reload, }) => {
           <Equipments
             equipments={equipments}
             setEquipments={setEquipments}
+          />
+          <RatePlans
+            ratePlans={ratePlans}
+            setRatePlans={setRatePlans}
           />
           <h4>Choisir une image pour l'aperçu de la chambre</h4>
           <Stack sx={{ p: 2 }} direction="row" spacing={2}>

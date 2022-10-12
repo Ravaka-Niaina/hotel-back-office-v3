@@ -32,6 +32,12 @@ export const changeOpenStatus = (payload) =>
     //   isPartner: true,
     // },
   })
-
-export const fetchListEquipments = (payload) =>
+export const fetchListEquipments = () =>
   axios.get(`${config.host}/equipement/`);
+
+export const fetchListRatePlans = (payload) =>
+  axios.post(`${config.host}/planTarifaire`, payload,  {
+    headers: {
+      Authorization: localStorage.getItem("id_token"),
+    },
+  })
