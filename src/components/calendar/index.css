@@ -1,5 +1,5 @@
-.calendarEditor table, .calendarEditor
-td,
+.calendarEditor table,
+.calendarEditor td,
 .calendarEditor th {
   border: 1px solid #e0e0e0;
 }
@@ -18,7 +18,7 @@ td,
 }
 
 .calendarEditor .status {
-  height:30px;
+  height: 30px;
   max-height: 25px;
   padding: 0px;
 }
@@ -48,17 +48,4 @@ td,
 .boldSocieteGenerale {
   font-size: 18px;
   font-weight: 900;
-}
-
-.headerLegalNotice {
-  color: #10306e;
-}
-
-.h2LegalNotice {
-  color: #10306e;
-  font-size: 22px;
-}
-
-.listLegalNotice > li {
-  margin-left: 18px;
 }

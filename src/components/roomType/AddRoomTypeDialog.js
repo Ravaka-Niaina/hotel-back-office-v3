@@ -1,14 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Stack, Button, Dialog, DialogActions, DialogContent } from '@mui/material';
+import { Stack, Button, Dialog, DialogActions, DialogContent, Checkbox } from '@mui/material';
 // components
-import { createRoomType } from '../../services/RoomType';
+import { createRoomType, fetchListEquipments } from '../../services/RoomType';
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import AddImageCrop from './AddImageCrop';
 import Galerie from './Galerie';
+import Equipments from './Equipments';
 
 const imgCrop = null;
 const AddRoomTypeDialog = ({ reload, }) => {
@@ -33,6 +34,7 @@ const AddRoomTypeDialog = ({ reload, }) => {
   });
   const [showGalerie, setShowGalerie] = useState(false);
   const [output, setOutput] = useState(null);
+  const [equipments, setEquipments] = useState([]);
 
   const addCropedImage = useCallback((cropedImage) => {
     setRoomType((roomType) => ({ ...roomType, imgCrop: cropedImage }));
@@ -55,11 +57,36 @@ const AddRoomTypeDialog = ({ reload, }) => {
     //   [name]: value,
     // });
   };
+
+  const getListEquipments = () => {
+    fetchListEquipments()
+    .then(result => {
+      const equipmentsTemp = [ ...result.data.data ];
+      console.log(equipmentsTemp);
+      equipmentsTemp.forEach(equipment => {
+        equipment.checked = false
+      });
+      setEquipments(equipmentsTemp);
+    })
+    .catch(err => console.error(err));
+  };
+
   useEffect(() => {
     // console.log(roomType)
   }, [roomType]);
 
+  useEffect(() => {
+    getListEquipments();
+  }, []);
+
   const addRoomType = () => {
+    const equipmentsId = [];
+    equipments.forEach(equipment => {
+      if (equipment.checked) {
+        equipmentsId.push(equipment._id);
+      }
+    });
+
     const payload = {
       toSend: {
         nom: roomType.nameInFrench,
@@ -73,12 +100,11 @@ const AddRoomTypeDialog = ({ reload, }) => {
         desc: roomType.descriptionInEnglish,
         imgCrop: output,
         photo: [output], 
-        equipements: [], 
+        equipements: equipmentsId,
         planTarifaire: [], 
         videos: [],
       }
     };
-    console.log(payload);
     createRoomType(payload)
     .then(result => {
       console.log(result);
@@ -258,6 +284,10 @@ const AddRoomTypeDialog = ({ reload, }) => {
               })}
             />
           </Stack>
+          <Equipments
+            equipments={equipments}
+            setEquipments={setEquipments}
+          />
           <h4>Choisir une image pour l'aperçu de la chambre</h4>
           <Stack sx={{ p: 2 }} direction="row" spacing={2}>
             <AddImageCrop 

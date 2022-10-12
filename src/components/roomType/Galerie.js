@@ -16,7 +16,6 @@ import styles from './Galerie.module.css';
 import UploadPhoto from './UploadPhoto';
 
 function callAPI(method, url, data, callback, errorHandler){
-    console.log('To implement');
     // TODO: change location of this
 }
 

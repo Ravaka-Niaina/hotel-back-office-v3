@@ -32,3 +32,6 @@ export const changeOpenStatus = (payload) =>
     //   isPartner: true,
     // },
   })
+
+export const fetchListEquipments = (payload) =>
+  axios.get(`${config.host}/equipement/`);

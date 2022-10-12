@@ -1,7 +1,5 @@
 import { Navigate, useRoutes } from 'react-router-dom';
 // layouts
-import GeneralConditionsOfSale from '../../views/GeneralConditionsOfSale';
-import LegalNotice from '../../views/LegalNotice';
 import DashboardLayout from '../../components/dashboardLayout';
 import Layout from '../../components/Layout';
 //
@@ -94,7 +92,7 @@ export default function Router() {
         //   path: 'emailModel',
         //   element: <Protected child={<EmailModel />} allowedRoles={getAllowedRoles(`${dashboardPath}/emailModel`)} />,
         // },
-        {
+        { 
           path: 'emailModel',
           element: <EmailModel />,
         },
