@@ -50,10 +50,6 @@ const AddHotelDialog = (props) => {
     temp[name] = value;
     setHotel({ ...temp });
     validate({ [name]: value });
-    formIsValid({
-      ...hotel,
-      [name]: value,
-    });
   };
   const validate = (fieldValues) => {
     const temp = { ...errors };
@@ -73,15 +69,15 @@ const AddHotelDialog = (props) => {
     if ('address' in fieldValues) temp.address = fieldValues.address ? '' : requiredFieldMessage;
     if ('min_kid_age' in fieldValues) temp.min_kid_age = fieldValues.min_kid_age ? '' : requiredFieldMessage;
     if ('max_kid_age' in fieldValues) temp.max_kid_age = fieldValues.max_kid_age ? '' : requiredFieldMessage;
-    if (!pictureList || pictureList.length === 0) temp.photos = requiredFieldMessage;
     if ('tourist_sticker' in fieldValues)
       temp.tourist_sticker = fieldValues.tourist_sticker ? '' : requiredFieldMessage;
     if ('tva' in fieldValues)
       temp.tva = fieldValues.tva || hotel.is_tva_included === 'false' ? '' : requiredFieldMessage;
     if ('location_lat' in fieldValues) temp.location_lat = fieldValues.location_lat ? '' : requiredFieldMessage;
     if ('location_lng' in fieldValues) temp.location_lng = fieldValues.location_lng ? '' : requiredFieldMessage;
-    if (logo.length === 0 || logo.length > 1) temp.logo = requiredFieldMessage;
-    if (banner.length === 0 || banner.length > 1) temp.banner = requiredFieldMessage;
+    if (!pictureList || pictureList.length === 0) temp.photos = requiredFieldMessage;
+    if (logo.length === 0 || logo.length > 1) temp.logo = 'Un logo est requis';
+    if (banner.length === 0 || banner.length > 1) temp.banner = 'Une bannière est requise';
     if ('primary_button_color' in fieldValues)
       temp.primary_button_color = fieldValues.primary_button_color ? '' : requiredFieldMessage;
     if ('secondary_button_color' in fieldValues)
@@ -158,6 +154,7 @@ const AddHotelDialog = (props) => {
     setErrors({ ...errors, [nameStatePhoto]: '' });
     for (let i = 0; i < e.target.files.length; i += 1) {
       const img = e.target.files[i];
+      console.log(img);
       const r = /^image/;
       if (r.test(img.type)) {
         const reader = new FileReader();
@@ -179,7 +176,8 @@ const AddHotelDialog = (props) => {
   };
   const addOneHotel = (e) => {
     e.preventDefault();
-    if (formIsValid(validate(hotel))) {
+    const errors = validate(hotel);
+    if (formIsValid(errors)) {
       const idToken = localStorage.getItem('id_token');
       context.showLoader(true);
       createHotel(formatPayloadToSend(), idToken)
@@ -356,7 +354,7 @@ const AddHotelDialog = (props) => {
                 required
                 {...(errors.photos && {
                   error: true,
-                  helpertext: errors.logo,
+                  helpertext: errors.photos,
                 })}
               />
             </Stack>
