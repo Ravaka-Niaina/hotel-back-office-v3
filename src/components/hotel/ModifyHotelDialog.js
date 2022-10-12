@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 
-import { Button, Stack, RadioGroup, FormControlLabel } from '@mui/material';
+import { Button, Stack, RadioGroup, FormControlLabel } from '@mui/material'; 
 
 import MapDialog from './MapDialog';
 import ListPicturePreview from './ListPicturePreview';
@@ -14,6 +14,7 @@ import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
 import { lightBackgroundToTop } from '../CustomizedComponents/NeumorphismTheme';
 import { ThemeContext } from '../context/Wrapper';
 import { updateHotel } from '../../services/Hotel';
+import config from '../../config/api';
 
 const ModifyHotelDialog = (props) => {
   const { row, reload , navigate } = props;
@@ -52,11 +53,7 @@ const ModifyHotelDialog = (props) => {
     temp[name] = value;
     setHotel({ ...temp });
     validate({ [name]: value });
-    formIsValid({
-      ...hotel,
-      [name]: value,
-    });
-    console.log(hotel);
+    // console.log(hotel);
   };
   const validate = (fieldValues) => {
     const temp = { ...errors };
@@ -82,6 +79,7 @@ const ModifyHotelDialog = (props) => {
       temp.tva = fieldValues.tva || hotel.is_tva_included === 'false' ? '' : requiredFieldMessage;
     if ('location_lat' in fieldValues) temp.location_lat = fieldValues.location_lat ? '' : requiredFieldMessage;
     if ('location_lng' in fieldValues) temp.location_lng = fieldValues.location_lng ? '' : requiredFieldMessage;
+    if (!pictureList || pictureList.length === 0) temp.photos = requiredFieldMessage;
     if (logo.length === 0 || logo.length > 1) temp.logo = 'Un logo est requis';
     if (banner.length === 0 || banner.length > 1) temp.banner = 'Une bannière est requise';
     if ('primary_button_color' in fieldValues)
@@ -94,10 +92,11 @@ const ModifyHotelDialog = (props) => {
     setErrors({
       ...temp,
     });
+    return temp;
   };
 
-  const formIsValid = () => {
-    const isValid = Object.values(errors).every((x) => x === '');
+  const formIsValid = (e) => {
+    const isValid = Object.values(e).every((x) => x === '');
     return isValid;
   };
 
@@ -135,7 +134,6 @@ const ModifyHotelDialog = (props) => {
       const img = e.target.files[i];
       const r = /^image/;
       if (r.test(img.type)) {
-        console.log('type image');
         const reader = new FileReader();
         reader.onload = (evt) => {
           const im = new Image();
@@ -182,8 +180,8 @@ const ModifyHotelDialog = (props) => {
   };
   const modifyHotel = (e) => {
     e.preventDefault();
-    validate(hotel);
-    if (formIsValid(hotel)) {
+    const errorsTemp = validate(hotel);
+    if (formIsValid(errorsTemp)) {
       context.showLoader(true);
       const idToken = localStorage.getItem('id_token');
       updateHotel(formatPayloadToSend(), idToken)
@@ -236,7 +234,7 @@ const ModifyHotelDialog = (props) => {
       typography_h2: row.typography_h2,
       typography_h3: row.typography_h3,
     });
-    console.log(row);
+    // console.log(row);
   },[]);    
   
 
@@ -245,12 +243,62 @@ const ModifyHotelDialog = (props) => {
     cleanHotelState();
     reload();
   };
-
+  const loadPictureList = () =>{
+    const files = props.row.photo.map((e)=>
+      fetch(`${config.host}/${e}`)
+        .then((result) =>
+          result.blob()
+        )
+        .then(blobFile => 
+            new File([blobFile],e, { type: "image/png" }),
+        )
+    )
+    Promise.all(files).then((result)=>{
+      console.log();
+      const temp = {
+        target: {
+          files: result,
+        }
+      }
+      handlePhotoChange(temp, pictureList, setPictureList, 'photos');
+    });
+    
+   
+  }
+  const loadLogo = () => {
+    fetch(`${config.host}/${props.row.logo}`)
+      .then((result) =>
+        result.blob()
+      )
+      .then(blobFile => {
+        const temp = {
+          target: {
+            files: [new File([blobFile], props.row.logo, { type: "image/png" })],
+          }
+        }
+        handlePhotoChange(temp, logo, setLogo, 'logo')
+      });
+  };
+  const loadBanner = () => {
+    fetch(`${config.host}/${ props.row.logo }`)
+      .then((result) =>
+        result.blob()
+      )
+      .then(blobFile => {
+        const temp = {
+          target: {
+            files: [new File([blobFile], props.row.banner, { type: "image/png" })],
+          }
+        }
+        handlePhotoChange(temp, banner, setBanner, 'banner')
+      });
+    
+  }
   useEffect(() => {
-    setPictureList(props.row.photo);
-    setLogo([props.row.logo]);
-    setBanner([props.row.banner]);
-  }, [props]);
+    loadPictureList();
+    loadLogo();
+    loadBanner();    
+  }, []);
 
   useEffect(() => {
     if (logo.length > 1) setLogo([logo[0]]);
@@ -397,9 +445,13 @@ const ModifyHotelDialog = (props) => {
                 inputProps={{
                   multiple: true,
                 }}
-                onChange={(e) => handlePhotoChange(e, pictureList, setPictureList, 'pictureList')}
+                onChange={(e) => handlePhotoChange(e, pictureList, setPictureList, 'photos')}
                 fullWidth
                 required
+                {...(errors.photos && {
+                  error: true,
+                  helpertext: errors.photos,
+                })}
               />
             </Stack>
             <ListPicturePreview itemData={pictureList} setPictureList={setPictureList} />
@@ -555,6 +607,10 @@ const ModifyHotelDialog = (props) => {
                   onChange={(e) => handlePhotoChange(e, logo, setLogo, 'logo')}
                   fullWidth
                   required
+                  {...(errors.logo && {
+                    error: true,
+                    helpertext: errors.logo,
+                  })}
                 />
               </Stack>
               <ListPicturePreview itemData={logo} setPictureList={setLogo} />
@@ -573,6 +629,10 @@ const ModifyHotelDialog = (props) => {
                   onChange={(e) => handlePhotoChange(e, banner, setBanner, 'banner')}
                   fullWidth
                   required
+                  {...(errors.banner && {
+                    error: true,
+                    helpertext: errors.banner,
+                  })}
                 />
               </Stack>
               <ListPicturePreview itemData={banner} setPictureList={setBanner} />
