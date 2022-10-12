@@ -280,7 +280,7 @@ const ModifyHotelDialog = (props) => {
       });
   };
   const loadBanner = () => {
-    fetch(`${config.host}/${ props.row.logo }`)
+    fetch(`${config.host}/${ props.row.banner }`)
       .then((result) =>
         result.blob()
       )
