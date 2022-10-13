@@ -61,7 +61,7 @@ const AddRoomTypeDialog = ({ reload, }) => {
     });
     setRatePlans(ratePlansTemp);
   };
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     // console.log(value);
@@ -94,7 +94,6 @@ const AddRoomTypeDialog = ({ reload, }) => {
       numPage: 1,
     })
     .then(result => {
-      console.log(result.data);
       const ratePlansTemp = [];
       result.data.list.forEach(({ _id, nom, }) => {
         ratePlansTemp.push({
