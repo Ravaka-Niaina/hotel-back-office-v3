@@ -11,7 +11,7 @@ const CalendarAttributeSide = ({chambre, ratePlanAttributeList , reloadRoom}) =>
         <div className='calendarEditor'>
             <table >
                 <thead>
-                    <tr style={{ height: "150px" }}>
+                    <tr style={{ height: "170px" }}>
                         <th>
                             <Stack
                                 spacing={1}
@@ -20,6 +20,9 @@ const CalendarAttributeSide = ({chambre, ratePlanAttributeList , reloadRoom}) =>
                                 alignItems="center"
                             >
                                 <CustomizedTitle text={chambre.nom} />
+                                <Stack direction='row' spacing={1} alignItems='center'>
+                                    <EditorCustomizingDialog chambre={chambre} reloadRoom={reloadRoom}/>
+                                </Stack>
                             </Stack>
                         </th>
                     </tr>
@@ -36,13 +39,6 @@ const CalendarAttributeSide = ({chambre, ratePlanAttributeList , reloadRoom}) =>
                                 <Grid item xs={8}>
                                     <Stack justifyContent='flex-start'>
                                         <p> Room to sell</p>
-                                    </Stack>
-                                </Grid>
-                                <Grid item xs={2}>
-                                    <Stack justifyContent='flex-end'>
-                                        <CustomizedIconButton sx={{ width: 22, height: 22 }}>
-                                            <EditIcon sx={{ width: 10, height: 10 }} />
-                                        </CustomizedIconButton>
                                     </Stack>
                                 </Grid>
                             </Grid>

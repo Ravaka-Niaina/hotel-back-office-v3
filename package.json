@@ -9,7 +9,7 @@
   },
   "scripts": {
     "docs": "./node_modules/jsdoc/jsdoc.js -c ./.jsdoc.conf.json",
-    "dev": "PORT=3005 react-scripts start",
+    "dev": "set PORT=3005 && react-scripts start",
     "start": "serve -s build",
     "build": "react-scripts build",
     "heroku-postbuild": "npm run build",

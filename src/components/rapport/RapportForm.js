@@ -68,6 +68,7 @@ const RapportForm = ({ setStateDataSalesReport }) => {
     };
     getReservationSalesReport(payload)
       .then((results) => {
+        console.log(results);
         if (results.data.status === 200) {
           setStateDataSalesReport(results.data.stats);
           context.showLoader(false);
@@ -115,14 +116,14 @@ const RapportForm = ({ setStateDataSalesReport }) => {
                   ))}
                 </RadioGroup>
               </Grid>
-              <Grid item xs={8}>
+              <Grid item xs={8} container
+                justifyContent="flex-star"
+                alignItems="center"
+                direction='row'
+                spacing={2}
+              >
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <Stack
-                    justifyContent="flex-star"
-                    alignItems="center"
-                    direction={{ xs: 'column', sm: 'row' }}
-                    spacing={{ xs: 1, sm: 2, md: 4 }}
-                  >
+                  <Grid item xs={4}>
                     <MobileDatePicker
                       label="Debut"
                       inputFormat="dd/MM/yyyy"
@@ -131,6 +132,8 @@ const RapportForm = ({ setStateDataSalesReport }) => {
                       // onChange={(e) => setDate(formatDate(e.toLocaleDateString('en-US')))}
                       renderInput={(params) => <CustomizedInput sx={{ width: 1 }} {...params} />}
                     />
+                  </Grid>
+                  <Grid item xs={4}>
                     <MobileDatePicker
                       label="Fin"
                       inputFormat="dd/MM/yyyy"
@@ -139,7 +142,9 @@ const RapportForm = ({ setStateDataSalesReport }) => {
                       // onChange={(e) => setDate(formatDate(e.toLocaleDateString('en-US')))}
                       renderInput={(params) => <CustomizedInput sx={{ width: 1 }} {...params} />}
                     />
-                  </Stack>
+                  </Grid>
+                    
+                  
                 </LocalizationProvider>
               </Grid>
             </Grid>

@@ -1,5 +1,6 @@
 import React , { useEffect , useState , useContext }from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow ,Stack,Container , MenuItem , Grid } from '@mui/material';
+import {format} from 'date-fns';
+import { Typography,Box, Table, TableBody, TableCell, TableContainer, TablePagination, TableHead, TableRow ,Stack,Container , MenuItem , Grid } from '@mui/material';
 
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -15,6 +16,7 @@ import CustomizedPaperInset from '../components/CustomizedComponents/CustomizedP
 import CustomizedInput from '../components/CustomizedComponents/CustomizedInput';
 import CustomizedSelect from '../components/CustomizedComponents/CustomizedSelect';
 import CustomizedButton from '../components/CustomizedComponents/CustomizedButton';
+import CustomizedLinearProgress from '../components/CustomizedComponents/CustomizedLinearProgress';
 import {ThemeContext} from '../components/context/Wrapper';
 import { lightBackgroundToTop } from '../components/CustomizedComponents/NeumorphismTheme';
 
@@ -24,18 +26,21 @@ import { formatDate } from '../services/Util';
 
 const Booking = () => {
     const context = useContext(ThemeContext);
+    const [ loading, setLoading] = useState(false);
     const [ location, setLocation] = useState('list');
     const [ currentReservation, setCurrentDetails] = useState(null);
     const [ currentItineraireIndex, setCurrentItineraireIndex] = useState(-1);
     const [ currentTarifIndex, setCurrentTarifIndex] = useState(-1);
     const [reservationList, setReservationList] = useState([]);
+    const [resultCount, setResultCount] = useState(0);
+    const [page, setPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
     const [filter, setFilter] = useState({
-        dateOf: 'check-in',
-        dateFrom: '',
-        dateUntil: '',
-        status: 'ok',
+        dateOf: 'none',
+        dateFrom: formatDate(new Date().toLocaleDateString()),
+        dateUntil: formatDate(new Date().toLocaleDateString()),
+        status: 'none',
     });
-    console.log(filter);
     const navigate = (itinerary,detailsData = null,itineraireIndex = -1,tarifIndex = -1) => {
         setCurrentDetails(detailsData);
         setCurrentItineraireIndex(itineraireIndex);
@@ -57,21 +62,71 @@ const Booking = () => {
             }
         ));
     }
+    const handleChangePage = (e,p,row = rowsPerPage) => {
+        fetchFilter(p+1,row);
+    }
+    const handleChangeRowsPerPage = (e) => {
+        const row = parseInt(e.target.value,10);
+        handleChangePage(null,0,row);
+    };
+    const fetchFilter = (p = 1,row = rowsPerPage) => {
+        setLoading(true);
+        setPage(p);
+        setRowsPerPage(row);
+        const payload = {
+            "filter": {
+                "statut": filter.status,
+                "dateToFind": filter.dateOf,
+                "dateDebut": filter.dateFrom,
+                "dateFin": filter.dateUntil,
+            },
+            "nbContent": row,
+            "numPage": p,
+        };
+        console.log(payload);
+        getReservationList(payload)
+            .then((result) => {
+                if (result.data.status === 200) {
+                    setReservationList(result.data.list);
+                    setResultCount(result.data.nbResult);
+                }
+                else if (result.data.errors) {
+                    context.changeResultErrorMessage('errors');
+                    context.showResultError(true);
+                }
+                else {
+                    context.changeResultErrorMessage('others');
+                    context.showResultError(true);
+                }
+            })
+            .catch((e) => {
+                context.changeResultErrorMessage(e.message);
+                context.showResultError(true);
+            })
+            .finally(() => {
+                setLoading(false);
+            })
+    };
     const fetchReservationList = () => {
         context.showLoader(true);
         const payload = {
-            tableName: 'reservation',
-            valuesToSearch: [],
-            fieldsToPrint: [],
-            nbContent: 5,
-            numPage: 1,
+            "filter": {
+                "statut": "",
+                "dateToFind": "none",
+                "dateDebut": "2022-10-10",
+                "dateFin": "2022-10-10"
+            },
+            "nbContent": rowsPerPage,
+            "numPage": 1
         };
+        console.log(payload);
         getReservationList(payload)
             .then((result) => {
                 console.log(result);
                 if(result.data.status === 200){
                     console.log(result.data);
                     setReservationList(result.data.list);
+                    setResultCount(result.data.nbResult);
                 }
                 else if(result.data.errors)
                 {
@@ -127,7 +182,7 @@ const Booking = () => {
                                 }}
                             >
                                 <Stack spacing={2}>
-                                    <Grid container direction='row' justifyContent='flex-start' alignItems='flex-end' spacing={4}>
+                                    <Grid container direction='row' justifyContent='space-between' alignItems='flex-end'>
                                         <Grid item xs={2}>
                                             <CustomizedSelect
                                                 label="Date de"
@@ -138,55 +193,69 @@ const Booking = () => {
                                                 <MenuItem disabled value="">
                                                     <em>Date de</em>
                                                 </MenuItem>
-                                                <MenuItem value='check-in'>
-                                                    depart
+                                                <MenuItem value='none'>
+                                                    Pas de filtre
                                                 </MenuItem>
-                                                <MenuItem value='check-out'>arrive</MenuItem>
-                                                <MenuItem value='reservation'>reservation</MenuItem>
+                                                <MenuItem value='dateDepart'>
+                                                    Depart
+                                                </MenuItem>
+                                                <MenuItem value='dateArrive'>Arrive</MenuItem>
+                                                <MenuItem value='dateReservation'>Reservation</MenuItem>
                                             </CustomizedSelect>
                                         </Grid>
-                                        <Grid item xs={2}>
-                                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                        {
+                                            filter.dateOf !== 'none' && (
+                                                <>
+                                                    <Grid item xs={2}>
+                                                        <LocalizationProvider dateAdapter={AdapterDateFns}>
 
-                                                <MobileDatePicker
-                                                    label="Debut"
-                                                    inputFormat="dd/MM/yyyy"
-                                                    value={filter.dateFrom ? new Date(filter.dateFrom) : new Date()}
-                                                    onChange={(e) => handleChangeFilters(formatDate(e.toLocaleDateString('en-US')),"dateFrom")}
-                                                    renderInput={(params) => <CustomizedInput sx={{ width: '150px' }} {...params} />}
-                                                />
+                                                            <MobileDatePicker
+                                                                disabled={filter.dateOf === 'none'}
+                                                                label="Debut"
+                                                                inputFormat="dd/MM/yyyy"
+                                                                value={filter.dateFrom ? new Date(filter.dateFrom) : new Date()}
+                                                                onChange={(e) => handleChangeFilters(formatDate(e.toLocaleDateString('en-US')), "dateFrom")}
+                                                                renderInput={(params) => <CustomizedInput sx={{ width: '150px' }} {...params} />}
+                                                            />
 
-                                            </LocalizationProvider>
-                                        </Grid>
-                                        <Grid item xs={2}>
-                                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                                        </LocalizationProvider>
+                                                    </Grid>
+                                                    <Grid item xs={2}>
+                                                        <LocalizationProvider dateAdapter={AdapterDateFns}>
 
-                                                <MobileDatePicker
-                                                    label="Fin"
-                                                    inputFormat="dd/MM/yyyy"
-                                                    value={filter.dateUntil ? new Date(filter.dateUntil) : new Date()}
-                                                    onChange={(e) => handleChangeFilters(formatDate(e.toLocaleDateString('en-US')),"dateUntil")}
-                                                    renderInput={(params) => <CustomizedInput sx={{ width: '150px' }} {...params} />}
-                                                />
+                                                            <MobileDatePicker
+                                                                disabled={filter.dateOf === 'none'}
+                                                                label="Fin"
+                                                                inputFormat="dd/MM/yyyy"
+                                                                value={filter.dateUntil ? new Date(filter.dateUntil) : new Date()}
+                                                                onChange={(e) => handleChangeFilters(formatDate(e.toLocaleDateString('en-US')), "dateUntil")}
+                                                                renderInput={(params) => <CustomizedInput sx={{ width: '150px' }} {...params} />}
+                                                            />
 
-                                            </LocalizationProvider>
-                                        </Grid>
+                                                        </LocalizationProvider>
+                                                    </Grid>
+                                                    
+                                                </>
+                                            )
+                                        }
                                         <Grid item xs={2}>
                                             <CustomizedSelect
                                                 label="Status"
                                                 sx={{ width: '150px' }}
-                                                onChange={(e) =>handleChangeFilters(e.target.value,"status")}
+                                                onChange={(e) => handleChangeFilters(e.target.value, "status")}
                                                 value={filter.status}
                                             >
                                                 <MenuItem disabled value="">
                                                     <em>Status</em>
                                                 </MenuItem>
+                                                <MenuItem value='none'>Tous</MenuItem>
                                                 <MenuItem selected value='ok'>ok</MenuItem>
-                                                <MenuItem value='canceled'>Annulé</MenuItem>
+                                                <MenuItem value='annulé'>Annulé</MenuItem>
+
                                             </CustomizedSelect>
                                         </Grid>
                                         <Grid item xs={2}>
-                                            <CustomizedButton text='filtrer' sx={{ width: '150px' }} />
+                                            <CustomizedButton text='filtrer' sx={{ width: '150px' }} onClick={()=>fetchFilter()}/>
                                         </Grid>
                                     </Grid>
                                     <TableContainer component={CustomizedPaperInset}>
@@ -203,12 +272,57 @@ const Booking = () => {
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {reservationList.map((row,i) => (
+                                                {
+                                                    loading && (
+                                                        <TableRow>
+                                                            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                                                                    <Box sx={{ margin: 1, textAlign: 'center' }} >
+                                                                        <CustomizedLinearProgress />
+                                                                    </Box>
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    )
+                                                }
+                                                { !loading && reservationList.map((row,i) => (
                                                     <ReservationRow key={i+1} row={row} navigate={navigate}/>
                                                 ))}
+                                                {
+                                                    !loading && reservationList.length < 1 && (
+                                                        <TableRow>
+                                                            <TableCell style={{ textAlign:'center' }} colSpan={6}>
+                                                                <CustomizedTitle text={`Pas de résultats`} color='#212B36' level={3}/>
+                                                                <Typography variant="body2" align="center">
+                                                                    Pas de réservations trouvés pour &nbsp;
+                                                                    <strong>
+                                                                        &quot; 
+                                                                        Statut: &nbsp; {filter.status === 'none'? ' tous ,':`${filter.status} ,`} 
+                                                                        {
+                                                                            filter.dateOf !== 'none' && `  ${filter.dateOf} entre le ${format(new Date(filter.dateFrom), 'dd MMMM yyyy')} et ${format(new Date(filter.dateUntil), 'dd MMMM yyyy') }.`
+                                                                        }
+                                                                        &quot;
+                                                                    </strong>.
+                                                                </Typography>
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    )
+                                                }
                                             </TableBody>
                                         </Table>
                                     </TableContainer>
+                                    <TablePagination
+                                        rowsPerPageOptions={[5, 10, 15]}
+                                        component="div"
+                                        count={resultCount}
+                                        rowsPerPage={rowsPerPage}
+                                        page={page-1}
+                                        onPageChange={handleChangePage}
+                                        onRowsPerPageChange={handleChangeRowsPerPage}
+                                        labelRowsPerPage='Lignes par page'
+                                        labelDisplayedRows={({ from, to, count, page })=>{
+                                            return `Page ${page+1} :   ${from} - ${to} sur ${count}`
+                                        }}
+                                    />
+                                    
                                 </Stack>
                             </CustomizedPaperOutside>
                         </>

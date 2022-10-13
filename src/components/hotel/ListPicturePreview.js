@@ -20,8 +20,6 @@ const ListPicturePreview = (props) => {
     newArray.splice(index, 1);
     setPictureList([...newArray]);
   };
-
-  itemData.map((item) => console.log(`${config.host}/${item}`));
   return (
     <div
       style={{

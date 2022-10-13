@@ -61,6 +61,7 @@ const TypeChambre = () => {
   const reload = async () => {
     getAllRoomType();
   };
+
   useEffect(() => {
     // Met à jour le titre du document via l’API du navigateur
     reload();

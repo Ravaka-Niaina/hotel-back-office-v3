@@ -49,6 +49,7 @@ const RatePlan = () => {
     const idToken = localStorage.getItem('id_token');
     getRatePlanList(payload,idToken)
       .then((fetch) => {
+        console.log(fetch);
         const status = 200;
         console.log(fetch.data);
         if (status === 200) {
