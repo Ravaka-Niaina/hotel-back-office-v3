@@ -1,5 +1,6 @@
 import React , { useEffect , useState , useContext }from 'react';
-import { Box, Table, TableBody, TableCell, TableContainer, TablePagination, TableHead, TableRow ,Stack,Container , MenuItem , Grid } from '@mui/material';
+import {format} from 'date-fns';
+import { Typography,Box, Table, TableBody, TableCell, TableContainer, TablePagination, TableHead, TableRow ,Stack,Container , MenuItem , Grid } from '@mui/material';
 
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -285,6 +286,26 @@ const Booking = () => {
                                                 { !loading && reservationList.map((row,i) => (
                                                     <ReservationRow key={i+1} row={row} navigate={navigate}/>
                                                 ))}
+                                                {
+                                                    !loading && reservationList.length < 1 && (
+                                                        <TableRow>
+                                                            <TableCell style={{ textAlign:'center' }} colSpan={6}>
+                                                                <CustomizedTitle text={`Pas de résultats`} color='#212B36' level={3}/>
+                                                                <Typography variant="body2" align="center">
+                                                                    Pas de réservations trouvés pour &nbsp;
+                                                                    <strong>
+                                                                        &quot; 
+                                                                        Statut: &nbsp; {filter.status === 'none'? ' tous ,':`${filter.status} ,`} 
+                                                                        {
+                                                                            filter.dateOf !== 'none' && `  ${filter.dateOf} entre le ${format(new Date(filter.dateFrom), 'dd MMMM yyyy')} et ${format(new Date(filter.dateUntil), 'dd MMMM yyyy') }.`
+                                                                        }
+                                                                        &quot;
+                                                                    </strong>.
+                                                                </Typography>
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    )
+                                                }
                                             </TableBody>
                                         </Table>
                                     </TableContainer>
