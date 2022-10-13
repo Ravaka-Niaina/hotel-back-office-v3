@@ -7,6 +7,9 @@ export const getRoomTypeList = (payload, idToken) =>
       Authorization: idToken,
     },
   });
+export const getRoomType = (roomTypeId) =>
+  axios.get(`${config.host}/typeChambre/detailsChambre/${ roomTypeId }`);
+
 export const createRoomType = (payload) =>
   axios.post(`${config.host}/typeChambre/insert`, payload, {
     headers: {
@@ -14,24 +17,28 @@ export const createRoomType = (payload) =>
       partner_id: localStorage.getItem("partner_id")
     },
   });
+
 export const updateRoomType = (payload, partnerId) =>
   axios.post(`${config.host}/roomType/update`, payload, {
     headers: {
       partner_id: partnerId,
     },
   });
+
 export const deleteRoomType = (payload) =>
   axios.post(`${config.host}/delete`, payload, {
     headers: {
       isPartner: true,
     },
   });
+
 export const changeOpenStatus = (payload) =>
   axios.post(`${config.host}/typeChambre/saveAvailability`, payload, {
     // headers: {
     //   isPartner: true,
     // },
-  })
+  });
+  
 export const fetchListEquipments = () =>
   axios.get(`${config.host}/equipement/`);
 
