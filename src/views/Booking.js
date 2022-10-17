@@ -91,11 +91,18 @@ const Booking = () => {
                     setResultCount(result.data.nbResult);
                 }
                 else if (result.data.errors) {
-                    context.changeResultErrorMessage('errors');
+                    const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+                    const indication = result.data.errors[item];
+                    const message = `${item}: ${indication}`;
+                    context.changeResultErrorMessage(message);
                     context.showResultError(true);
                 }
-                else {
-                    context.changeResultErrorMessage('others');
+                else if(result.data.message){
+                    context.changeResultErrorMessage(result.data.message);
+                    context.showResultError(true);
+                }
+                else{
+                    context.changeResultErrorMessage('Une erreur est survenue lors du chargement des données');
                     context.showResultError(true);
                 }
             })
