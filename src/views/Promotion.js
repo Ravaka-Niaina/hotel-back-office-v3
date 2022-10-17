@@ -241,7 +241,7 @@ const Promotion = () => {
                         {
                           loading && (
                             <TableRow>
-                              <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                              <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={TABLE_HEAD.length + 1}>
                                 <Box sx={{ margin: 1, textAlign: 'center' }} >
                                   <CustomizedLinearProgress />
                                 </Box>
@@ -306,7 +306,7 @@ const Promotion = () => {
                         {
                           !loading && promotionList.length < 1 && (
                             <TableRow>
-                              <TableCell style={{ textAlign: 'center' }} colSpan={6}>
+                            <TableCell style={{ textAlign: 'center' }} colSpan={TABLE_HEAD.length + 1}>
                                 <CustomizedTitle text={`Pas de résultats`} color='#212B36' level={3} />
                                 <Typography variant="body2" align="center">
                                   Pas de promotion trouvés pour &nbsp;
