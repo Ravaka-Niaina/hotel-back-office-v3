@@ -182,7 +182,8 @@ const TypeChambre = () => {
                 />
                 <TableBody>
                   {roomTypeList.map((row) => {
-                    const { _id, nom, nbAdulte, nbEnfant, chambresTotal, superficie } = row;
+                    const { _id, nom, nbAdulte, nbEnfant, chambreTotal, superficie } = row;
+                    console.log(row)
                     const isItemSelected = selected.indexOf(nom) !== -1;
                     return (
                       <TableRow
@@ -203,8 +204,8 @@ const TypeChambre = () => {
                         </TableCellStyled>
                         <TableCellStyled align="left">{nbAdulte}</TableCellStyled>
                         <TableCellStyled align="left">{nbEnfant}</TableCellStyled>
-                        <TableCellStyled align="left">{chambresTotal}</TableCellStyled>
-                        <TableCellStyled align="left">{superficie}</TableCellStyled>
+                        <TableCellStyled align="left">{chambreTotal}</TableCellStyled>
+                        <TableCellStyled align="left">{superficie} m²</TableCellStyled>
                         <TableCellStyled align="right">
                           <RoomTypeMoreMenu row={row} reload={reload} />
                         </TableCellStyled>
