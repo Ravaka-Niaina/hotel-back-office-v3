@@ -30,7 +30,6 @@ import { lightBackgroundToTop } from '../components/CustomizedComponents/Neumorp
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: '_id', label: 'Id', alignRight: false },
   { id: 'nom', label: 'Nom', alignRight: false },
   { id: 'prenom', label: 'Prenom', alignRight: false },
   { id: 'telephone', label: 'Telephone', alignRight: false },
@@ -203,11 +202,6 @@ export default function User() {
                       >
                         <TableCellStyled padding="checkbox">
                           <CustomizedCheckbox checked={isItemSelected} onChange={(event) => handleClick(event, nom)} />
-                        </TableCellStyled>
-                        <TableCellStyled component="th" scope="row" padding="none">
-                          <Typography variant="subtitle2" noWrap>
-                            {_id}
-                          </Typography>
                         </TableCellStyled>
                         <TableCellStyled align="left">{nom}</TableCellStyled>
                         <TableCellStyled align="left">{prenom}</TableCellStyled>

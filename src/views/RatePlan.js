@@ -19,7 +19,6 @@ import CustomizedIconButton from '../components/CustomizedComponents/CustomizedI
 import Iconify from '../components/Iconify';
 
 const TABLE_HEAD = [
-  { id: 'id', label: 'ID', alignRight: false },
   { id: 'nom', label: 'Nom', alignRight: false },
   { id: 'action', label: 'Actions', alignRight: false },
 ];
@@ -142,11 +141,6 @@ const RatePlan = () => {
                               >
                                 <TableCellStyled padding="checkbox">
                                   <CustomizedCheckbox />
-                                </TableCellStyled>
-                                <TableCellStyled component="th" scope="row" padding="none">
-                                  <Typography variant="subtitle2" noWrap>
-                                    {_id}
-                                  </Typography>
                                 </TableCellStyled>
                                 <TableCellStyled align="left">{nom}</TableCellStyled>
 
