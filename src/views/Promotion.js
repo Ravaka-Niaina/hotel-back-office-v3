@@ -1,7 +1,8 @@
 import { useState, useEffect, useContext } from 'react';
-import {Link as RouterLink} from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 // material
 import {
+  Box,
   Table,
   Stack,
   TableRow,
@@ -21,12 +22,13 @@ import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedChe
 import TableCellStyled from '../components/CustomizedComponents/CustomizedTableCell';
 import PromotionMoreMenu from '../components/promotion/PromotionMoreMenu';
 import { ThemeContext } from '../components/context/Wrapper';
-import { UserListHead, UserListToolbar } from '../components/table';
+import { UserListHead } from '../components/table';
 import { getPromotionList } from '../services/Promotion';
 import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
 import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
 import CustomizedButton from '../components/CustomizedComponents/CustomizedButton';
 import CustomizedIconButton from '../components/CustomizedComponents/CustomizedIconButton';
+import CustomizedLinearProgress from '../components/CustomizedComponents/CustomizedLinearProgress';
 import { lightBackgroundToTop } from '../components/CustomizedComponents/NeumorphismTheme';
 import Iconify from '../components/Iconify';
 // mock
@@ -52,19 +54,15 @@ const Promotion = () => {
 
   const [currentPromotion, setCurrentPromotion] = useState(null);
 
-  const [page, setPage] = useState(0);
+  const [resultCount, setResultCount] = useState(0);
 
-  const [order, setOrder] = useState('asc');
-
-  const [selected, setSelected] = useState([]);
-
-  const [orderBy, setOrderBy] = useState('name');
-
-  const [filterName, setFilterName] = useState('');
+  const [page, setPage] = useState(1);
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const navigate = (itinerary,currentPromotionRow = null) => {
+  const [loading, setLoading] = useState(false);
+
+  const navigate = (itinerary, currentPromotionRow = null) => {
     setCurrentPromotion(currentPromotionRow);
     if (itinerary === 'addForm') {
       setLocation('addForm');
@@ -76,88 +74,122 @@ const Promotion = () => {
       setLocation('list');
     }
   };
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
+  const handleChangePage = (e, p, row = rowsPerPage) => {
+    fetchFilter(p + 1, row);
+  }
+  const handleChangeRowsPerPage = (e) => {
+    const row = parseInt(e.target.value, 10);
+    handleChangePage(null, 0, row);
   };
-  const getAllPromotion = () => {
-    context.showLoader(true);
+  const fetchFilter = (p = 1, row = rowsPerPage) => {
+    setLoading(true);
+    setPage(p);
+    setRowsPerPage(row);
     const payload = {
       tableName: 'promotion',
       valuesToSearch: [],
       fieldsToPrint: ['nom', 'sejourMin', 'planTarifaire', 'typeChambre', 'dateDebutS', 'dateFinS'],
-      nbContent: 5,
-      numPage: 1,
+      nbContent: row,
+      numPage: p,
     };
-    const user = JSON.parse(localStorage.getItem('partner_id'));
+    // const user = JSON.parse(localStorage.getItem('partner_id'));
     try {
       const idToken = localStorage.getItem("id_token");
       getPromotionList(payload, idToken)
-        .then((datas) => {
-          const dataStatus = 200;
-          const dataList = datas.data.list;
+        .then((result) => {
+          console.log(result);
+          const dataStatus = result.data.status;
+          const dataList = result.data.list;
 
           if (dataStatus === 200) {
             setPromotionList(dataList);
-          } else {
-            context.changeResultErrorMessage(`Une erreur est survenue lors du chargement de la liste de promotions.`);
+            setResultCount(result.data.nbResult);
+          }
+          else if (result.data.errors) {
+            const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+            const indication = result.data.errors[item];
+            const message = `${item}: ${indication}`;
+            context.changeResultErrorMessage(message);
+            context.showResultError(true);
+          }
+          else if (result.data.message) {
+            context.changeResultErrorMessage(result.data.message);
+            context.showResultError(true);
+          }
+          else {
+            context.changeResultErrorMessage('Une erreur est survenue lors du chargement des données');
+            context.showResultError(true);
             context.showResultError(true);
           }
         })
-        .catch(() => {
-          context.changeResultErrorMessage(`Une erreur est survenue lors du chargement de la liste de promotions.`);
+        .catch((e) => {
+          context.changeResultErrorMessage(e.message);
+          context.showResultError(true);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } catch (e) {
+      context.changeResultErrorMessage(e.message);
+      context.showResultError(true);
+    }
+  };
+  const getAllPromotion = (p = 1, row = rowsPerPage) => {
+    context.showLoader(true);
+    setPage(p);
+    setRowsPerPage(row);
+    const payload = {
+      tableName: 'promotion',
+      valuesToSearch: [],
+      fieldsToPrint: ['nom', 'sejourMin', 'planTarifaire', 'typeChambre', 'dateDebutS', 'dateFinS'],
+      nbContent: row,
+      numPage: p,
+    };
+    // const user = JSON.parse(localStorage.getItem('partner_id'));
+    try {
+      const idToken = localStorage.getItem("id_token");
+      getPromotionList(payload, idToken)
+        .then((result) => {
+          console.log(result);
+          const dataStatus = result.data.status;
+          const dataList = result.data.list;
+
+          if (dataStatus === 200) {
+            setPromotionList(dataList);
+            setResultCount(result.data.nbResult);
+          }
+          else if (result.data.errors) {
+            const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+            const indication = result.data.errors[item];
+            const message = `${item}: ${indication}`;
+            context.changeResultErrorMessage(message);
+            context.showResultError(true);
+          }
+          else if (result.data.message) {
+            context.changeResultErrorMessage(result.data.message);
+            context.showResultError(true);
+          }
+          else {
+            context.changeResultErrorMessage('Une erreur est survenue lors du chargement des données');
+            context.showResultError(true);
+            context.showResultError(true);
+          }
+        })
+        .catch((e) => {
+          context.changeResultErrorMessage(e.message);
           context.showResultError(true);
         })
         .finally(() => {
           context.showLoader(false);
         });
     } catch (e) {
-      context.changeResultErrorMessage(`Une erreur est survenue lors du chargement de la liste de promotions.`);
+      context.changeResultErrorMessage(e.message);
       context.showResultError(true);
     }
   };
   const reload = async () => {
     getAllPromotion();
   };
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = promotionList.map((n) => n.nom);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-    }
-    setSelected(newSelected);
-  };
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const handleFilterByName = (event) => {
-    setFilterName(event.target.value);
-  };
-
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - promotionList.length) : 0;
   useEffect(() => {
     reload();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -167,19 +199,19 @@ const Promotion = () => {
   return (
     <Page title="AIOLIA | Promotions">
       <Container>
-      {
-        location === 'addForm' && (
-          <AddPromotionDialog reload={reload} navigate={navigate} />
-        )
-      }
-      {
-        location === 'modifyForm' && currentPromotion !== null && (
-          <ModifyPromotionDialog row={currentPromotion} reload={reload} navigate={navigate}/>
-        )
-      }
-      {
-        location === 'list' && (
-          <>
+        {
+          location === 'addForm' && (
+            <AddPromotionDialog reload={reload} navigate={navigate} />
+          )
+        }
+        {
+          location === 'modifyForm' && currentPromotion !== null && (
+            <ModifyPromotionDialog row={currentPromotion} reload={reload} navigate={navigate} />
+          )
+        }
+        {
+          location === 'list' && (
+            <>
               <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                 <CustomizedTitle text="Promotion" size={20} />
                 <CustomizedButton text="Ajouter" onClick={() => navigate('addForm')} variant="contained" component={RouterLink} to="#" />
@@ -194,25 +226,32 @@ const Promotion = () => {
                   padding: 5,
                 }}
               >
-                <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
-                <Scrollbar>
+                
                   <TableContainer sx={{ minWidth: 800 }}>
                     <Table>
                       <UserListHead
-                        order={order}
-                        orderBy={orderBy}
+                        order={'asc'}
+                        orderBy={'none'}
                         headLabel={TABLE_HEAD}
                         // rowCount={promotionList.length}
-                        numSelected={selected.length}
-                        onRequestSort={handleRequestSort}
-                        onSelectAllClick={handleSelectAllClick}
+                        numSelected={[]}
                       />
                       <TableBody>
-                        {promotionList &&
+                        {
+                          loading && (
+                            <TableRow>
+                              <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={TABLE_HEAD.length + 1}>
+                                <Box sx={{ margin: 1, textAlign: 'center' }} >
+                                  <CustomizedLinearProgress />
+                                </Box>
+                              </TableCell>
+                            </TableRow>
+                          )
+                        }
+                        {!loading && promotionList &&
                           promotionList.map((row) => {
                             const { _id, nom, sejourMin, planTarifaire, typeChambre, dateDebutS, dateFinS } = row;
-                            const isItemSelected = selected.indexOf(nom) !== -1;
 
                             return (
                               <TableRow
@@ -220,13 +259,9 @@ const Promotion = () => {
                                 key={_id}
                                 tabIndex={-1}
                                 role="checkbox"
-                                selected={isItemSelected}
-                                aria-checked={isItemSelected}
                               >
                                 <TableCellStyled padding="checkbox">
                                   <CustomizedCheckbox
-                                    checked={isItemSelected}
-                                    onChange={(event) => handleClick(event, nom)}
                                   />
                                 </TableCellStyled>
                                 <TableCellStyled component="th" scope="row" padding="none">
@@ -235,8 +270,24 @@ const Promotion = () => {
                                   </Typography>
                                 </TableCellStyled>
                                 <TableCellStyled align="left">{sejourMin}</TableCellStyled>
-                                <TableCellStyled align="left">{planTarifaire}</TableCellStyled>
-                                <TableCellStyled align="left">{typeChambre}</TableCellStyled>
+                                <TableCellStyled align="left">
+                                  <ul>
+                                    {
+                                      planTarifaire.map((e, i) => (
+                                        <li key={i}>{e}</li>
+                                      ))
+                                    }
+                                  </ul>
+                                </TableCellStyled>
+                                <TableCellStyled align="left">
+                                  <ul>
+                                    {
+                                      typeChambre.map((e, i) => (
+                                        <li key={i}>{e}</li>
+                                      ))
+                                    }
+                                  </ul>
+                                </TableCellStyled>
                                 <TableCellStyled align="left">{dateDebutS}</TableCellStyled>
                                 <TableCellStyled align="left">{dateFinS}</TableCellStyled>
 
@@ -252,41 +303,48 @@ const Promotion = () => {
                               </TableRow>
                             );
                           })}
-                        {emptyRows > 0 && (
-                          <TableRow style={{ height: 53 * emptyRows }}>
-                            <TableCell colSpan={6} />
-                          </TableRow>
-                        )}
+                        {
+                          !loading && promotionList.length < 1 && (
+                            <TableRow>
+                            <TableCell style={{ textAlign: 'center' }} colSpan={TABLE_HEAD.length + 1}>
+                                <CustomizedTitle text={`Pas de résultats`} color='#212B36' level={3} />
+                                <Typography variant="body2" align="center">
+                                  Pas de promotion trouvés pour &nbsp;
+                                  {/* <strong>
+                                    &quot;
+                                    Statut: &nbsp; {filter.status === 'none' ? ' tous ,' : `${filter.status} ,`}
+                                    {
+                                      filter.dateOf !== 'none' && `  ${filter.dateOf} entre le ${format(new Date(filter.dateFrom), 'dd MMMM yyyy')} et ${format(new Date(filter.dateUntil), 'dd MMMM yyyy')}.`
+                                    }
+                                    &quot;
+                                  </strong>. */}
+                                </Typography>
+                              </TableCell>
+                            </TableRow>
+                          )
+                        }
                       </TableBody>
-
-                      {/* {(0)
-                  <TableBody>
-                    <TableRow>
-                      <TableCellStyled align="center" colSpan={6} sx={{ py: 3 }}>
-                        <> </>
-                      </TableCellStyled>
-                    </TableRow>
-                  </TableBody>
-                )} */}
                     </Table>
                   </TableContainer>
-                </Scrollbar>
+                
 
-                {promotionList && rowsPerPage && page && (
-                  <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component="div"
-                    count={promotionList.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                  />
-                )}
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 15]}
+                  component="div"
+                  count={resultCount}
+                  rowsPerPage={rowsPerPage}
+                  page={page - 1}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  labelRowsPerPage='Lignes par page'
+                  labelDisplayedRows={({ from, to, count, page }) => {
+                    return `Page ${page + 1} :   ${from} - ${to} sur ${count}`
+                  }}
+                />
               </CustomizedPaperOutside>
-          </>
-        )
-      }
+            </>
+          )
+        }
       </Container>
     </Page>
   );
