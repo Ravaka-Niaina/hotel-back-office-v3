@@ -17,11 +17,9 @@ import CustomizedPaperOutside from '../components/CustomizedComponents/Customize
 import { lightBackgroundToTop } from '../components/CustomizedComponents/NeumorphismTheme';
 
 const TABLE_HEAD = [
-  { id: 'id', label: 'ID', alignRight: false },
   { id: 'nom', label: 'Nom', alignRight: false },
   { id: 'description', label: 'Description', alignRight: false },
   { id: 'remboursabilité', label: 'Remboursabilité', alignRight: false },
-  { id: '', label: '', alignRight: false },
   { id: 'action', label: 'Actions', alignRight: false },
 ];
 
@@ -59,7 +57,10 @@ const Politic = () => {
           context.showResultError(true);
         }
       })
-      .catch(() => {})
+      .catch((err) => {
+        context.changeResultErrorMessage(err.message);
+        context.showResultError(true);
+      })
       .finally(() => {
         context.showLoader(false);
       });
@@ -112,11 +113,6 @@ const Politic = () => {
                         <TableRow hover key={i} tabIndex={-1} role="checkbox">
                           <TableCellStyled padding="checkbox">
                             <CustomizedCheckbox />
-                          </TableCellStyled>
-                          <TableCellStyled component="th" scope="row" padding="none">
-                            <Typography variant="subtitle2" noWrap>
-                              {row._id}
-                            </Typography>
                           </TableCellStyled>
                           <TableCellStyled align="left">{row.nom}</TableCellStyled>
                           <TableCellStyled component="th" scope="row" padding="none">
