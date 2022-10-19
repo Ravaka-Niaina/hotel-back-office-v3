@@ -234,8 +234,8 @@ const Promotion = () => {
                         order={'asc'}
                         orderBy={'none'}
                         headLabel={TABLE_HEAD}
-                        // rowCount={promotionList.length}
-                        numSelected={[]}
+                        rowCount={promotionList.length}
+                        numSelected={0}
                       />
                       <TableBody>
                         {

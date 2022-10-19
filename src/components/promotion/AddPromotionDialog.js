@@ -246,8 +246,8 @@ const AddPromotionDialog = ({reload,navigate}) => {
       } else if (e.target.value === 'false') {
         promotionTemp[field] = false;
         if (field === 'book_any_time') {
-          promotionTemp.beginning_of_reservation = '2000-1-1';
-          promotionTemp.end_of_reservation = '2000-1-1';
+          promotionTemp.beginning_of_reservation = formatDate(new Date().toLocaleDateString('en-US'));
+          promotionTemp.end_of_reservation = formatDate(new Date().toLocaleDateString('en-US'));
         }
       } else if (e.target.value === 'true') {
         promotionTemp[field] = true;
