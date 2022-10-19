@@ -19,8 +19,9 @@ import CustomizedIconButton from '../components/CustomizedComponents/CustomizedI
 import Iconify from '../components/Iconify';
 
 const TABLE_HEAD = [
-  { id: 'id', label: 'ID', alignRight: false },
   { id: 'nom', label: 'Nom', alignRight: false },
+  { id: 'Chambres attribuées', label: 'Chambres attribuées', alignRight: false },
+  { id: "Politiques d'annulation", label: "Politiques d'annulation", alignRight: false },
   { id: 'action', label: 'Actions', alignRight: false },
 ];
 
@@ -39,7 +40,7 @@ const RatePlan = () => {
     const payload = {
       tableName: 'tarif',
       valuesToSearch: [],
-      fieldsToPrint: ['_id', 'nom'],
+      fieldsToPrint: ['_id', 'nom','politiqueAnnulAtrb','chambresAtrb'],
       nbContent: 100,
       numPage: 1,
     };
@@ -127,7 +128,7 @@ const RatePlan = () => {
                         />
                         <TableBody>
                           {ratePlanList.map((row) => {
-                            const { _id, nom, isActif } = row;
+                            const { _id, nom, isActif,chambresAtrb,politiqueAnnulAtrb } = row;
                             console.log(isActif);
                             const isItemSelected = selected.indexOf(nom) !== -1;
 
@@ -143,13 +144,29 @@ const RatePlan = () => {
                                 <TableCellStyled padding="checkbox">
                                   <CustomizedCheckbox />
                                 </TableCellStyled>
-                                <TableCellStyled component="th" scope="row" padding="none">
-                                  <Typography variant="subtitle2" noWrap>
-                                    {_id}
-                                  </Typography>
-                                </TableCellStyled>
                                 <TableCellStyled align="left">{nom}</TableCellStyled>
-
+                                <TableCellStyled align="left">
+                                  <ul>
+                                    {
+                                      chambresAtrb.map((e,i)=>(
+                                        <li key={i}>
+                                          {e}
+                                        </li>
+                                      ))
+                                    }
+                                  </ul>
+                                </TableCellStyled>
+                                <TableCellStyled align="left">
+                                  <ul>
+                                    {
+                                      politiqueAnnulAtrb.map((e,i)=>(
+                                        <li key={i}>
+                                          {e}
+                                        </li>
+                                      ))
+                                    }
+                                  </ul>
+                                </TableCellStyled>
                                 <TableCellStyled align="right">
                                   <Stack direction="row" spacing={2}>
                                     <CustomizedIconButton 
