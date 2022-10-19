@@ -23,7 +23,7 @@ const TABLE_HEAD = [
   { id: 'nom', label: 'Nom', alignRight: false },
   { id: 'Chambres attribuées', label: 'Chambres attribuées', alignRight: false },
   { id: "Politiques d'annulation", label: "Politiques d'annulation", alignRight: false },
-  { id: 'action', label: 'Actions', alignRight: false },
+  { id: 'action', label: 'Actions', alignRight: false,alignCenter:true },
 ];
 
 const RatePlan = () => {
@@ -256,7 +256,7 @@ const RatePlan = () => {
                                   </ul>
                                 </TableCellStyled>
                                 <TableCellStyled align="right">
-                                  <Stack direction="row" spacing={2}>
+                                  <Stack direction="row" spacing={2} justifyContent='center'>
                                     <CustomizedIconButton 
                                       variant="contained" 
                                       onClick={()=>{

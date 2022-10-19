@@ -42,7 +42,7 @@ const TABLE_HEAD = [
   { id: 'typeChambre', label: 'Type Chambre', alignRight: false },
   { id: 'debutSejour', label: 'Debut Sejour', alignRight: false },
   { id: 'finSejour', label: 'Fin Sejour', alignRight: false },
-  { id: 'action', label: 'Actions', alignRight: false },
+  { id: 'action', label: 'Actions', alignRight: true, alignCenter: true },
 ];
 
 const Promotion = () => {
@@ -292,7 +292,7 @@ const Promotion = () => {
                                 <TableCellStyled align="left">{dateFinS}</TableCellStyled>
 
                                 <TableCellStyled align="right">
-                                  <Stack direction='row' spacing={2}>
+                                  <Stack direction='row' spacing={2} justifyContent='center'>
                                     <CustomizedIconButton variant="contained" onClick={() => navigate('modifyForm', row)}>
                                       <Iconify icon="eva:edit-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
                                     </CustomizedIconButton >
