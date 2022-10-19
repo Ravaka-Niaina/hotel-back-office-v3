@@ -443,7 +443,7 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
           ...lightBackgroundToTop,
           minHeight: '100vh',
           border: '1px white solid',
-          width: 0.75,
+          width: 0.8,
           margin: 'auto',
           padding: 5,
         }}
