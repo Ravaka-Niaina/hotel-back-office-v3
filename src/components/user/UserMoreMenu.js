@@ -10,7 +10,7 @@ import ModifyUserDialog from './ModifyUserDialog';
 
 const UserMoreMenu = ({userId, userDetails,reload, accessRights})  => (
     <>
-      <Stack direction='row' spacing={2}>
+      <Stack direction='row' spacing={2} justifyContent='center'>
         <ModifyUserDialog accessRights={accessRights} userDetails={userDetails} userId={userId} reload={reload} />
         <DeleteUserDialog />
       </Stack>

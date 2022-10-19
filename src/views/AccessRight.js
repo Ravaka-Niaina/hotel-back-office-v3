@@ -15,7 +15,7 @@ import { lightBackgroundToTop } from '../components/CustomizedComponents/Neumorp
 
 const TABLE_HEAD = [
   { id: 'nom', label: 'Nom', alignRight: false },
-  { id: 'action', label: 'Actions', alignRight: false },
+  { id: 'action', label: 'Actions', alignRight: true,alignCenter:true },
 ];
 
 const AccessRight = () => {

@@ -22,7 +22,7 @@ const TABLE_HEAD = [
   { id: 'nom', label: 'Nom', alignRight: false },
   { id: 'adresse', label: 'Adresse', alignRight: false },
   { id: 'lien', label: 'Lien', alignRight: false },
-  { id: 'action', label: 'Actions', alignRight: false },
+  { id: 'action', label: 'Actions', alignRight: true, alignCenter: true },
 ];
 
 const Hotel = () => {
@@ -176,7 +176,7 @@ const Hotel = () => {
                                 </a>
                               </TableCellStyled>
                               <TableCellStyled align="right">
-                                <Stack direction="row" spacing={2}>
+                                <Stack direction="row" spacing={2} justifyContent='center'>
                                   <CustomizedIconButton variant="contained" onClick={() => navigate('modifyForm', row)}>
                                     <Iconify icon="eva:edit-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
                                   </CustomizedIconButton>

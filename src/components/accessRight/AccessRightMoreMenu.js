@@ -13,7 +13,7 @@ export default function AccessRightMoreMenu({ reload, accessRight }) {
 
   return (
     <>
-      <Stack direction='row' spacing={2}>
+      <Stack direction='row' spacing={2} justifyContent='center'>
         <ModifyAccessRightDialog reload={reload} accessRightProp={accessRight} />
         <DeleteAccessRightDialog reload={reload} accessRightId={accessRight._id} />
       </Stack>    

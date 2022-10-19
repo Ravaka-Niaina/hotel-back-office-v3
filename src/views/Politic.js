@@ -21,7 +21,7 @@ const TABLE_HEAD = [
   { id: 'nom', label: 'Nom', alignRight: false },
   { id: 'description', label: 'Description', alignRight: false },
   { id: 'remboursabilité', label: 'Remboursabilité', alignRight: false },
-  { id: 'action', label: 'Actions', alignRight: false },
+  { id: 'action', label: 'Actions', alignRight: true, alignCenter: true },
 ];
 
 const Politic = () => {
