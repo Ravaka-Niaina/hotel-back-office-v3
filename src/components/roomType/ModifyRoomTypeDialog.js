@@ -29,6 +29,7 @@ const ModifyRoomTypeDialog = ({ row }) => {
         open={open}
         setOpen={setOpen}
         roomTypeId={row._id}
+        isUpdate
       />
     </>
   );

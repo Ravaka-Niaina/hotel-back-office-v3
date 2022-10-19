@@ -19,8 +19,9 @@ export const createRoomType = (payload) =>
   });
 
 export const updateRoomType = (payload, partnerId) =>
-  axios.post(`${config.host}/roomType/update`, payload, {
+  axios.post(`${config.host}/typeChambre/update`, payload, {
     headers: {
+      Authorization: localStorage.getItem("id_token"),
       partner_id: partnerId,
     },
   });

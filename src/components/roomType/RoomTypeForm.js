@@ -2,8 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import { Stack, Button, Dialog, DialogActions, DialogContent, Checkbox } from '@mui/material';
+import CancelIcon from '@mui/icons-material/Cancel';
 // components
-import { createRoomType, fetchListEquipments, fetchListRatePlans, getRoomType } from '../../services/RoomType';
+import { createRoomType, fetchListEquipments, fetchListRatePlans, getRoomType, updateRoomType, } from '../../services/RoomType';
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
@@ -11,6 +12,8 @@ import AddImageCrop from './AddImageCrop';
 import Galerie from './Galerie';
 import Equipments from './Equipments';
 import RatePlans from './RatePlans';
+import styles from './RoomTypeForm.module.css';
+import config from '../../config/api';
 
 const imgCrop = null;
 const RoomTypeForm = ({ 
@@ -18,6 +21,7 @@ const RoomTypeForm = ({
   open,
   setOpen, 
   roomTypeId,
+  isUpdate,
 }) => {
   
   // const [errors, setErrors] = useState({});
@@ -40,6 +44,18 @@ const RoomTypeForm = ({
   const [output, setOutput] = useState(null);
   const [equipments, setEquipments] = useState([]);
   const [ratePlans, setRatePlans] = useState([]);
+  const [photoSortie, setPhotoSortie] = useState([]);
+  const [previewSortie, setPreviewSortie] = useState([]);
+
+  const removePhoto = (indexPhoto) => {
+    const photoSortieTmp = [...photoSortie];
+    photoSortieTmp.splice(indexPhoto, 1);
+    setPhotoSortie(photoSortieTmp);
+
+    const previewSortieTmp = [...previewSortie];
+    previewSortieTmp.splice(indexPhoto, 1);
+    setPreviewSortie(previewSortieTmp);
+  };
 
   const addCropedImage = useCallback((cropedImage) => {
     setRoomType((roomType) => ({ ...roomType, imgCrop: cropedImage }));
@@ -108,7 +124,7 @@ const RoomTypeForm = ({
   const getInfoRoomType = () => {
     getRoomType(roomTypeId)
     .then(result => {
-      console.log(result.data);
+      console.log(result);
       if (result.data.status === 200) {
         const {
           nom, 
@@ -125,7 +141,6 @@ const RoomTypeForm = ({
           planTarifaire,
           videos,
           photoCrop,
-
         } = result.data.typeChambre;
         setRoomType({
           nameInFrench: nom,
@@ -143,7 +158,13 @@ const RoomTypeForm = ({
         });
         setRatePlans(planTarifaire);
         setEquipments(equipements);
+        setPhotoSortie(photo);
 
+        const previewTmp = [];
+        photo.forEach((preview) => {
+          previewTmp.push(`${config.host}/${preview}`);
+        });
+        setPreviewSortie(previewTmp);
       }
     })
     .catch(err => console.error(err));
@@ -152,7 +173,6 @@ const RoomTypeForm = ({
   useEffect(() => {
     if (open) {
       getInfoRoomType();
-      console.log('getting data from server...');
     }
   },[open]);
 
@@ -189,7 +209,7 @@ const RoomTypeForm = ({
         description: roomType.descriptionInFrench,
         desc: roomType.descriptionInEnglish,
         imgCrop: output,
-        photo: [output], 
+        photo: photoSortie, 
         equipements: equipmentsId,
         planTarifaire: ratePlansId, 
         videos: [],
@@ -206,6 +226,55 @@ const RoomTypeForm = ({
       }
     })
     .catch(err => console.error(err));
+  };
+
+  const sendUpdateRoomType = () => {
+    const equipmentsId = [];
+    equipments.forEach(equipment => {
+      if (equipment.checked) {
+        equipmentsId.push(equipment._id);
+      }
+    });
+
+    const ratePlansId = [];
+    ratePlans.forEach(ratePlan => {
+      if (ratePlan.checked) {
+        ratePlansId.push(ratePlan._id);
+      }
+    });
+
+    const payload = {
+      toSend: {
+        _id: roomTypeId,
+        nom: roomType.nameInFrench,
+        name: roomType.nameInEnglish,
+        chambreTotal: roomType.numberOfRoom,
+        superficie: roomType.areaSize,
+        etage: roomType.stageNumber,
+        nbAdulte: roomType.adultNumber,
+        nbEnfant: roomType.childNumber,
+        description: roomType.descriptionInFrench,
+        desc: roomType.descriptionInEnglish,
+        photo: photoSortie, 
+        equipements: equipmentsId,
+        planTarifaire: ratePlansId, 
+        videos: [],
+      },
+      imgCrop: {
+        imageCrop: roomType.imgCrop,
+        isModifPhoto: false,
+      }
+    };
+    updateRoomType(payload)
+    .then(result => {
+      if (result.data.status === 200) {
+        setOpen(false);
+        reload();
+      } else {
+        console.error("Une erreur s'est produite");
+      }
+    })
+    .catch(err => console.error(err));
 
     // reload()
     // setOpen(false);
@@ -214,7 +283,7 @@ const RoomTypeForm = ({
   return (
     <>
       <Dialog open={open} onClose={handleClose} maxWidth={'xl'}>
-        <CustomizedDialogTitle text="Ajouter un nouveau type de chambre" />
+        <CustomizedDialogTitle text={isUpdate ? "Modifier un type chambre" : "Ajouter un nouveau type de chambre"} />
 
         <DialogContent style={{ backgroundColor: '#E8F0F8', paddingTop: 15 }}>
           <Stack sx={{ p: 2 }} direction={{ xs: 'column', md: 'row' }} spacing={2}>
@@ -396,9 +465,32 @@ const RoomTypeForm = ({
               addCropedImage={addCropedImage}
               output={output}
               setOutput={setOutput}
+              imgCrop={roomType.imgCrop}
             />
           </Stack>
           <h4>Images de la chambre</h4>
+          <div>
+            {
+              previewSortie.map((preview, i) => (
+                <Stack sx={{ position: 'relative' }}>
+                  <img className={styles.photoRoom} key={preview} src={preview} alt="chambre" />
+                  <CancelIcon
+                    sx={{
+                      color: 'red',
+                      position: 'absolute',
+                      top: 10,
+                      right: 183,
+                      '&:hover': {
+                        cursor: 'pointer',
+                      },
+                    }}
+                    onClick={() => removePhoto(i)}
+                  />
+                </Stack>
+              ))
+            }
+          </div>
+          
           <Stack sx={{ p: 2 }} direction="row" spacing={2}>
             <CustomizedButton text={`Choisir à partir de la gallerie`} onClick={() => setShowGalerie(true)} component={RouterLink} to="#"/>
             <CustomizedButton text={`Uploader une image`} component={RouterLink} to="#"/>
@@ -406,11 +498,15 @@ const RoomTypeForm = ({
           <Galerie 
             showGalerie={showGalerie} 
             setShowGalerie={setShowGalerie}
+            photoSortie={photoSortie}
+            setPhotoSortie={setPhotoSortie}
+            previewSortie={previewSortie}
+            setPreviewSortie={setPreviewSortie}
           />
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px' }}>
           <Button onClick={handleClose}>Annuler</Button>
-          <CustomizedButton onClick={addRoomType} text={`Valider`} component={RouterLink} to="#" />
+          <CustomizedButton onClick={isUpdate ? sendUpdateRoomType : addRoomType} text={`Valider`} component={RouterLink} to="#" />
         </DialogActions>
       </Dialog>
     </>

@@ -70,7 +70,6 @@ const PreviewPhotoToUpload = ({imgSrc, preview, setPreview, photo, setPhoto, i, 
     const [progressBarColor, setProgressBarColor] = useState("primary");
 
     useEffect(() => {
-        console.log(`createdId = ${  increment}`);
         setId(increment);
         increment+=1;
         functionUploadPhoto[i] = { function: savePhotoToBack, args: {photo: photo[i], isUploadCompleted} };
@@ -100,17 +99,16 @@ const PreviewPhotoToUpload = ({imgSrc, preview, setPreview, photo, setPhoto, i, 
         if(!isUploadCompleted){
             console.log(`${id  } , ${  isUploadCompleted}`);
             uploadImage({
-                method: 'post', 
-                url: '/galerie/add', 
-                data: {file: photo}, 
-                callback: callbackUpload, 
+                method: 'post',
+                url: '/galerie/add',
+                data: {file: photo},
+                callback: callbackUpload,
                 setProgress,
                 errorCallback: errorCallbackUpload
             });
         }
     }
     
-    console.log(isUploadCompleted);
     return(
         <div className={styles.listPhoto}>
             <div style={{ backgroundImage: `url(${  imgSrc  })` }} />
@@ -144,7 +142,7 @@ const PreviewPhotoToUpload = ({imgSrc, preview, setPreview, photo, setPhoto, i, 
 }
 
 let functionUploadPhoto = [];
-const UploadPhoto = ({showUpload, switchShowUpload, removePhotoLocal, getContentGalerie,switchShowImageCrop}) => {
+const UploadPhoto = ({showUpload, switchShowUpload, removePhotoLocal, getContentGallery,switchShowImageCrop}) => {
     const [photo, setPhoto] = useState([]);
     const [preview, setPreview] = useState([]);
 
@@ -153,7 +151,7 @@ const UploadPhoto = ({showUpload, switchShowUpload, removePhotoLocal, getContent
         switchShowUpload(e);
         setPhoto([]);
         setPreview([]);
-        getContentGalerie();
+        getContentGallery();
     }
 
     function resetUploadList(){
@@ -192,7 +190,6 @@ const UploadPhoto = ({showUpload, switchShowUpload, removePhotoLocal, getContent
     }
 
     function uploadAllPhotos(){
-        console.log(functionUploadPhoto);
         for(let i = 0; i < functionUploadPhoto.length; i+=1){
             const f = functionUploadPhoto[i];
             f.function(f.args.photo, f.args.isUploadCompleted);

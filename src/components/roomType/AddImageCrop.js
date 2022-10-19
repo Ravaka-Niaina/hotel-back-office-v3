@@ -9,11 +9,12 @@ import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArro
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import { ThemeContext } from '../context/Wrapper';
+import config from '../../config/api';
 
 const maxWidth = 350;
 const maxHeight = 350;
 
-const AddImageCrop = ({addCropedImage, output, setOutput,}) => {
+const AddImageCrop = ({addCropedImage, output, setOutput,imgCrop,}) => {
   const context = useContext(ThemeContext);
   const [open, setOpen] = useState(false);
   // functions to close and open the dialog of the image crop
@@ -29,7 +30,7 @@ const AddImageCrop = ({addCropedImage, output, setOutput,}) => {
   const removePreviewedImage = () => {
     setPreviewedImage(null);
   };
-  const [previewedImage, setPreviewedImage] = useState(null);
+  const [previewedImage, setPreviewedImage] = useState(imgCrop ? `${config.host}/${imgCrop}` : null);
   const [src, setSrc] = useState(null);
   const [image, setImage] = useState(null);
   const [crop, setCrop] = useState({
@@ -100,6 +101,7 @@ const AddImageCrop = ({addCropedImage, output, setOutput,}) => {
   useEffect(()=>{
     addCropedImage(previewedImage)
   },[previewedImage,addCropedImage])
+
   return (
     <Stack direction={`column`}>
       <Stack display={'flex'} alignItems="center" justifyContent="center">
