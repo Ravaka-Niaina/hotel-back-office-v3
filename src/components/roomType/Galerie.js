@@ -12,8 +12,10 @@ import Modal from '@mui/material/Modal';
 
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 
+import { getPhotosOfGallery, removePhotoFromGalerry, } from '../../services/Galerie';
 import styles from './Galerie.module.css';
 import UploadPhoto from './UploadPhoto';
+import config from '../../config/api';
 
 function callAPI(method, url, data, callback, errorHandler){
     // TODO: change location of this
@@ -48,17 +50,19 @@ const removePhotoLocal = (preview, setPreview, photo, setPhoto, indicePhoto) => 
 const removePhoto = (event, preview, setPreview, photo, setPhoto, indicePhoto) => {
     event.preventDefault();
     if(photo[indicePhoto].startsWith("galerie\\")){
-        callAPI('post', '/galerie/remove', {_id: photo[indicePhoto]}, (data) => {
-        if(data.status === 200){
-          removePhotoLocal(preview, setPreview, photo, setPhoto, indicePhoto);
-        }
-    });
+        removePhotoFromGalerry({_id: photo[indicePhoto]})
+        .then(result => {
+            if(result.data.status === 200){
+                removePhotoLocal(preview, setPreview, photo, setPhoto, indicePhoto);
+              }
+        })
+        .catch(err => console.error(err));
     }else{
         removePhotoLocal(preview, setPreview, photo, setPhoto, indicePhoto);
     }
 };
 
-const Galerie = ({showGalerie, setShowGalerie, photoSortie, setPhotoSortie, nbPhotoBeforeSortie, previewSortie, setPreviewSortie , imageCrop, setImageCrop}) => {
+const Galerie = ({showGalerie, setShowGalerie, photoSortie, setPhotoSortie, previewSortie, setPreviewSortie , imageCrop, setImageCrop}) => {
     const [photo, setPhoto] = useState([]);
     const [preview, setPreview] = useState([]);
     const [areImagesLoading, setAreImagesLoading] = useState(false);
@@ -67,29 +71,31 @@ const Galerie = ({showGalerie, setShowGalerie, photoSortie, setPhotoSortie, nbPh
     const [imageSelected, setImageSelected] = useState([]);
     const [showUpload, setShowUpload] = useState(false);
 
-
-    function displayResult(data){
-        if(data.status === 200){
-            const tmpPreview = [];
-            const tmpPhoto = [];
-            const tmpImageSelected = [];
-            for(let i = 0; i < data.photos.length; i+=1){
-                tmpPreview[i] =  `${process.env.REACT_APP_BACK_URL  }/${  data.photos[i]._id}`;
-                tmpPhoto[i] = data.photos[i]._id;
-                imageSelected[i] = false;
+    function getContentGallery(){
+        getPhotosOfGallery()
+        .then(result => {
+            console.log(result);
+            const {data} = result;
+            if(data.status === 200){
+                const tmpPreview = [];
+                const tmpPhoto = [];
+                const tmpImageSelected = [];
+                for(let i = 0; i < data.photos.length; i+=1){
+                    tmpPreview[i] =  `${config.host}/${  data.photos[i]._id}`;
+                    tmpPhoto[i] = data.photos[i]._id;
+                    imageSelected[i] = false;
+                }
+                setPreview(tmpPreview);
+                setPhoto(tmpPhoto);
+                setImageSelected(tmpImageSelected);
             }
-            setPreview(tmpPreview);
-            setPhoto(tmpPhoto);
-            setImageSelected(tmpImageSelected);
-        }
-    }
-
-    function getContentGalerie(){
-        callAPI('get', '/galerie', {}, displayResult);
+        })
+        .catch(err => console.error(err));
+        // callAPI('get', '/galerie', {}, displayResult);
     }
 
     useEffect(() => {
-        getContentGalerie();
+        getContentGallery();
     }, []);
 
     function closeGalerie(){
@@ -109,21 +115,18 @@ const Galerie = ({showGalerie, setShowGalerie, photoSortie, setPhotoSortie, nbPh
     function choosePhotos(e){
         e.preventDefault();
 
-        nbPhotoBeforeSortie.value = photoSortie.length;
         const photosToTake = [];
         const previewToTake = [];
         for(let i = 0; i < imageSelected.length; i+=1){
             if(imageSelected[i]){
                 photosToTake.push(photo[i]);
-                previewToTake.push(`${process.env.REACT_APP_BACK_URL  }/${  photo[i]}`);
+                previewToTake.push(`${config.host}/${photo[i]}`);
             }
         }
-     
+
         setPhotoSortie(photoSortie.concat(photosToTake));
         setPreviewSortie(previewSortie.concat(previewToTake));
         closeGalerie();
-        console.log(previewToTake);
-        
         
     }
 
@@ -202,7 +205,7 @@ const Galerie = ({showGalerie, setShowGalerie, photoSortie, setPhotoSortie, nbPh
                 showUpload={showUpload} 
                 switchShowUpload={switchShowUpload}
                 removePhotoLocal={removePhotoLocal}
-                getContentGalerie={getContentGalerie}
+                getContentGallery={getContentGallery}
             />
     
         </>
