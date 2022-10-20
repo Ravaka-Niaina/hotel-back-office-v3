@@ -37,8 +37,8 @@ const Booking = () => {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [filter, setFilter] = useState({
         dateOf: 'none',
-        dateFrom: formatDate(new Date().toLocaleDateString()),
-        dateUntil: formatDate(new Date().toLocaleDateString()),
+        dateFrom: formatDate(new Date().toLocaleDateString('en-US')),
+        dateUntil: formatDate(new Date().toLocaleDateString('en-US')),
         status: 'none',
     });
     const navigate = (itinerary,detailsData = null,itineraireIndex = -1,tarifIndex = -1) => {

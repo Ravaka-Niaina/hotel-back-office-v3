@@ -8,6 +8,7 @@ import {
   TableCell,
   Container,
   Typography,
+  Box,
   TableContainer,
   TablePagination,
 } from '@mui/material';
@@ -24,67 +25,130 @@ import { ThemeContext } from '../components/context/Wrapper';
 import { getUserList } from '../services/User';
 import { getAccessRightList } from '../services/AccessRight';
 import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
+import CustomizedLinearProgress from '../components/CustomizedComponents/CustomizedLinearProgress';
 import { lightBackgroundToTop } from '../components/CustomizedComponents/NeumorphismTheme';
 // mock
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: '_id', label: 'Id', alignRight: false },
   { id: 'nom', label: 'Nom', alignRight: false },
   { id: 'prenom', label: 'Prenom', alignRight: false },
   { id: 'telephone', label: 'Telephone', alignRight: false },
   { id: 'active', label: 'Actif', alignRight: false },
-  { id: 'action', label: 'Actions', alignRight: false },
+  { id: 'action', label: 'Actions', alignRight: true, alignCenter: true },
 ];
 
 // ----------------------------------------------------------------------
 
 export default function User() {
   const context = useContext(ThemeContext);
+  const order = 'asc';
+  const selected = [];
+  const orderBy = 'name';
+  const filterName = '';
+
   const [userList, setUserList] = useState(new Array(0));
 
-  const [page, setPage] = useState(0);
+  const [accessRights, setAccessRights] = useState(null);
 
-  const [order, setOrder] = useState('asc');
+  const [resultCount, setResultCount] = useState(0);
 
-  const [selected, setSelected] = useState([]);
-
-  const [orderBy, setOrderBy] = useState('name');
-
-  const [filterName, setFilterName] = useState('');
+  const [page, setPage] = useState(1);
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const [accessRights, setAccessRights] = useState(null);
+  const [loading, setLoading] = useState(false);
   
-  useEffect(() => {
-    reload();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  const getAllUser = async () => {
-    context.showLoader(true);
+  const handleChangePage = (e, p, row = rowsPerPage) => {
+    fetchFilter(p + 1, row);
+  }
+  const handleChangeRowsPerPage = (e) => {
+    const row = parseInt(e.target.value, 10);
+    handleChangePage(null, 0, row);
+  };
+  const fetchFilter = (p = 1, row = rowsPerPage) => {
+    setLoading(true);
+    setPage(p);
+    setRowsPerPage(row);
     const payloadListUser = {
       tableName: 'partenaire',
       valuesToSearch: [],
       fieldsToPrint: [],
-      nbContent: 200,
-      numPage: 1,
+      nbContent: row,
+      numPage: p,
     };
     // const accessRights = await getAccessRightList({})
     // console.log(accessRights)
     const idToken = localStorage.getItem('id_token');
     getUserList(payloadListUser, idToken)
       .then((result) => {
-        if (result.status === 200) {
+        if (result.data.status === 200) {
           setUserList(result.data.list);
-        } else {
+          setResultCount(result.data.nbResult);
+        }
+        else if (result.data.errors) {
+          const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+          const indication = result.data.errors[item];
+          const message = `${item}: ${indication}`;
+          context.changeResultErrorMessage(message);
+          context.showResultError(true);
+        }
+        else if (result.data.message) {
+          context.changeResultErrorMessage(result.data.message);
+          context.showResultError(true);
+        }
+        else {
           context.changeResultErrorMessage('Une erreur est survenue lors du chargement des données');
+          context.showResultError(true);
           context.showResultError(true);
         }
       })
-      .catch(() => {
-        context.changeResultErrorMessage('Une erreur est survenue lors du chargement des données');
+      .catch((e) => {
+        context.changeResultErrorMessage(e.message);
+        context.showResultError(true);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+  const getAllUser = async (p = 1, row = rowsPerPage) => {
+    context.showLoader(true);
+    const payloadListUser = {
+      tableName: 'partenaire',
+      valuesToSearch: [],
+      fieldsToPrint: [],
+      nbContent: row,
+      numPage: p,
+    };
+    // const accessRights = await getAccessRightList({})
+    // console.log(accessRights)
+    const idToken = localStorage.getItem('id_token');
+    getUserList(payloadListUser, idToken)
+      .then((result) => {
+        if (result.data.status === 200) {
+          setUserList(result.data.list);
+          setResultCount(result.data.nbResult);
+        } 
+        else if (result.data.errors) {
+          const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+          const indication = result.data.errors[item];
+          const message = `${item}: ${indication}`;
+          context.changeResultErrorMessage(message);
+          context.showResultError(true);
+        }
+        else if (result.data.message) {
+          context.changeResultErrorMessage(result.data.message);
+          context.showResultError(true);
+        }
+        else {
+          context.changeResultErrorMessage('Une erreur est survenue lors du chargement des données');
+          context.showResultError(true);
+          context.showResultError(true);
+        }
+      })
+      .catch((e) => {
+        context.changeResultErrorMessage(e.message);
         context.showResultError(true);
       })
       .finally(() => {
@@ -96,6 +160,7 @@ export default function User() {
     getAccessRightList().then(result=>{
       if(result.status !== 200) return
       if (!result.data) return
+      if(result.data.status !== 200) return
       if(!result.data?.list) return
       setAccessRights(result?.data?.list)
     })
@@ -104,58 +169,10 @@ export default function User() {
     getAllUser();
     getAccessRights();
   };
-
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = userList.map((n) => n.nom);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-    }
-    setSelected(newSelected);
-  };
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const handleFilterByName = (event) => {
-    setFilterName(event.target.value);
-  };
-
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
-
-  const filteredUsers = userList;
-
-  const isUserNotFound = filteredUsers.length === 0;
-  useEffect(()=>{
-    // console.log(userList)
-  },[userList])
+  useEffect(() => {
+    reload();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <Page title="AIOLIA | Utilisateurs">
       <Container>
@@ -173,7 +190,7 @@ export default function User() {
             padding: 5,
           }}
         >
-          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+          <UserListToolbar numSelected={selected.length} filterName={filterName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -184,10 +201,19 @@ export default function User() {
                   headLabel={TABLE_HEAD}
                   rowCount={userList.length}
                   numSelected={selected.length}
-                  onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
+                  {
+                            loading && (
+                              <TableRow>
+                                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={TABLE_HEAD.length + 1}>
+                                  <Box sx={{ margin: 1, textAlign: 'center' }} >
+                                    <CustomizedLinearProgress />
+                                  </Box>
+                                </TableCell>
+                              </TableRow>
+                            )
+                  }
                   {userList && userList.map((row) => {
                     const { _id, nom, prenom, telephone, isActive } = row;
                     const isItemSelected = selected.indexOf(nom) !== -1;
@@ -202,12 +228,7 @@ export default function User() {
                         aria-checked={isItemSelected}
                       >
                         <TableCellStyled padding="checkbox">
-                          <CustomizedCheckbox checked={isItemSelected} onChange={(event) => handleClick(event, nom)} />
-                        </TableCellStyled>
-                        <TableCellStyled component="th" scope="row" padding="none">
-                          <Typography variant="subtitle2" noWrap>
-                            {_id}
-                          </Typography>
+                          <CustomizedCheckbox checked={isItemSelected} />
                         </TableCellStyled>
                         <TableCellStyled align="left">{nom}</TableCellStyled>
                         <TableCellStyled align="left">{prenom}</TableCellStyled>
@@ -220,34 +241,40 @@ export default function User() {
                       </TableRow>
                     );
                   })}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCellStyled colSpan={6} />
-                    </TableRow>
-                  )}
-                </TableBody>
+                  {
+                          !loading && userList.length < 1 && (
+                            <TableRow>
+                            <TableCell style={{ textAlign: 'center' }} colSpan={TABLE_HEAD.length + 1}>
+                                <CustomizedTitle text={`Pas de résultats`} color='#212B36' level={3} />
+                                <Typography variant="body2" align="center">
+                                  Pas d'utilisateur trouvés &nbsp;
+                                  {/* <strong>
+                                    &quot;
 
-                {isUserNotFound && (
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <></>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                )}
+                                    &quot;
+                                  </strong>. */}
+                                </Typography>
+                              </TableCell>
+                            </TableRow>
+                          )
+                  }
+                </TableBody>
               </Table>
             </TableContainer>
           </Scrollbar>
 
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={userList.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
+                  rowsPerPageOptions={[5, 10, 15]}
+                  component="div"
+                  count={resultCount}
+                  rowsPerPage={rowsPerPage}
+                  page={page - 1}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  labelRowsPerPage='Lignes par page'
+                  labelDisplayedRows={({ from, to, count, page }) => {
+                    return `Page ${page + 1} :   ${from} - ${to} sur ${count}`
+                  }}
           />
         </CustomizedPaperOutside>
       </Container>
