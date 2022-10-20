@@ -63,80 +63,80 @@ import Armoire from '../../assets/images/equipments/armoire.svg';
 import Adapteur from '../../assets/images/equipments/adapteur.svg';
 import AccesExecutif from '../../assets/images/equipments/acces-executif.svg';
 
+const getMatchedIcon = (tag) => {
+  const matchings = {
+    'accessible': <AccessibleIcon />,
+    'connected_tv': <ConnectedTvIcon />,
+    'wifi': <WifiIcon />,
+    'local_parking': <LocalParkingIcon />,
+  };
+  return matchings[tag];
+};
+
+const getMatchedSvg = (tag) => {
+  const matchingsSvg = {
+    'ventilateur': Ventilateur,
+    'ustensille-cuisine': UstensilleCuisine,
+    'telephone': Telephone,
+    'table-manger': TableManger,
+    'streaming': Streaming,
+    'sol-carrele': SolCarrele,
+    'serviette': Serviette,
+    'service-reveil': ServiceReveil,
+    'seche-linge': SecheLinge,
+    'seche-cheveux': SecheCheveux,
+    'sauna': Sauna,
+    'satellite': Satellite,
+    'reveil': Reveil,
+    'refrigerateur': Refrigerateur,
+    'radio': Radio,
+    'produits-menagers': ProduitsMenagers,
+    'prise-pres-lit': PrisePresLit,
+    'presse-pantalon': PressePantalon,
+    'portable-coffre-fort': PortableCoffreFort,
+    'plaque': Plaque,
+    'piscine-privee': PiscinePrivee,
+    'piscine-debordement': PiscineDebordement,
+    'parquet': Parquet,
+    'ordinateur': Ordinateur,
+    'ordinateur-portable': OrdinateurPortable,
+    'moquette': Moquette,
+    'mobilier-ext': MobilierExt,
+    'minibar': Minibar,
+    'micro-ondes': MicroOndes,
+    'lit-pliant': LitPliant,
+    'lave-vaisselle': LaveVaisselle,
+    'lave-linge': LaveLinge,
+    'grille-pain': GrillePain,
+    'four': Four,
+    'espace-repas-ext': EspaceRepasExt,
+    'dressing': Dressing,
+    'couverture-chauffante': CouvertureChauffante,
+    'console': Console,
+    'coin-salon': CoinSalon,
+    'coin-repas': CoinRepas,
+    'cheminee': Cheminee,
+    'chauffage': Chauffage,
+    'chambre-communiquant': ChambreCommuniquant,
+    'chambre-anti-allergie': ChambreAntiAllergie,
+    'chaise-haute-enfant': ChaiseHauteEnfant,
+    'chaines-cable': ChainesCable,
+    'casier': Casier,
+    'canape': Canape,
+    'canape-lit': CanapeLit,
+    'bouteille-eau': BouteilleEau,
+    'berceau': Berceau,
+    'barbecue': Barbecue,
+    'article-toilette': ArticleToilette,
+    'armoire': Armoire,
+    'adapteur': Adapteur,
+    'acces-executif': AccesExecutif,
+  };
+
+  return matchingsSvg[tag];
+};
+
 const Equipments = ({ equipments, setEquipments }) => {
-  const getMatchedIcon = (tag) => {
-    const matchings = {
-      'accessible': <AccessibleIcon />,
-      'connected_tv': <ConnectedTvIcon />,
-      'wifi': <WifiIcon />,
-      'local_parking': <LocalParkingIcon />,
-    };
-    return matchings[tag];
-  };
-
-  const getMatchedSvg = (tag) => {
-    const matchingsSvg = {
-      'ventilateur': Ventilateur,
-      'ustensille-cuisine': UstensilleCuisine,
-      'telephone': Telephone,
-      'table-manger': TableManger,
-      'streaming': Streaming,
-      'sol-carrele': SolCarrele,
-      'serviette': Serviette,
-      'service-reveil': ServiceReveil,
-      'seche-linge': SecheLinge,
-      'seche-cheveux': SecheCheveux,
-      'sauna': Sauna,
-      'satellite': Satellite,
-      'reveil': Reveil,
-      'refrigerateur': Refrigerateur,
-      'radio': Radio,
-      'produits-menagers': ProduitsMenagers,
-      'prise-pres-lit': PrisePresLit,
-      'presse-pantalon': PressePantalon,
-      'portable-coffre-fort': PortableCoffreFort,
-      'plaque': Plaque,
-      'piscine-privee': PiscinePrivee,
-      'piscine-debordement': PiscineDebordement,
-      'parquet': Parquet,
-      'ordinateur': Ordinateur,
-      'ordinateur-portable': OrdinateurPortable,
-      'moquette': Moquette,
-      'mobilier-ext': MobilierExt,
-      'minibar': Minibar,
-      'micro-ondes': MicroOndes,
-      'lit-pliant': LitPliant,
-      'lave-vaisselle': LaveVaisselle,
-      'lave-linge': LaveLinge,
-      'grille-pain': GrillePain,
-      'four': Four,
-      'espace-repas-ext': EspaceRepasExt,
-      'dressing': Dressing,
-      'couverture-chauffante': CouvertureChauffante,
-      'console': Console,
-      'coin-salon': CoinSalon,
-      'coin-repas': CoinRepas,
-      'cheminee': Cheminee,
-      'chauffage': Chauffage,
-      'chambre-communiquant': ChambreCommuniquant,
-      'chambre-anti-allergie': ChambreAntiAllergie,
-      'chaise-haute-enfant': ChaiseHauteEnfant,
-      'chaines-cable': ChainesCable,
-      'casier': Casier,
-      'canape': Canape,
-      'canape-lit': CanapeLit,
-      'bouteille-eau': BouteilleEau,
-      'berceau': Berceau,
-      'barbecue': Barbecue,
-      'article-toilette': ArticleToilette,
-      'armoire': Armoire,
-      'adapteur': Adapteur,
-      'acces-executif': AccesExecutif,
-    };
-
-    return matchingsSvg[tag];
-  };
-
   const switchCheckboxEquipment = (indexEquipment => {
     const equipmentsTemp = [ ...equipments ];
     equipmentsTemp[indexEquipment].checked = 
