@@ -321,7 +321,7 @@ const ModifyHotelDialog = (props) => {
           minHeight: '100vh',
           border: '1px white solid',
           padding: 5,
-          width: 0.75,
+          width: 0.8,
           margin: 'auto'
         }}
       >
