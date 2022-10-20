@@ -1,6 +1,11 @@
 .equipments > tr > td:first-child {
   width: 40px;
 }
+.equipments > tr > td > img {
+  width: 24px;
+  height: 24px;
+  display: inline;
+}
 .equipments > tr > td:nth-child(2) {
   width: 40px;
   text-align: center;
