@@ -6,7 +6,7 @@ import Iconify from '../Iconify';
 import RoomTypeForm from './RoomTypeForm';
 
 // Nesoriko leh prop row (Cedric)
-const ModifyRoomTypeDialog = ({ row }) => {
+const ModifyRoomTypeDialog = ({ row, reload, }) => {
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -30,6 +30,7 @@ const ModifyRoomTypeDialog = ({ row }) => {
         setOpen={setOpen}
         roomTypeId={row._id}
         isUpdate
+        reload={reload}
       />
     </>
   );

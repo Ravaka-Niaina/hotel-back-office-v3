@@ -13,7 +13,7 @@ export default function RoomTypeMoreMenu({ row, reload, }) {
   return (
     <>
       <Stack direction='row' spacing={2} justifyContent='center'>
-          <ModifyRoomTypeDialog row={row} />
+          <ModifyRoomTypeDialog row={row} reload={reload} />
           <DeleteRoomTypeDialog row={row} reload={reload} />
       </Stack>
     </>

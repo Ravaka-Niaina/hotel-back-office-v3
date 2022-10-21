@@ -47,6 +47,38 @@ const RoomTypeForm = ({
   const [photoSortie, setPhotoSortie] = useState([]);
   const [previewSortie, setPreviewSortie] = useState([]);
 
+  const clearForm = () => {
+    setRoomType({
+      nameInFrench: '',
+      nameInEnglish: '',
+      numberOfRoom: '',
+      areaSize: '',
+      stageNumber: '',
+      adultNumber: '',
+      childNumber: '',
+      descriptionInFrench: '',
+      descriptionInEnglish: '',
+      videos: [],
+      photo: [],
+      imgCrop: '',
+    });
+
+    const equipmentsTmp = [...equipments];
+    equipmentsTmp.forEach(equipment => {
+      equipment.checked = false;
+    });
+    setEquipments(equipmentsTmp);
+
+    const ratePlansTmp = [...ratePlans];
+    ratePlansTmp.forEach(ratePlan => {
+      ratePlan.checked = false;
+    });
+    setEquipments(ratePlansTmp);
+
+    setPhotoSortie([]);
+    setPreviewSortie([]);
+  };
+
   const removePhoto = (indexPhoto) => {
     const photoSortieTmp = [...photoSortie];
     photoSortieTmp.splice(indexPhoto, 1);
@@ -124,7 +156,6 @@ const RoomTypeForm = ({
   const getInfoRoomType = () => {
     getRoomType(roomTypeId)
     .then(result => {
-      console.log(result);
       if (result.data.status === 200) {
         const {
           nom, 
@@ -217,9 +248,9 @@ const RoomTypeForm = ({
     };
     createRoomType(payload)
     .then(result => {
-      console.log(result);
       if (result.data.status === 200) {
         setOpen(false);
+        clearForm();
         reload();
       } else {
         console.error("Une erreur s'est produite");
@@ -267,6 +298,7 @@ const RoomTypeForm = ({
     };
     updateRoomType(payload)
     .then(result => {
+      console.log(result);
       if (result.data.status === 200) {
         setOpen(false);
         reload();
@@ -275,9 +307,6 @@ const RoomTypeForm = ({
       }
     })
     .catch(err => console.error(err));
-
-    // reload()
-    // setOpen(false);
   };
 
   return (
