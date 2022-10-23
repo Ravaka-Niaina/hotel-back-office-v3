@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import React , { useState } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink as RouterLink, matchPath, useLocation } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
 import { Box, List, Collapse, ListItemText, ListItemIcon, ListItemButton } from '@mui/material';
+
 //
+import NotificationBadge from '../reservation/NotificationBadge';
 import Iconify from '../Iconify';
 
 // ----------------------------------------------------------------------
@@ -37,7 +39,7 @@ NavItem.propTypes = {
 function NavItem({ item, active }) {
   const isActiveRoot = active(item.path);
 
-  const { title, path, icon, info, children } = item;
+  const { title, path, icon, info, children,notificationComponent } = item;
 
   const [open, setOpen] = useState(isActiveRoot);
 
@@ -134,6 +136,16 @@ function NavItem({ item, active }) {
     >
       <ListItemIconStyle>{icon && icon}</ListItemIconStyle>
       <ListItemText disableTypography primary={title} />
+      {
+        notificationComponent && (
+          <ListItemIconStyle>
+            {
+              React.cloneElement(notificationComponent)
+            }
+          </ListItemIconStyle>
+        )
+      }
+      
       {isActiveRoot && (
         <ListItemIconStyle>
           <Iconify icon={'eva:arrow-ios-forward-fill'} width={22} height={22} />
