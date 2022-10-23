@@ -26,12 +26,13 @@ const TABLE_HEAD = [
   { id: 'action', label: 'Actions', alignRight: false,alignCenter:true },
 ];
 
+let delaySearchRef = null;
 const RatePlan = () => {
   const context = useContext(ThemeContext);
   const order = 'asc';
   const selected = [];
   const orderBy = 'name';
-  const filterName = '';
+  const [filterName, setFilterName] = useState('');
 
   const [location , setLocation] = useState('list');
 
@@ -55,13 +56,17 @@ const RatePlan = () => {
     handleChangePage(null, 0, row);
   };
 
+  const handleFilterByName = (event) => {
+    setFilterName(event.target.value);
+  };
+
   const fetchFilter = (p = 1, row = rowsPerPage) => {
     setLoading(true);
     setPage(p);
     setRowsPerPage(row);
     const payload = {
       tableName: 'tarif',
-      valuesToSearch: [],
+      valueToSearch: filterName,
       fieldsToPrint: ['_id', 'nom', 'politiqueAnnulAtrb', 'chambresAtrb'],
       nbContent: row,
       numPage: p,
@@ -172,6 +177,12 @@ const RatePlan = () => {
     reload();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (delaySearchRef) clearTimeout(delaySearchRef);
+    delaySearchRef = setTimeout(() => fetchFilter(1, rowsPerPage), 2000);
+  }, [filterName]);
+
   return (
     <Page title="AIOLIA | Plans tarifaires">
       <Container>
@@ -193,7 +204,10 @@ const RatePlan = () => {
                   <CustomizedButton onClick={() => navigate('addForm')} text='Ajouter' component={RouterLink} to="#" />
                 </Stack>
                 <CustomizedPaperOutside sx={{ ...lightBackgroundToTop, background: '#E3EDF7', p: 5, minHeight: '100vh' }}>
-                  <UserListToolbar numSelected={selected.length} filterName={filterName} />
+                  <UserListToolbar 
+                    numSelected={selected.length} 
+                    onFilterName={handleFilterByName}
+                  />
                   {ratePlanList && <Scrollbar>
                     <TableContainer sx={{ minWidth: 800 }}>
                       <Table>
@@ -305,9 +319,7 @@ const RatePlan = () => {
                       onPageChange={handleChangePage}
                       onRowsPerPageChange={handleChangeRowsPerPage}
                       labelRowsPerPage='Lignes par page'
-                      labelDisplayedRows={({ from, to, count, page }) => {
-                        return `Page ${page + 1} :   ${from} - ${to} sur ${count}`
-                      }}
+                      labelDisplayedRows={({ from, to, count, page }) => `Page ${page + 1} :   ${from} - ${to} sur ${count}`}
                     />
                   </Scrollbar>}
                 </CustomizedPaperOutside>

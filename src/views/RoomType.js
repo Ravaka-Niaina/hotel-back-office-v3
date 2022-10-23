@@ -43,6 +43,7 @@ const TableCellStyled = styled(TableCell)({
   color: '#7E7E7E',
 });
 
+let delaySearchRef = null;
 const TypeChambre = () => {
   const context = useContext(ThemeContext);
   const [roomTypeList, setRoomTypeList] = useState(new Array(0));
@@ -69,12 +70,17 @@ const TypeChambre = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (delaySearchRef) clearTimeout(delaySearchRef);
+    delaySearchRef = setTimeout(() => getAllRoomType(), 2000);
+  }, [filterName]);
+
   function getAllRoomType() {
     context.showLoader(true);
 
     const payload = {
       tableName: 'typeChambre',
-      valuesToSearch: [],
+      valueToSearch: filterName,
       fieldsToPrint: [],
       nbContent: 100,
       numPage: 1,
@@ -90,7 +96,7 @@ const TypeChambre = () => {
           } else {
             // console.log(datas)
           }
-        })
+        }) 
         .catch(() => {})
         .finally(() => {
           context.showLoader(false);
@@ -183,7 +189,6 @@ const TypeChambre = () => {
                 <TableBody>
                   {roomTypeList.map((row) => {
                     const { _id, nom, nbAdulte, nbEnfant, chambreTotal, superficie } = row;
-                    console.log(row)
                     const isItemSelected = selected.indexOf(nom) !== -1;
                     return (
                       <TableRow
