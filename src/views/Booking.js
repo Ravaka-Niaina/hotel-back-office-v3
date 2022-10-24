@@ -20,7 +20,7 @@ import CustomizedLinearProgress from '../components/CustomizedComponents/Customi
 import {ThemeContext} from '../components/context/Wrapper';
 import { lightBackgroundToTop } from '../components/CustomizedComponents/NeumorphismTheme';
 
-import { getReservationList } from '../services/Reservation';
+import { getReservationList,getNotificationReservationList } from '../services/Reservation';
 import { formatDate } from '../services/Util';
 
 
