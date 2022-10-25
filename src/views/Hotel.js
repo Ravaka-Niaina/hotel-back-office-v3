@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Table, Stack, TableRow, TableBody, Container, TableContainer } from '@mui/material';
-import {Link as RouterLink} from 'react-router-dom';
+import {Link as RouterLink, useNavigate } from 'react-router-dom';
 import AddHotelDialog from '../components/hotel/AddHotelDialog';
 import ModifyHotelDialog from '../components/hotel/ModifyHotelDialog';
 import HotelMoreMenu from '../components/hotel/HotelMoreMenu';
@@ -18,6 +18,7 @@ import CustomizedIconButton from '../components/CustomizedComponents/CustomizedI
 import { lightBackgroundToTop } from '../components/CustomizedComponents/NeumorphismTheme';
 import Iconify from '../components/Iconify';
 
+
 const TABLE_HEAD = [
   { id: 'nom', label: 'Nom', alignRight: false },
   { id: 'adresse', label: 'Adresse', alignRight: false },
@@ -34,6 +35,8 @@ const Hotel = () => {
   const selected = [];
   const orderBy = 'name';
   const filterName = '';
+
+  const navigatePage = useNavigate();
 
   // const [ratePlanList, setRatePlanList] = useState(new Array(0));
 
@@ -110,6 +113,12 @@ const Hotel = () => {
     reload();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const manageHotelContent = (hotelId) => {
+    localStorage.setItem('hotel_id', hotelId);
+    navigatePage('/');
+  };
+
   return (
     <Page title="AIOLIA | Hotels">
       <Container>
@@ -179,6 +188,9 @@ const Hotel = () => {
                                 <Stack direction="row" spacing={2} justifyContent='center'>
                                   <CustomizedIconButton variant="contained" onClick={() => navigate('modifyForm', row)}>
                                     <Iconify icon="eva:edit-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
+                                  </CustomizedIconButton>
+                                  <CustomizedIconButton variant="contained" onClick={() => manageHotelContent(row._id)}>
+                                    <Iconify icon="bxs:user-check" width={20} height={20} color="rgba(140, 159, 177, 1)" />
                                   </CustomizedIconButton>
                                   <HotelMoreMenu row={row} reload={reload} />
                                 </Stack>

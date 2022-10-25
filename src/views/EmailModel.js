@@ -63,13 +63,24 @@ export default function EmailModel() {
    */
   const [openHtmlEditor, setOpenHtmlEditor] = useState(false)
 
+  let userAttr = {};
+  try {
+    userAttr = JSON.parse(localStorage.getItem('user_attr'));
+  } catch (err) {
+    userAttr = {
+      hotel_name: 'Colbert',
+      hotel_phone_number: '+261 34 78 711 04',
+      hotel_email_address: 'colbert@gmail.com',
+    };
+  }
+
   /**
    * @object An object that contains test variables to test in the email
    */
   const VARIABLES = {
-    hotel_name: 'Colbert',
-    hotel_phone_number: "+261 34 78 711 04",
-    hotel_email_address: "colbert@gmail.com",
+    hotel_name: userAttr.hotel_name,
+    hotel_phone_number: userAttr.hotel_phone_number,
+    hotel_email_address: userAttr.hotel_email_address,
     reservation_link: 'https://adr-hotel-front/booking-summary/1234',
     logo_link: "http://localhost:3000/images/logo/logowcolor.png",
     client_firstname: "Rabekoto",
@@ -164,7 +175,7 @@ export default function EmailModel() {
     getDraftFromHtml(e.target.value)
   }
   return (
-    <Page title="AOLIA | Modèle Email">
+    <Page title="AIOLIA | Modèle Email">
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <CustomizedTitle size={20} text="Modèle d'email" />
       </Stack>

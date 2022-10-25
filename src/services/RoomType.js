@@ -5,16 +5,22 @@ export const getRoomTypeList = (payload, idToken) =>
   axios.post(`${config.host}/typeChambre/TC`, payload, {
     headers: {
       Authorization: idToken,
+      hotel_id: localStorage.getItem('hotel_id'),
     },
   });
 export const getRoomType = (roomTypeId) =>
-  axios.get(`${config.host}/typeChambre/detailsChambre/${ roomTypeId }`);
+  axios.get(`${config.host}/typeChambre/detailsChambre/${ roomTypeId }`, {
+    headers: {
+      hotel_id: localStorage.getItem('hotel_id'),
+    }
+  });
 
 export const createRoomType = (payload) =>
   axios.post(`${config.host}/typeChambre/insert`, payload, {
     headers: {
       Authorization: localStorage.getItem("id_token"),
-      partner_id: localStorage.getItem("partner_id")
+      partner_id: localStorage.getItem("partner_id"),
+      hotel_id: localStorage.getItem('hotel_id')
     },
   });
 
@@ -23,6 +29,7 @@ export const updateRoomType = (payload, partnerId) =>
     headers: {
       Authorization: localStorage.getItem("id_token"),
       partner_id: partnerId,
+      hotel_id: localStorage.getItem('hotel_id')
     },
   });
 
@@ -30,6 +37,7 @@ export const deleteRoomType = (payload) =>
   axios.post(`${config.host}/delete`, payload, {
     headers: {
       isPartner: true,
+      hotel_id: localStorage.getItem('hotel_id')
     },
   });
 
