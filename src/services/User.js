@@ -33,9 +33,10 @@ export const resendCode = (payload) =>
  */
 export const register = (payload) =>
   axios.post(`${config.host}/user/register`, payload, {
-    /* headers: {
-            Authorization: token,
-        }, */
+    headers: {
+      ispartner: true,
+      Authorization: localStorage.getItem('id_token'),
+    },
   });
 export const getUserList = (payload, idToken) =>
   axios.post(`${config.host}/user/list`, payload, {

@@ -2,6 +2,7 @@
 import jwtDecode from 'jwt-decode';
 import { getPayloadFromToken, getUserDetailsById, checkAuthWithRole } from '../../services/User';
 import { getAllowedRoles } from '../../services/AllowedRoles';
+import NotificationBadge from '../reservation/NotificationBadge';
 import Iconify from '../Iconify';
 // ----------------------------------------------------------------------
 
@@ -36,6 +37,7 @@ export const getSidebarConfig = async (context) => {
       path: '/dashboard/booking',
       icon: getIcon('teenyicons:appointments-solid'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/booking')),
+      notificationComponent:(<NotificationBadge />),
     },
     {
       title: 'plans tarifaires',

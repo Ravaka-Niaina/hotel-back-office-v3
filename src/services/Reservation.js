@@ -8,3 +8,15 @@ export const getReservationList = (payload) =>
         //     Authorization: idToken,
         // },
 });
+export const getNotificationCount = (payload,idToken) =>
+    axios.post(`${config.host}/notificationReservation/nbNotifReservation`, payload, {
+        headers: {
+            Authorization: idToken,
+        },
+    });
+export const getNotificationReservationList = (payload,idToken) =>
+    axios.post(`${config.host}/notificationReservation`, payload, {
+        headers: {
+            Authorization: idToken,
+        },
+});
