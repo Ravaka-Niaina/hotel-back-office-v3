@@ -123,8 +123,7 @@ export default function User() {
     };
     // const accessRights = await getAccessRightList({})
     // console.log(accessRights)
-    const idToken = localStorage.getItem('id_token');
-    getUserList(payloadListUser, idToken)
+    getUserList(payloadListUser)
       .then((result) => {
         if (result.data.status === 200) {
           setUserList(result.data.list);
