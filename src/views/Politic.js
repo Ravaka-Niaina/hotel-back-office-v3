@@ -110,8 +110,9 @@ const Politic = () => {
     const idToken = localStorage.getItem('id_token');
     getPolitics({ ...payload }, idToken)
     .then((result) => {
+      console.log(result);
       try {
-          const status = result?.status;
+          const status = result?.data.status;
           if (status === 200) {
             const list = result.data?.list;
             setPoliticList(list);

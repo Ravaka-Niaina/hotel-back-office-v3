@@ -93,13 +93,13 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
   
   const fetchData = async () => {
     context.showLoader(true);
-    let fetchPromotionFinished = false;
-    let fetchItemsFinished = false;
     const user = JSON.parse(localStorage.getItem('partner_id'));
     getPromotionDetail(row._id, user)
       .then((promotionDetail) => {
         // console.log(promotionDetail.data);
         if (promotionDetail.data.status === 200) {
+          setListTarif(promotionDetail.data.listTarif);
+          setListRoom(promotionDetail.data.listTypeChambre);
           const oldPromotion = promotionDetail.data.promotion;
           delete oldPromotion.userIdInsert;
           delete oldPromotion.hotelUser;
@@ -137,26 +137,7 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
         context.changeResultErrorMessage('Une erreur interne est survenue lors du chargemenent des données.');
         context.showResultError(true);
       }).finally(() => {
-        fetchPromotionFinished = true;
-        if(fetchItemsFinished) context.showLoader(false);
-      });
-    getListTarifAndRoom()
-      .then((fetch) => {
-        if (fetch.data.status === 200) {
-          setListTarif(fetch.data.listTarif);
-          setListRoom(fetch.data.listTypeChambre);
-          context.showLoader(false);
-        } else {
-          context.changeResultErrorMessage('Une erreur interne est survenue lors du chargemenent des données.');
-          context.showResultError(true);
-        }
-      })
-      .catch(() => {
-        context.changeResultErrorMessage('Une erreur interne est survenue lors du chargemenent des données.');
-        context.showResultError(true);
-      }).finally(() => {
-        fetchItemsFinished = true;
-        if (fetchPromotionFinished) context.showLoader(false);
+        context.showLoader(false);
       });
 
   };
