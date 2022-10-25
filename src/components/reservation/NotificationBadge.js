@@ -37,13 +37,13 @@ const NotificationBadge = () => {
     },[]);
     useEffect(()=>{
         // instance pusher channel and beam listener
-        console.log(process.env.REACT_APP_PUSHER_CHANNEL_KEY, ' AND ', process.env.REACT_APP_PUSHER_CHANNEL_CLUSTER);
+        // console.log(process.env.REACT_APP_PUSHER_CHANNEL_KEY, ' AND ', process.env.REACT_APP_PUSHER_CHANNEL_CLUSTER);
         const pusher = new Pusher(process.env.REACT_APP_PUSHER_CHANNEL_KEY, {
             cluster: process.env.REACT_APP_PUSHER_CHANNEL_CLUSTER,
         });
         const channel = pusher.subscribe("key");
         channel.bind("newReservation", (dataFromServer) => {
-            console.log(dataFromServer);
+            // console.log(dataFromServer);
             setNotificationCount((prev) => prev + 1);
         });
         const beamsClient = new PusherPushNotifications.Client({
