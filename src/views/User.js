@@ -178,7 +178,7 @@ export default function User() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <CustomizedTitle size={20} text='Utilisateur'/>
-          <AddUserDialog />
+          <AddUserDialog accessRights={accessRights} reload={reload} />
         </Stack>
 
         <CustomizedPaperOutside
@@ -272,9 +272,7 @@ export default function User() {
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
                   labelRowsPerPage='Lignes par page'
-                  labelDisplayedRows={({ from, to, count, page }) => {
-                    return `Page ${page + 1} :   ${from} - ${to} sur ${count}`
-                  }}
+                  labelDisplayedRows={({ from, to, count, page }) => `Page ${page + 1} :   ${from} - ${to} sur ${count}`}
           />
         </CustomizedPaperOutside>
       </Container>
