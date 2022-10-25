@@ -140,6 +140,7 @@ const RoomTypeForm = ({
       numPage: 1,
     })
     .then(result => {
+      console.log(result);
       const ratePlansTemp = [];
       result.data.list.forEach(({ _id, nom, }) => {
         ratePlansTemp.push({

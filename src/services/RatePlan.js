@@ -5,6 +5,7 @@ export const getRatePlanList = (payload, idToken) =>
     axios.post(`${config.host}/planTarifaire`, payload, {
         headers: {
             Authorization: idToken,
+            hotel_id: localStorage.getItem('hotel_id'),
         },
 });
 export const createRatePlan = (payload,idToken) =>
@@ -29,7 +30,12 @@ export const deleteRatePlan = (payload) =>
 });
 
 export const getRoomTypeAndCancelingPoliticList = () =>
-    axios.get(`${config.host}/tctarif/TPAvecPA`);
+    axios.get(`${config.host}/tctarif/TPAvecPA`, {
+        headers: {
+            Authorization: localStorage.getItem('id_token'),
+            hotel_id: localStorage.getItem('hotel_id'),
+        },
+});
 
 export const getRatePlanDetails = (id) =>
     axios.get(`${config.host}/planTarifaire/details/${id}`);

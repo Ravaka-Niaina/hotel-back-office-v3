@@ -55,5 +55,6 @@ export const fetchListRatePlans = (payload) =>
   axios.post(`${config.host}/planTarifaire`, payload,  {
     headers: {
       Authorization: localStorage.getItem("id_token"),
+      hotel_id: localStorage.getItem('hotel_id'),
     },
   })

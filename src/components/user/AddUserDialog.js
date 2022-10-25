@@ -3,6 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 
 import React, { useEffect, useState, useContext } from 'react';
 import { Stack, Dialog, DialogActions, DialogContent, Button } from '@mui/material';
+import { calendarFormat } from 'moment';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 
@@ -57,6 +58,27 @@ const AddUserDialog = ({accessRights, reload}) => {
       ...temp,
     });
   };
+
+  const clearForm = () => {
+    setUser({
+      last_name: '',
+      first_name: '',
+      email: '',
+      backup_email: '',
+      phone_number: '',
+      password: '',
+      confirmPassword: '',
+    });
+    setErrors({
+      last_name: '',
+      first_name: '',
+      email: '',
+      backup_email: '',
+      phone_number: '',
+      password: '',
+      confirmPassword: '',
+    });
+  };
   
   const handleClose = () => {
     setOpen(false);
@@ -99,6 +121,7 @@ const AddUserDialog = ({accessRights, reload}) => {
     }).then(result => {
       console.log(result);
       if (result.data.status === 200) {
+        clearForm();
         setOpen(false);
         reload();
       }
@@ -173,6 +196,7 @@ const AddUserDialog = ({accessRights, reload}) => {
               placeholder="Telephone"
               name="phone_number"
               label="Telephone"
+              autoComplete={false}
             />
             <CustomizedInput
               onChange={handleChange}
@@ -186,6 +210,7 @@ const AddUserDialog = ({accessRights, reload}) => {
               name="password"
               label="Mot depasse"
               type="password"
+              autoComplete={false}
             />
             <CustomizedInput
               onChange={handleChange}
@@ -199,13 +224,12 @@ const AddUserDialog = ({accessRights, reload}) => {
               name="confirmPassword"
               label="confirmPassword"
               type="password"
-              // error
-              // helperText="Password not the same"
+              autoComplete={false}
             />
           </Stack>
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px' }}>
-          <Button onClick={handleClose} sx={{ fontSize: 12 }}>
+          <Button onClick={() => {handleClose(); clearForm()}} sx={{ fontSize: 12 }}>
             Annuler
           </Button>
           <CustomizedButton onClick={createUser} text={`Valider`} component={RouterLink} to="#" />
