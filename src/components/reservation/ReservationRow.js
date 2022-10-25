@@ -35,7 +35,7 @@ const ReservationRow = ({row,navigate}) => {
                     <Stack direction='row' spacing={2} alignItems='center'>
                         <CustomizedTitle text={format(new Date(row.dateValidation), 'dd MMMM yyyy ~ HH:mm:SS')} size={15} level={0} />
                         {
-                            row.reservateur.nom === 'Ratefiarivony' && (
+                            row.new !== undefined && (
                                 <Chip label="nouveau" color="primary" variant="outlined" />
                             )
                         }

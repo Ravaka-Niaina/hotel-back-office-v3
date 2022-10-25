@@ -14,9 +14,7 @@ const NotificationBadge = () => {
         setNotificationCount(0);
     };
     const fetchNotificationCount = () => {
-        const payload = {};
-        const idToken = localStorage.getItem('id_token');
-        getNotificationCount(payload,idToken)
+        getNotificationCount()
             .then((result)=>{
                 if(result.data.status === 200){
                     setNotificationCount(result.data.nbNotifReserv);
