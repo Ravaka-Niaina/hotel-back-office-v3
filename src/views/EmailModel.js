@@ -63,24 +63,14 @@ export default function EmailModel() {
    */
   const [openHtmlEditor, setOpenHtmlEditor] = useState(false)
 
-  let userAttr = {};
-  try {
-    userAttr = JSON.parse(localStorage.getItem('user_attr'));
-  } catch (err) {
-    userAttr = {
-      hotel_name: 'Colbert',
-      hotel_phone_number: '+261 34 78 711 04',
-      hotel_email_address: 'colbert@gmail.com',
-    };
-  }
 
   /**
    * @object An object that contains test variables to test in the email
    */
   const VARIABLES = {
-    hotel_name: userAttr.hotel_name,
-    hotel_phone_number: userAttr.hotel_phone_number,
-    hotel_email_address: userAttr.hotel_email_address,
+    hotel_name: 'nom',
+    hotel_phone_number: '034 11 222 44',
+    hotel_email_address: 'Soavimasoandro, Antananarivo 101',
     reservation_link: 'https://adr-hotel-front/booking-summary/1234',
     logo_link: "http://localhost:3000/images/logo/logowcolor.png",
     client_firstname: "Rabekoto",
@@ -191,32 +181,42 @@ export default function EmailModel() {
       >
         {/* <UserListToolbar /> */}
         <Scrollbar>
-          <div>
+          <Stack spacing={2} >
             <h4><b>Variables de test</b></h4> <br />
-            {Object.keys(VARIABLES).map(variable => `[${variable}] : ${VARIABLES[variable]} --- `)}
-          </div>
-          <br />
-          <Stack direction="row">
-            {openDraftEditor ? <button style={{ ...draftModificationMenuStyle }} onClick={handleOpenDraftEditor}>Modification via draft</button> : <button style={{ ...draftModificationMenuStyle, ...shadowOutside }} onClick={handleOpenDraftEditor}>Modification via draft</button>}
-            {openHtmlEditor ? <button style={{ ...htmlModificationMenuStyle }} onClick={handleOpenHtmlEditor}>Modification via html</button> : <button style={{ ...htmlModificationMenuStyle, ...shadowOutside }} onClick={handleOpenHtmlEditor}>Modification via html</button>}
+            <Stack>
+              {
+                Object.keys(VARIABLES).map(variable => (
+                  <Stack direction='row' spacing={2}>
+                    <CustomizedTitle text={`[${variable}] : `} level={0} size={16}/>
+                    <CustomizedTitle text={`${VARIABLES[variable]}`} level={2} size={16} color='#787878'/>
+                  </Stack>
+                ))}
+            </Stack>
+            
+          
+            <br />
+            <Stack direction="row" spacing={2}>
+              <button style={{ ...draftModificationMenuStyle, ...(!openDraftEditor && {...shadowOutside}) }} onClick={handleOpenDraftEditor}>Modification via editeur</button> 
+              <button style={{ ...htmlModificationMenuStyle, ...(!openHtmlEditor && {...shadowOutside}) }} onClick={handleOpenHtmlEditor}>Modification via html</button> 
+            </Stack>
+            {openDraftEditor &&
+              <><Editor
+                stripPastedStyles={{ backgroundColor: 'green' }}
+                // toolbarStyle={{ borderRadius:'8px',...lightBackgroundToTop, ...shadowOutside, ...linearBorderOutside, ...linearBorderInset, padding: 10 }}
+              editorStyle={{ borderRadius: 5, paddingLeft: 15, paddingRight: 15 , minHeight: '150px',...lightBackgroundToTop, ...shadowInset, ...linearBorderOutside, ...linearBorderInset,  }}
+                editorState={editorState}
+                onEditorStateChange={onDraftEditorStateChange}
+              />
+              </>
+            }
+            {openHtmlEditor &&
+              <>
+                <CustomizedInput type='text' style={{ ...shadowInset, minHeight: '150px' }} value={htmlPreview} onChange={onHtmlEditorStateChange} multiline />
+              </>
+            }
+            <CustomizedTitle sx={{textAlign:'center'}} text={`Apercu de l'email`} level={0} size={32} />
+            {htmlPreview && <div style={{ ...shadowInset, backgroundColor: 'white', marginTop: '20px', padding: 20 }} dangerouslySetInnerHTML={{ __html: convertVariablesToValues(VARIABLES, htmlPreview) }} />}
           </Stack>
-          {openDraftEditor &&
-            <><Editor
-              stripPastedStyles={{ backgroundColor: 'green' }}
-              toolbarStyle={{ ...lightBackgroundToTop, ...shadowInset, ...linearBorderOutside, ...linearBorderInset, padding: 10 }}
-              editorStyle={{ ...lightBackgroundToTop, ...shadowInset, ...linearBorderOutside, ...linearBorderInset, padding: 10, minHeight: '150px' }}
-              editorState={editorState}
-              onEditorStateChange={onDraftEditorStateChange}
-            />
-            </>
-          }
-          {openHtmlEditor &&
-            <>
-              <CustomizedInput type='text' style={{ ...shadowInset, minHeight: '150px' }} value={htmlPreview} onChange={onHtmlEditorStateChange} multiline />
-            </>
-          }
-          <h2 style={{textAlign:'center'}}>Apercu de l'email</h2>
-          {htmlPreview && <div style={{ ...shadowInset, backgroundColor: 'white', marginTop: '20px', padding: 20 }} dangerouslySetInnerHTML={{ __html: convertVariablesToValues(VARIABLES, htmlPreview) }} />}
         </Scrollbar>
       </CustomizedPaperOutside>
     </Page>
