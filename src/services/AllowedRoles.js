@@ -31,7 +31,7 @@ export const getAllowedRoles = (pageSectionPath) => {
     },
     {
       path: '/dashboard/calendar',
-      allowedRoles: ['superAdmin','admin'],
+      allowedRoles: ['superAdmin','admin', 'modifierDisponibiliteTypeChambre'],
     },
     {
       path: '/dashboard/accessRight',

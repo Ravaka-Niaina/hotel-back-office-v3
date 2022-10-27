@@ -43,7 +43,8 @@ export const getSidebarConfig = async (context) => {
       title: 'plans tarifaires',
       path: '/dashboard/ratePlan',
       icon: getIcon('eva:file-text-fill'),
-      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/ratePlan')),
+      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/ratePlan'))
+        || checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/calendar')),
       children: [
         {
           title: 'tarifs',

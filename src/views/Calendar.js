@@ -30,7 +30,6 @@ const Calendar = () => {
     const [ roomList , setRoomList ] = useState([]);
     const [loading, setLoading]=useState(false);
     const [partialRoomLoading, setPartialRoomLoading] = useState('');
-    console.log(roomList);
     // console.log(format(value[0].toDate(), 'd MMMM yyyy'));
     // function getNDigits(number, digit){
     //     digit = `${digit}`;
@@ -69,11 +68,9 @@ const Calendar = () => {
                         if(resultIndex > -1)
                         {
                             // console.log('hahah');
-                            setRoomList((prev) => {
-                                return produce(prev,condition => {
+                            setRoomList((prev) => produce(prev,condition => {
                                    condition[roomIndex] = JSON.parse(JSON.stringify(result.data.typeChambre[resultIndex]));
-                                });
-                            });
+                                }));
                         }
                     }
                     else if(result.data.errors){
@@ -110,7 +107,6 @@ const Calendar = () => {
         setLoading(true);
         getTcTarifPrix(payload)
             .then((result) => {
-                console.log(result);
                 if (result.data.status === 200) {
                     setRoomList(result.data.typeChambre);
                 }

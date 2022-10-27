@@ -83,7 +83,6 @@ const Booking = () => {
             "nbContent": row,
             "numPage": p,
         };
-        console.log(payload);
         getReservationList(payload)
             .then((result) => {
                 if (result.data.status === 200) {
@@ -126,12 +125,9 @@ const Booking = () => {
             "nbContent": rowsPerPage,
             "numPage": 1
         };
-        console.log(payload);
         getReservationList(payload)
             .then((result) => {
-                console.log(result);
                 if(result.data.status === 200){
-                    console.log(result.data);
                     setReservationList(result.data.list);
                     setResultCount(result.data.nbResult);
                 }
@@ -155,7 +151,6 @@ const Booking = () => {
         
     };
     useEffect(() => {
-        console.log('useEffect and fecth');
         fetchReservationList();
     },[]);
     return (
@@ -325,9 +320,7 @@ const Booking = () => {
                                         onPageChange={handleChangePage}
                                         onRowsPerPageChange={handleChangeRowsPerPage}
                                         labelRowsPerPage='Lignes par page'
-                                        labelDisplayedRows={({ from, to, count, page })=>{
-                                            return `Page ${page+1} :   ${from} - ${to} sur ${count}`
-                                        }}
+                                        labelDisplayedRows={({ from, to, count, page })=>`Page ${page+1} :   ${from} - ${to} sur ${count}`}
                                     />
                                     
                                 </Stack>
