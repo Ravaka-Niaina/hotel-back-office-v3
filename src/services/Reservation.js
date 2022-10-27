@@ -9,17 +9,19 @@ export const getReservationList = (payload) =>
             hotel_id: localStorage.getItem('hotel_id'),
         },
 });
-export const getNotificationCount = (payload,idToken) =>
-    axios.post(`${config.host}/notificationReservation/nbNotifReservation`, payload, {
+export const getNotificationCount = () =>
+    axios.post(`${config.host}/notificationReservation/nbNotifReservation`,{},{
         headers: {
             Authorization: localStorage.getItem('id_token'),
             hotel_id: localStorage.getItem('hotel_id'),
         },
-});
-export const getNotificationReservationList = (payload,idToken) =>
-    axios.post(`${config.host}/notificationReservation`, payload, {
+    }
+);
+export const getNotificationReservationList = () =>
+    axios.post(`${config.host}/notificationReservation`,{},{
         headers: {
             Authorization: localStorage.getItem('id_token'),
             hotel_id: localStorage.getItem('hotel_id'),
         },
-});
+    }
+);

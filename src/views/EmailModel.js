@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { useState } from 'react';
-import { Stack } from '@mui/material';
+import { Stack,Container } from '@mui/material';
+import CancelIcon from '@mui/icons-material/Cancel';
 import { Editor } from "react-draft-wysiwyg";
 import { convertToRaw, EditorState, ContentState } from 'draft-js';
 import draftToHtmlPuri from 'draftjs-to-html'
@@ -9,10 +10,11 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 import Page from '../components/Page';
 import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
-import Scrollbar from '../components/Scrollbar';
 import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
+import CustomizedIconButton from 'src/components/CustomizedComponents/CustomizedIconButton';
 import { lightBackgroundToTop, shadowInset, linearBorderOutside, linearBorderInset, shadowOutside } from '../components/CustomizedComponents/NeumorphismTheme';
 import CustomizedInput from '../components/CustomizedComponents/CustomizedInput';
+import Iconify from '../components/Iconify';
 
 /**
  * @style The style of the menu to choose between draft or html modification
@@ -36,6 +38,21 @@ const draftModificationMenuStyle = {
 const htmlModificationMenuStyle = {
   ...chooseModificationTypeStyle
 }
+/**
+   * @object An object that contains all the type of model , ex: for canceling one reservation
+   */
+const modelList = [
+  {
+    type: "confirmation",
+    label: "Confirmation des réservations",
+    iconify: "bi:envelope-check-fill",
+  },
+  {
+    type: "canceling",
+    label: "Annulation des réservations",
+    iconify: "bi:envelope-x-fill",
+  },
+];
 
 /**
  * @file 
@@ -63,24 +80,16 @@ export default function EmailModel() {
    */
   const [openHtmlEditor, setOpenHtmlEditor] = useState(false)
 
-  let userAttr = {};
-  try {
-    userAttr = JSON.parse(localStorage.getItem('user_attr'));
-  } catch (err) {
-    userAttr = {
-      hotel_name: 'Colbert',
-      hotel_phone_number: '+261 34 78 711 04',
-      hotel_email_address: 'colbert@gmail.com',
-    };
-  }
+  const [modelTypeIndex, setModelTypeIndex] = useState(0);
+
 
   /**
    * @object An object that contains test variables to test in the email
    */
   const VARIABLES = {
-    hotel_name: userAttr.hotel_name,
-    hotel_phone_number: userAttr.hotel_phone_number,
-    hotel_email_address: userAttr.hotel_email_address,
+    hotel_name: 'nom',
+    hotel_phone_number: '034 11 222 44',
+    hotel_email_address: 'Soavimasoandro, Antananarivo 101',
     reservation_link: 'https://adr-hotel-front/booking-summary/1234',
     logo_link: "http://localhost:3000/images/logo/logowcolor.png",
     client_firstname: "Rabekoto",
@@ -91,6 +100,10 @@ export default function EmailModel() {
     itinerary_number: "52033214"
   }
 
+  
+  const handleChangeModelTypeIndex = (model) => {
+    setModelTypeIndex(model);
+  }
   /**
    * @function convertVariablesToValues
    * @description A function that handles the convertion of variables defined in the <variables> param to their values
@@ -176,49 +189,86 @@ export default function EmailModel() {
   }
   return (
     <Page title="AIOLIA | Modèle Email">
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <CustomizedTitle size={20} text="Modèle d'email" />
-      </Stack>
+      <Container>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+          <CustomizedTitle size={20} text="Modèle d'email" />
+        </Stack>
 
-      <CustomizedPaperOutside
-        sx={{
-          ...lightBackgroundToTop,
-          minHeight: '100vh',
-          border: '1px white solid',
-          color: '#787878',
-          padding: 6,
-        }}
-      >
-        {/* <UserListToolbar /> */}
-        <Scrollbar>
-          <div>
-            <h4><b>Variables de test</b></h4> <br />
-            {Object.keys(VARIABLES).map(variable => `[${variable}] : ${VARIABLES[variable]} --- `)}
-          </div>
-          <br />
-          <Stack direction="row">
-            {openDraftEditor ? <button style={{ ...draftModificationMenuStyle }} onClick={handleOpenDraftEditor}>Modification via draft</button> : <button style={{ ...draftModificationMenuStyle, ...shadowOutside }} onClick={handleOpenDraftEditor}>Modification via draft</button>}
-            {openHtmlEditor ? <button style={{ ...htmlModificationMenuStyle }} onClick={handleOpenHtmlEditor}>Modification via html</button> : <button style={{ ...htmlModificationMenuStyle, ...shadowOutside }} onClick={handleOpenHtmlEditor}>Modification via html</button>}
+        <Stack spacing={3}>
+          <Stack spacing={2}>
+              <CustomizedTitle text='Modèle pour:' size={24} sx={{textAlign:'center'}}/>
+              <Stack direction='row' alignItems="center" justifyContent="flex-start" spacing={6}>
+                {
+                  modelList.map((model,i)=>(
+                    <Stack alignItems="center" justifyContent="flex-start" spacing={3} key={i}>
+                      <CustomizedIconButton 
+                        sx={{ 
+                          width: 150, 
+                          height: 150,
+                          ...(modelTypeIndex === i && {...shadowInset,borderRadius:'6px'}) 
+                        }} 
+                        onClick={() => handleChangeModelTypeIndex(i)}
+                      >
+                        <Iconify icon={model.iconify} width={50} height={50} color="rgba(140, 159, 177, 1)" />
+                      </CustomizedIconButton>
+                      <CustomizedTitle text={model.label} size={14} />
+                    </Stack>
+                  ))
+                }
+              </Stack>
           </Stack>
-          {openDraftEditor &&
-            <><Editor
-              stripPastedStyles={{ backgroundColor: 'green' }}
-              toolbarStyle={{ ...lightBackgroundToTop, ...shadowInset, ...linearBorderOutside, ...linearBorderInset, padding: 10 }}
-              editorStyle={{ ...lightBackgroundToTop, ...shadowInset, ...linearBorderOutside, ...linearBorderInset, padding: 10, minHeight: '150px' }}
-              editorState={editorState}
-              onEditorStateChange={onDraftEditorStateChange}
-            />
-            </>
-          }
-          {openHtmlEditor &&
-            <>
-              <CustomizedInput type='text' style={{ ...shadowInset, minHeight: '150px' }} value={htmlPreview} onChange={onHtmlEditorStateChange} multiline />
-            </>
-          }
-          <h2 style={{textAlign:'center'}}>Apercu de l'email</h2>
-          {htmlPreview && <div style={{ ...shadowInset, backgroundColor: 'white', marginTop: '20px', padding: 20 }} dangerouslySetInnerHTML={{ __html: convertVariablesToValues(VARIABLES, htmlPreview) }} />}
-        </Scrollbar>
-      </CustomizedPaperOutside>
+          <CustomizedPaperOutside
+            sx={{
+              ...lightBackgroundToTop,
+              minHeight: '100vh',
+              margin: 'auto',
+              border: '1px white solid',
+              color: '#787878',
+              padding: 5,
+            }}
+          >
+            {/* <UserListToolbar /> */}
+            <Stack spacing={2} >
+              <CustomizedTitle text={modelList[modelTypeIndex].label} level={0}  sx={{textAlign:'center'}}/>
+              <CustomizedTitle text={`Variables de test`} level={0} />
+              <Stack>
+                {
+                  Object.keys(VARIABLES).map((variable, i) => (
+                    <Stack direction='row' spacing={2} key={i}>
+                      <CustomizedTitle text={`[${variable}] : `} level={0} size={16} />
+                      <CustomizedTitle text={`${VARIABLES[variable]}`} level={2} size={16} color='#787878' />
+                    </Stack>
+                  ))}
+              </Stack>
+
+
+              <br />
+              <Stack direction="row" spacing={2}>
+                <button style={{ ...draftModificationMenuStyle, ...(!openDraftEditor && { ...shadowOutside }) }} onClick={handleOpenDraftEditor}>Modification via editeur</button>
+                <button style={{ ...htmlModificationMenuStyle, ...(!openHtmlEditor && { ...shadowOutside }) }} onClick={handleOpenHtmlEditor}>Modification via html</button>
+              </Stack>
+              {openDraftEditor &&
+                <><Editor
+                  stripPastedStyles={{ backgroundColor: 'green' }}
+                  // toolbarStyle={{ borderRadius:'8px',...lightBackgroundToTop, ...shadowOutside, ...linearBorderOutside, ...linearBorderInset, padding: 10 }}
+                  editorStyle={{ borderRadius: 5, paddingLeft: 15, paddingRight: 15, minHeight: '150px', ...lightBackgroundToTop, ...shadowInset, ...linearBorderOutside, ...linearBorderInset, }}
+                  editorState={editorState}
+                  onEditorStateChange={onDraftEditorStateChange}
+                  onTab={(e) => { e.preventDefault(); console.log(editorState);}}
+                />
+                </>
+              }
+              {openHtmlEditor &&
+                <>
+                  <CustomizedInput type='text' style={{ ...shadowInset, minHeight: '150px' }} value={htmlPreview} onChange={onHtmlEditorStateChange} multiline />
+                </>
+              }
+              <CustomizedTitle sx={{ textAlign: 'center' }} text={`Apercu de l'email`} level={0} size={32} />
+              {htmlPreview && <div style={{ ...shadowInset, backgroundColor: 'white', marginTop: '20px', padding: 20 }} dangerouslySetInnerHTML={{ __html: convertVariablesToValues(VARIABLES, htmlPreview) }} />}
+            </Stack>
+          </CustomizedPaperOutside>
+        </Stack>
+      </Container>
     </Page>
   );
 }
