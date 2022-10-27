@@ -3,7 +3,10 @@ import config from '../config/api';
 
 export const getTcTarifPrix = (payload) =>
     axios.post(`${config.host}/TCTarif/prix`, payload, {
-        
+        headers: {
+            Authorization: localStorage.getItem('id_token'),
+            hotel_id: localStorage.getItem('hotel_id'),
+        },
     }
 );
 

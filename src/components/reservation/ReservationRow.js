@@ -1,6 +1,6 @@
 import React , { useState } from 'react';
 import { format } from 'date-fns';
-import { Collapse, Table, TableBody, TableCell, TableHead, TableRow, IconButton, Stack, Box, Container, MenuItem, Grid, Link } from '@mui/material';
+import { Chip, Collapse, Table, TableBody, TableCell, TableHead, TableRow, IconButton, Stack, Box, Container, MenuItem, Grid, Link } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
@@ -32,7 +32,15 @@ const ReservationRow = ({row,navigate}) => {
                     {`${row.reservateur.nom} ${row.reservateur.prenom}`}
                 </TableCell>
                 <TableCell component="th" scope="row">
-                    {format(new Date(row.dateValidation), 'dd MMMM yyyy ~ HH:mm:SS')}
+                    <Stack direction='row' spacing={2} alignItems='center'>
+                        <CustomizedTitle text={format(new Date(row.dateValidation), 'dd MMMM yyyy ~ HH:mm:SS')} size={15} level={0} />
+                        {
+                            row.new !== undefined && (
+                                <Chip label="nouveau" color="primary" variant="outlined" />
+                            )
+                        }
+                        
+                    </Stack>     
                 </TableCell>
             </TableRow>
             <TableRow>

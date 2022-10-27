@@ -36,12 +36,14 @@ export const register = (payload) =>
     headers: {
       ispartner: true,
       Authorization: localStorage.getItem('id_token'),
+      hotel_id: localStorage.getItem('hotel_id'),
     },
   });
-export const getUserList = (payload, idToken) =>
+export const getUserList = (payload) =>
   axios.post(`${config.host}/user/list`, payload, {
     headers: {
-      Authorization: idToken,
+      Authorization: localStorage.getItem("id_token"),
+      hotel_id: localStorage.getItem('hotel_id'),
     },
   });
 export const getUserDetails = (id,idToken) =>
@@ -81,6 +83,7 @@ export const addAccessRight = (payload) => {
  */
 export const checkAuthWithRole = (roles, allowed) => {
   const isAllowed = allowed.some((allowedRole) => roles.some((userRole) => allowedRole === userRole));
+  if (allowed[0] === '*') return true;
   return isAllowed;
 };
 

@@ -5,13 +5,14 @@ export const getPolitics = (payload, idToken) =>
   axios.post(`${config.host}/politique/list`, payload, {
     headers: {
       Authorization: localStorage.getItem("id_token"),
-      partner_id: localStorage.getItem("partner_id")
+      hotel_id: localStorage.getItem('hotel_id'),
     },
   });
 export const createPolitic = (payload, idToken) =>
   axios.post(`${config.host}/politique/insertionPolitique`, payload, {
     headers: {
-      Authorization: idToken,
+      Authorization: localStorage.getItem("id_token"),
+      hotel_id: localStorage.getItem('hotel_id'),
     },
   });
 

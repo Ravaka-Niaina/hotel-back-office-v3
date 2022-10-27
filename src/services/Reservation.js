@@ -4,19 +4,24 @@ import config from '../config/api';
 
 export const getReservationList = (payload) =>
     axios.post(`${config.host}/reservation/partenaire`, payload, {
-        // headers: {
-        //     Authorization: idToken,
-        // },
-});
-export const getNotificationCount = (payload,idToken) =>
-    axios.post(`${config.host}/notificationReservation/nbNotifReservation`, payload, {
         headers: {
-            Authorization: idToken,
-        },
-    });
-export const getNotificationReservationList = (payload,idToken) =>
-    axios.post(`${config.host}/notificationReservation`, payload, {
-        headers: {
-            Authorization: idToken,
+            Authorization: localStorage.getItem('id_token'),
+            hotel_id: localStorage.getItem('hotel_id'),
         },
 });
+export const getNotificationCount = () =>
+    axios.post(`${config.host}/notificationReservation/nbNotifReservation`,{},{
+        headers: {
+            Authorization: localStorage.getItem('id_token'),
+            hotel_id: localStorage.getItem('hotel_id'),
+        },
+    }
+);
+export const getNotificationReservationList = () =>
+    axios.post(`${config.host}/notificationReservation`,{},{
+        headers: {
+            Authorization: localStorage.getItem('id_token'),
+            hotel_id: localStorage.getItem('hotel_id'),
+        },
+    }
+);

@@ -53,7 +53,22 @@ const VerifyCodeForm = () => {
           if (verifyResult.data.status === 200) {
             localStorage.setItem('id_token', removeDoubleQuotes(verifyResult.data.id_token));
             localStorage.setItem('user_attr', JSON.stringify(verifyResult.data.user_attr));
-            window.location = "/dashboard/app"
+            // window.location = "/dashboard/app";
+
+            context.getUserDetails()
+            .then(userDetails => {
+              const userAccessRights = userDetails.data.atribAR;
+              window.location = userAccessRights.some(({ _id }) => _id === 'superAdmin')
+              ? "/dashboard/hotel"
+              : "/dashboard/app";
+              console.log(userAccessRights);
+            }).catch(err => {
+              console.error(err);
+              context.changeResultErrorMessage('Impossible d\'obtenir les informations de l\'utilisateur');
+              context.showResultError(true);
+              window.location = "/dashboard/app";
+            });
+            
           } else {
             context.changeResultErrorMessage(verifyResult.data.message);
             context.showResultError(true);

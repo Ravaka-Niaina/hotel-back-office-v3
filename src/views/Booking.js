@@ -32,6 +32,7 @@ const Booking = () => {
     const [ currentItineraireIndex, setCurrentItineraireIndex] = useState(-1);
     const [ currentTarifIndex, setCurrentTarifIndex] = useState(-1);
     const [reservationList, setReservationList] = useState([]);
+    const [newReservationList, setNewReservationList] = useState([]);
     const [resultCount, setResultCount] = useState(0);
     const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -69,6 +70,7 @@ const Booking = () => {
         const row = parseInt(e.target.value,10);
         handleChangePage(null,0,row);
     };
+    
     const fetchFilter = (p = 1,row = rowsPerPage) => {
         setLoading(true);
         setPage(p);
@@ -83,7 +85,6 @@ const Booking = () => {
             "nbContent": row,
             "numPage": p,
         };
-        console.log(payload);
         getReservationList(payload)
             .then((result) => {
                 if (result.data.status === 200) {
@@ -102,7 +103,7 @@ const Booking = () => {
                     context.showResultError(true);
                 }
                 else{
-                    context.changeResultErrorMessage('Une erreur est survenue lors du chargement des données');
+                    context.changeResultErrorMessage('Une erreur est survenue: Liste de reservstion.');
                     context.showResultError(true);
                 }
             })
@@ -126,12 +127,9 @@ const Booking = () => {
             "nbContent": rowsPerPage,
             "numPage": 1
         };
-        console.log(payload);
         getReservationList(payload)
             .then((result) => {
-                console.log(result);
                 if(result.data.status === 200){
-                    console.log(result.data);
                     setReservationList(result.data.list);
                     setResultCount(result.data.nbResult);
                 }
@@ -153,6 +151,22 @@ const Booking = () => {
                 context.showLoader(false);
             })
         
+    };
+    const fetchNewReservationList = () => {
+        getNotificationReservationList()
+            .then((result) => {
+                if(result.data.status === 200){
+                    setNewReservationList(result.data.list);
+                }
+                else{
+                    context.changeResultErrorMessage(`Une erreur est survenue: Nouvelle reservation.`);
+                    context.showResultError(true);
+                }
+            })
+            .catch((e) => {
+                context.changeResultErrorMessage(e.message);
+                context.showResultError(true);
+            })
     };
     useEffect(() => {
         console.log('useEffect and fecth');
@@ -291,7 +305,7 @@ const Booking = () => {
                                                     )
                                                 }
                                                 { !loading && reservationList.map((row,i) => (
-                                                    <ReservationRow key={i+1} row={row} navigate={navigate}/>
+                                                    <ReservationRow key={i+1} row={{...row,new:newReservationList.find((elem)=>elem._id === row._id)}} navigate={navigate}/>
                                                 ))}
                                                 {
                                                     !loading && reservationList.length < 1 && (
@@ -325,9 +339,7 @@ const Booking = () => {
                                         onPageChange={handleChangePage}
                                         onRowsPerPageChange={handleChangeRowsPerPage}
                                         labelRowsPerPage='Lignes par page'
-                                        labelDisplayedRows={({ from, to, count, page })=>{
-                                            return `Page ${page+1} :   ${from} - ${to} sur ${count}`
-                                        }}
+                                        labelDisplayedRows={({ from, to, count, page })=>`Page ${page+1} :   ${from} - ${to} sur ${count}`}
                                     />
                                     
                                 </Stack>
