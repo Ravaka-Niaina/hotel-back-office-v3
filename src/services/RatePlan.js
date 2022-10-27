@@ -8,10 +8,11 @@ export const getRatePlanList = (payload, idToken) =>
             hotel_id: localStorage.getItem('hotel_id'),
         },
 });
-export const createRatePlan = (payload,idToken) =>
+export const createRatePlan = (payload) =>
     axios.post(`${config.host}/planTarifaire/insert`, payload, {
         headers: {
-            Authorization: idToken,
+            Authorization: localStorage.getItem('id_token'),
+            hotel_id: localStorage.getItem('hotel_id'),
         },
 });
 
