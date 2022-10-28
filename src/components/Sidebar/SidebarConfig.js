@@ -37,7 +37,7 @@ export const getSidebarConfig = async (context) => {
       path: '/dashboard/booking',
       icon: getIcon('teenyicons:appointments-solid'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/booking')),
-      notificationComponent:(<NotificationBadge />),
+      // notificationComponent:(<NotificationBadge />),
     },
     {
       title: 'plans tarifaires',
