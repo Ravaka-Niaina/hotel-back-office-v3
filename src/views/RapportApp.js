@@ -24,7 +24,14 @@ import TableCellStyled from '../components/CustomizedComponents/CustomizedTableC
 //   average_price_last_year: [12, 96, 36],
 //   revenue_per_room: [32, 28, 49],
 // };
-
+const translatedLabel = {
+  "date": "Date",
+  "night": "Nuitées",
+  "night_last_year": "Nuitées (l'année dernière)",
+  "average_price": "Tarif journalier moyen",
+  "average_price_last_year": "Tarif journalier moyen (l'année dernière)",
+  "revenue_per_room": "Revenu",
+};
 export default function RapportApp() {
   // const theme = useTheme();
   const [dataSalesReport, setDataSalesReport] = useState({});
@@ -108,34 +115,36 @@ export default function RapportApp() {
                             <TableHead>
                               <TableRow>
                                 <TableCellStyled component="th" scope="row">
-                                  Chambre/Tarif
+                                  Date
                                 </TableCellStyled>
-                                <TableCellStyled component="th" scope="row">
-                                  Nuitées
-                                </TableCellStyled>
-                                <TableCellStyled component="th" scope="row">
-                                  Revenu
-                                </TableCellStyled>
-                                <TableCellStyled component="th" scope="row">
-                                  Tarif journalier moyen
-                                </TableCellStyled>
+                                {
+                                  dataSalesReport.date.map((d,i)=>(
+                                    <TableCellStyled component="th" scope="row" key={i}>
+                                      {d}
+                                    </TableCellStyled>
+                                  ))
+                                }
                               </TableRow>
                             </TableHead>
                             <TableBody>
-                              <CustomizedTableRow>
-                                <TableCell component="th" scope="row">
-                                  One
-                                </TableCell>
-                                <TableCell component="th" scope="row">
-                                  Two
-                                </TableCell>
-                                <TableCell component="th" scope="row">
-                                  Three
-                                </TableCell>
-                                <TableCell component="th" scope="row">
-                                  Four
-                                </TableCell>
-                              </CustomizedTableRow>
+                                {
+                                  Object.keys(dataSalesReport).map((key,i)=>{
+                                    return key !== "date" ? (
+                                      <CustomizedTableRow key={i}>
+                                        <TableCell component="th" scope="row">
+                                          {translatedLabel[key]}
+                                        </TableCell>
+                                        {
+                                          dataSalesReport[key].map((value,j)=>(
+                                            <TableCell component="th" scope="row" key={j}>
+                                              {value}
+                                            </TableCell>
+                                          ))
+                                        }
+                                      </CustomizedTableRow>
+                                    ) : null;
+                                  })
+                                }
                             </TableBody>
                           </Table>
                         </TableContainer>
