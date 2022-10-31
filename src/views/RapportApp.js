@@ -3,13 +3,16 @@
 // import { useTheme } from '@mui/material/styles';
 import { useState } from 'react';
 
-import { Grid, Container, Typography } from '@mui/material';
+import { Grid, Container, Stack,TableCell,Table,TableContainer,TableBody,TableHead,TableRow } from '@mui/material';
 // components
 import Page from '../components/Page';
 // sections
 import { ReservationSalesReport } from '../components/stats';
 import RapportForm from '../components/rapport/RapportForm';
 import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
+import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
+import CustomizedTableRow from '../components/CustomizedComponents/CustomizedTableRow';
+import TableCellStyled from '../components/CustomizedComponents/CustomizedTableCell';
 
 // ----------------------------------------------------------------------
 
@@ -92,6 +95,98 @@ export default function RapportApp() {
                   ]}
                 />
               )}
+            </Grid>
+            <Grid item xs={12}>
+              {
+                Object.keys(dataSalesReport).length > 0 && (
+                  <CustomizedPaperOutside elevation={12} sx={{ background: '#E3EDF7', p: 5 , minHeight:300 }}>
+                    <Stack spacing={6}>  
+                      <Stack spacing={1}>  
+                        <CustomizedTitle text='Vos performances commerciales' />
+                        <TableContainer >
+                          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                            <TableHead>
+                              <TableRow>
+                                <TableCellStyled component="th" scope="row">
+                                  Chambre/Tarif
+                                </TableCellStyled>
+                                <TableCellStyled component="th" scope="row">
+                                  Nuitées
+                                </TableCellStyled>
+                                <TableCellStyled component="th" scope="row">
+                                  Revenu
+                                </TableCellStyled>
+                                <TableCellStyled component="th" scope="row">
+                                  Tarif journalier moyen
+                                </TableCellStyled>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              <CustomizedTableRow>
+                                <TableCell component="th" scope="row">
+                                  One
+                                </TableCell>
+                                <TableCell component="th" scope="row">
+                                  Two
+                                </TableCell>
+                                <TableCell component="th" scope="row">
+                                  Three
+                                </TableCell>
+                                <TableCell component="th" scope="row">
+                                  Four
+                                </TableCell>
+                              </CustomizedTableRow>
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      </Stack>
+                      <Stack spacing={1}>
+                        <CustomizedTitle text={`Répartition par chambre et tarif`} />
+                        <TableContainer >
+                          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                            <TableHead>
+                              <TableRow>
+                                <TableCellStyled component="th" scope="row">
+                                  Chambre/Tarif
+                                </TableCellStyled>
+                                <TableCellStyled component="th" scope="row">
+                                  Nuitées
+                                </TableCellStyled>
+                                <TableCellStyled component="th" scope="row">
+                                  Revenu
+                                </TableCellStyled>
+                                <TableCellStyled component="th" scope="row">
+                                  Tarif journalier moyen
+                                </TableCellStyled>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {
+                                [...new Array(6)].map((e,i)=>(
+                                  <CustomizedTableRow key={i}>
+                                    <TableCell component="th" scope="row">
+                                      One
+                                    </TableCell>
+                                    <TableCell component="th" scope="row">
+                                      Two
+                                    </TableCell>
+                                    <TableCell component="th" scope="row">
+                                      Three
+                                    </TableCell>
+                                    <TableCell component="th" scope="row">
+                                      Four
+                                    </TableCell>
+                                  </CustomizedTableRow>
+                                ))
+                              }
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      </Stack>
+                    </Stack>
+                  </CustomizedPaperOutside>
+                )
+              }
             </Grid>
             
            

@@ -79,6 +79,7 @@ const RapportForm = ({ setStateDataSalesReport }) => {
         }
       })
       .catch((error) => {
+        console.log('sa');
         throw error;
       });
   };
