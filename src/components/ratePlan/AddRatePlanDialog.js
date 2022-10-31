@@ -156,7 +156,7 @@ const AddRatePlanDialog = ({ reload , navigate}) => {
       if (formIsValid(ratePlan)) {
         const idToken = localStorage.getItem('id_token')
         context.showLoader(true);
-        createRatePlan(formatPayloadToSend(), idToken)
+        createRatePlan(formatPayloadToSend())
           .then((result) => {
             if (result.data.status === 200) {
               handleClose();

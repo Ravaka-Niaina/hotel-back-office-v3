@@ -59,7 +59,6 @@ const RapportForm = ({ setStateDataSalesReport }) => {
   };
 
   const getSalesReport = () => {
-    console.log(salesReport);
     context.showLoader(true);
     const payload = {
       vue: salesReport.view,
@@ -68,7 +67,6 @@ const RapportForm = ({ setStateDataSalesReport }) => {
     };
     getReservationSalesReport(payload)
       .then((results) => {
-        console.log(results);
         if (results.data.status === 200) {
           setStateDataSalesReport(results.data.stats);
           context.showLoader(false);

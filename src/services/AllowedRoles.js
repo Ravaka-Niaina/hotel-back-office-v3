@@ -55,7 +55,7 @@ export const getAllowedRoles = (pageSectionPath) => {
     },
     {
       path: '/dashboard/hotel',
-      allowedRoles: ['superAdmin','admin', 'deleteHotel', 'getHotel', 'getListHotel', 'getOneHotel', 'insertHotel', 'updateHotel'],
+      allowedRoles: ['superAdmin','admin'],
     },
     {
       path: '/dashboard/emailModel',
