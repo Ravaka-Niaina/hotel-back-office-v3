@@ -84,9 +84,26 @@ export const getSidebarConfig = async (context) => {
     },
     {
       title: 'Hotels',
-      path: '/dashboard/hotel',
+      path: '/dashboard/createOrDeleteHotel',
       icon: getIcon('bxs:building-house'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/hotel')),
+      children: [
+        {
+          title: 'Créer ou Supprimer hôtel',
+          path: '/dashboard/createOrDeleteHotel',
+          userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/hotel')),
+        },
+        {
+          title: 'Modifier hôtel',
+          path: '/dashboard/updateHotel',
+          userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/hotel')),
+        },
+        {
+          title: 'Choisir hôtel à gérer',
+          path: '/dashboard/chooseHotelToManage/',
+          userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/hotel')),
+        }
+      ]
     },
     {
       title: "droit d'accès",
