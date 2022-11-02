@@ -4,7 +4,9 @@ import DashboardLayout from '../../components/dashboardLayout';
 import Layout from '../../components/Layout';
 //
 import Politic from '../../views/Politic';
-import Hotel from '../../views/Hotel';
+import UpdateHotel from '../../views/Hotel/UpdateHotel';
+import CreateOrDeleteHotel from '../../views/Hotel/CreateOrDeleteHotel';
+import ChooseHotelToManage from '../../views/Hotel/ChooseHotelToManage';
 import RatePlan from '../../views/RatePlan';
 import Calendar from '../../views/Calendar';
 import Promotion from '../../views/Promotion';
@@ -85,8 +87,16 @@ export default function Router() {
           element: <Protected child={<Politic />} allowedRoles={getAllowedRoles(`${dashboardPath}/politic`)} />,
         },
         {
-          path: 'hotel',
-          element: <Protected child={<Hotel />} allowedRoles={getAllowedRoles(`${dashboardPath}/hotel`)} />,
+          path: 'updateHotel',
+          element: <Protected child={<UpdateHotel />} allowedRoles={getAllowedRoles(`${dashboardPath}/hotel`)} />,
+        },
+        {
+          path: 'createOrDeleteHotel',
+          element: <Protected child={<CreateOrDeleteHotel />} allowedRoles={getAllowedRoles(`${dashboardPath}/hotel`)} />,
+        },
+        {
+          path: 'chooseHotelToManage',
+          element: <Protected child={<ChooseHotelToManage />} allowedRoles={getAllowedRoles(`${dashboardPath}/hotel`)} />,
         },
         // {
         //   path: 'emailModel',

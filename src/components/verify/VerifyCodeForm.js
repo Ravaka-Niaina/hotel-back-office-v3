@@ -59,7 +59,7 @@ const VerifyCodeForm = () => {
             .then(userDetails => {
               const userAccessRights = userDetails.data.atribAR;
               window.location = userAccessRights.some(({ _id }) => _id === 'superAdmin' || _id === 'admin')
-              ? "/dashboard/hotel"
+              ? "/dashboard/chooseHotelToManage"
               : "/dashboard/app";
             }).catch(err => {
               console.error(err);
