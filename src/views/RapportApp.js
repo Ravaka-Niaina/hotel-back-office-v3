@@ -1,7 +1,7 @@
 // import { faker } from '@faker-js/faker';
 // @mui
 // import { useTheme } from '@mui/material/styles';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { Grid, Container, Stack,TableCell,Table,TableContainer,TableBody,TableHead,TableRow } from '@mui/material';
 // components
@@ -35,11 +35,11 @@ const translatedLabel = {
 export default function RapportApp() {
   // const theme = useTheme();
   const [dataSalesReport, setDataSalesReport] = useState({});
-
-  const setStateDataSalesReport = (data) => {
+  const [breakdownReport, setBreakdownReport] = useState({});
+  const setStateDataSalesReport = (data,breakdown) => {
     setDataSalesReport(data);
+    setBreakdownReport(breakdown);
   };
-
   return (
     <Page title="AIOLIA | Rapports">
       <Container maxWidth="xl">
@@ -105,7 +105,7 @@ export default function RapportApp() {
             </Grid>
             <Grid item xs={12}>
               {
-                Object.keys(dataSalesReport).length > 0 && (
+                Object.keys(dataSalesReport).length > 0 && Object.keys(breakdownReport).length > 0 && (
                   <CustomizedPaperOutside elevation={12} sx={{ background: '#E3EDF7', p: 5 , minHeight:300 }}>
                     <Stack spacing={6}>  
                       <Stack spacing={1}>  
@@ -149,6 +149,8 @@ export default function RapportApp() {
                           </Table>
                         </TableContainer>
                       </Stack>
+                      
+                      
                       <Stack spacing={1}>
                         <CustomizedTitle text={`Répartition par chambre et tarif`} />
                         <TableContainer >
@@ -171,22 +173,70 @@ export default function RapportApp() {
                             </TableHead>
                             <TableBody>
                               {
-                                [...new Array(6)].map((e,i)=>(
-                                  <CustomizedTableRow key={i}>
-                                    <TableCell component="th" scope="row">
-                                      One
-                                    </TableCell>
-                                    <TableCell component="th" scope="row">
-                                      Two
-                                    </TableCell>
-                                    <TableCell component="th" scope="row">
-                                      Three
-                                    </TableCell>
-                                    <TableCell component="th" scope="row">
-                                      Four
-                                    </TableCell>
-                                  </CustomizedTableRow>
-                                ))
+                                Object.keys(breakdownReport).map((room,i)=>{
+                                  const total = Object.keys(breakdownReport[room])
+                                                  .reduce((acc, key) => {
+                                                    acc.nuitee += breakdownReport[room][key].nuitee;
+                                                    acc.prix += breakdownReport[room][key].prix;
+                                                    return acc;
+                                                  },{nuitee:0,prix:0});
+                                  return (
+                                    <React.Fragment key={i}>
+                                      <CustomizedTableRow key={i} >
+                                        <TableCell component="th" scope="row" sx={{ color: 'black', fontSize: '16px' }}>
+                                          <strong>
+                                            {room}
+                                          </strong>
+                                        </TableCell>
+                                        <TableCell component="th" scope="row" align='right' sx={{ color: 'black', fontSize: '16px' }}>
+                                          <strong>
+                                            {
+                                              total.nuitee
+                                            }
+                                          </strong>
+                                        </TableCell>
+                                        <TableCell component="th" scope="row" align='right' sx={{ color: 'black', fontSize: '16px' }}>
+                                          <strong>
+                                            {
+                                              total.prix.toFixed(2)
+                                            }
+                                          </strong>
+                                        </TableCell>
+                                        <TableCell component="th" scope="row" align='right' sx={{ color: 'black', fontSize: '16px' }}>
+                                          <strong>
+                                            {
+                                              ((total.prix) / (total.nuitee)).toFixed(2)
+                                            }
+                                          </strong>
+                                        </TableCell>
+                                      </CustomizedTableRow>
+                                      {
+                                        Object.keys(breakdownReport[room]).map((tarif,j)=>(
+                                          <CustomizedTableRow key={`${i}-${j}`}>
+                                            <TableCell component="th" scope="row" sx={{paddingLeft: 5}}>
+                                              {tarif}
+                                            </TableCell>
+                                            <TableCell component="th" scope="row" align='right'>
+                                              {
+                                                breakdownReport[room][tarif].nuitee
+                                              }
+                                            </TableCell>
+                                            <TableCell component="th" scope="row" align='right'>
+                                              {
+                                                breakdownReport[room][tarif].prix
+                                              }
+                                            </TableCell>
+                                            <TableCell component="th" scope="row" align='right'>
+                                              {
+                                                ((breakdownReport[room][tarif].prix) / (breakdownReport[room][tarif].nuitee)).toFixed(2)
+                                              }
+                                            </TableCell>
+                                          </CustomizedTableRow>
+                                        ))
+                                      }
+                                    </React.Fragment>
+                                  )
+                                })
                               }
                             </TableBody>
                           </Table>
