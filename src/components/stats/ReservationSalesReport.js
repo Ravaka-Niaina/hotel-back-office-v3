@@ -27,7 +27,7 @@ export default function ReservationSalesReport({ title, subheader, chartLabels, 
       y: {
         formatter: (y) => {
           if (typeof y !== 'undefined') {
-            return `${y.toFixed(0)} visits`;
+            return `${y.toFixed(0)}`;
           }
           return y;
         },

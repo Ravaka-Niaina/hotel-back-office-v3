@@ -170,6 +170,7 @@ const Booking = () => {
     };
     useEffect(() => {
         console.log('useEffect and fecth');
+        fetchNewReservationList();
         fetchReservationList();
     },[]);
     return (
