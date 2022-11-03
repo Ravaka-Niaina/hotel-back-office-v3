@@ -67,8 +67,9 @@ const RapportForm = ({ setStateDataSalesReport }) => {
     };
     getReservationSalesReport(payload)
       .then((results) => {
+        console.log(results);
         if (results.data.status === 200) {
-          setStateDataSalesReport(results.data.stats);
+          setStateDataSalesReport(results.data.stats, results.data.reservPerDay);
           context.showLoader(false);
         } else {
           context.showLoader(false);
@@ -77,6 +78,7 @@ const RapportForm = ({ setStateDataSalesReport }) => {
         }
       })
       .catch((error) => {
+        console.log('sa');
         throw error;
       });
   };

@@ -19,7 +19,8 @@ export const createRatePlan = (payload) =>
 export const updateRatePlan = (payload, idToken) =>
     axios.post(`${config.host}/planTarifaire/update`, payload, {
         headers: {
-            Authorization: idToken,
+            Authorization: localStorage.getItem('id_token'),
+            hotel_id: localStorage.getItem('hotel_id'),
         },
 });
 
