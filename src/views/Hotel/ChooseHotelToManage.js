@@ -132,7 +132,6 @@ const CreateOrDeleteHotel = () => {
             <>
               <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                 <CustomizedTitle size={20} text="Choisir hôtel à gérer" />
-                <CustomizedButton onClick={() => navigate('addForm')} text="Ajouter" variant="contained" component={RouterLink} to="#" />
               </Stack>
               <CustomizedPaperOutside
                 sx={{
