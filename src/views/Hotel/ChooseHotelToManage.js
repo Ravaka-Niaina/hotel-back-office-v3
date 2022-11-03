@@ -16,12 +16,14 @@ import CustomizedButton from '../../components/CustomizedComponents/CustomizedBu
 import CustomizedIconButton from '../../components/CustomizedComponents/CustomizedIconButton';
 import { lightBackgroundToTop } from '../../components/CustomizedComponents/NeumorphismTheme';
 import Iconify from '../../components/Iconify';
+import config from '../../config/api';
 
 
 const TABLE_HEAD = [
   { id: 'nom', label: 'Nom', alignRight: false },
   { id: 'adresse', label: 'Adresse', alignRight: false },
   { id: 'lien', label: 'Lien', alignRight: false },
+  { id: 'lien', label: 'Front office', alignRight: false },
   { id: 'action', label: 'Actions', alignRight: true, alignCenter: true },
 ];
 
@@ -76,7 +78,6 @@ const CreateOrDeleteHotel = () => {
     getHotelList(payload)
       .then((fetch) => {
         fetch.data.status = 200;
-        console.log(fetch);
         if (fetch.data.status === 200) {
           setHotelList(fetch.data.list);
         } else {
@@ -131,7 +132,6 @@ const CreateOrDeleteHotel = () => {
             <>
               <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                 <CustomizedTitle size={20} text="Choisir hôtel à gérer" />
-                <CustomizedButton onClick={() => navigate('addForm')} text="Ajouter" variant="contained" component={RouterLink} to="#" />
               </Stack>
               <CustomizedPaperOutside
                 sx={{
@@ -176,6 +176,11 @@ const CreateOrDeleteHotel = () => {
                               <TableCellStyled align="left">
                                 <a href={`https://${link}`} target="_blank" rel="noreferrer noopener">
                                   {link}
+                                </a>
+                              </TableCellStyled>
+                              <TableCellStyled align="left">
+                                <a href={`${config.frontOffice}/${name}`} target="_blank" rel="noreferrer noopener">
+                                  {`${config.frontOffice}/${name}`}
                                 </a>
                               </TableCellStyled>
                               <TableCellStyled align="right">
