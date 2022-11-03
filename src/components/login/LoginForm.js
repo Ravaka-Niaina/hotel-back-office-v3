@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 // form// @mui
 import { Link, Stack, IconButton, InputAdornment, Typography, styled } from '@mui/material';
@@ -64,6 +64,7 @@ export default function LoginForm() {
     if(formIsValid()){
       context.showLoader(true);
       const payloads = formatPayloadToSend();
+      console.log(payloads);
       login(payloads)
         .then((datas) => {
           const dataMessage = datas.data.message;
