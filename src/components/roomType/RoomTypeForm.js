@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useContext } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import { Stack, Button, Dialog, DialogActions, DialogContent, Checkbox } from '@mui/material';
@@ -6,6 +6,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 // components
 import { createRoomType, fetchListEquipments, fetchListRatePlans, getRoomType, updateRoomType, } from '../../services/RoomType';
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
+import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import AddImageCrop from './AddImageCrop';
@@ -14,6 +15,8 @@ import Equipments from './Equipments';
 import RatePlans from './RatePlans';
 import styles from './RoomTypeForm.module.css';
 import config from '../../config/api';
+
+import { ThemeContext } from '../context/Wrapper';
 
 const imgCrop = null;
 const RoomTypeForm = ({ 
@@ -24,6 +27,7 @@ const RoomTypeForm = ({
   isUpdate,
 }) => {
   
+  const context = useContext(ThemeContext);
   // const [errors, setErrors] = useState({});
   const errors = {};
   const [roomType, setRoomType] = useState({
@@ -215,6 +219,7 @@ const RoomTypeForm = ({
   }, []);
 
   const addRoomType = () => {
+    context.showLoader(true);
     const equipmentsId = [];
     equipments.forEach(equipment => {
       if (equipment.checked) {
@@ -248,19 +253,28 @@ const RoomTypeForm = ({
       }
     };
     createRoomType(payload)
-    .then(result => {
-      if (result.data.status === 200) {
-        setOpen(false);
-        clearForm();
-        reload();
-      } else {
-        console.error("Une erreur s'est produite");
-      }
-    })
-    .catch(err => console.error(err));
+      .then(result => {
+        if (result.data.status === 200) {
+          setOpen(false);
+          context.changeResultSuccessMessage('Enregistrement inséré avec succès');
+          context.showResultSuccess(true);
+          clearForm();
+          reload();
+        } else {
+          context.changeResultErrorMessage("Une erreur interne s'est produite");
+          context.showResultError(true);
+        }
+      })
+      .catch(() => {
+        context.changeResultErrorMessage("Une erreur interne s'est produite");
+        context.showResultError(true);
+      }).finally(() => {
+        context.showLoader(false);
+      });
   };
 
   const sendUpdateRoomType = () => {
+    context.showLoader(true);
     const equipmentsId = [];
     equipments.forEach(equipment => {
       if (equipment.checked) {
@@ -302,20 +316,29 @@ const RoomTypeForm = ({
       console.log(result);
       if (result.data.status === 200) {
         setOpen(false);
+        context.changeResultSuccessMessage('Enregistrement inséré avec succès');
+        context.showResultSuccess(true);
         reload();
       } else {
-        console.error("Une erreur s'est produite");
+        context.changeResultErrorMessage("Une erreur interne s'est produite");
+        context.showResultError(true);
       }
     })
-    .catch(err => console.error(err));
+    .catch(() => {
+      context.changeResultErrorMessage("Une erreur interne s'est produite");
+      context.showResultError(true);
+    }).finally(()=>{
+      context.showLoader(false);
+    });
   };
 
   return (
     <>
-      <Dialog open={open} onClose={handleClose} maxWidth={'xl'}>
+      <Dialog open={open} onClose={handleClose} maxWidth={'md'}>
         <CustomizedDialogTitle text={isUpdate ? "Modifier un type chambre" : "Ajouter un nouveau type de chambre"} />
 
         <DialogContent style={{ backgroundColor: '#E8F0F8', paddingTop: 15 }}>
+          <CustomizedTitle text='Informations chambre' size={18} level={0} />
           <Stack sx={{ p: 2 }} direction={{ xs: 'column', md: 'row' }} spacing={2}>
             <CustomizedInput
               placeholder="nom"
@@ -387,6 +410,8 @@ const RoomTypeForm = ({
               })}
               value={roomType.areaSize}
             />
+          </Stack>
+          <Stack sx={{ p: 2 }} direction={{ xs: 'column', md: 'row' }} spacing={2}>
             <CustomizedInput
               placeholder="nombre d'étage"
               onChange={handleChange}
@@ -405,7 +430,7 @@ const RoomTypeForm = ({
               value={roomType.stageNumber}
             />
           </Stack>
-          <h4>Occupation</h4>
+          <CustomizedTitle text='Occupation' size={18} level={0} />
           <Stack sx={{ p: 2 }} direction={{ xs: 'column', md: 'row' }} spacing={2}>
             <CustomizedInput
               placeholder="nombre d'adulte"
@@ -442,7 +467,7 @@ const RoomTypeForm = ({
               value={roomType.childNumber}
             />
           </Stack>
-          <h4>Description</h4>
+          <CustomizedTitle text='Description' size={18} level={0} />
           <Stack sx={{ p: 2 }} direction={{ xs: 'column', md: 'row' }} spacing={2}>
             <CustomizedInput
               placeholder="description"
@@ -489,7 +514,7 @@ const RoomTypeForm = ({
             ratePlans={ratePlans}
             setRatePlans={setRatePlans}
           />
-          <h4>Choisir une image pour l'aperçu de la chambre</h4>
+          <CustomizedTitle text={`Choisir une image pour l'aperçu de la chambre`} size={18} level={0} />
           <Stack sx={{ p: 2 }} direction="row" spacing={2}>
             <AddImageCrop 
               addCropedImage={addCropedImage}
@@ -498,7 +523,7 @@ const RoomTypeForm = ({
               imgCrop={roomType.imgCrop}
             />
           </Stack>
-          <h4>Images de la chambre</h4>
+          <CustomizedTitle text='Image de la chambre' size={18} level={0} />
           <div>
             {
               previewSortie.map((preview, i) => (

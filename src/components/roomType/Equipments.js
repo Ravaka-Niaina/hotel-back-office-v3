@@ -63,6 +63,8 @@ import Armoire from '../../assets/images/equipments/armoire.svg';
 import Adapteur from '../../assets/images/equipments/adapteur.svg';
 import AccesExecutif from '../../assets/images/equipments/acces-executif.svg';
 
+import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
+
 const getMatchedIcon = (tag) => {
   const matchings = {
     'accessible': <AccessibleIcon />,
@@ -146,24 +148,33 @@ const Equipments = ({ equipments, setEquipments }) => {
 
   return(
     <>
-      <h4>Equipements</h4>
-      <Stack>
-        <table className={styles.equipments}>
-          {
-            equipments.map((equipment, i) => (
-              <tr key={equipment._id}>
-                <td><Checkbox checked={equipment.checked} onChange={() => switchCheckboxEquipment(i)} /></td>
+      <CustomizedTitle text='Equipements' size={18} level={0} />
+      <div style={{ columnCount: 3 }}>
+
+        {
+          equipments.map((equipment, i) => (
+            <Stack direction='row' alignItems='center' spacing={2}>
+              <Checkbox checked={equipment.checked} onChange={() => switchCheckboxEquipment(i)} />
+              <div 
+                  style={{
+                  width: '24px',
+                  height: '24px',
+                  display: 'inline',
+                }}
+              >
                 {
                   getMatchedIcon(equipment.tag)
-                  ? <td>{ getMatchedIcon(equipment.tag) }</td>
-                  : <td><img src={ getMatchedSvg(equipment.tag) } alt="equipment"/></td>
+                    ? getMatchedIcon(equipment.tag)
+                    : <img src={getMatchedSvg(equipment.tag)} alt="equipment" />
                 }
-                <td>{equipment.label}</td>
-              </tr>
-            ))
-          }
-        </table>
-      </Stack>
+              </div>
+              <p>
+                {equipment.label}
+              </p>
+            </Stack>
+          ))
+        }
+      </div>
     </>
   );
 };
