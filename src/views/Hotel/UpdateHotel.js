@@ -151,7 +151,7 @@ const UpdateHotel = () => {
                         numSelected={selected.length}
                       />
                       <TableBody>
-                        {hotelList.map((row) => {
+                        {hotelList.map((row,i) => {
                           const { _id, name, address, link } = row;
 
                           const isItemSelected = selected.indexOf(name) !== -1;
@@ -159,7 +159,7 @@ const UpdateHotel = () => {
                           return (
                             <TableRow
                               hover
-                              key={_id}
+                              key={i}
                               tabIndex={-1}
                               role="checkbox"
                               selected={isItemSelected}
