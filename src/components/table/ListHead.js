@@ -52,9 +52,9 @@ export default function UserListHead({
             onChange={onSelectAllClick}
           />
         </TableCellStyled>
-        {headLabel.map((headCell) => (
+        {headLabel.map((headCell,i) => (
           <TableCellStyled
-            key={headCell.id}
+            key={i}
             align={headCell.alignRight ? 'right' : 'left'}
             {
             ...(headCell.alignCenter && { align: 'center' })
