@@ -2,7 +2,7 @@ import { styled } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import PropTypes from 'prop-types';
 
-const TCStyled = styled(TableCell)(({ theme }) => ({
+const TCStyled = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#191E25',
     color: '#DDE2EA',

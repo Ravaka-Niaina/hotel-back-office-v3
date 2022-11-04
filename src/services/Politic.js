@@ -1,7 +1,7 @@
 import axios from 'axios';
 import config from '../config/api';
 
-export const getPolitics = (payload, idToken) =>
+export const getPolitics = (payload) =>
   axios.post(`${config.host}/politique/list`, payload, {
     timeout: 10000,
     headers: {
@@ -9,7 +9,7 @@ export const getPolitics = (payload, idToken) =>
       hotel_id: localStorage.getItem('hotel_id'),
     },
   });
-export const createPolitic = (payload, idToken) =>
+export const createPolitic = (payload) =>
   axios.post(`${config.host}/politique/insertionPolitique`, payload, {
     timeout: 10000,
     headers: {

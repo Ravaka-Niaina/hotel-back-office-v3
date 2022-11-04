@@ -1,8 +1,8 @@
 import { format } from 'date-fns';
 
-export const formatDate = (date) => {
-  return format(new Date(date),'yyyy-MM-dd');
-};
+export const formatDate = (date) => 
+  format(new Date(date),'yyyy-MM-dd');
+
 export const dateIHMFormat = (date) => {
   const d = new Date(date.getTime());
   return d.toString().split(' ').filter((e, j) => j < 3).join(' ');

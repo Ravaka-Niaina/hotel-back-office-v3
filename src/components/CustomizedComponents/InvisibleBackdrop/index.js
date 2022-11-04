@@ -6,9 +6,7 @@ const CustomBackdrop = styled(Backdrop,
     { 
         name: 'MuiModal', 
         slot: 'Backdrop', 
-        overridesResolver: (props, styles) => { 
-            return styles.backdrop; 
-        }, 
+        overridesResolver: (props, styles) => styles.backdrop, 
     })({ zIndex: -1, })
 const InvisibleBackdrop = (props) => <CustomBackdrop invisible {...props} />;
 export default InvisibleBackdrop;

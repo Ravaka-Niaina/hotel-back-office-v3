@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from 'react';
+import React, { useState, createContext } from 'react';
 import jwtDecode from 'jwt-decode';
 import PropTypes from 'prop-types';
 import SimpleBackdrop from '../backdrop/Backdrop';

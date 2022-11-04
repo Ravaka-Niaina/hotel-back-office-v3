@@ -1,8 +1,7 @@
 // component
-import jwtDecode from 'jwt-decode';
-import { getPayloadFromToken, getUserDetailsById, checkAuthWithRole } from '../../services/User';
+import {  checkAuthWithRole } from '../../services/User';
 import { getAllowedRoles } from '../../services/AllowedRoles';
-import NotificationBadge from '../reservation/NotificationBadge';
+// import NotificationBadge from '../reservation/NotificationBadge';
 import Iconify from '../Iconify';
 // ----------------------------------------------------------------------
 

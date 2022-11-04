@@ -1,8 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Table, Stack, TableRow, TableBody, Container, TableContainer } from '@mui/material';
-import {Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import AddHotelDialog from '../../components/hotel/AddHotelDialog';
-import HotelMoreMenu from '../../components/hotel/HotelMoreMenu';
 import CustomizedCheckbox from '../../components/CustomizedComponents/CustomizedCheckbox';
 import CustomizedTitle from '../../components/CustomizedComponents/CustomizedTitle';
 import TableCellStyled from '../../components/CustomizedComponents/CustomizedTableCell';
@@ -12,7 +11,6 @@ import { ThemeContext } from '../../components/context/Wrapper';
 import { UserListHead, UserListToolbar } from '../../components/table';
 import { getHotelList } from '../../services/Hotel';
 import CustomizedPaperOutside from '../../components/CustomizedComponents/CustomizedPaperOutside';
-import CustomizedButton from '../../components/CustomizedComponents/CustomizedButton';
 import CustomizedIconButton from '../../components/CustomizedComponents/CustomizedIconButton';
 import { lightBackgroundToTop } from '../../components/CustomizedComponents/NeumorphismTheme';
 import Iconify from '../../components/Iconify';
@@ -31,7 +29,6 @@ const CreateOrDeleteHotel = () => {
   const context = useContext(ThemeContext);
   const [hotelList, setHotelList] = useState(new Array(0));
   const [location , setLocation] = useState('list');
-  const [currentRow , setCurrentRow] = useState(null);
   const order = 'asc';
   const selected = [];
   const orderBy = 'name';
@@ -97,8 +94,7 @@ const CreateOrDeleteHotel = () => {
   const reload = () => {
     getAllHotel();
   };
-  const navigate = (itinerary , currentHotelRow = null) => {
-    setCurrentRow(currentHotelRow);
+  const navigate = (itinerary) => {
     if (itinerary === 'addForm') {
       setLocation('addForm');
     }
@@ -155,7 +151,7 @@ const CreateOrDeleteHotel = () => {
                       />
                       <TableBody>
                         {hotelList.map((row,i) => {
-                          const { _id, name, address, link } = row;
+                          const { name, address, link } = row;
 
                           const isItemSelected = selected.indexOf(name) !== -1;
 

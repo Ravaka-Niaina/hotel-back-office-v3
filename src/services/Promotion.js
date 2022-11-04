@@ -32,7 +32,7 @@ export const getListTarifAndRoom = () => axios.get(`${config.host}/TCTarif/list`
     },
   }
 );
-export const getPromotionDetail = (promotionId, partnerId) =>
+export const getPromotionDetail = (promotionId) =>
   axios.get(`${config.host}/promotion/detail/${promotionId}`, {
     timeout: 10000,
     headers: {

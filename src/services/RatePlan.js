@@ -18,7 +18,7 @@ export const createRatePlan = (payload) =>
         },
 });
 
-export const updateRatePlan = (payload, idToken) =>
+export const updateRatePlan = (payload) =>
     axios.post(`${config.host}/planTarifaire/update`, payload, {
         timeout: 10000,
         headers: {

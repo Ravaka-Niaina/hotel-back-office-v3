@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Table, Stack, TableRow, TableBody, Container, TableContainer } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import ModifyHotelDialog from '../../components/hotel/ModifyHotelDialog';
 import CustomizedCheckbox from '../../components/CustomizedComponents/CustomizedCheckbox';
 import CustomizedTitle from '../../components/CustomizedComponents/CustomizedTitle';
@@ -33,7 +33,7 @@ const UpdateHotel = () => {
   const orderBy = 'name';
   const filterName = '';
 
-  const navigatePage = useNavigate();
+  // const navigatePage = useNavigate();
 
   // const [ratePlanList, setRatePlanList] = useState(new Array(0));
 
@@ -111,10 +111,10 @@ const UpdateHotel = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const manageHotelContent = (hotelId) => {
-    localStorage.setItem('hotel_id', hotelId);
-    navigatePage('/');
-  };
+  // const manageHotelContent = (hotelId) => {
+  //   localStorage.setItem('hotel_id', hotelId);
+  //   navigatePage('/');
+  // };
 
   return (
     <Page title="AIOLIA | Hotels">
@@ -152,7 +152,7 @@ const UpdateHotel = () => {
                       />
                       <TableBody>
                         {hotelList.map((row,i) => {
-                          const { _id, name, address, link } = row;
+                          const { name, address, link } = row;
 
                           const isItemSelected = selected.indexOf(name) !== -1;
 

@@ -17,8 +17,6 @@ import Login from '../../views/Login';
 import VerifyCode from '../../views/VerifyCode';
 import NotFound from '../../views/Page404';
 import DashboardApp from '../../views/DashboardApp';
-import TestSideBar from '../../views/TestSideBar';
-import TestFormulaire from '../../views/TestFormulaire';
 import HomeForm from '../../views/HomeForm';
 import RapportApp from '../../views/RapportApp';
 import EmailModel from '../../views/EmailModel';
@@ -110,10 +108,6 @@ export default function Router() {
       ],
     },
     {
-      path: '/testform',
-      element: <TestFormulaire />,
-    },
-    {
       path: '/',
       element: <Layout />,
       children: [
@@ -123,10 +117,6 @@ export default function Router() {
         { path: '404', element: <Navigate to="/dashboard/app" /> },
         { path: '*', element: <Navigate to="/404" /> },
       ],
-    },
-    {
-      path: '/TestSideBar',
-      element: <TestSideBar />,
     },
     { path: '*', element: <Navigate to="/404" replace /> },
   ]);

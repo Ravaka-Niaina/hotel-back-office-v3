@@ -17,7 +17,6 @@ import {
 import AddPromotionDialog from '../components/promotion/AddPromotionDialog';
 import ModifyPromotionDialog from '../components/promotion/ModifyPromotionDialog';
 import Page from '../components/Page';
-import Scrollbar from '../components/Scrollbar';
 import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
 import TableCellStyled from '../components/CustomizedComponents/CustomizedTableCell';
 import PromotionMoreMenu from '../components/promotion/PromotionMoreMenu';
@@ -337,9 +336,7 @@ const Promotion = () => {
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
                   labelRowsPerPage='Lignes par page'
-                  labelDisplayedRows={({ from, to, count, page }) => {
-                    return `Page ${page + 1} :   ${from} - ${to} sur ${count}`
-                  }}
+                  labelDisplayedRows={({ from, to, count, page }) => `Page ${page + 1} :   ${from} - ${to} sur ${count}`}
                 />
               </CustomizedPaperOutside>
             </>

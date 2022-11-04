@@ -177,6 +177,7 @@ const Booking = () => {
         console.log('useEffect and fecth');
         fetchNewReservationList();
         fetchReservationList();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
     return (
         <Page title="AIOLIA | Reservations">
