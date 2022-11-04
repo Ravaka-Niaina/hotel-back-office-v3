@@ -6,6 +6,7 @@ import config from '../config/api';
  */
 export const login = (payload) =>
   axios.post(`${config.host}/user/login`, payload, {
+    timeout: 10000,
     /* headers: {
             Authorization: token,
         }, */
@@ -13,17 +14,20 @@ export const login = (payload) =>
 
 export const verifyCode = (payload) =>
   axios.post(`${config.host}/user/login/verifyCode`, payload, {
+    timeout: 10000,
     /* headers: {
             Authorization: token,
         }, */
   });
 export const verifyToken = (token) => axios.get(`${config.host}/verify_token`, {
+    timeout: 10000,
     headers: {
       Authorization: token,
     },
   });
 export const resendCode = (payload) =>
   axios.post(`${config.host}/user/login/resendVerificationCode`, payload, {
+    timeout: 10000,
     /* headers: {
             Authorization: token,
         }, */
@@ -33,6 +37,7 @@ export const resendCode = (payload) =>
  */
 export const register = (payload) =>
   axios.post(`${config.host}/user/register`, payload, {
+    timeout: 10000,
     headers: {
       ispartner: true,
       Authorization: localStorage.getItem('id_token'),
@@ -41,6 +46,7 @@ export const register = (payload) =>
   });
 export const getUserList = (payload) =>
   axios.post(`${config.host}/user/list`, payload, {
+    timeout: 10000,
     headers: {
       Authorization: localStorage.getItem("id_token"),
       hotel_id: localStorage.getItem('hotel_id'),
@@ -48,6 +54,7 @@ export const getUserList = (payload) =>
   });
 export const getUserDetails = (id,idToken) =>
   axios.get(`${config.host}/user/details/${id}`, {
+    timeout: 10000,
     headers: {
       ispartner: true,
       Authorization: idToken,
@@ -55,6 +62,7 @@ export const getUserDetails = (id,idToken) =>
   });
 export const updateUser = (payload) =>
   axios.post(`${config.host}/user/update`, payload, {
+    timeout: 10000,
     /* headers: {
             Authorization: token,
         }, */
@@ -68,6 +76,7 @@ export const addAccessRight = (payload) => {
    * }
    */
    axios.post(`${config.host}/user/addAccessRight`, payload, {
+     timeout: 10000,
     /* headers: {
             Authorization: token,
         }, */

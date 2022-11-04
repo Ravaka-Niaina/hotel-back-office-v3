@@ -13,6 +13,7 @@ export const getAccessRightList = (payload) => {
     `${config.host}/droitAcces/list`,
     { ...defaultPayload, ...payload },
     {
+      timeout: 10000,
       // headers: {
       //     partner_id: partnerId,
       // },
@@ -21,6 +22,7 @@ export const getAccessRightList = (payload) => {
 };
 export const createAccessRight = (payload) =>
   axios.post(`${config.host}/droitAcces/insert`, payload, {
+    timeout: 10000,
     // headers: {
     //     Authorization: idToken,
     // },
@@ -28,12 +30,14 @@ export const createAccessRight = (payload) =>
 
 export const updateAccessRight = (payload) =>
   axios.post(`${config.host}/droitAcces/update`, payload, {
+    timeout: 10000,
     // headers: {
     //     Authorization: idToken,
     // },
   });
 export const deleteAccessRight = (payload) =>
   axios.post(`${config.host}/droitAcces/delete`, payload, {
+    timeout: 10000,
     // headers: {
     //     Authorization: idToken,
     // },

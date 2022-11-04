@@ -3,6 +3,7 @@ import config from '../config/api';
 
 export const getTcTarifPrix = (payload) =>
     axios.post(`${config.host}/TCTarif/prix`, payload, {
+        timeout: 10000,
         headers: {
             Authorization: localStorage.getItem('id_token'),
             hotel_id: localStorage.getItem('hotel_id'),
@@ -12,16 +13,16 @@ export const getTcTarifPrix = (payload) =>
 
 export const configPrix = (payload) =>
     axios.post(`${config.host}/TCTarif/configPrix`, payload, {
-        
+        timeout: 10000,
     }
 );
 export const configPrixNPers = (payload) =>
     axios.post(`${config.host}/TCTarif/configPrixXPers`, payload, {
-        
+        timeout: 10000,
     }
 );
 export const saveRatePlanAvailability = (payload) =>
     axios.post(`${config.host}/TCTarif/saveRatePlanAvailability`, payload, {
-
+        timeout: 10000,
     }
 );

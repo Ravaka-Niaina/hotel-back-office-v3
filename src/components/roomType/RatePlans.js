@@ -1,5 +1,6 @@
 import React from 'react';
 import { Stack, Checkbox } from '@mui/material';
+import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
 
 const RatePlans = ({ ratePlans, setRatePlans }) => {
   const switchCheckboxRatePlan = (indexRatePlan) => {
@@ -11,7 +12,7 @@ const RatePlans = ({ ratePlans, setRatePlans }) => {
 
   return (
     <div>
-      <h4>Plans tarifaires</h4>
+      <CustomizedTitle text='Plans Tarifaires' size={18} level={0} />
       <Stack>
       <table>
         {
