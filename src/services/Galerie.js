@@ -1,7 +1,7 @@
 import axios from 'axios';
 import config from '../config/api';
 
-export const getPhotosOfGallery= (payload) => 
+export const getPhotosOfGallery= () => 
     axios.get(`${config.host}/galerie`,{
       timeout: 10000,
     });

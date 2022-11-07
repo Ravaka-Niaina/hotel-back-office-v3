@@ -65,6 +65,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       setSidebarConfig(newSidebarConfig);
     };
     initiateSidebarConfig();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     if (isOpenSidebar) {

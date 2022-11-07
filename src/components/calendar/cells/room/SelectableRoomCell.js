@@ -1,4 +1,5 @@
 import React from 'react';
+import { PropTypes } from 'prop-types'; 
 import debounce from 'lodash.debounce';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
@@ -44,7 +45,7 @@ const SelectableRoomCell = ({children,item,chambre,selected,setSelected,setAncho
             if (!isItemSelected) {
                 console.log('manova');
                 setSelected(
-                    oldSelected =>
+                    () =>
                     (
                         chambre.statusDays.reduce((stack, elem, i) => {
                             if (i <= newItemIndex && i >= firstItemSelectedIndex) {
@@ -68,7 +69,7 @@ const SelectableRoomCell = ({children,item,chambre,selected,setSelected,setAncho
             if (!selected.includes(item)) {
 
                 setSelected(
-                    oldSelected =>
+                    () =>
                     (
                         chambre.statusDays.reduce((stack, elem, i) => {
                             if (i >= newItemIndex && i <= lastItemSelectedIndex) {
@@ -142,4 +143,14 @@ const SelectableRoomCell = ({children,item,chambre,selected,setSelected,setAncho
     );
 };
 
+SelectableRoomCell.propTypes = {
+    children: PropTypes.any,
+    item: PropTypes.any,
+    chambre: PropTypes.any,
+    selected: PropTypes.any,
+    setSelected : PropTypes.any,
+    setAnchorEl: PropTypes.any,
+    setOpen: PropTypes.any,
+    cleanOthers: PropTypes.any
+};
 export default SelectableRoomCell;

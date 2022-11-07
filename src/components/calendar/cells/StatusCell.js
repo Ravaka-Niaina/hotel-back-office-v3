@@ -10,17 +10,17 @@ import { ThemeContext } from '../../context/Wrapper';
 import { changeOpenStatus as saveRoomAvailability } from '../../../services/RoomType';
 import { saveRatePlanAvailability } from '../../../services/TCTarif';
 
-const getItemData = (item) => {
-    if (typeof item !== 'string') {
-        return null;
-    };
-    const dataSplited = item.split('@');
-    return {
-        "date": dataSplited[0],
-        "rate_plan_index": parseInt(dataSplited[1], 10),
-        "version_index": parseInt(dataSplited[2], 10),
-    };
-};
+// const getItemData = (item) => {
+//     if (typeof item !== 'string') {
+//         return null;
+//     };
+//     const dataSplited = item.split('@');
+//     return {
+//         "date": dataSplited[0],
+//         "rate_plan_index": parseInt(dataSplited[1], 10),
+//         "version_index": parseInt(dataSplited[2], 10),
+//     };
+// };
 const StatusCell = ({available,chambre,date,setChambre,index,isRatePlan = false,subIndex = -1,...other}) => {
     const context = useContext(ThemeContext);
     const [loading,setLoading ] =  useState(false);
@@ -38,11 +38,11 @@ const StatusCell = ({available,chambre,date,setChambre,index,isRatePlan = false,
             .then((result) => {
                 console.log(result.data);
                 if (result.data.status === 200) {
-                    setChambre((prev) => {
-                        return produce(prev, condition => {
+                    setChambre((prev) =>  
+                        produce(prev, condition => {
                             condition.planTarifaire[index].prixTarif[subIndex].closed = !prev.planTarifaire[index].prixTarif[subIndex].closed;
-                        });
-                    });
+                        })
+                    );
                 }
                 else if(result.data.errors){
                     const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
@@ -77,11 +77,11 @@ const StatusCell = ({available,chambre,date,setChambre,index,isRatePlan = false,
             .then((result) => {
                 // console.log(result.data);
                 if (result.data.status === 200) {
-                    setChambre((prev) => {
-                        return produce(prev, condition => {
+                    setChambre((prev) => 
+                        produce(prev, condition => {
                             condition.statusDays[index].closed = !prev.statusDays[index].closed;
-                        });
-                    });
+                        })
+                    );
                 }
                 else {
                     context.changeResultErrorMessage(`Changement du status impossible.`);
@@ -138,7 +138,13 @@ const StatusCell = ({available,chambre,date,setChambre,index,isRatePlan = false,
         </div>
     );
 };
-StatusCell.protoTypes = {
+StatusCell.propTypes = {
     available:PropTypes.any,
+    chambre: PropTypes.any,
+    date:PropTypes.any,
+    setChambre:PropTypes.any,
+    index:PropTypes.any,
+    isRatePlan:PropTypes.any,
+    subIndex:PropTypes.any,
 }
 export default StatusCell;

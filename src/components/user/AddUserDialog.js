@@ -1,20 +1,16 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState,  } from 'react';
 import { Stack, Dialog, DialogActions, DialogContent, Button } from '@mui/material';
-import { calendarFormat } from 'moment';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
-import { ThemeContext } from '../context/Wrapper';
 import { register } from '../../services/User';
 
-const AddUserDialog = ({accessRights, reload}) => {
-  const context = useContext(ThemeContext);
+const AddUserDialog = ({reload}) => {
   const [open, setOpen] = useState(false);
-
   const [user, setUser] = useState({
     last_name: '',
     first_name: '',
@@ -126,6 +122,7 @@ const AddUserDialog = ({accessRights, reload}) => {
         reload();
       }
     }).catch(err => console.error(err));
+    return null;
   };
   
   return (
@@ -239,5 +236,7 @@ const AddUserDialog = ({accessRights, reload}) => {
   );
 };
 
-AddUserDialog.propTypes = {};
+AddUserDialog.propTypes = {
+  reload: PropTypes.any,
+};
 export default AddUserDialog;

@@ -2,7 +2,7 @@ import React from 'react';
 import { Stack } from '@mui/material';
 // component
 import PropTypes from 'prop-types';
-import ModifyHotelDialog from './ModifyHotelDialog';
+// import ModifyHotelDialog from './ModifyHotelDialog';
 import DeleteHotelDialog from './DeleteHotelDialog';
 
 const HotelMoreMenu = (props) => {

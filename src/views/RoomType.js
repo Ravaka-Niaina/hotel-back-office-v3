@@ -4,7 +4,6 @@ import { useState, useContext, useEffect } from 'react';
 import {
   Table,
   Stack,
-  Checkbox,
   TableRow,
   TableBody,
   TableCell,
@@ -72,8 +71,10 @@ const TypeChambre = () => {
   }, []);
 
   useEffect(() => {
+    
     if (delaySearchRef) clearTimeout(delaySearchRef);
     delaySearchRef = setTimeout(() => getAllRoomType(), 2000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterName]);
 
   function getAllRoomType() {

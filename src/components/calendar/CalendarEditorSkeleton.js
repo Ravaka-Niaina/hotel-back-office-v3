@@ -1,9 +1,8 @@
-import React,{useState} from 'react';
-import { Grid , Stack ,Skeleton } from '@mui/material';
+import React from 'react';
+import { Grid ,Skeleton } from '@mui/material';
 import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
 
-const CalendarEditorSkeleton = () => {
-    return (
+const CalendarEditorSkeleton = () => (
         <CustomizedPaperOutside elevation={12} sx={{ background: '#E3EDF7', p: 5 }}>
            <Grid container spacing={2}>
                 <Grid item xs={4} container direction='column' spacing={1}>
@@ -23,7 +22,6 @@ const CalendarEditorSkeleton = () => {
                 </Grid>
             </Grid>
         </CustomizedPaperOutside>
-    );
-};
+);
 
 export default CalendarEditorSkeleton;

@@ -25,7 +25,7 @@ export function uploadImage({method, url, data, callback, setProgress, errorCall
                 }
             }
         })
-        .then(res => {callback()})
+        .then(res => {callback();console.log(res)})
         .catch(err =>{ console.log(err); errorCallback(err) });
     });
     

@@ -1,9 +1,9 @@
-import { Link as RouterLink } from 'react-router-dom';
+
 // @mui
 import { styled } from '@mui/material/styles';
-import { Card, Link, Container, Typography } from '@mui/material';
+import {Container, Typography } from '@mui/material';
 // hooks
-import useResponsive from '../hooks/useResponsive';
+// import useResponsive from '../hooks/useResponsive';
 // components
 import Page from '../components/Page';
 import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
@@ -34,14 +34,14 @@ const HeaderStyle = styled('header')(({ theme }) => ({
   },
 }));
 
-const SectionStyle = styled(Card)(({ theme }) => ({
-  width: '100%',
-  maxWidth: 464,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  margin: theme.spacing(2, 0, 2, 2),
-}));
+// const SectionStyle = styled(Card)(({ theme }) => ({
+//   width: '100%',
+//   maxWidth: 464,
+//   display: 'flex',
+//   flexDirection: 'column',
+//   justifyContent: 'center',
+//   margin: theme.spacing(2, 0, 2, 2),
+// }));
 
 const ContentStyle = styled('div')(({ theme }) => ({
   maxWidth: 480,
@@ -60,10 +60,10 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 
 const VerifyCode = () => {
-  const smUp = useResponsive('up', 'sm');
+  // const smUp = useResponsive('up', 'sm');
 
-  const mdUp = useResponsive('up', 'md');
-
+  // const mdUp = useResponsive('up', 'md');
+  const censoredPhoneNumber = '+261-XXX-XXX-XX-XX';
   return (
     <Page title="AIOLIA | Verification de code" sx={{ backgroundColor: '#E8F0F8' }}> 
       <RootStyle>
@@ -74,7 +74,7 @@ const VerifyCode = () => {
           <ContentStyle>
             {/* <img src={`${process.env.PUBLIC_URL}/images/logo/logowcolor.png`} alt={`login_logo`} style={{ margin: 'auto' }} width={250} height={250} /> */}
             <CustomizedTitle text='Code de vérification' size='34' level={2}/>
-            <Typography sx={{ color: 'text.secondary', mb: 5 }}>Entrez le code que nous avons envoyé à +261-XXX-XXX-XX-XX pour vous connecter.</Typography>
+            <Typography sx={{ color: 'text.secondary', mb: 5 }}>Entrez le code que nous avons envoyé à {censoredPhoneNumber} pour vous connecter.</Typography>
 
             <VerifyCodeForm />
             

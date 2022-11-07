@@ -1,13 +1,11 @@
 import React from 'react';
+import { PropTypes } from 'prop-types';
 import {Grid , Stack} from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
 import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
 
 import EditorCustomizingDialog from './EditorCustomizingDialog';
 
-const CalendarAttributeSide = ({chambre, ratePlanAttributeList , reloadRoom}) => {
-    return (
+const CalendarAttributeSide = ({chambre, ratePlanAttributeList , reloadRoom}) => (
         <div className='calendarEditor'>
             <table >
                 <thead>
@@ -48,14 +46,15 @@ const CalendarAttributeSide = ({chambre, ratePlanAttributeList , reloadRoom}) =>
                         <td style={{paddingLeft:'16px'}}>Booked</td>
                     </tr>
                     {
-                        ratePlanAttributeList.map((element)=>{
-                            return element;
-                        })
+                        ratePlanAttributeList.map((element)=> element)
                     }
                 </tbody>
             </table>
         </div>
-    );
+);
+CalendarAttributeSide.propTypes = {
+    chambre: PropTypes.any,
+    ratePlanAttributeList: PropTypes.any,
+    reloadRoom: PropTypes.any,
 };
-
 export default CalendarAttributeSide;

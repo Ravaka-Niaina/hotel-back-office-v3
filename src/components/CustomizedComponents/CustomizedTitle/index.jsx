@@ -19,13 +19,11 @@ const CustomTitle = styled(Typography)((props) => ({
   fontSize:`${props.size}px`,
 }));
 
-const CustomizedTitle = (props) => {
-  return (
+const CustomizedTitle = (props) => (
     <CustomTitle {...props} variant="h5" gutterBottom>
       {props.text}
     </CustomTitle>
   );
-}
 CustomizedTitle.defaultProps = {
   color: '#8B9EB0',
   size: '18',

@@ -18,6 +18,7 @@ const UserMoreMenu = ({userId, userDetails,reload, accessRights})  => (
   )
 
 UserMoreMenu.propTypes = {
+  userDetails: PropTypes.any,
   userId:PropTypes.any,
   reload:PropTypes.any,
   accessRights: PropTypes.any

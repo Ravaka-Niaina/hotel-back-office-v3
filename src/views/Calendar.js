@@ -1,6 +1,6 @@
-import React , { useState , useEffect , useContext , useRef} from 'react';
+import React , { useState , useEffect , useContext} from 'react';
 import produce from 'immer';
-import { format, parse } from 'date-fns';
+import { format } from 'date-fns';
 import moment from 'moment';
 import { Stack , Grid } from '@mui/material';
 import { DateRangePicker } from 'rsuite';
@@ -132,6 +132,7 @@ const Calendar = () => {
     };
     useEffect(() => {
         fetchData(dateRange);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
             <Stack spacing={4} sx={{p:2}}> 

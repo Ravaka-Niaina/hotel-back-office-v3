@@ -181,6 +181,7 @@ const RatePlan = () => {
   useEffect(() => {
     if (delaySearchRef) clearTimeout(delaySearchRef);
     delaySearchRef = setTimeout(() => fetchFilter(1, rowsPerPage), 2000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterName]);
 
   return (

@@ -1,10 +1,10 @@
 import React from 'react';
+import { PropTypes } from 'prop-types';
 import { Stack } from '@mui/material';
-import StatusCell from './cells/StatusCell';
+// import StatusCell from './cells/StatusCell';
 import { dateIHMFormat } from '../../services/Util';
 
-const CalendarValueSide = ({list,chambre,ratePlanList,roomDetails}) => {
-    return (
+const CalendarValueSide = ({list,ratePlanList,roomDetails}) => (
         <div className='calendarEditor value' style={{ overflowX: "auto" }}>
             <table>
                 <thead>
@@ -26,13 +26,12 @@ const CalendarValueSide = ({list,chambre,ratePlanList,roomDetails}) => {
                                     >
                                         <Stack spacing={1}>
                                             {
-                                                dateIHMFormat(e).split(' ').map((datePart)=>{
-                                                    return (
+                                                dateIHMFormat(e).split(' ').map((datePart)=>(
                                                         <span key={datePart}>
                                                             {datePart}
                                                         </span>
                                                     )
-                                                })
+                                                )
                                             }
                                         </Stack>
                                                
@@ -45,28 +44,27 @@ const CalendarValueSide = ({list,chambre,ratePlanList,roomDetails}) => {
                 </thead>
                 <tbody>
                     {
-                        Object.keys(roomDetails).map((key) => {
-                            return (
+                        Object.keys(roomDetails).map((key) => (
                                 <tr key={key}>
                                     {
-                                        roomDetails[key].map((cell)=>{
-                                            return cell;
-                                        })
+                                        roomDetails[key].map((cell)=> cell)
                                     }
                                 </tr>
                             )
-                        })
+                        )
                     }
                     {
-                        ratePlanList.map((tarifDetails, j) => {
-                            return tarifDetails;
-                        })
+                        ratePlanList.map((tarifDetails) => tarifDetails)
                     }
 
                 </tbody>
             </table>
         </div>
-    );
-};
-
+);
+CalendarValueSide.propTypes = {
+    list: PropTypes.any,
+    chambre: PropTypes.any,
+    ratePlanList: PropTypes.any,
+    roomDetails: PropTypes.any,
+}
 export default CalendarValueSide;

@@ -1,4 +1,5 @@
 import React from 'react';
+import { PropTypes } from 'prop-types';
 import debounce from 'lodash.debounce';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
@@ -15,7 +16,7 @@ const getItemData = (item) => {
             "version_index":parseInt(dataSplited[2],10),
 };
 };
-const SelectableRatePlanCell = ({children, item, chambre, selected, setSelected, setAnchorEl, setOpen , setRoomSelected,cleanOthers, ...others}) => {
+const SelectableRatePlanCell = ({children, item, chambre, selected, setSelected, setAnchorEl, setOpen , cleanOthers, ...others}) => {
     const handleDragStart = (e, direction) => {
         const crt = document.createElement('div');
         crt.style.visibility = "hidden"; /* or visibility: hidden, or any of the above */
@@ -53,7 +54,7 @@ const SelectableRatePlanCell = ({children, item, chambre, selected, setSelected,
             if (!isItemSelected) {
     
                 setSelected(
-                    oldSelected =>
+                    () =>
                     (
                         chambre.planTarifaire[newItemData.rate_plan_index].prixTarif.reduce((stack, elem, i) => {
                             if (i <= newItemIndex && i >= firstItemSelectedIndex) {
@@ -75,7 +76,7 @@ const SelectableRatePlanCell = ({children, item, chambre, selected, setSelected,
             if (!selected.includes(item)) {
 
                 setSelected(
-                    oldSelected =>
+                    () =>
                     (
                         chambre.planTarifaire[newItemData.rate_plan_index].prixTarif.reduce((stack, elem, i) => {
                             if (i >= newItemIndex && i <= lastItemSelectedIndex) {
@@ -148,5 +149,16 @@ const SelectableRatePlanCell = ({children, item, chambre, selected, setSelected,
         </div>
     );
 };
-
+SelectableRatePlanCell.propTypes = {
+    children:PropTypes.any,
+    item:PropTypes.any,
+    chambre:PropTypes.any,
+    selected:PropTypes.any,
+    setSelected:PropTypes.any,
+    setAnchorEl:PropTypes.any,
+    setOpen:PropTypes.any,
+    setRoomSelected:PropTypes.any,
+    cleanOthers:PropTypes.any,
+    oldSelected: PropTypes.any,
+}
 export default SelectableRatePlanCell;

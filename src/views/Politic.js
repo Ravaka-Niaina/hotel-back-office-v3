@@ -98,7 +98,7 @@ const Politic = () => {
         setLoading(false);
       });
   };
-  const getAllPolitics = (p = 1, row = rowsPerPage) => {
+  const getAllPolitics = () => {
     context.showLoader(true);
     const payload = {
       tableName: 'politiqueAnnulation',
@@ -257,9 +257,9 @@ const Politic = () => {
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
                   labelRowsPerPage='Lignes par page'
-                  labelDisplayedRows={({ from, to, count, page }) => {
-                    return `Page ${page + 1} :   ${from} - ${to} sur ${count}`
-                  }}
+                  labelDisplayedRows={({ from, to, count, page }) => 
+                    `Page ${page + 1} :   ${from} - ${to} sur ${count}`
+                  }
             />
           </Scrollbar>
         </CustomizedPaperOutside>
