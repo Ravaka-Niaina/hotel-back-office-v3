@@ -4,33 +4,41 @@
 @font-face {
     font-family: 'RalewayBold';
     src: local('RalewayBold'), url("../fonts/Raleway-Bold.ttf") format('truetype');
+    font-display: swap;
 }
 
 @font-face {
     font-family: 'RalewayRegular';
         src: local('RalewayRegular'), url("../fonts/Raleway-Regular.ttf") format('truetype');
+        font-display: swap;
 }
 @font-face {
     font-family: 'RalewayThin';
     src: local('RalewayThin'), url("../fonts/Raleway-Thin.ttf") format('truetype');
+    font-display: swap;
 }
 @font-face {
     font-family: 'RalewayLight';
         src: local('RalewayLight'), url("../fonts/Raleway-Light.ttf") format('truetype');
+        font-display: swap;
 }
 @font-face {
     font-family: 'RalewaySemiBold';
         src: local('RalewaySemiBold'), url("../fonts/Raleway-SemiBold.ttf") format('truetype');
+        font-display: swap;
 }
 @font-face {
     font-family: 'RalewayMedium';
         src: local('RalewayMedium'), url("../fonts/Raleway-Medium.ttf") format('truetype');
+        font-display: swap;
 }
 @font-face {
     font-family: 'RalewayHeavy';
         src: local('RalewayHeavy'), url("../fonts/Raleway-Heavy.ttf") format('truetype');
+        font-display: swap;
 }
 @font-face {
     font-family: 'RalewayExtraBold';
         src: local('RalewayExtraBold'), url("../fonts/Raleway-ExtraBold.ttf") format('truetype');
+        font-display: swap;
 }
