@@ -127,11 +127,11 @@ export default function LoginForm() {
         />
       </Stack>
 
-      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
+      {/* <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
         <Link variant="subtitle2" underline="hover">
           Mot de passe oublié?
         </Link>
-      </Stack>
+      </Stack> */}
 
       <CustomizedButton onClick={handleSubmit} fullWidth text={`Se connecter`} component={RouterLink} to="#"/>
     </form>
