@@ -634,6 +634,7 @@ const AddHotelDialog = (props) => {
   );
 };
 AddHotelDialog.propTypes = {
-  reload : PropTypes.any
+  reload : PropTypes.any,
+  navigate: PropTypes.any,
 }
 export default AddHotelDialog;

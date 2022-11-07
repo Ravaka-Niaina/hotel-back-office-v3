@@ -4,7 +4,6 @@ import { useState, useContext, useEffect } from 'react';
 import {
   Table,
   Stack,
-  Checkbox,
   TableRow,
   TableBody,
   TableCell,
@@ -26,6 +25,7 @@ import { ThemeContext } from '../components/context/Wrapper';
 import { getRoomTypeList } from '../services/RoomType';
 import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
 import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
+import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
 import { lightBackgroundToTop } from '../components/CustomizedComponents/NeumorphismTheme';
 
 // ----------------------------------------------------------------------
@@ -71,8 +71,10 @@ const TypeChambre = () => {
   }, []);
 
   useEffect(() => {
+    
     if (delaySearchRef) clearTimeout(delaySearchRef);
     delaySearchRef = setTimeout(() => getAllRoomType(), 2000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterName]);
 
   function getAllRoomType() {
@@ -200,7 +202,7 @@ const TypeChambre = () => {
                         aria-checked={isItemSelected}
                       >
                         <TableCellStyled padding="checkbox">
-                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, nom)} />
+                          <CustomizedCheckbox checked={isItemSelected} onChange={(event) => handleClick(event, nom)} />
                         </TableCellStyled>
                         <TableCellStyled component="th" scope="row" padding="none">
                           <Typography variant="subtitle2" noWrap>

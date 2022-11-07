@@ -1,4 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
+import { PropTypes } from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import {
@@ -404,6 +405,7 @@ const AddPromotionDialog = ({reload,navigate}) => {
 
   useEffect(()=>{
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
   return (
     <>
@@ -829,5 +831,8 @@ const AddPromotionDialog = ({reload,navigate}) => {
     </>
   );
 };
-
+AddPromotionDialog.propTypes = {
+  reload: PropTypes.any,
+  navigate: PropTypes.any,
+};
 export default AddPromotionDialog;

@@ -116,6 +116,7 @@ const Booking = () => {
             })
     };
     const fetchReservationList = () => {
+        console.log('feetch reservation list');
         context.showLoader(true);
         const payload = {
             "filter": {
@@ -127,8 +128,11 @@ const Booking = () => {
             "nbContent": rowsPerPage,
             "numPage": 1
         };
+        console.log('before call');
         getReservationList(payload)
             .then((result) => {
+                console.log('result coming');
+                console.log(result);
                 if(result.data.status === 200){
                     setReservationList(result.data.list);
                     setResultCount(result.data.nbResult);
@@ -149,6 +153,7 @@ const Booking = () => {
             })
             .finally(()=>{
                 context.showLoader(false);
+                console.log('finally');
             })
         
     };
@@ -172,6 +177,7 @@ const Booking = () => {
         console.log('useEffect and fecth');
         fetchNewReservationList();
         fetchReservationList();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
     return (
         <Page title="AIOLIA | Reservations">

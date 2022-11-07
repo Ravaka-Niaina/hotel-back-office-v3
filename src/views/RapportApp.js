@@ -129,7 +129,8 @@ export default function RapportApp() {
                             <TableBody>
                                 {
                                   Object.keys(dataSalesReport).map((key,i)=>{
-                                    return key !== "date" ? (
+                                    const k = key;
+                                    return k !== "date" ? (
                                       <CustomizedTableRow key={i}>
                                         <TableCell component="th" scope="row">
                                           {translatedLabel[key]}

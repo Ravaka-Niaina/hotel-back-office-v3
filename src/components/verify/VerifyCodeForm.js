@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 // form
 // @mui
 import { Stack } from '@mui/material';
@@ -15,7 +14,6 @@ const VerifyCodeForm = () => {
   const context = useContext(ThemeContext);
   const [code, setCode] = useState('');
   const [errors, setErrors] = useState(false);
-  const navigate = useNavigate();
   const removeDoubleQuotes = (str) => {
     const toReplace = '"';
     return str.replaceAll(toReplace, '');
@@ -38,7 +36,7 @@ const VerifyCodeForm = () => {
     const isValid = Object.values(errors).every((x) => x === '');
     return isValid;
   };
-  const onSubmit = async (e) => {
+  const onSubmit = async () => {
     validate({ code });
     if (formIsValid() && code !== '') {
       context.showLoader(true);

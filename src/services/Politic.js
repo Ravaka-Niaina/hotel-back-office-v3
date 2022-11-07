@@ -1,15 +1,17 @@
 import axios from 'axios';
 import config from '../config/api';
 
-export const getPolitics = (payload, idToken) =>
+export const getPolitics = (payload) =>
   axios.post(`${config.host}/politique/list`, payload, {
+    timeout: 10000,
     headers: {
       Authorization: localStorage.getItem("id_token"),
       hotel_id: localStorage.getItem('hotel_id'),
     },
   });
-export const createPolitic = (payload, idToken) =>
+export const createPolitic = (payload) =>
   axios.post(`${config.host}/politique/insertionPolitique`, payload, {
+    timeout: 10000,
     headers: {
       Authorization: localStorage.getItem("id_token"),
       hotel_id: localStorage.getItem('hotel_id'),
@@ -18,6 +20,7 @@ export const createPolitic = (payload, idToken) =>
 
 export const deletePolitic = (payload) =>
   axios.post(`${config.host}/politique/suppression`, payload, {
+    timeout: 10000,
     headers: {
       // Authorization: idToken,
     }
@@ -25,6 +28,7 @@ export const deletePolitic = (payload) =>
 
 export const modifyPolitic = (payload, idPolitic, idToken) =>
   axios.post(`${config.host}/politique/updateP/${idPolitic}`, payload, {
+    timeout: 10000,
     headers: {
         Authorization: idToken,
     },

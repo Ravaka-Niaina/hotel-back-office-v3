@@ -13,9 +13,8 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
         backgroundColor: theme.palette.mode === 'light' ? '#1a90ff' : '#308fe8',
     },
 }));
-const CustomizedLinearProgress = (props) => {
-    return (
+const CustomizedLinearProgress = (props) => (
         <BorderLinearProgress {...props} />
     );
-};
+
 export default CustomizedLinearProgress;

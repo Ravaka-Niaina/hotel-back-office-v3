@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Table, Stack, TableRow, TableBody, Container, TableContainer } from '@mui/material';
-import {Link as RouterLink, useNavigate } from 'react-router-dom';
+import {Link as RouterLink } from 'react-router-dom';
 import AddHotelDialog from '../../components/hotel/AddHotelDialog';
 import HotelMoreMenu from '../../components/hotel/HotelMoreMenu';
 import CustomizedCheckbox from '../../components/CustomizedComponents/CustomizedCheckbox';
@@ -13,9 +13,7 @@ import { UserListHead, UserListToolbar } from '../../components/table';
 import { getHotelList } from '../../services/Hotel';
 import CustomizedPaperOutside from '../../components/CustomizedComponents/CustomizedPaperOutside';
 import CustomizedButton from '../../components/CustomizedComponents/CustomizedButton';
-import CustomizedIconButton from '../../components/CustomizedComponents/CustomizedIconButton';
 import { lightBackgroundToTop } from '../../components/CustomizedComponents/NeumorphismTheme';
-import Iconify from '../../components/Iconify';
 
 
 const TABLE_HEAD = [
@@ -29,13 +27,10 @@ const CreateOrDeleteHotel = () => {
   const context = useContext(ThemeContext);
   const [hotelList, setHotelList] = useState(new Array(0));
   const [location , setLocation] = useState('list');
-  const [currentRow , setCurrentRow] = useState(null);
   const order = 'asc';
   const selected = [];
   const orderBy = 'name';
   const filterName = '';
-
-  const navigatePage = useNavigate();
 
   // const [ratePlanList, setRatePlanList] = useState(new Array(0));
 
@@ -96,8 +91,8 @@ const CreateOrDeleteHotel = () => {
   const reload = () => {
     getAllHotel();
   };
-  const navigate = (itinerary , currentHotelRow = null) => {
-    setCurrentRow(currentHotelRow);
+  const navigate = (itinerary) => {
+    // setCurrentRow(currentHotelRow);
     if (itinerary === 'addForm') {
       setLocation('addForm');
     }
@@ -112,11 +107,6 @@ const CreateOrDeleteHotel = () => {
     reload();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const manageHotelContent = (hotelId) => {
-    localStorage.setItem('hotel_id', hotelId);
-    navigatePage('/');
-  };
 
   return (
     <Page title="AIOLIA | Créer ou Supprimer hôtel">
@@ -154,15 +144,15 @@ const CreateOrDeleteHotel = () => {
                         numSelected={selected.length}
                       />
                       <TableBody>
-                        {hotelList.map((row) => {
-                          const { _id, name, address, link } = row;
+                        {hotelList.map((row,i) => {
+                          const { name, address, link } = row;
 
                           const isItemSelected = selected.indexOf(name) !== -1;
 
                           return (
                             <TableRow
                               hover
-                              key={_id}
+                              key={i}
                               tabIndex={-1}
                               role="checkbox"
                               selected={isItemSelected}

@@ -235,6 +235,7 @@ const ModifyHotelDialog = (props) => {
       typography_h3: row.typography_h3,
     });
     // console.log(row);
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);    
   
 
@@ -297,11 +298,13 @@ const ModifyHotelDialog = (props) => {
   useEffect(() => {
     loadPictureList();
     loadLogo();
-    loadBanner();    
+    loadBanner();
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (logo.length > 1) setLogo([logo[0]]);
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [logo]);
 
   useEffect(() => {
@@ -739,5 +742,6 @@ ModifyHotelDialog.propTypes = {
   row: PropTypes.any,
   reload: PropTypes.func,
   newHotel: PropTypes.any,
+  navigate: PropTypes.any,
 };
 export default ModifyHotelDialog;
