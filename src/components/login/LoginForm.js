@@ -64,7 +64,6 @@ export default function LoginForm() {
     if(formIsValid()){
       context.showLoader(true);
       const payloads = formatPayloadToSend();
-      console.log(payloads);
       login(payloads)
         .then((datas) => {
           const dataMessage = datas.data.message;

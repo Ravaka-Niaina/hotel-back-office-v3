@@ -21,6 +21,7 @@ describe('login', () => {
   });
 
   test('check submit login redirect to verifyCode', async () => {
+    const mockFunction  = jest.fn(login);
     const { 
       getByPlaceholderText, getByText, findByDisplayValue 
     } = render(
