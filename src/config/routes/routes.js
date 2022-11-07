@@ -1,28 +1,31 @@
+import React, { lazy } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
 // layouts
+
 import DashboardLayout from '../../components/dashboardLayout';
 import Layout from '../../components/Layout';
-//
-import Politic from '../../views/Politic';
-import UpdateHotel from '../../views/Hotel/UpdateHotel';
-import CreateOrDeleteHotel from '../../views/Hotel/CreateOrDeleteHotel';
-import ChooseHotelToManage from '../../views/Hotel/ChooseHotelToManage';
-import RatePlan from '../../views/RatePlan';
-import Calendar from '../../views/Calendar';
-import Promotion from '../../views/Promotion';
-import TypeChambre from '../../views/RoomType';
-import AccessRight from '../../views/AccessRight';
-import User from '../../views/User';
-import Login from '../../views/Login';
-import VerifyCode from '../../views/VerifyCode';
-import NotFound from '../../views/Page404';
-import DashboardApp from '../../views/DashboardApp';
-import HomeForm from '../../views/HomeForm';
-import RapportApp from '../../views/RapportApp';
-import EmailModel from '../../views/EmailModel';
-import Booking from '../../views/Booking';
-import Protected from '../../components/protected/Protected';
 import { getAllowedRoles } from '../../services/AllowedRoles';
+//
+const Politic = lazy(()=>import('../../views/Politic'));
+const UpdateHotel = lazy(() => import('../../views/Hotel/UpdateHotel'));
+const CreateOrDeleteHotel = lazy(() => import('../../views/Hotel/CreateOrDeleteHotel'));
+const ChooseHotelToManage = lazy(() => import('../../views/Hotel/ChooseHotelToManage'));
+const RatePlan = lazy(() => import('../../views/RatePlan'));
+const Calendar = lazy(() => import('../../views/Calendar'));
+const Promotion = lazy(() => import('../../views/Promotion'));
+const TypeChambre = lazy(() => import('../../views/RoomType'));
+const AccessRight = lazy(() => import('../../views/AccessRight'));
+const User = lazy(() => import('../../views/User'));
+const Login = lazy(() => import('../../views/Login'));
+const VerifyCode = lazy(() => import('../../views/VerifyCode'));
+const NotFound = lazy(() => import('../../views/Page404'));
+const DashboardApp = lazy(() => import('../../views/DashboardApp'));
+const HomeForm = lazy(() => import('../../views/HomeForm'));
+const RapportApp = lazy(() => import('../../views/RapportApp'));
+const EmailModel = lazy(() => import('../../views/EmailModel'));
+const Booking = lazy(() => import('../../views/Booking'));
+const Protected = lazy(() => import('../../components/protected/Protected'));
+
 // ----------------------------------------------------------------------
 /**
  * @file routes
