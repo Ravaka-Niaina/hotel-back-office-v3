@@ -129,7 +129,7 @@ const AddUserDialog = ({reload}) => {
     <>
       <CustomizedButton text={`Ajouter`} component={RouterLink} to="#" onClick={() => setOpen(true)} />
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth={'md'}>
-        <CustomizedDialogTitle text={`Modifier l'utilisateur ${user?.first_name} ${user?.last_name}`} />
+        <CustomizedDialogTitle text={`Ajouter l'utilisateur ${user?.first_name} ${user?.last_name}`} />
         <DialogContent style={{ backgroundColor: '#E8F0F8', paddingTop: 15, paddingRight: 20, paddingLeft: 20 }}>
           <Stack spacing={1}>
             <CustomizedInput
