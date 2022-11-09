@@ -17,6 +17,9 @@ const TypeChambre = lazy(() => import('../../views/RoomType'));
 const AccessRight = lazy(() => import('../../views/AccessRight'));
 const User = lazy(() => import('../../views/User'));
 const Login = lazy(() => import('../../views/Login'));
+const SendCodeResetPassword = lazy(() => import('../../views/SendCodeResetPassword'));
+const EnterCodeResetPassword = lazy(() => import('../../views/EnterCodeResetPassword'));
+const EnterNewPassword = lazy(() => import('../../views/EnterNewPassword'));
 const VerifyCode = lazy(() => import('../../views/VerifyCode'));
 const NotFound = lazy(() => import('../../views/Page404'));
 const DashboardApp = lazy(() => import('../../views/DashboardApp'));
@@ -117,6 +120,9 @@ export default function Router() {
         { path: '/', element: <Navigate to="/dashboard/app" /> },
         { path: 'login', element: <Login /> },
         { path: 'verifycode', element: <VerifyCode /> },
+        { path: 'sendCodeResetPassword', element: <SendCodeResetPassword /> },
+        { path: 'enterCodeResetPassword/:userId', element: <EnterCodeResetPassword /> },
+        { path: 'enterNewPassword/:userId', element: <EnterNewPassword /> },
         { path: '404', element: <Navigate to="/dashboard/app" /> },
         { path: '*', element: <Navigate to="/404" /> },
       ],
