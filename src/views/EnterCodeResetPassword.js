@@ -5,7 +5,7 @@ import { Container } from '@mui/material';
 // components
 import Page from '../components/Page';
 // sections
-import { LoginForm } from '../components/login';
+import EnterCodeResetPasswordForm from '../components/enterCodeResetPassword/EnterCodeResetPasswordForm';
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -41,9 +41,9 @@ const ContentStyle = styled('div')(({ theme }) => ({
 }));
 // ----------------------------------------------------------------------
 
-export default function Login() {
+export default function EnterCodeResetPassword() {
   return (
-    <Page title="AIOLIA | Connexion" sx={{ backgroundColor: '#E8F0F8' }}>
+    <Page title="AIOLIA | Entrer code reinitialisation mot de passe" sx={{ backgroundColor: '#E8F0F8' }}>
       <RootStyle>
         <HeaderStyle>
           <div> </div>
@@ -51,8 +51,8 @@ export default function Login() {
         <Container maxWidth="sm">
           <ContentStyle>
             <img src={`${process.env.PUBLIC_URL}/images/logo/logowcolor.png`} alt={`login_logo`} style={{ margin: 'auto' }} width={250} height={250} />
-            <LoginForm />
-            <p style={{padding:'2em',fontSize:'12px',textAlign:'justify'}}>
+            <EnterCodeResetPasswordForm />
+            <p style={{padding:'2em',fontSize:'10px',textAlign:'justify'}}>
               Conditions générales: Pour accéder à ce site Internet et l'utiliser, vous devez avoir une permission écrite sous la forme d'un accord contractuel de AIOLIA. Ce site Web est protégé par des droits d'auteurs et constitue la propriété de AIOLIA. Toute utilisation de ce site Web contraire à celle stipulée dans l'accord contractuel et toute distribution des noms d'utilisateurs et des mots de passe à d'autres entités qui ne sont pas sous contrat avec AIOLIA sont strictement interdites et seront considérées comme une violation de confidentialité pouvant entraîner d'éventuelles implications légales et financières.
             </p>
           </ContentStyle>
