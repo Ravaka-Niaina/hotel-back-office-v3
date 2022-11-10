@@ -72,6 +72,7 @@ export default function LoginForm() {
             localStorage.setItem('partner_id', JSON.stringify(dataPartnerId));
             context.showLoader(false);
             navigate('/verifycode');
+            
           } else {
             context.changeResultErrorMessage('Vos identifiants sont incorrects,veuillez réessayer.');
             context.showResultError(true);

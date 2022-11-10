@@ -80,6 +80,14 @@ const Wrapper = ({ children }) => {
   const details = getUserDetailsById(partnerId, getIdToken());
 
   const getUserDetails = async () => {
+    const savedUserDetails = localStorage.getItem("user_details");
+    if(savedUserDetails !== null)
+    {
+      return new Promise((resolve, reject) => {
+          resolve(JSON.parse(savedUserDetails));
+      });
+    }
+    
     const userDetails = await details;
     return userDetails
   };
