@@ -5,6 +5,7 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import DashboardLayout from '../../components/dashboardLayout';
 import Layout from '../../components/Layout';
 import { getAllowedRoles } from '../../services/AllowedRoles';
+import VerifyCode from '../../views/VerifyCode';
 //
 const Politic = lazy(()=>import('../../views/Politic'));
 const UpdateHotel = lazy(() => import('../../views/Hotel/UpdateHotel'));
@@ -20,7 +21,7 @@ const Login = lazy(() => import('../../views/Login'));
 const SendCodeResetPassword = lazy(() => import('../../views/SendCodeResetPassword'));
 const EnterCodeResetPassword = lazy(() => import('../../views/EnterCodeResetPassword'));
 const EnterNewPassword = lazy(() => import('../../views/EnterNewPassword'));
-const VerifyCode = lazy(() => import('../../views/VerifyCode'));
+
 const NotFound = lazy(() => import('../../views/Page404'));
 const DashboardApp = lazy(() => import('../../views/DashboardApp'));
 const HomeForm = lazy(() => import('../../views/HomeForm'));

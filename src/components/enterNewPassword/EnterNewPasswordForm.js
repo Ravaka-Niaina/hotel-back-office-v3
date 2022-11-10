@@ -71,7 +71,7 @@ export default function EnterNewPasswordForm() {
           context.showLoader(true);
           if (datas.data.status === 200) {
             localStorage.removeItem('codeTmp');
-            navigate('/login');
+            // navigate('/login');
           } else {
             context.changeResultErrorMessage('Vos identifiants sont incorrects,veuillez réessayer.');
             context.showResultError(true);

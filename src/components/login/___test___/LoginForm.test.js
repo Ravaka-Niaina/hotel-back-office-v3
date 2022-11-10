@@ -2,27 +2,37 @@ import React from 'react';
 import axios from 'axios';
 import { describe, expect, test } from '@jest/globals';
 import '@testing-library/jest-dom';
-import { render, screen, act, fireEvent, waitFor, getByRole, } from '@testing-library/react';
+import { render, screen, act, fireEvent, waitFor, getByRole, getByPlaceholderText, } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {BrowserRouter as Router} from 'react-router-dom';
 
-import LoginForm from '../../src/components/login/LoginForm';
-import { login } from '../../src/services/User';
-import Wrapper from '../../src/components/context/Wrapper';
+import LoginForm from '../LoginForm';
+import { login } from '../../../services/User';
+import Wrapper from '../../context/Wrapper';
 
 jest.mock('../../src/services/User');
 
 describe('login', () => {
   test('check login has a submit button', () => {
-    render(<Router><input type='text' value='Norris'/><LoginForm /></Router>);
+    render(<Router><LoginForm /></Router>);
       const submitButton = screen.getByRole('link', { name: 'Se_connecter' });
       expect(submitButton).toBeInTheDocument();
   });
 
-  test('find if inputEmail print the correct email inputed', () => {
-    const inputEmail = getByRole('textbox');
-    // fireEvent.change(inputEmail, { target: { value: 'adrhotel@yopmail.com' } });
-    expect(inputEmail).toBeInTheDocument(); 
+  test('find if inputEmail exists', () => {
+    render(<Router><LoginForm /></Router>);
+    const inputEmail = screen.getByTestId('emailAddress');
+    expect(inputEmail).toBeInTheDocument();
   });
+
+  test('find if input email can be changed', async () => {
+    render(<Router><LoginForm /></Router>);
+    const inputEmail = screen.getByTestId('emailAddress');
+    await userEvent.type(inputEmail, 'adrhotel@yopmail.com');
+    expect(inputEmail).toHaveValue('adrhotel@yopmail.com');
+  });
+
+  test()
 
   // test('check submit login redirect to verifyCode', async () => {
   //   const { 

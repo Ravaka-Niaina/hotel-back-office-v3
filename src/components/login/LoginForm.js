@@ -71,6 +71,7 @@ export default function LoginForm() {
           const dataPartnerId = datas.data.partner_id;
           if (dataMessage === 'OK') {
             localStorage.setItem('partner_id', JSON.stringify(dataPartnerId));
+            context.showLoader(false);
             navigate('/verifycode');
           } else {
             context.changeResultErrorMessage('Vos identifiants sont incorrects,veuillez réessayer.');
@@ -91,6 +92,7 @@ export default function LoginForm() {
     <form>
       <Stack spacing={3}>
         <CustomizedInput
+          inputProps={{ "data-testid": "emailAddress" }}
           sx={{ width: 1, fontSize: 17 }}
           name="email"
           label={<Label>Adresse e-mail</Label>}
@@ -102,6 +104,7 @@ export default function LoginForm() {
             error: true,
             helpertext: errors.email,
           })}
+          value={form.email}
         />
         <CustomizedInput
           sx={{ width: 1, fontSize: 17 }}

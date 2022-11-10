@@ -105,7 +105,6 @@ const VerifyCodeForm = () => {
         context.showLoader(false);
       });
   };
-
   return (
     <>
       <Stack spacing={3}>
