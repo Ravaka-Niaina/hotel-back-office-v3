@@ -116,8 +116,8 @@ export const addAccessRight = (payload) => {
  * @returns {boolean} True if the requirements are fullfilled , otherwise false
  */
 export const checkAuthWithRole = (roles, allowed) => {
-  const isAllowed = allowed.some((allowedRole) => roles.some((userRole) => allowedRole === userRole));
   if (allowed[0] === '*') return true;
+  const isAllowed = allowed.some((allowedRole) => roles.some((userRole) => allowedRole === userRole));
   return isAllowed;
 };
 
