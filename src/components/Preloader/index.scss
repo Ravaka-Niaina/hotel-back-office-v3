@@ -1,0 +1,100 @@
+:root{
+  --bg-color: #2b2e33;
+  --color-primary: #E3EDF7;
+  --shadow-outer:2px 2px 4px rgba(114, 142, 171, 0.1), -4px -4px 10px #FFFFFF, 4px 4px 10px rgba(111, 140, 176, 0.41);
+  --shadow-inner:inset 4px 4px 5px rgba(197, 215, 238, 1),inset -2px -2px 7px rgba(255, 255, 255, 0.9);
+}
+
+.pathcontainer{
+  width: 120px;
+  height: 67px;
+  margin: auto;
+  position: relative;
+}
+.path{
+  height: 10px;
+  width: 110px;
+  overflow: hidden;
+  position: absolute;
+  bottom:50%;
+}
+.path > div{
+  background: #444;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  margin: 0 15px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation-fill-mode: both;
+  animation: dynamic 5s infinite cubic-bezier(0.89, 0.03, 0.06, 1.5);
+}
+.path > div:nth-child(2){ left: 80px; }
+.path > div:nth-child(3){ left: 120px; }
+.path > div:nth-child(4){ left: 160px; }
+.path > div:nth-child(5){ left: 200px; }
+.path > div:nth-child(6){ left: 240px; }
+.path > div:nth-child(7){ left: 280px; }
+@keyframes dynamic{
+  0%{ transform: translateX(-40px); }
+  25%{ transform: translateX(-80px); }
+  50%{ transform: translateX(-120px); }
+  75%{ transform: translateX(-160px); }
+  100%{ transform: translateX(-200px); }
+}
+.circle{
+  width: 120px;
+  position:relative;
+}
+.logo{
+  position: absolute;
+  margin: auto;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+  .loader {
+    position: relative;
+    height: 120px;
+    width: 120px;
+    border-radius: 50%;
+    border: 5px solid var(--color-primary);
+    box-shadow: var(--shadow-outer);
+    animation: loader 2s linear infinite;
+    &::after {
+      content: "";
+      position: absolute;
+      top: -13px;
+      left: 20px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: var(--color-primary);
+      box-shadow: var(--shadow-outer);
+    }
+    &::before {
+      content: "";
+      position: absolute;
+      top: -11px;
+      left: 22px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      z-index: 4;
+      background-color: transparent;
+      box-shadow: var(--shadow-inner);
+    }
+  }
+  @keyframes loader {
+    from {
+      transform: rotate(0deg);
+      filter: hue-rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+      filter: hue-rotate(360deg);
+    }
+  }
