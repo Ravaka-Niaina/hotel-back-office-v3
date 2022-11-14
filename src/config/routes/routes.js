@@ -27,6 +27,7 @@ const DashboardApp = lazy(() => import('../../views/DashboardApp'));
 const HomeForm = lazy(() => import('../../views/HomeForm'));
 const RapportApp = lazy(() => import('../../views/RapportApp'));
 const EmailModel = lazy(() => import('../../views/EmailModel'));
+const EmailModelOld = lazy(() => import('../../views/EmailModelOld'));
 const Booking = lazy(() => import('../../views/Booking'));
 const Protected = lazy(() => import('../../components/protected/Protected'));
 
@@ -110,6 +111,10 @@ export default function Router() {
         { 
           path: 'emailModel',
           element: <EmailModel />,
+        },
+        { 
+          path: 'emailModelOld',
+          element: <EmailModelOld />,
         },
         { path: '*', element: <NotFound /> },
       ],

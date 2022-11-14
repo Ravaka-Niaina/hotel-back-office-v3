@@ -18,6 +18,8 @@ const Label = styled(Typography)({
 });
 // ----------------------------------------------------------------------
 
+export const utilLogin = { handleSubmit: null };
+
 export default function LoginForm() {
   const context = useContext(ThemeContext);
   const navigate = useNavigate();
@@ -50,6 +52,7 @@ export default function LoginForm() {
     setForm((prev) => ({ ...prev, [name]: value }));
     validate({ [name]: value });
   };
+
   const formatPayloadToSend = () => {
     const payload = {
       is_partner: true,
@@ -59,7 +62,8 @@ export default function LoginForm() {
     };
     return payload;
   };
-  const handleSubmit = () => {
+
+  utilLogin.handleSubmit = () => {
     validate({form});
     if(formIsValid()){
       context.showLoader(true);
@@ -67,6 +71,7 @@ export default function LoginForm() {
       console.log(payloads);
       login(payloads)
         .then((datas) => {
+          console.log(datas);
           const dataMessage = datas.data.message;
           const dataPartnerId = datas.data.partner_id;
           if (dataMessage === 'OK') {
@@ -137,7 +142,7 @@ export default function LoginForm() {
         </Link>
       </Stack>
 
-      <CustomizedButton onClick={handleSubmit} fullWidth text={`Se connecter`} component={RouterLink} to="#"/>
+      <CustomizedButton data-testid="submit-btn" onClick={utilLogin.handleSubmit} fullWidth text={`Se connecter`} component={RouterLink} to="#"/>
     </form>
   );
 }
