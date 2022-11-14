@@ -3,9 +3,10 @@ import { Navigate, useRoutes } from 'react-router-dom';
 // layouts
 
 import DashboardLayout from '../../components/dashboardLayout';
-import Layout from '../../components/Layout';
 import { getAllowedRoles } from '../../services/AllowedRoles';
-import VerifyCode from '../../views/VerifyCode';
+import Protected from '../../components/protected/Protected';
+
+import Preloader from '../../components/Preloader/Preloader';
 //
 const Politic = lazy(()=>import('../../views/Politic'));
 const UpdateHotel = lazy(() => import('../../views/Hotel/UpdateHotel'));
@@ -18,6 +19,7 @@ const TypeChambre = lazy(() => import('../../views/RoomType'));
 const AccessRight = lazy(() => import('../../views/AccessRight'));
 const User = lazy(() => import('../../views/User'));
 const Login = lazy(() => import('../../views/Login'));
+const VerifyCode = lazy(() => import('../../views/VerifyCode'));
 const SendCodeResetPassword = lazy(() => import('../../views/SendCodeResetPassword'));
 const EnterCodeResetPassword = lazy(() => import('../../views/EnterCodeResetPassword'));
 const EnterNewPassword = lazy(() => import('../../views/EnterNewPassword'));
@@ -29,7 +31,9 @@ const RapportApp = lazy(() => import('../../views/RapportApp'));
 const EmailModel = lazy(() => import('../../views/EmailModel'));
 const EmailModelOld = lazy(() => import('../../views/EmailModelOld'));
 const Booking = lazy(() => import('../../views/Booking'));
-const Protected = lazy(() => import('../../components/protected/Protected'));
+
+
+
 
 // ----------------------------------------------------------------------
 /**
@@ -119,20 +123,13 @@ export default function Router() {
         { path: '*', element: <NotFound /> },
       ],
     },
-    {
-      path: '/',
-      element: <Layout />,
-      children: [
-        { path: '/', element: <Navigate to="/dashboard/app" /> },
-        { path: 'login', element: <Login /> },
-        { path: 'verifycode', element: <VerifyCode /> },
-        { path: 'sendCodeResetPassword', element: <SendCodeResetPassword /> },
-        { path: 'enterCodeResetPassword/:userId', element: <EnterCodeResetPassword /> },
-        { path: 'enterNewPassword/:userId', element: <EnterNewPassword /> },
-        { path: '404', element: <Navigate to="/dashboard/app" /> },
-        { path: '*', element: <Navigate to="/404" /> },
-      ],
-    },
-    { path: '*', element: <Navigate to="/404" replace /> },
+    { path: '/', element: <Navigate to="/dashboard/app" /> },
+    { path: 'load', element: <Preloader /> },
+    { path: 'login', element: <Login /> },
+    { path: 'verifycode', element: <VerifyCode /> },
+    { path: 'sendCodeResetPassword', element: <SendCodeResetPassword /> },
+    { path: 'enterCodeResetPassword/:userId', element: <EnterCodeResetPassword /> },
+    { path: 'enterNewPassword/:userId', element: <EnterNewPassword /> },
+    { path: '*', element: <NotFound /> },
   ]);
 }

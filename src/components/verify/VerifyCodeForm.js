@@ -55,16 +55,31 @@ const VerifyCodeForm = () => {
 
             context.getUserDetails()
             .then(userDetails => {
-              const userAccessRights = userDetails.data.atribAR;
-              window.location = userAccessRights.some(({ _id }) => _id === 'superAdmin' || _id === 'admin')
-              ? "/dashboard/chooseHotelToManage"
-              : "/dashboard/app";
+              if(userDetails.data.status === 200)
+              {
+                const userAccessRights = userDetails.data.atribAR;
+                const userDetailsSaved = {
+                data:userDetails.data,
+                }
+                localStorage.setItem("user_details",JSON.stringify(userDetailsSaved));
+                window.location = userAccessRights.some(({ _id }) => _id === 'superAdmin' || _id === 'admin')
+                ? "/dashboard/chooseHotelToManage"
+                : "/dashboard/app";
+              }
+              else{
+                context.changeResultErrorMessage('Impossible d\'obtenir les informations de l\'utilisateur');
+                context.showResultError(true);
+                window.location = "/dashboard/app";
+              }
             }).catch(err => {
               console.error(err);
               context.changeResultErrorMessage('Impossible d\'obtenir les informations de l\'utilisateur');
               context.showResultError(true);
               window.location = "/dashboard/app";
-            });
+            })
+            .finally(()=>{
+              context.showLoader(false);
+            })
             
           } else {
             context.changeResultErrorMessage(verifyResult.data.message);
