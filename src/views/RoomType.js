@@ -1,4 +1,5 @@
 import { useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // material
 import {
@@ -59,6 +60,9 @@ const TypeChambre = () => {
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const navigate = useNavigate();
+
   const reload = async () => {
     getAllRoomType();
   };
@@ -92,11 +96,12 @@ const TypeChambre = () => {
     try {
       getRoomTypeList(payload, idToken)
         .then((datas) => {
-          if (datas.status === 200) {
+          if (datas.data.status === 200) {
             const roomTypeData = datas.data;
             setRoomTypeList(roomTypeData.list);
           } else {
-            // console.log(datas)
+            setRoomTypeList([]);
+            navigate('/dashboard/chooseHotelToManage');
           }
         }) 
         .catch(() => {})
@@ -157,7 +162,7 @@ const TypeChambre = () => {
 
   const filteredUsers = roomTypeList;
 
-  const isUserNotFound = filteredUsers.length === 0;
+  const isUserNotFound = filteredUsers?.length === 0;
   return (
     <Page title="AIOLIA | Types de chambres">
       <Container>

@@ -98,6 +98,7 @@ export default function LoginForm() {
     <form>
       <Stack spacing={3}>
         <CustomizedInput
+          labelcolor="#4D4D4D"
           inputProps={{ "data-testid": "emailAddress" }}
           sx={{ width: 1, fontSize: 17 }}
           name="email"
@@ -113,7 +114,8 @@ export default function LoginForm() {
           value={form.email}
         />
         <CustomizedInput
-          sx={{ width: 1, fontSize: 17 }}
+          labelcolor="#4D4D4D"
+          sx={{ width: 1, fontSize: 17, }}
           type={showPassword ? 'text' : 'password'}
           name="password"
           label='Mot de passe'
@@ -128,7 +130,7 @@ export default function LoginForm() {
           {...{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                <IconButton onClick={() => setShowPassword(!showPassword)} aria-label="name" edge="end">
                   <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
                 </IconButton>
               </InputAdornment>
@@ -138,7 +140,7 @@ export default function LoginForm() {
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <Link variant="subtitle2" underline="hover" onClick={() => navigate('/sendCodeResetPassword')}>
+        <Link variant="subtitle2" underline="hover" href='/sendCodeResetPassword' color='#33647E'>
           Mot de passe oublié?
         </Link>
       </Stack>
