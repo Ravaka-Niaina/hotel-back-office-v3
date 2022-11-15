@@ -6,11 +6,7 @@ import { render, screen, act, fireEvent, waitFor, getByRole, getByPlaceholderTex
 import userEvent from '@testing-library/user-event';
 import {BrowserRouter as Router} from 'react-router-dom';
 
-import LoginForm from '../LoginForm';
-import { login } from '../../../services/User';
-import Wrapper from '../../context/Wrapper';
-
-jest.mock('../../src/services/User');
+import LoginForm, { utilLogin } from '../LoginForm';
 
 describe('login', () => {
   test('check login has a submit button', () => {
@@ -32,7 +28,15 @@ describe('login', () => {
     expect(inputEmail).toHaveValue('adrhotel@yopmail.com');
   });
 
-  test()
+  test('test mock function', async () => {
+    render(<Router><LoginForm /></Router>);
+    utilLogin.handleSubmit = jest.fn().mockResolvedValue({
+      "status": 200,
+    });
+    const loginBtn = screen.getByTestId('submit-btn');
+    await userEvent.click(loginBtn);
+    expect(utilLogin.handleSubmit).toHaveBeenCalled();
+  });
 
   // test('check submit login redirect to verifyCode', async () => {
   //   const { 

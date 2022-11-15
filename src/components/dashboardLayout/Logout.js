@@ -6,6 +6,9 @@ const Logout = () => {
   const logout = () => {
     localStorage.removeItem('partner_id');
     localStorage.removeItem('id_token');
+    localStorage.removeItem('hotel_id');
+    localStorage.removeItem('user_attr');
+    localStorage.removeItem('user_details');
     navigate('/login');
   };
   return (

@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Stack,Container } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Editor } from "react-draft-wysiwyg";
@@ -12,10 +12,13 @@ import Page from '../components/Page';
 import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
 import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
 import CustomizedIconButton from 'src/components/CustomizedComponents/CustomizedIconButton';
+import CustomizedButton from 'src/components/CustomizedComponents/CustomizedButton';
 import { lightBackgroundToTop, shadowInset, linearBorderOutside, linearBorderInset, shadowOutside } from '../components/CustomizedComponents/NeumorphismTheme';
 import CustomizedInput from '../components/CustomizedComponents/CustomizedInput';
 import Iconify from '../components/Iconify';
 
+import { saveEmailModelToBackEnd, getEmailModelFromBackEnd } from 'src/services/EmailModel';
+import { ThemeContext } from 'src/components/context/Wrapper';
 /**
  * @style The style of the menu to choose between draft or html modification
  */
@@ -82,6 +85,7 @@ export default function EmailModel() {
 
   const [modelTypeIndex, setModelTypeIndex] = useState(0);
 
+  const context = useContext(ThemeContext);
 
   /**
    * @object An object that contains test variables to test in the email
@@ -100,10 +104,6 @@ export default function EmailModel() {
     itinerary_number: "52033214"
   }
 
-  
-  const handleChangeModelTypeIndex = (model) => {
-    setModelTypeIndex(model);
-  }
   /**
    * @function convertVariablesToValues
    * @description A function that handles the convertion of variables defined in the <variables> param to their values
@@ -187,6 +187,64 @@ export default function EmailModel() {
     setHtmlPreview(e.target.value)
     getDraftFromHtml(e.target.value)
   }
+
+  const saveHtmlPreview = () => {
+    context.showResultSuccess(false);
+    context.showResultError(false);
+    context.showLoader(true);
+    saveEmailModelToBackEnd({ 
+      content: htmlPreview,
+      type: modelTypeIndex === 0 ? 'confirmation' : 'canceling'
+    })
+    .then(data => {
+      context.showLoader(false);
+      if (data.data.status === 200) {
+        context.changeResultSuccessMessage(`Le modèle email a été sauvegardé`);
+        context.showResultSuccess(true);
+      } else {
+        context.changeResultErrorMessage('Une erreur est survenu, veuillez reessayer plus tard');
+        context.showResultError(true);
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      context.showLoader(false);
+    });
+  };
+
+  const getHotelEmailModel = (modelTypeIndexTmp) => {
+    context.showLoader(true);
+    const emailType = modelTypeIndexTmp === 0 
+      ? 'confirmation'
+      : 'annulation'; 
+    getEmailModelFromBackEnd(emailType)
+    .then(data => {
+      context.showLoader(false);
+      const htmlEmail = data.data.data.htmlConfirmation;
+      setHtmlPreview(htmlEmail);
+      const contentBlock = htmlToDraft(htmlEmail);
+      if (contentBlock) {
+        const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+        setEditorState(EditorState.createWithContent(contentState)); 
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      context.changeResultErrorMessage('Impossible d\'obtenir le mod');
+      context.showResultError(true);
+      context.showLoader(false);
+    })
+  };
+
+  const handleChangeModelTypeIndex = (model) => {
+    setModelTypeIndex(model);
+    getHotelEmailModel(model);
+  }
+
+  useEffect(() => {
+    getHotelEmailModel(0);
+  }, []);
+
   return (
     <Page title="AIOLIA | Modèle Email">
       <Container>
@@ -265,6 +323,7 @@ export default function EmailModel() {
               }
               <CustomizedTitle sx={{ textAlign: 'center' }} text={`Apercu de l'email`} level={0} size={32} />
               {htmlPreview && <div style={{ ...shadowInset, backgroundColor: 'white', marginTop: '20px', padding: 20 }} dangerouslySetInnerHTML={{ __html: convertVariablesToValues(VARIABLES, htmlPreview) }} />}
+              <CustomizedButton onClick={saveHtmlPreview} fullWidth text={`Enregistrer email`} to="#"/>
             </Stack>
           </CustomizedPaperOutside>
         </Stack>

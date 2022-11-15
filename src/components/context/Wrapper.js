@@ -52,7 +52,7 @@ const Wrapper = ({ children }) => {
   const showResultError = (show) => {
     setOpenAlertError(show);
   };
-  const changeResultErrorMessage = (message) => {
+  const changeResultErrorMessage = (message = `Erreur inattendue, contactez votre administrateur pour plus d'informations`) => {
     setErrorMessage(message);
   };
   const showResultSuccess = (show) => {
@@ -75,11 +75,19 @@ const Wrapper = ({ children }) => {
   };
 
 
-  const payloadFromToken = getPayloadFromToken(jwtDecode, getIdToken());
-  const partnerId = payloadFromToken?.partner_id;
-  const details = getUserDetailsById(partnerId, getIdToken());
+  
 
   const getUserDetails = async () => {
+    const savedUserDetails = localStorage.getItem("user_details");
+    if(savedUserDetails !== null)
+    {
+      return new Promise((resolve, reject) => {
+          resolve(JSON.parse(savedUserDetails));
+      });
+    }
+    const payloadFromToken = getPayloadFromToken(jwtDecode, getIdToken());
+    const partnerId = payloadFromToken?.partner_id;
+    const details = getUserDetailsById(partnerId, getIdToken());
     const userDetails = await details;
     return userDetails
   };
