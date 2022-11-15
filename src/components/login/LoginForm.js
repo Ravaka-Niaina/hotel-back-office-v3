@@ -146,7 +146,14 @@ export default function LoginForm() {
         </Link>
       </Stack>
 
-      <CustomizedButton data-testid="submit-btn" onClick={utilLogin.handleSubmit} fullWidth text={`Se connecter`} component={RouterLink} to="#"/>
+      <CustomizedButton 
+        onClick={utilLogin.handleSubmit} 
+        fullWidth 
+        text={`Se connecter`} 
+        component={RouterLink} 
+        to="#"
+      />
+      {/* <button onClick={utilLogin.handleSubmit} >Se connecter</button> */}
     </form>
   );
 }

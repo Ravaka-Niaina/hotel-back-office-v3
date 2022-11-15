@@ -30,12 +30,14 @@ describe('login', () => {
 
   test('test mock function', async () => {
     render(<Router><LoginForm /></Router>);
-    utilLogin.handleSubmit = jest.fn().mockResolvedValue({
-      "status": 200,
-    });
-    const loginBtn = screen.getByTestId('submit-btn');
+    // utilLogin.handleSubmit = jest.fn().mockResolvedValue({
+    //   "status": 200,
+    // });
+    const spy = jest.spyOn(utilLogin, 'handleSubmit').mockImplementation(() => ({ status: 200, }));
+    const loginBtn = screen.getByText('Se connecter');
     await userEvent.click(loginBtn);
-    expect(utilLogin.handleSubmit).toHaveBeenCalled();
+    // console.log(loginBtn.textContent);
+    expect(spy).toBeCalled();
   });
 
   // test('check submit login redirect to verifyCode', async () => {
