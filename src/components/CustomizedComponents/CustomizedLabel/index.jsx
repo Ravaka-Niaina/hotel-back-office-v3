@@ -15,9 +15,10 @@ const CustomLabel = styled('span')({
   alignItems: 'center',
   color: '#8B9EB0',
 });
-const CustomizedLabel = (props) => <CustomLabel>{props.label}</CustomLabel>;
+const CustomizedLabel = (props) => <CustomLabel {...(props.labelcolor && { sx : {color:`${props.labelcolor} !important`}})} >{props.label}</CustomLabel>;
 
 CustomizedLabel.propTypes = {
   label: PropTypes.any,
+  labelcolor : PropTypes.any,
 };
 export default CustomizedLabel;
