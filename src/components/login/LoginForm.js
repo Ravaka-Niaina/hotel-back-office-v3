@@ -75,6 +75,7 @@ export default function LoginForm() {
           const dataPartnerId = datas.data.partner_id;
           if (dataMessage === 'OK') {
             localStorage.setItem('partner_id', JSON.stringify(dataPartnerId));
+            localStorage.setItem('phone_number', JSON.stringify(datas.data.phoneNumber));
             context.showLoader(false);
             navigate('/verifycode');
             
@@ -142,7 +143,14 @@ export default function LoginForm() {
         </Link>
       </Stack>
 
-      <CustomizedButton data-testid="submit-btn" onClick={utilLogin.handleSubmit} fullWidth text={`Se connecter`} component={RouterLink} to="#"/>
+      <CustomizedButton 
+        onClick={utilLogin.handleSubmit} 
+        fullWidth 
+        text={`Se connecter`} 
+        component={RouterLink} 
+        to="#"
+      />
+      {/* <button onClick={utilLogin.handleSubmit} >Se connecter</button> */}
     </form>
   );
 }

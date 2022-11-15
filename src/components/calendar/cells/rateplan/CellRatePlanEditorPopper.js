@@ -9,6 +9,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import CustomizedIconButton from '../../../CustomizedComponents/CustomizedIconButton';
 import CustomizedPaperOutside from '../../../CustomizedComponents/CustomizedPaperOutside';
 import CustomizedInput from '../../../CustomizedComponents/CustomizedInput';
+import CustomizedTitle from '../../../CustomizedComponents/CustomizedTitle';
 
 import { ThemeContext } from '../../../context/Wrapper';
 
@@ -134,7 +135,7 @@ const CellRatePlanEditorPopper = ({ open, anchorEl , setOpen , selected , setSel
                             <CustomizedPaperOutside sx={{ background: '#E3EDF7' , p: 2, width: '250px', minHeight: '250px' }}>
                                 <Stack direction="column" spacing={2} justifyContent='flex-start'>
                                     <Stack>
-                                        <h4>{chambre.nom}</h4>
+                                        <CustomizedTitle text={chambre.nom} level={0} />
                                         <h6>
                                             {
                                                 selected[0] && format(new Date(getItemData(selected[0]).date), 'd MMMM yyyy')

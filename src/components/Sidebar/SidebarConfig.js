@@ -21,14 +21,37 @@ export const getSidebarConfig = async (context) => {
     {
       title: 'tableau de bord',
       path: '/dashboard/app',
-      icon: getIcon('wpf:statistics'),
+      icon: getIcon('eva:pie-chart-2-fill'),
       userIsAllowed: getAllowedRoles('/dashboard/app'),
       isAuthorized: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/app')),
     },
     {
+      title: 'Hotels',
+      path: '/dashboard/createOrDeleteHotel',
+      icon: getIcon('bxs:building-house'),
+      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/hotel')),
+      children: [
+        {
+          title: 'Créer ou Supprimer hôtel',
+          path: '/dashboard/createOrDeleteHotel',
+          userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/hotel')),
+        },
+        {
+          title: 'Modifier hôtel',
+          path: '/dashboard/updateHotel',
+          userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/hotel')),
+        },
+        {
+          title: 'Choisir hôtel à gérer',
+          path: '/dashboard/chooseHotelToManage/',
+          userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/hotel')),
+        }
+      ]
+    },
+    {
       title: 'rapports',
       path: '/dashboard/rapport',
-      icon: getIcon('eva:pie-chart-2-fill'),
+      icon: getIcon('wpf:statistics'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/rapport')),
     },
     {
@@ -80,29 +103,6 @@ export const getSidebarConfig = async (context) => {
       path: '/dashboard/user',
       icon: getIcon('eva:people-fill'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/user')),
-    },
-    {
-      title: 'Hotels',
-      path: '/dashboard/createOrDeleteHotel',
-      icon: getIcon('bxs:building-house'),
-      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/hotel')),
-      children: [
-        {
-          title: 'Créer ou Supprimer hôtel',
-          path: '/dashboard/createOrDeleteHotel',
-          userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/hotel')),
-        },
-        {
-          title: 'Modifier hôtel',
-          path: '/dashboard/updateHotel',
-          userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/hotel')),
-        },
-        {
-          title: 'Choisir hôtel à gérer',
-          path: '/dashboard/chooseHotelToManage/',
-          userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/hotel')),
-        }
-      ]
     },
     {
       title: "droit d'accès",

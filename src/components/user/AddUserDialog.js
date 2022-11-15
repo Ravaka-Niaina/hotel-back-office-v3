@@ -1,15 +1,15 @@
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
-
-import React, { useEffect, useState,  } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Stack, Dialog, DialogActions, DialogContent, Button } from '@mui/material';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
-
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
+import { ThemeContext } from '../context/Wrapper';
 import { register } from '../../services/User';
 
 const AddUserDialog = ({reload}) => {
+  const context = useContext(ThemeContext);
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState({
     last_name: '',
@@ -97,6 +97,7 @@ const AddUserDialog = ({reload}) => {
     }
     setErrors(errorsTmp);
     if (errorExists) return 0;
+    context.showLoader(true);
     register({
       isPartner: true,
       name: user.last_name,
@@ -114,14 +115,40 @@ const AddUserDialog = ({reload}) => {
       town: '',
       postal_code: '',
 
-    }).then(result => {
-      console.log(result);
-      if (result.data.status === 200) {
-        clearForm();
-        setOpen(false);
-        reload();
-      }
-    }).catch(err => console.error(err));
+    })
+      .then(result => {
+        console.log(result);
+        if (result.data.status === 200) {
+          clearForm();
+          setOpen(false);
+          context.changeResultSuccessMessage('Enregistrement effectué');
+          context.showResultSuccess(true);
+          reload();
+        }
+        else if (result.data.errors) {
+          const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+          const indication = result.data.errors[item];
+          const message = `${item}: ${indication}`;
+          context.changeResultErrorMessage(message);
+          context.showResultError(true);
+        }
+        else if (result.data.msg) {
+          context.changeResultErrorMessage(result.data.msg);
+          context.showResultError(true);
+        }
+        else{
+          context.changeResultErrorMessage();
+          context.showResultError(true);
+        }
+      })
+      .catch(err => {
+        context.changeResultErrorMessage();
+        context.showResultError(true);
+        console.log(err);
+      })
+      .finally(()=>{
+        context.showLoader(false);
+      });
     return null;
   };
   
