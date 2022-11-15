@@ -76,6 +76,7 @@ export default function LoginForm() {
           const dataPartnerId = datas.data.partner_id;
           if (dataMessage === 'OK') {
             localStorage.setItem('partner_id', JSON.stringify(dataPartnerId));
+            localStorage.setItem('phone_number', JSON.stringify(datas.data.phoneNumber));
             context.showLoader(false);
             navigate('/verifycode');
             
