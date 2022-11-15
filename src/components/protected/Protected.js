@@ -63,9 +63,11 @@ const Protected = ({ child, allowedRoles }) => {
       const userDetails = context.getUserDetails();
       userDetails.then((results) => {
         // the attributedAccessRights from the payload
-        console.log('user');
-        console.log(results);
         if(results.data.status === 200){
+          const userDetailsSaved = {
+            data:results.data,
+          }
+          localStorage.setItem("user_details",JSON.stringify(userDetailsSaved));
           const attributedAccessRights = results.data?.atribAR;
           // only getting the id field from the arrays of the payload and storing it inside an array
           const accessRightsIds = attributedAccessRights.map((accessRight) => accessRight?._id);

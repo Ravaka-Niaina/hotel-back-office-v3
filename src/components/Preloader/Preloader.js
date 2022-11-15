@@ -15,7 +15,7 @@ const Preloader = () => {
             
             <Stack direction='row' justifyContent='space-between' alignItems='center'>
                 <div className='pathcontainer'>
-                    <div class="path">
+                    <div className="path">
                         <div></div>
                         <div></div>
                         <div></div>

@@ -10,6 +10,7 @@ import CustomizedIconButton from '../../../CustomizedComponents/CustomizedIconBu
 import CustomizedPaperOutside from '../../../CustomizedComponents/CustomizedPaperOutside';
 import CustomizedRadio from '../../../CustomizedComponents/CustomizedRadio';
 import CustomizedInput from '../../../CustomizedComponents/CustomizedInput';
+import CustomizedTitle from '../../../CustomizedComponents/CustomizedTitle';
 
 import { ThemeContext } from '../../../context/Wrapper';
 
@@ -118,7 +119,7 @@ const CellRoomEditorPopper = ({ open, anchorEl , setOpen , selected , setSelecte
                             <CustomizedPaperOutside sx={{ background: '#E3EDF7' , p: 2, width: '250px', minHeight: '350px' }}>
                                 <Stack direction="column" spacing={2} justifyContent='flex-start'>
                                     <Stack>
-                                        <h4>{chambre.nom}</h4>
+                                        <CustomizedTitle text={chambre.nom} level={0} />
                                         <h6>
                                             {
                                                 selected[0] && format(new Date(selected[0]), 'd MMMM yyyy')
