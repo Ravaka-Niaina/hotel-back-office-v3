@@ -33,7 +33,7 @@ const StatusCell = ({available,chambre,date,setChambre,index,isRatePlan = false,
             idTarif: chambre.planTarifaire[index]._id,
             isTarifOpen: !available,
         };
-        console.log(payload);
+        console.log('ety ny maso');                  
         saveRatePlanAvailability(payload)
             .then((result) => {
                 console.log(result.data);

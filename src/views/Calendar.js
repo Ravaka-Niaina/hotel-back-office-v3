@@ -30,24 +30,7 @@ const Calendar = () => {
     const [ roomList , setRoomList ] = useState([]);
     const [loading, setLoading]=useState(false);
     const [partialRoomLoading, setPartialRoomLoading] = useState('');
-    // console.log(format(value[0].toDate(), 'd MMMM yyyy'));
-    // function getNDigits(number, digit){
-    //     digit = `${digit}`;
-    //     const remain = number - digit.length;
-    //     for(let i = 0; i < remain; i+=1){
-    //         digit = `0${digit}`;
-    //     }
-    //     return digit;
-    // }
     
-    // function getDate(date){
-    //     date = new Date(date);
-    //     const year = date.getFullYear();
-    //     const month = getNDigits(2, date.getMonth() + 1);
-    //     const day = getNDigits(2, date.getDate());
-    //     date = `${year}-${month}-${day}`;
-    //     return date;
-    // }
     const reloadOneRoom = (id) => {
         const roomIndex = roomList.findIndex((elem)=>elem._id === id); 
         if(roomIndex > -1)

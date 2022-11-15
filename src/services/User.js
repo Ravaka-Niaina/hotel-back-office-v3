@@ -19,6 +19,31 @@ export const verifyCode = (payload) =>
             Authorization: token,
         }, */
   });
+
+export const sendEmailUpdateAccountPassword = (payload) =>
+  axios.post(`${config.host}/user/sendEmailUpdateCompte`, payload, {
+    timeout: 10000,
+    /* headers: {
+            Authorization: token,
+        }, */
+  });
+
+export const updatePassword = (payload) =>
+  axios.post(`${config.host}/user/updatePassword`, payload, {
+    timeout: 10000,
+    /* headers: {
+            Authorization: token,
+        }, */
+  });
+
+export const verifyCodeResetPassword = (payload) =>
+  axios.post(`${config.host}/user/verifyPartnerPasswordResetCode`, payload, {
+    timeout: 10000,
+    /* headers: {
+            Authorization: token,
+        }, */
+  });
+
 export const verifyToken = (token) => axios.get(`${config.host}/verify_token`, {
     timeout: 10000,
     headers: {
