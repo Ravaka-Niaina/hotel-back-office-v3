@@ -1,7 +1,8 @@
 import React, { useState, createContext } from 'react';
 import jwtDecode from 'jwt-decode';
 import PropTypes from 'prop-types';
-import SimpleBackdrop from '../backdrop/Backdrop';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 import Message from '../snackbar/Message';
 import { getPayloadFromToken, getUserDetailsById } from '../../services/User';
 
@@ -46,7 +47,9 @@ const Wrapper = ({ children }) => {
   };
 
   const showLoader = (show) => {
-    setDisable(show);
+
+      setDisable(show);
+
   };
 
   const showResultError = (show) => {
@@ -91,7 +94,6 @@ const Wrapper = ({ children }) => {
     const userDetails = await details;
     return userDetails
   };
-
   return (
     <ThemeContext.Provider
       value={{
@@ -106,7 +108,9 @@ const Wrapper = ({ children }) => {
         getUserDetails,
       }}
     >
-      <SimpleBackdrop open={disable} />
+      <Backdrop sx={{ color: '#fff', zIndex: 2147483647 }}  open={disable}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <Message
         vertical="top"
         horizontal="center"

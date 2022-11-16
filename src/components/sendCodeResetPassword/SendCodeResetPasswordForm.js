@@ -63,7 +63,7 @@ export default function SendCodeResetPasswordForm() {
       sendEmailUpdateAccountPassword(payloads)
         .then((datas) => {
           if (datas.data.status === 200) {
-            context.showLoader(false);
+            // context.showLoader(false);
             navigate(`/enterCodeResetPassword/${datas.data.user_id}`);
           } else {
             context.changeResultErrorMessage('Vos identifiants sont incorrects,veuillez réessayer.');
@@ -85,7 +85,7 @@ export default function SendCodeResetPasswordForm() {
         <CustomizedInput
           sx={{ width: 1, fontSize: 17 }}
           name="email"
-          label={<Label>Adresse e-mail</Label>}
+          label={<Label>Adresse e-mail de réinitialisation de mot de passe</Label>}
           placeholder="exemple@exemple.com"
           type="email"
           onChange={handleChange}
@@ -98,7 +98,7 @@ export default function SendCodeResetPasswordForm() {
         
       </Stack>
 
-      <CustomizedButton style={{marginTop: '25px'}} onClick={handleSubmit} fullWidth text={`Envoyer code de réinitialisation mot de passe`} component={RouterLink} to="#"/>
+      <CustomizedButton style={{marginTop: '25px'}} onClick={handleSubmit} fullWidth text={`Envoyer code`} component={RouterLink} to="#"/>
     </form>
   );
 }
