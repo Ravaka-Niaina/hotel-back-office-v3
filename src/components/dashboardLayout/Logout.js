@@ -9,7 +9,7 @@ const Logout = () => {
     localStorage.removeItem('hotel_id');
     localStorage.removeItem('user_attr');
     localStorage.removeItem('user_details');
-    navigate('/login');
+    navigate('/login', {replace:true});
   };
   return (
     <Button
