@@ -77,7 +77,7 @@ export default function LoginForm() {
             localStorage.setItem('partner_id', JSON.stringify(dataPartnerId));
             localStorage.setItem('phone_number', JSON.stringify(datas.data.phoneNumber || '034 00 000 00'));
             context.showLoader(false);
-            // navigate('/verifycode');
+            navigate('/verifycode');
             
           } else {
             context.changeResultErrorMessage('Vos identifiants sont incorrects,veuillez réessayer.');
