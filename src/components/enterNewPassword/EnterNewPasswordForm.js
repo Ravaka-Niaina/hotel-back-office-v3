@@ -68,10 +68,12 @@ export default function EnterNewPasswordForm() {
       const payloads = formatPayloadToSend();
       updatePassword(payloads)
         .then((datas) => {
-          context.showLoader(true);
+          console.log(datas);
           if (datas.data.status === 200) {
             localStorage.removeItem('codeTmp');
-            // navigate('/login');
+            navigate('/login' , {replace:true});
+            context.changeResultSuccessMessage('Votre mot de passe a été réinitialisé');
+            context.showResultSuccess(true);
           } else {
             context.changeResultErrorMessage('Vos identifiants sont incorrects,veuillez réessayer.');
             context.showResultError(true);
@@ -139,7 +141,7 @@ export default function EnterNewPasswordForm() {
         />
       </Stack>
 
-      <CustomizedButton style={{ marginTop: '25px' }} onClick={handleSubmit} fullWidth text={`Valider nouveau mot de passe`} component={RouterLink} to="#"/>
+      <CustomizedButton style={{ marginTop: '25px' }} onClick={handleSubmit} fullWidth text={`Reinitialiser mot de passe`} component={RouterLink} to="#"/>
     </form>
   );
 }

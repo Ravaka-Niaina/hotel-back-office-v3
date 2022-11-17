@@ -1,4 +1,4 @@
-
+import React from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
 import {Container, Typography } from '@mui/material';
@@ -65,6 +65,7 @@ const VerifyCode = () => {
   // const mdUp = useResponsive('up', 'md');
   const phoneNumber = JSON.parse(localStorage.getItem('phone_number'));
   const censoredPhoneNumber = `+261-${phoneNumber.substring(1,3)}-XX-XXX-${phoneNumber.substring(phoneNumber.length-2,phoneNumber.length)}`;
+
   return (
     <Page title="AIOLIA | Verification de code" sx={{ backgroundColor: '#E8F0F8' }}> 
       <RootStyle>

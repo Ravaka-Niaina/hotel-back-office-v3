@@ -43,7 +43,6 @@ const SelectableRoomCell = ({children,item,chambre,selected,setSelected,setAncho
             openEditor(e.currentTarget);
             const isItemSelected = selected.includes(item);
             if (!isItemSelected) {
-                console.log('manova');
                 setSelected(
                     () =>
                     (

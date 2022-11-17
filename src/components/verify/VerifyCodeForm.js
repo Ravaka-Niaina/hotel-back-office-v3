@@ -11,6 +11,7 @@ import { ThemeContext } from '../context/Wrapper';
 // ----------------------------------------------------------------------
 
 const VerifyCodeForm = () => {
+
   const context = useContext(ThemeContext);
   const [code, setCode] = useState('');
   const [errors, setErrors] = useState(false);
