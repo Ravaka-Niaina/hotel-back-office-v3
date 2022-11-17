@@ -64,11 +64,15 @@ export default function EnterCodeResetPasswordForm() {
       console.log(payloads);
       verifyCodeResetPassword(payloads)
         .then((datas) => {
-          context.showLoader(false);
           if (datas.data.status === 200) {
             localStorage.setItem('codeTmp', form.code);
-            context.showLoader(false);
+            // context.showLoader(false);
             navigate(`/enterNewPassword/${params.userId}`);
+          }
+          else
+          {
+            context.changeResultErrorMessage(`Une erreur s'est produite,veuillez réessayer plus tard.`);
+            context.showResultError(true);
           }
           // const dataMessage = datas.data.message;
           // const dataPartnerId = datas.data.partner_id;
@@ -97,7 +101,7 @@ export default function EnterCodeResetPasswordForm() {
           sx={{ width: 1, fontSize: 17 }}
           name="code"
           label={<Label>Code de reinitialisation mot de passe</Label>}
-          placeholder="2070"
+          placeholder="exemple: 2070"
           type="number"
           onChange={handleChange}
           fullWidth
@@ -109,7 +113,7 @@ export default function EnterCodeResetPasswordForm() {
         
       </Stack>
 
-      <CustomizedButton style={{marginTop: '25px'}} onClick={handleSubmit} fullWidth text={`Valider code de reinitialisation mot de passe`} component={RouterLink} to="#"/>
+      <CustomizedButton style={{marginTop: '25px'}} onClick={handleSubmit} fullWidth text={`Valider`} component={RouterLink} to="#"/>
     </form>
   );
 }
