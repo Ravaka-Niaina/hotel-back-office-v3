@@ -20,7 +20,7 @@ const Label = styled(Typography)({
 
 export const utilLogin = { handleSubmit: null };
 
-export default function LoginForm() {
+export default function LoginForm({ onSubmit }) {
   const context = useContext(ThemeContext);
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -70,7 +70,6 @@ export default function LoginForm() {
       const payloads = formatPayloadToSend();
       login(payloads)
         .then((datas) => {
-          console.log(datas);
           const dataMessage = datas.data.message;
           const dataPartnerId = datas.data.partner_id;
           if (dataMessage === 'OK') {
@@ -115,6 +114,7 @@ export default function LoginForm() {
         />
         <CustomizedInput
           labelcolor="#4D4D4D"
+          inputProps={{ "data-testid": "password" }}
           sx={{ width: 1, fontSize: 17, }}
           type={showPassword ? 'text' : 'password'}
           name="password"
@@ -146,7 +146,7 @@ export default function LoginForm() {
       </Stack>
 
       <CustomizedButton 
-        onClick={utilLogin.handleSubmit} 
+        onClick={() => onSubmit ? onSubmit(utilLogin.handleSubmit) : utilLogin.handleSubmit()} 
         fullWidth 
         text={`Se connecter`} 
         component={RouterLink} 
