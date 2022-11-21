@@ -4,9 +4,11 @@ import { describe, expect, test } from '@jest/globals';
 import '@testing-library/jest-dom';
 import { render, screen, act, fireEvent, waitFor, getByRole, getByPlaceholderText, } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import {BrowserRouter as Router} from 'react-router-dom';
+import {BrowserRouter as Router, useNavigate, } from 'react-router-dom';
 
+import Wrapper from "../../context/Wrapper";
 import LoginForm, { utilLogin } from '../LoginForm';
+
 
 describe('login', () => {
   test('check login has a submit button', () => {
@@ -28,16 +30,27 @@ describe('login', () => {
     expect(inputEmail).toHaveValue('adrhotel@yopmail.com');
   });
 
-  test('test mock function', async () => {
-    render(<Router><LoginForm /></Router>);
-    // utilLogin.handleSubmit = jest.fn().mockResolvedValue({
-    //   "status": 200,
-    // });
-    const spy = jest.spyOn(utilLogin, 'handleSubmit').mockImplementation(() => ({ status: 200, }));
+  test('test login function', async () => {
+    const onSubmit = jest.fn().mockImplementation((injectedFunction) => {
+      injectedFunction();
+    });
+    axios.post = jest.fn().mockResolvedValue({ 
+      data: {
+        message: 'OK', 
+        partner_id: '12345'
+      }
+    });
+    render(<Wrapper><Router><LoginForm onSubmit={onSubmit} /></Router></Wrapper>);
+    
+    const inputEmail = screen.getByTestId('emailAddress');
+    await userEvent.type(inputEmail, 'adrhotel@yopmail.com');
+    
+    const inputPassword = screen.getByTestId('password');
+    await userEvent.type(inputPassword, '1234');
+
     const loginBtn = screen.getByText('Se connecter');
     await userEvent.click(loginBtn);
-    // console.log(loginBtn.textContent);
-    expect(spy).toBeCalled();
+    expect(onSubmit).toBeCalled();
   });
 
   // test('check submit login redirect to verifyCode', async () => {
