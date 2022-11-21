@@ -1,5 +1,5 @@
-import { useContext, useMemo, useState } from 'react';
-import {Link as RouterLink} from "react-router-dom";
+import { useContext, useMemo, useState, useEffect, } from 'react';
+import {Link as RouterLink, useNavigate} from "react-router-dom";
 import PropTypes from 'prop-types'
 import { Grid, MenuItem, FormControlLabel, RadioGroup, Stack } from '@mui/material';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
@@ -19,6 +19,7 @@ const RapportForm = ({ setStateDataSalesReport }) => {
   // const [date, setDate] = useState(formatDate(new Date().toLocaleDateString('en-US')));
   // const dateNow = new Date();
   const context = useContext(ThemeContext);
+  const navigate = useNavigate();
 
   // const dateTomorrow = dateNow.setDate(dateNow.getDate() + 1);
 
@@ -82,6 +83,14 @@ const RapportForm = ({ setStateDataSalesReport }) => {
         throw error;
       });
   };
+
+  useEffect(() => {
+    if (!localStorage.getItem('hotel_id')) {
+      context.changeResultErrorMessage('Veuillez d\'abord choisir un hôtel à gérer');
+      context.showResultError(true);
+      navigate('/dashboard/chooseHotelToManage/');
+    }
+  }, []);
 
   return (
     <>

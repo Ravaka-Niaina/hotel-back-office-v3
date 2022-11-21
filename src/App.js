@@ -14,6 +14,7 @@ import Router from './config/routes/routes';
 // css
 import Preloader from './components/Preloader/Preloader';
 import './assets/css/fonts.css';
+import IdleTimer from './services/IdleTimer';
 
 const App = () => (
   <Suspense 
@@ -25,7 +26,9 @@ const App = () => (
           <ThemeProvider>
             <ScrollToTop />
             <BaseOptionChartStyle />
-            <Router />
+            <IdleTimer>
+              <Router />
+            </IdleTimer>
           </ThemeProvider>
         </BrowserRouter>
       </HelmetProvider>
