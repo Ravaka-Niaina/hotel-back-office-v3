@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Logout = () => {
   const navigate = useNavigate();
+
   const logout = () => {
     localStorage.removeItem('partner_id');
     localStorage.removeItem('id_token');
@@ -11,6 +12,7 @@ const Logout = () => {
     localStorage.removeItem('user_details');
     navigate('/login', {replace:true});
   };
+  
   return (
     <Button
       variant="contained"
