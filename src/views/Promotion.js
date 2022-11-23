@@ -21,7 +21,7 @@ import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedChe
 import TableCellStyled from '../components/CustomizedComponents/CustomizedTableCell';
 import PromotionMoreMenu from '../components/promotion/PromotionMoreMenu';
 import { ThemeContext } from '../components/context/Wrapper';
-import { UserListHead } from '../components/table';
+import { UserListHead , UserListToolbar } from '../components/table';
 import { getPromotionList } from '../services/Promotion';
 import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
 import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
@@ -30,6 +30,7 @@ import CustomizedIconButton from '../components/CustomizedComponents/CustomizedI
 import CustomizedLinearProgress from '../components/CustomizedComponents/CustomizedLinearProgress';
 import { lightBackgroundToTop } from '../components/CustomizedComponents/NeumorphismTheme';
 import Iconify from '../components/Iconify';
+
 // mock
 
 // ----------------------------------------------------------------------
@@ -44,6 +45,7 @@ const TABLE_HEAD = [
   { id: 'action', label: 'Actions', alignRight: true, alignCenter: true },
 ];
 
+let delaySearchRef = null;
 const Promotion = () => {
   const context = useContext(ThemeContext);
 
@@ -60,6 +62,10 @@ const Promotion = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [loading, setLoading] = useState(false);
+
+  const [filterName, setFilterName] = useState('');
+
+  const selected = [];
 
   const navigate = (itinerary, currentPromotionRow = null) => {
     setCurrentPromotion(currentPromotionRow);
@@ -139,7 +145,7 @@ const Promotion = () => {
     setRowsPerPage(row);
     const payload = {
       tableName: 'promotion',
-      valuesToSearch: [],
+      valueToSearch: filterName,
       fieldsToPrint: ['nom', 'sejourMin', 'planTarifaire', 'typeChambre', 'dateDebutS', 'dateFinS'],
       nbContent: row,
       numPage: p,
@@ -186,6 +192,11 @@ const Promotion = () => {
       context.showResultError(true);
     }
   };
+
+  const handleFilterByName = (event) => {
+    setFilterName(event.target.value);
+  };
+
   const reload = async () => {
     getAllPromotion();
   };
@@ -193,6 +204,14 @@ const Promotion = () => {
     reload();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    
+    if (delaySearchRef) clearTimeout(delaySearchRef);
+    delaySearchRef = setTimeout(() => getAllPromotion(), 2000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterName]);
+
   // const isUserNotFound = filteredUsers?.length === 0;
 
   return (
@@ -226,7 +245,7 @@ const Promotion = () => {
                 }}
               >
 
-                
+                  <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
                   <TableContainer sx={{ minWidth: 800 }}>
                     <Table>
                       <UserListHead
