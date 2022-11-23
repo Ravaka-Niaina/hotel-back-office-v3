@@ -76,6 +76,15 @@ const Protected = ({ child, allowedRoles }) => {
           // Redirect to login page if the user doesn't have permissions
           setIsAuth(checkAuth);
           if (!checkAuth) redirectToLoginPage()
+          if (
+            !window.location.href.includes('chooseHotelToManage') 
+            && (
+              accessRightsIds.includes('superAdmin') 
+              || accessRightsIds.includes('admin')
+            ) && !localStorage.getItem('hotel_id')
+          ) {
+            navigate('/dashboard/chooseHotelToManage');
+          }
         }
         else if(results.data.errors){
           const item = Object.keys(results.data.errors).filter((e, i) => i === 0)[0];
