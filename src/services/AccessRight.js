@@ -4,7 +4,7 @@ import config from '../config/api';
 export const getAccessRightList = (payload) => {
   const defaultPayload = {
     tableName: 'droitAcces',
-    valuesToSearch: [],
+    valueToSearch: '',
     fieldsToPrint: ['_id', 'nom'],
     nbContent: 100,
     numPage: 1,
