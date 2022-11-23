@@ -24,12 +24,12 @@ const TABLE_HEAD = [
   { id: 'action', label: 'Actions', alignRight: true, alignCenter: true },
 ];
 
+let delaySearchRef = null;
 const Politic = () => {
   const context = useContext(ThemeContext);
   const order = 'asc';
   const selected = [];
   const orderBy = 'name';
-  const filterName = '';
 
   const [politicList, setPoliticList] = useState(new Array(0));
 
@@ -40,6 +40,8 @@ const Politic = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [loading, setLoading] = useState(false);
+
+  const [filterName, setFilterName] = useState('');
 
   const handleChangePage = (e, p, row = rowsPerPage) => {
     fetchFilter(p + 1, row);
@@ -102,7 +104,7 @@ const Politic = () => {
     context.showLoader(true);
     const payload = {
       tableName: 'politiqueAnnulation',
-      valuesToSearch: [],
+      valueToSearch: filterName,
       fieldsToPrint: [],
       nbContent: 200,
       numPage: 1,
@@ -147,13 +149,27 @@ const Politic = () => {
         context.showLoader(false);
       });
   };
+
+  const handleFilterByName = (event) => {
+    setFilterName(event.target.value);
+  };
+
   const reload = () => {
     getAllPolitics();
   };
+
   useEffect(() => {
     reload();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    
+    if (delaySearchRef) clearTimeout(delaySearchRef);
+    delaySearchRef = setTimeout(() => getAllPolitics(), 2000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterName]);
+
   return (
     <Page title="AIOLIA | Politiques d'annulation">
       <Container>
@@ -171,7 +187,7 @@ const Politic = () => {
             padding: 5,
           }}
         >
-          <UserListToolbar numSelected={selected.length} filterName={filterName} />
+          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>

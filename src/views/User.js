@@ -41,12 +41,12 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
+let delaySearchRef = null;
 export default function User() {
   const context = useContext(ThemeContext);
   const order = 'asc';
   const selected = [];
   const orderBy = 'name';
-  const filterName = '';
 
   const [userList, setUserList] = useState(new Array(0));
 
@@ -59,6 +59,8 @@ export default function User() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [loading, setLoading] = useState(false);
+
+  const [filterName, setFilterName] = useState('');
   
   const handleChangePage = (e, p, row = rowsPerPage) => {
     fetchFilter(p + 1, row);
@@ -116,7 +118,7 @@ export default function User() {
     context.showLoader(true);
     const payloadListUser = {
       tableName: 'partenaire',
-      valuesToSearch: [],
+      valueToSearch: filterName,
       fieldsToPrint: [],
       nbContent: row,
       numPage: p,
@@ -164,14 +166,28 @@ export default function User() {
       setAccessRights(result?.data?.list)
     })
   }
+
+  const handleFilterByName = (event) => {
+    setFilterName(event.target.value);
+  };
+
   const reload = () => {
     getAllUser();
     getAccessRights();
   };
+
   useEffect(() => {
     reload();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    
+    if (delaySearchRef) clearTimeout(delaySearchRef);
+    delaySearchRef = setTimeout(() => getAllUser(), 2000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterName]);
+  
   return (
     <Page title="AIOLIA | Utilisateurs">
       <Container>
@@ -189,7 +205,7 @@ export default function User() {
             padding: 5,
           }}
         >
-          <UserListToolbar numSelected={selected.length} filterName={filterName} />
+          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
