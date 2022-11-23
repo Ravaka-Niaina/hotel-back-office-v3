@@ -18,13 +18,12 @@ const TABLE_HEAD = [
   { id: 'action', label: 'Actions', alignRight: true,alignCenter:true },
 ];
 
+let delaySearchRef = null;
 const AccessRight = () => {
   const context = useContext(ThemeContext);
   const order = 'asc';
   const selected = [];
   const orderBy = 'name';
-
-  const filterName = '';
 
   const [accessRightList, setAccessRightList] = useState(new Array(0));
 
@@ -35,6 +34,8 @@ const AccessRight = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [loading, setLoading] = useState(false);
+
+  const [filterName, setFilterName] = useState('');
 
   const handleChangePage = (e, p, row = rowsPerPage) => {
     fetchFilter(p + 1, row);
@@ -49,7 +50,7 @@ const AccessRight = () => {
     setRowsPerPage(row);
     const payload = {
       tableName: 'droitAcces',
-      valuesToSearch: [],
+      valueToSearch: filterName,
       fieldsToPrint: ['_id', 'nom'],
       nbContent: row,
       numPage: p,
@@ -88,7 +89,7 @@ const AccessRight = () => {
   const getAllAccessRight = (p = 1, row = rowsPerPage) => {
     const payload = {
       tableName: 'droitAcces',
-      valuesToSearch: [],
+      valueToSearch: filterName,
       fieldsToPrint: ['_id', 'nom'],
       nbContent: row,
       numPage: p,
@@ -127,6 +128,10 @@ const AccessRight = () => {
       });
   };
 
+  const handleFilterByName = (event) => {
+    setFilterName(event.target.value);
+  };
+
   const reload = () => {
     getAllAccessRight();
   };
@@ -135,6 +140,13 @@ const AccessRight = () => {
     reload();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    
+    if (delaySearchRef) clearTimeout(delaySearchRef);
+    delaySearchRef = setTimeout(() => getAllAccessRight(), 2000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterName]);
 
   return (
     <Page title="AIOLIA | Droits d'acces">
@@ -152,7 +164,7 @@ const AccessRight = () => {
             padding: 5,
           }}
         >
-          <UserListToolbar numSelected={selected.length} filterName={filterName} />
+          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
                 <UserListHead
