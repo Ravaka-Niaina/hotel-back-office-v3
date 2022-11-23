@@ -112,12 +112,12 @@ export default function Router() {
         //   path: 'emailModel',
         //   element: <Protected child={<EmailModel />} allowedRoles={getAllowedRoles(`${dashboardPath}/emailModel`)} />,
         // },
+        // { 
+        //   path: 'emailModel',
+        //   element: <EmailModel />,
+        // },
         { 
           path: 'emailModel',
-          element: <EmailModel />,
-        },
-        { 
-          path: 'emailModelOld',
           element: <EmailModelOld />,
         },
         { path: '*', element: <NotFound /> },
