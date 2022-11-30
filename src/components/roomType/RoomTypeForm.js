@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
+
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import { Stack, Button, Dialog, DialogActions, DialogContent, Checkbox } from '@mui/material';
@@ -25,11 +26,11 @@ const RoomTypeForm = ({
   setOpen, 
   roomTypeId,
   isUpdate,
+  onSubmit,
 }) => {
   
   const context = useContext(ThemeContext);
   // const [errors, setErrors] = useState({});
-  const errors = {};
   const [roomType, setRoomType] = useState({
     nameInFrench: '',
     nameInEnglish: '',
@@ -42,6 +43,20 @@ const RoomTypeForm = ({
     descriptionInEnglish: '',
     videos: [],
     photo: [],
+    imgCrop: '',
+  });
+  const [errors, setErrors] = useState({
+    nameInFrench: '',
+    nameInEnglish: '',
+    numberOfRoom: '',
+    areaSize: '',
+    stageNumber: '',
+    adultNumber: '',
+    childNumber: '',
+    descriptionInFrench: '',
+    descriptionInEnglish: '',
+    videos: '',
+    photo: '',
     imgCrop: '',
   });
   const [showGalerie, setShowGalerie] = useState(false);
@@ -116,11 +131,11 @@ const RoomTypeForm = ({
     const { name, value } = e.target;
     // console.log(value);
     setRoomType((roomType) => ({ ...roomType, [name]: value }));
+    setErrors({ ...errors, [name]: value.trim() ? '' : 'Ce champ est requis' });
     // validate({ [name]: value });
     // formIsValid({
     //   ...accessRight,
-    //   [name]: value,
-    // });
+    //   [name]: value, 
   };
 
   const getListEquipments = () => {
@@ -144,7 +159,6 @@ const RoomTypeForm = ({
       numPage: 1,
     })
     .then(result => {
-      console.log(result);
       const ratePlansTemp = [];
       result.data.list.forEach(({ _id, nom, }) => {
         ratePlansTemp.push({
@@ -206,6 +220,14 @@ const RoomTypeForm = ({
     .catch(err => console.error(err));
   };
 
+  const validateAddRoomType = () => {
+    if (onSubmit) {
+      onSubmit(addRoomType);
+    } else {
+      addRoomType();
+    }
+  };
+
   useEffect(() => {
     if (open) {
       getInfoRoomType();
@@ -217,6 +239,43 @@ const RoomTypeForm = ({
     getListEquipments();
     getListRatePlans();
   }, []);
+
+  const getClearedErrors = () => ({
+      nameInFrench: '',
+      nameInEnglish: '',
+      numberOfRoom: '',
+      areaSize: '',
+      stageNumber: '',
+      adultNumber: '',
+      childNumber: '',
+      descriptionInFrench: '',
+      descriptionInEnglish: '',
+      videos: '',
+      photo: '',
+      imgCrop: '',
+    });
+
+  const setExistingErrors = (errors) => {
+    const correspondence = {
+      nom: 'nameInFrench',
+      name: 'nameInEnglish',
+      chambreTotal: 'numberOfRoom',
+      superficie: 'areaSize',
+      etage: 'stageNumber',
+      nbAdulte: 'adultNumber',
+      nbEnfant: 'childNumber',
+      description: 'descriptionInFrench',
+      desc: 'descriptionInEnglish',
+      videos: '',
+      photo: 'photo',
+      imgCrop: '',
+    }
+    const clearedErrors = getClearedErrors(); 
+    Object.keys(correspondence).forEach((err) => {
+      clearedErrors[correspondence[err]] = errors[err];
+    });
+    setErrors(clearedErrors);
+  };
 
   const addRoomType = () => {
     context.showLoader(true);
@@ -254,6 +313,7 @@ const RoomTypeForm = ({
     };
     createRoomType(payload)
       .then(result => {
+        console.log(result);
         if (result.data.status === 200) {
           setOpen(false);
           context.changeResultSuccessMessage('Enregistrement inséré avec succès');
@@ -261,6 +321,7 @@ const RoomTypeForm = ({
           clearForm();
           reload();
         } else {
+          setExistingErrors(result.data.errors);
           context.changeResultErrorMessage("Une erreur interne s'est produite");
           context.showResultError(true);
         }
@@ -351,9 +412,9 @@ const RoomTypeForm = ({
               type="text"
               fullWidth
               required
-              {...(errors.id && {
+              {...(errors.nameInFrench && {
                 error: true,
-                helpertext: errors.id,
+                helpertext: errors.nameInFrench,
               })}
               value={roomType.nameInFrench}
             />
@@ -368,9 +429,9 @@ const RoomTypeForm = ({
               type="text"
               fullWidth
               required
-              {...(errors.id && {
+              {...(errors.nameInEnglish && {
                 error: true,
-                helpertext: errors.id,
+                helpertext: errors.nameInEnglish,
               })}
               value={roomType.nameInEnglish}
             />
@@ -387,9 +448,9 @@ const RoomTypeForm = ({
               type="number"
               fullWidth
               required
-              {...(errors.id && {
+              {...(errors.numberOfRoom && {
                 error: true,
-                helpertext: errors.id,
+                helpertext: errors.numberOfRoom,
               })}
               value={roomType.numberOfRoom}
             />
@@ -404,9 +465,9 @@ const RoomTypeForm = ({
               type="text"
               fullWidth
               required
-              {...(errors.id && {
+              {...(errors.areaSize && {
                 error: true,
-                helpertext: errors.id,
+                helpertext: errors.areaSize,
               })}
               value={roomType.areaSize}
             />
@@ -423,9 +484,9 @@ const RoomTypeForm = ({
               type="text"
               fullWidth
               required
-              {...(errors.id && {
+              {...(errors.stageNumber && {
                 error: true,
-                helpertext: errors.id,
+                helpertext: errors.stageNumber,
               })}
               value={roomType.stageNumber}
             />
@@ -443,9 +504,9 @@ const RoomTypeForm = ({
               type="text"
               fullWidth
               required
-              {...(errors.id && {
+              {...(errors.adultNumber && {
                 error: true,
-                helpertext: errors.id,
+                helpertext: errors.adultNumber,
               })}
               value={roomType.adultNumber}
             />
@@ -460,9 +521,9 @@ const RoomTypeForm = ({
               type="text"
               fullWidth
               required
-              {...(errors.id && {
+              {...(errors.childNumber && {
                 error: true,
-                helpertext: errors.id,
+                helpertext: errors.childNumber,
               })}
               value={roomType.childNumber}
             />
@@ -481,9 +542,9 @@ const RoomTypeForm = ({
               fullWidth
               required
               multiline
-              {...(errors.id && {
+              {...(errors.descriptionInFrench && {
                 error: true,
-                helpertext: errors.id,
+                helpertext: errors.descriptionInFrench,
               })}
               value={roomType.descriptionInFrench}
             />
@@ -499,9 +560,9 @@ const RoomTypeForm = ({
               fullWidth
               required
               multiline
-              {...(errors.id && {
+              {...(errors.descriptionInEnglish && {
                 error: true,
-                helpertext: errors.id,
+                helpertext: errors.descriptionInEnglish,
               })}
               value={roomType.descriptionInEnglish}
             />
@@ -561,7 +622,7 @@ const RoomTypeForm = ({
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px' }}>
           <Button onClick={handleClose}>Annuler</Button>
-          <CustomizedButton onClick={isUpdate ? sendUpdateRoomType : addRoomType} text={`Valider`} component={RouterLink} to="#" />
+          <CustomizedButton onClick={isUpdate ? sendUpdateRoomType : validateAddRoomType} text={`Valider`} component={RouterLink} to="#" />
         </DialogActions>
       </Dialog>
     </>
