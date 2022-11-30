@@ -1,3 +1,4 @@
+import React from 'react';
 // component
 import {  checkAuthWithRole } from '../../services/User';
 import { getAllowedRoles } from '../../services/AllowedRoles';
