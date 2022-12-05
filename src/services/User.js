@@ -61,7 +61,7 @@ export const resendCode = (payload) =>
  * @function register
  */
 export const register = (payload) =>
-  axios.post(`${config.host}/user/register`, payload, {
+  axios.post(`${config.host}/user/registerPartner`, payload, {
     timeout: 10000,
     headers: {
       ispartner: true,
@@ -69,6 +69,10 @@ export const register = (payload) =>
       hotel_id: localStorage.getItem('hotel_id'),
     },
   });
+
+export const sendDeletePartner = (userId) =>
+  axios.delete(`${config.host}/user/deletePartner/${userId}`)
+
 export const getUserList = (payload) =>
   axios.post(`${config.host}/user/list`, payload, {
     timeout: 10000,
@@ -77,6 +81,7 @@ export const getUserList = (payload) =>
       hotel_id: localStorage.getItem('hotel_id'),
     },
   });
+
 export const getUserDetails = (id,idToken) =>
   axios.get(`${config.host}/user/details/${id}`, {
     timeout: 10000,
@@ -85,6 +90,7 @@ export const getUserDetails = (id,idToken) =>
       Authorization: idToken,
     },
   });
+
 export const updateUser = (payload) =>
   axios.post(`${config.host}/user/update`, payload, {
     timeout: 10000,

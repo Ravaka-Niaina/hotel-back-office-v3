@@ -8,11 +8,11 @@ import ModifyUserDialog from './ModifyUserDialog';
 
 // ----------------------------------------------------------------------
 
-const UserMoreMenu = ({userId, userDetails,reload, accessRights})  => (
+const UserMoreMenu = ({userId, userDetails,reload, accessRights, getAllUser})  => (
     <>
       <Stack direction='row' spacing={2} justifyContent='center'>
         <ModifyUserDialog accessRights={accessRights} userDetails={userDetails} userId={userId} reload={reload} />
-        <DeleteUserDialog />
+        <DeleteUserDialog userDetails={userDetails} userId={userId} getAllUser={getAllUser} />
       </Stack>
     </>
   )

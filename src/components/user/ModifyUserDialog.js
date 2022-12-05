@@ -16,7 +16,14 @@ import CustomizedSwitch from '../CustomizedComponents/CustomizedSwitch';
 
 const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
   const context = useContext(ThemeContext);
-  const [errors, setErrors] = useState(false);
+  const [errors, setErrors] = useState({
+    last_name: '',
+    first_name: '',
+    email: '',
+    backup_email: '',
+    phone_number: '',
+    user_access_rights: '',
+  });
   const [open, setOpen] = useState(false);
   const initialAccessRights = userDetails?.idDroitAcces
 
@@ -41,6 +48,15 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
     });
   };
 
+  const getClearedErrors = () => ({
+      last_name: '',
+      first_name: '',
+      email: '',
+      backup_email: '',
+      phone_number: '',
+      user_access_rights: [],
+    });
+
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -64,13 +80,13 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
       temp.email = fieldValues.email ? '' : 'Ce champ est requis.';
       if (fieldValues.email) temp.email = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(fieldValues.email) ? '' : 'Email invalide.';
     }
-    // if ('backup_email' in fieldValues) {
-    //   temp.backup_email = fieldValues.backup_email ? "" : "Ce champ est requis.";
-    //   if (fieldValues.backup_email)
-    //     temp.backup_email = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(fieldValues.backup_email)
-    //       ? ""
-    //       : "Email invalide.";
-    // };
+    if ('backup_email' in fieldValues) {
+      temp.backup_email = fieldValues.backup_email ? "" : "Ce champ est requis.";
+      if (fieldValues.backup_email)
+        temp.backup_email = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(fieldValues.backup_email)
+          ? ""
+          : "Email invalide.";
+    };
     if ('phone_number' in fieldValues) temp.phone_number = fieldValues.phone_number ? '' : 'Ce champ est requis.';
 
     setErrors({
@@ -79,13 +95,14 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
   };
 
   const formIsValid = (newUser) => {
+    const errorsTemp = { ...errors, email: '', backup_email: '', user_access_rights: '' };
     const isValid =
       newUser.first_name &&
       newUser.last_name &&
       newUser.email &&
       newUser.backup_email &&
       newUser.phone_number &&
-      Object.values(errors).every((x) => x === '');
+      Object.values(errorsTemp).every((x) => x === '');
     return isValid;
   };
   const handleClickOpen = () => {
@@ -102,6 +119,7 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
       nom: user.last_name,
       prenom: user.first_name,
       email: user.email,
+      backup_email: user.backup_email,
       idDroitAcces: user.user_access_rights
     };
     return payload;
@@ -124,6 +142,7 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
       const payloadToSend = formatPayloadToSend()
       updateUser(payloadToSend)
         .then(async(result) => {
+          console.log(result.data);
           if (result.data.status === 200) {
             await addAccessRights(user?.id, user?.user_access_rights)
             setOpen(false);
@@ -133,6 +152,7 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
           } else {
             context.changeResultErrorMessage('Une erreur est servenue lors de la modification des données');
             context.showResultError(true);
+            setErrors({ ...getClearedErrors(), ...result.data.errors });
           }
         })
         .catch((e) => {

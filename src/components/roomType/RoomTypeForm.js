@@ -141,13 +141,14 @@ const RoomTypeForm = ({
   const getListEquipments = () => {
     fetchListEquipments()
     .then(result => {
+      // console.log(result.data);
       const equipmentsTemp = [ ...result.data.data ];
       equipmentsTemp.forEach(equipment => {
         equipment.checked = false
       });
       setEquipments(equipmentsTemp);
     })
-    .catch(err => console.error(err));
+    // .catch(err => console.error(err));
   };
 
   const getListRatePlans = () => {

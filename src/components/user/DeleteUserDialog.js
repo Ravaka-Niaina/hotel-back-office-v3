@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {Link as RouterLink} from "react-router-dom";
 // material
 import {
@@ -9,12 +9,15 @@ import {
   DialogActions,
   Button,
 } from '@mui/material';
+import { sendDeletePartner } from '../../services/User';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
+import { ThemeContext } from '../context/Wrapper';
 import Iconify from '../Iconify';
 
-const DeleteUserDialog = () => {
+const DeleteUserDialog = ({ userDetails, userId, getAllUser }) => {
   const [open, setOpen] = useState(false);
+  const context = useContext(ThemeContext);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -23,7 +26,21 @@ const DeleteUserDialog = () => {
     setOpen(false);
   };
 
-  const deleteUser = async () => {};
+  const deletePartner = (e) => {
+    sendDeletePartner(userId)
+    .then(res => {
+      setOpen(false);
+      if (res.data.status === 200) {
+        getAllUser();
+        context.changeResultSuccessMessage('Suppression effectuée');
+        context.showResultSuccess(true);
+      } else {
+        context.changeResultErrorMessage('Une erreur s\'est produite');
+        context.showResultError(true);
+      }
+    });
+  };
+
   return (
     <>
       <CustomizedIconButton variant="contained" onClick={handleClickOpen}>
@@ -40,12 +57,12 @@ const DeleteUserDialog = () => {
         </DialogTitle>
         <DialogContent sx={{ backgroundColor: '#D6E3F3' }}>
           <DialogContentText id="alert-dialog-description">
-            Voulez vous vraiment supprimer l'utilisateur "xxx" ?
+            Voulez vous vraiment supprimer l'utilisateur {`"${ userDetails.prenom } ${ userDetails.nom }"`} ?
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#D6E3F3' }}>
           <Button onClick={handleClose}>Annuler</Button>
-          <CustomizedButton handleClick={deleteUser} text={'Supprimer'} component={RouterLink} to="#"/>
+          <CustomizedButton onClick={deletePartner} text={'Supprimer'} component={RouterLink} to="#"/>
         </DialogActions>
       </Dialog>
     </>
