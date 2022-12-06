@@ -152,7 +152,7 @@ const CreateOrDeleteHotel = () => {
                       <TableBody>
                         {hotelList.map((row,i) => {
                           const { name, address, link } = row;
-
+                          
                           const isItemSelected = selected.indexOf(name) !== -1;
 
                           return (
