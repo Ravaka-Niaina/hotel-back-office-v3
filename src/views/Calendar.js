@@ -196,7 +196,7 @@ const Calendar = () => {
                     </CustomizedPaperOutside>
                 </Stack>
                 {
-                    loading && roomList.length<1 && (<CalendarEditorSkeleton />)
+                    loading && roomList.length < 1 && (<CalendarEditorSkeleton />)
                 }
                 {
                     roomList.map((room,i)=>

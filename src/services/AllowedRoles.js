@@ -60,6 +60,30 @@ export const getAllowedRoles = (pageSectionPath) => {
     {
       path: '/dashboard/emailModel',
       allowedRoles: ['superAdmin','admin'],
+    },
+    {
+      path: '/dashboard/historic',
+      allowedRoles: ['superAdmin', 'admin'],
+    },
+    {
+      path: '/dashboard/historic/roomType',
+      allowedRoles: ['superAdmin', 'admin'],
+    },
+    {
+      path: '/dashboard/historic/ratePlan',
+      allowedRoles: ['superAdmin', 'admin'],
+    },
+    {
+      path: '/dashboard/historic/availability',
+      allowedRoles: ['superAdmin', 'admin'],
+    },
+    {
+      path: '/dashboard/historic/promotion',
+      allowedRoles: ['superAdmin', 'admin'],
+    },
+    {
+      path: '/dashboard/historic/politic',
+      allowedRoles: ['superAdmin', 'admin'],
     }
   ];
 

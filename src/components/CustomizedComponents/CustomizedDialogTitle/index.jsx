@@ -1,3 +1,4 @@
+import React from 'react';
 import { DialogTitle, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import CustomizedTitle from '../CustomizedTitle';

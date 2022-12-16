@@ -1,9 +1,10 @@
+import React, { useCallback, useEffect, useState, useContext } from 'react';
 import { Stack, Button, Dialog, DialogContent, DialogActions } from '@mui/material';
 import ReactCrop from 'react-image-crop';
 import { useDropzone } from 'react-dropzone';
 import 'react-image-crop/dist/ReactCrop.css';
 import PropTypes from 'prop-types'
-import { useCallback, useEffect, useState, useContext } from 'react';
+
 import CancelIcon from '@mui/icons-material/Cancel';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
