@@ -31,7 +31,11 @@ const RapportApp = lazy(() => import('../../views/RapportApp'));
 const EmailModel = lazy(() => import('../../views/EmailModel'));
 const EmailModelOld = lazy(() => import('../../views/EmailModelOld'));
 const Booking = lazy(() => import('../../views/Booking'));
-
+const HistoricRoomType = lazy(() => import('../../components/historic/HistoricRoomType'));
+const HistoricRatePlan = lazy(() => import('../../components/historic/HistoricRatePlan'));
+const HistoricAvailability = lazy(() => import('../../components/historic/HistoricAvailability'));
+const HistoricPromotion = lazy(() => import('../../components/historic/HistoricPromotion'));
+const HistoricPolitic = lazy(() => import('../../components/historic/HistoricPolitic'));
 
 
 
@@ -107,6 +111,26 @@ export default function Router() {
         {
           path: 'chooseHotelToManage',
           element: <Protected child={<ChooseHotelToManage />} allowedRoles={getAllowedRoles(`${dashboardPath}/hotel`)} />,
+        },
+        {
+          path: 'historic/roomType',
+          element: <Protected child={<HistoricRoomType />} allowedRoles={getAllowedRoles(`${dashboardPath}/historic/roomType`)} />,
+        },
+        {
+          path: 'historic/ratePlan',
+          element: <Protected child={<HistoricRatePlan />} allowedRoles={getAllowedRoles(`${dashboardPath}/historic/ratePlan`)} />,
+        },
+        {
+          path: 'historic/availability',
+          element: <Protected child={<HistoricAvailability />} allowedRoles={getAllowedRoles(`${dashboardPath}/historic/availability`)} />,
+        },
+        {
+          path: 'historic/promotion',
+          element: <Protected child={<HistoricPromotion />} allowedRoles={getAllowedRoles(`${dashboardPath}/historic/promotion`)} />,
+        },
+        {
+          path: 'historic/politic',
+          element: <Protected child={<HistoricPolitic />} allowedRoles={getAllowedRoles(`${dashboardPath}/historic/politic`)} />,
         },
         // {
         //   path: 'emailModel',

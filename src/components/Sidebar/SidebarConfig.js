@@ -118,6 +118,39 @@ export const getSidebarConfig = async (context) => {
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/emailModel')),
     },
     {
+      title: 'Historique modifications',
+      path: '/dashboard/historic',
+      icon: getIcon('material-symbols:menu-book-rounded'),
+      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/historic')),
+      children: [
+        {
+          title: 'Type chambre',
+          path: '/dashboard/historic/roomType',
+          userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/historic/roomType')),
+        },
+        {
+          title: 'Plan tarifaire',
+          path: '/dashboard/historic/ratePlan',
+          userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/historic/ratePlan')),
+        },
+        {
+          title: 'Disponibilité',
+          path: '/dashboard/historic/availability',
+          userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/historic/ratePlan')),
+        },
+        {
+          title: 'Promotion',
+          path: '/dashboard/historic/promotion',
+          userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/historic/promotion')),
+        },
+        {
+          title: 'Politic',
+          path: '/dashboard/historic/politic',
+          userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/historic/politic')),
+        }
+      ]
+    },
+    {
       title: 'login',
       path: '/login',
       icon: getIcon('eva:lock-fill'),

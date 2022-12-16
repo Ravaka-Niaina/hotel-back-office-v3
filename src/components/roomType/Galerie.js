@@ -4,7 +4,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/jsx-key */
 /* eslint-disable react/jsx-no-bind */
-import { useEffect , useState } from 'react';
+import React, { useEffect , useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -74,7 +74,6 @@ const Galerie = ({showGalerie, setShowGalerie, photoSortie, setPhotoSortie, prev
     function getContentGallery(){
         getPhotosOfGallery()
         .then(result => {
-            console.log(result);
             const {data} = result;
             if(data.status === 200){
                 const tmpPreview = [];

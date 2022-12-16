@@ -251,7 +251,13 @@ export default function User() {
                         <TableCellStyled align="left">{isActive ? 'Oui' : 'Non'}</TableCellStyled>
 
                         <TableCellStyled align="right">
-                          {row && <UserMoreMenu accessRights={accessRights} userDetails={row} userId={_id} reload={reload}/>}
+                          {row && <UserMoreMenu 
+                            accessRights={accessRights} 
+                            userDetails={row} 
+                            userId={_id} 
+                            reload={reload}
+                            getAllUser={getAllUser}  
+                          />}
                         </TableCellStyled>
                       </TableRow>
                     );

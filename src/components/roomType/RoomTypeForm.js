@@ -129,7 +129,6 @@ const RoomTypeForm = ({
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // console.log(value);
     setRoomType((roomType) => ({ ...roomType, [name]: value }));
     setErrors({ ...errors, [name]: value.trim() ? '' : 'Ce champ est requis' });
     // validate({ [name]: value });
@@ -160,7 +159,7 @@ const RoomTypeForm = ({
     })
     .then(result => {
       const ratePlansTemp = [];
-      result.data.list.forEach(({ _id, nom, }) => {
+      result.data.list?.forEach(({ _id, nom, }) => {
         ratePlansTemp.push({
           _id,
           name: nom,
@@ -210,11 +209,13 @@ const RoomTypeForm = ({
         setEquipments(equipements);
         setPhotoSortie(photo);
 
-        const previewTmp = [];
-        photo.forEach((preview) => {
-          previewTmp.push(`${config.host}/${preview}`);
-        });
-        setPreviewSortie(previewTmp);
+        if (photo) {
+          const previewTmp = [];
+          photo.forEach((preview) => {
+            previewTmp.push(`${config.host}/${preview}`);
+          });
+          setPreviewSortie(previewTmp);
+        }
       }
     })
     .catch(err => console.error(err));
@@ -313,7 +314,6 @@ const RoomTypeForm = ({
     };
     createRoomType(payload)
       .then(result => {
-        console.log(result);
         if (result.data.status === 200) {
           setOpen(false);
           context.changeResultSuccessMessage('Enregistrement inséré avec succès');
@@ -374,7 +374,6 @@ const RoomTypeForm = ({
     };
     updateRoomType(payload)
     .then(result => {
-      console.log(result);
       if (result.data.status === 200) {
         setOpen(false);
         context.changeResultSuccessMessage('Enregistrement inséré avec succès');
@@ -622,7 +621,7 @@ const RoomTypeForm = ({
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px' }}>
           <Button onClick={handleClose}>Annuler</Button>
-          <CustomizedButton onClick={isUpdate ? sendUpdateRoomType : validateAddRoomType} text={`Valider`} component={RouterLink} to="#" />
+          <CustomizedButton onClick={isUpdate ? sendUpdateRoomType : validateAddRoomType} text={`Valider`} component={RouterLink} to="#" data-testid="btnValidate" />
         </DialogActions>
       </Dialog>
     </>
