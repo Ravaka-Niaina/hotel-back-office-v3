@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Box, Table, Stack, TableRow, TableBody, Container, Typography, TableCell, TableContainer, TablePagination } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
+import { getHistoricModifRoomType } from '../../services/HistoricModifRoomType';
 import AddRatePlanDialog from '../../components/ratePlan/AddRatePlanDialog';
 import ModifyRatePlanDialog from '../../components/ratePlan/ModifyRatePlanDialog';
 import RatePlanMoreMenu from '../../components/ratePlan/RatePlanMoreMenu';
@@ -76,6 +77,11 @@ const mockupHistoricRoomTypeList = [
 ];
 
 const HistoricRoomType = () => {
+  /*
+  nbContentPerPage : 5
+  nbPage : 1
+  nbResult : 4 *
+  */
   const context = useContext(ThemeContext);
   const order = 'asc';
   const selected = [];
@@ -97,10 +103,15 @@ const HistoricRoomType = () => {
   const [loading, setLoading] = useState(false);
 
   const handleChangePage = (e, p, row = rowsPerPage) => {
+    console.log(`page = ${  p}`);
+    setPage(p + 1);
+    fetchHistoricModifRoomType({nbContent: row, numPage: p + 1});
   }
   const handleChangeRowsPerPage = (e) => {
     const row = parseInt(e.target.value, 10);
     handleChangePage(null, 0, row);
+    setRowsPerPage(row);
+    fetchHistoricModifRoomType({nbContent: row, numPage: 1});
   };
 
   const handleFilterByName = (event) => {
@@ -122,9 +133,29 @@ const HistoricRoomType = () => {
       setLocation('list');
     }
   };
+
+  const fetchHistoricModifRoomType = ({ nbContent = 5, numPage = 1 }) => {
+    const payload = {
+      nbContent,
+      numPage,
+    };
+    setRowsPerPage(nbContent);
+    setPage(numPage);
+
+    getHistoricModifRoomType(payload)
+      .then(result => {
+        console.log(result);
+        setHistoricRoomTypeList(result.data.list);
+        setResultCount(result.data.nbResult);
+        setRowsPerPage(result.data.nbContentPerPage);
+        setPage(numPage);
+      })
+      .catch(err => console.error(err));
+  };
   
   useEffect(() => {
-    setHistoricRoomTypeList(mockupHistoricRoomTypeList);
+    // setHistoricRoomTypeList(mockupHistoricRoomTypeList);
+    fetchHistoricModifRoomType({});
   }, []);
 
   return (
@@ -138,10 +169,10 @@ const HistoricRoomType = () => {
                   <CustomizedButton onClick={() => navigate('addForm')} text='Ajouter' component={RouterLink} to="#" />
                 </Stack>
                 <CustomizedPaperOutside sx={{ ...lightBackgroundToTop, background: '#E3EDF7', p: 5, minHeight: '100vh' }}>
-                  <UserListToolbar 
+                  {/* <UserListToolbar 
                     numSelected={selected.length} 
                     onFilterName={handleFilterByName}
-                  />
+                  /> */}
                   {historicRoomTypeList && <Scrollbar>
                     <TableContainer sx={{ minWidth: 800 }}>
                       <Table>
@@ -166,6 +197,7 @@ const HistoricRoomType = () => {
                           }
                           {historicRoomTypeList.map((row) => {
                             const { 
+                              _id,
                               idRoomType, 
                               roomTypeName, 
                               modifier, 
@@ -189,8 +221,16 @@ const HistoricRoomType = () => {
                                 <TableCellStyled align="left">{modifier}</TableCellStyled>
                                 <TableCellStyled align="left">{modificationDate}</TableCellStyled>
                                 <TableCellStyled align="left">{modifiedField}</TableCellStyled>
-                                <TableCellStyled align="left">{oldValue}</TableCellStyled>
-                                <TableCellStyled align="left">{newValue}</TableCellStyled>
+                                <TableCellStyled align="left">{
+                                  Array.isArray(oldValue)
+                                  ? <ul>{oldValue.map(oldVal => <li key={oldVal}>{oldVal}</li>)}</ul>
+                                  : <>{oldValue}</>
+                                }</TableCellStyled>
+                                <TableCellStyled align="left">{
+                                  Array.isArray(newValue)
+                                  ? <ul>{newValue.map(newVal => <li key={newVal}>{newVal}</li>)}</ul>
+                                  : <>{newValue}</>  
+                                }</TableCellStyled>
                               </TableRow>
                             );
                           })}
