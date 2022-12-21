@@ -28,54 +28,6 @@ const TABLE_HEAD = [
   { id: 'newValue', label: 'nouvelle valeur', alignleft: true },
 ];
 
-const mockupHistoricRoomTypeList = [
-  {
-    idRoomType: 'shkdh20u0shdlksjs',
-    roomTypeName: 'Chambre standard',
-    modifier: 'Ravaka Niaina Ratefiarivony',
-    modificationDate: '31-12-2022',
-    modifiedField: 'nom',
-    oldValue: 'Chambre Deluxe',
-    newValue: 'Chambre standard'
-  },
-  {
-    idRoomType: 'shkdh20u0shdlksjs',
-    roomTypeName: 'Chambre standard',
-    modifier: 'Ravaka Niaina Ratefiarivony',
-    modificationDate: '31-12-2022',
-    modifiedField: 'nom',
-    oldValue: 'Chambre Deluxe',
-    newValue: 'Chambre standard'
-  },
-  {
-    idRoomType: 'shkdh20u0shdlksjs',
-    roomTypeName: 'Chambre standard',
-    modifier: 'Ravaka Niaina Ratefiarivony',
-    modificationDate: '31-12-2022',
-    modifiedField: 'nom',
-    oldValue: 'Chambre Deluxe',
-    newValue: 'Chambre standard'
-  },
-  {
-    idRoomType: 'shkdh20u0shdlksjs',
-    roomTypeName: 'Chambre standard',
-    modifier: 'Ravaka Niaina Ratefiarivony',
-    modificationDate: '31-12-2022',
-    modifiedField: 'nom',
-    oldValue: 'Chambre Deluxe',
-    newValue: 'Chambre standard'
-  },
-  {
-    idRoomType: 'shkdh20u0shdlksjs',
-    roomTypeName: 'Chambre standard',
-    modifier: 'Ravaka Niaina Ratefiarivony',
-    modificationDate: '31-12-2022',
-    modifiedField: 'nom',
-    oldValue: 'Chambre Deluxe',
-    newValue: 'Chambre standard'
-  },
-];
-
 const HistoricRoomType = () => {
   /*
   nbContentPerPage : 5
