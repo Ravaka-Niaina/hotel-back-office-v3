@@ -40,10 +40,11 @@ export const getPromotionDetail = (promotionId) =>
       hotel_id: localStorage.getItem('hotel_id'),
     },
   });
-export const updatePromotion = (payload, idToken) => 
+export const updatePromotion = (payload) => 
   axios.post(`${config.host}/promotion/updateP/`, payload, {
     timeout: 10000,
     headers: {
-      Authorization: idToken,
+      Authorization: localStorage.getItem('id_token'),
+      hotel_id: localStorage.getItem('hotel_id'),
     },
   });

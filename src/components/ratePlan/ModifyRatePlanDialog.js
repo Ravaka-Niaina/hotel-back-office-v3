@@ -84,9 +84,9 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
           setRatePlan({
             _id: ratePlanId,
             french_name: result.data.planTarifaire.nom,
-            english_name: result.data.planTarifaire.nom,
+            english_name: result.data.planTarifaire.name,
             french_description: result.data.planTarifaire.description,
-            english_description: result.data.planTarifaire.description,
+            english_description: result.data.planTarifaire.desc,
             booking_all_time: result.data.planTarifaire.reservAToutMoment ? 'true' : 'false',
             start_date_of_booking: result.data.planTarifaire.dateReservation.debut,
             end_date_of_booking: result.data.planTarifaire.dateReservation.fin,
@@ -173,7 +173,9 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
     const payloadToSend = {
       _id: ratePlanId,
       nom: ratePlan.french_name,
+      name: ratePlan.english_name,
       description: ratePlan.french_description,
+      desc: ratePlan.english_description,
       dateReservation: {
         debut: ratePlan.booking_all_time === 'true' ? '' : ratePlan.start_date_of_booking,
         fin: ratePlan.booking_all_time === 'true' ? '' : ratePlan.end_date_of_booking,
@@ -591,7 +593,7 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
           <Button onClick={handleClose} sx={{ fontSize: 12 , textTransform:'none' }}>
             Annuler
           </Button>
-          <CustomizedButton text="Enregistrer modification" onClick={modifyRatePlan} component={RouterLink} to="#"/>
+          <CustomizedButton text="Enregistrer modification" onClick={modifyRatePlan} />
         </Stack>  
       </CustomizedPaperOutside>
     </>

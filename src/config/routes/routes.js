@@ -31,11 +31,11 @@ const RapportApp = lazy(() => import('../../views/RapportApp'));
 const EmailModel = lazy(() => import('../../views/EmailModel'));
 const EmailModelOld = lazy(() => import('../../views/EmailModelOld'));
 const Booking = lazy(() => import('../../views/Booking'));
-const HistoricRoomType = lazy(() => import('../../components/historic/HistoricRoomType'));
-const HistoricRatePlan = lazy(() => import('../../components/historic/HistoricRatePlan'));
-const HistoricAvailability = lazy(() => import('../../components/historic/HistoricAvailability'));
-const HistoricPromotion = lazy(() => import('../../components/historic/HistoricPromotion'));
-const HistoricPolitic = lazy(() => import('../../components/historic/HistoricPolitic'));
+const HistoricRoomType = lazy(() => import('../../views/historic/HistoricRoomType'));
+const HistoricRatePlan = lazy(() => import('../../views/historic/HistoricRatePlan'));
+const HistoricAvailability = lazy(() => import('../../views/historic/HistoricAvailability'));
+const HistoricPromotion = lazy(() => import('../../views/historic/HistoricPromotion'));
+const HistoricPolitic = lazy(() => import('../../views/historic/HistoricPolitic'));
 
 
 
