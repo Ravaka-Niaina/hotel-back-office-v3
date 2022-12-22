@@ -238,8 +238,7 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
       && (newPromotion.last_day !== '' || !newPromotion.specific_days_of_stay)
       && (newPromotion.first_day !== '' || !newPromotion.specific_days_of_stay)
       && Object.values(errors).every((x) => x === '');
-
-    console.log(isValid);
+      
     return isValid;
   };
 
@@ -376,12 +375,10 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
   const modifyPromotion = async () => {
     validate(promotion);
     if(formIsValid(promotion) || true) {
-      console.log('here');
       context.showLoader(true);
-      const idToken = localStorage.getItem('id_token');
-      updatePromotion(formatPayloadToSend(), idToken)
+      updatePromotion(formatPayloadToSend())
         .then((result) => {
-          // console.log(result);
+          console.log(result);
           if (result.data.status === 200) {
             handleClose();
             context.changeResultSuccessMessage('Enregistrement mis à jour avec succès.');
