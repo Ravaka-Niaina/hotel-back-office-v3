@@ -26,11 +26,12 @@ export const deletePolitic = (payload) =>
     }
   })
 
-export const modifyPolitic = (payload, idPolitic, idToken) =>
+export const modifyPolitic = (payload, idPolitic) =>
   axios.post(`${config.host}/politique/updateP/${idPolitic}`, payload, {
     timeout: 10000,
     headers: {
-        Authorization: idToken,
+      Authorization: localStorage.getItem("id_token"),
+      hotel_id: localStorage.getItem('hotel_id'),
     },
 })
 // export const updatePolitic = (payload) =>
