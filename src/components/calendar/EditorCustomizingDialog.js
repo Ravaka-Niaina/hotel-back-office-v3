@@ -5,6 +5,7 @@ import moment from 'moment';
 import { Dialog,DialogContent, Alert, Stack, FormControlLabel, RadioGroup , Grid } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { DateRangePicker } from 'rsuite';
+import "rsuite/dist/rsuite.min.css";
 
 import EditIcon from '@mui/icons-material/Edit';
 import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
@@ -22,6 +23,7 @@ import { ThemeContext } from '../context/Wrapper';
 import {configPrix} from '../../services/TCTarif';
 
 import './index.css';
+import './dateRangePicker.module.css';
 
 const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
     const today = new Date();
@@ -254,16 +256,20 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
             >
                 <CustomizedDialogTitle   text={`Editor (${chambre.nom})`} />
                 <DialogContent 
-                    style={{ 
+                    style={{
                         background: 'linear-gradient(308.48deg, rgba(255, 255, 255, 0.53) 2.36%, rgba(255, 255, 255, 0) 61.95%), #E3EDF7',
                         paddingTop: 15 
                     }}
                 >
                     <Stack spacing={5} style={{ paddingLeft: '2em', paddingRight: '2em' }}>
+                        <div id="pickerHere" />
                         <DateRangePicker
+                            container={() => document.getElementById("pickerHere")}
+                            onClick={() => setOpenPicker(!openPicker)}
+                            editable={false}
                             open={openPicker}
                             placement='autoVerticalStart'
-                            style={{ border: '2px #2476d2 solid', borderRadius: '8px'}}
+                            style={{ border: '2px #2476d2 solid', borderRadius: '8px', zIndex: 999}}
                             value={[dateRange[0].toDate(), dateRange[1].toDate()]}
                             onChange={(val) => {
                                 const newValue = JSON.parse(JSON.stringify(val));
