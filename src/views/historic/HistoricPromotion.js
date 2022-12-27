@@ -20,7 +20,7 @@ import CustomizedIconButton from '../../components/CustomizedComponents/Customiz
 import Iconify from '../../components/Iconify';
 
 const TABLE_HEAD = [
-  { id: 'promotionName', label: 'nom type chambre', alignleft: true },
+  { id: 'promotionName', label: 'nom promotion', alignleft: true },
   { id: 'modifier', label: 'modificateur', alignleft: true },
   { id: 'modificationDate', label: 'date modification', alignleft: true },
   { id: 'modifiedField', label: 'champ modifié', alignleft: true },
