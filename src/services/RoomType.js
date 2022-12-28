@@ -49,9 +49,11 @@ export const deleteRoomType = (payload) =>
 export const changeOpenStatus = (payload) =>
   axios.post(`${config.host}/typeChambre/saveAvailability`, payload, {
     timeout: 10000,
-    // headers: {
-    //   isPartner: true,
-    // },
+    headers: {
+      Authorization: localStorage.getItem("id_token"),
+      partner_id: localStorage.getItem("partner_id"),
+      hotel_id: localStorage.getItem('hotel_id')
+    },
   });
   
 export const fetchListEquipments = () =>
