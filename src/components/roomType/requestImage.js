@@ -15,7 +15,7 @@ export function uploadImage({method, url, data, callback, setProgress, errorCall
         axios({
             method,      
             url: config.host + url,
-            withCredentials: true,
+            // withCredentials: true,
             data: formData,
             headers,
             onUploadProgress: progressEvent => {
