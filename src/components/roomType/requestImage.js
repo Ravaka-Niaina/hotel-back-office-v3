@@ -11,6 +11,7 @@ export function uploadImage({method, url, data, callback, setProgress, errorCall
             "Content-Type": "multipart/form-data; boundary=&"
             // "Content-Type": "multipart/form-data"
         };
+        console.log(config.host + url);
         
         axios({
             method,      
