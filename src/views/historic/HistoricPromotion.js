@@ -2,22 +2,16 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Box, Table, Stack, TableRow, TableBody, Container, Typography, TableCell, TableContainer, TablePagination } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { getHistoricModifPromotion } from '../../services/HistoricModifPromotion';
-import AddRatePlanDialog from '../../components/ratePlan/AddRatePlanDialog';
-import ModifyRatePlanDialog from '../../components/ratePlan/ModifyRatePlanDialog';
-import RatePlanMoreMenu from '../../components/ratePlan/RatePlanMoreMenu';
 import CustomizedCheckbox from '../../components/CustomizedComponents/CustomizedCheckbox';
 import TableCellStyled from '../../components/CustomizedComponents/CustomizedTableCell';
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
-import { ThemeContext } from '../../components/context/Wrapper';
-import { UserListHead, UserListToolbar } from '../../components/table';
+import { UserListHead, } from '../../components/table';
 import CustomizedTitle from '../../components/CustomizedComponents/CustomizedTitle';
 import CustomizedPaperOutside from '../../components/CustomizedComponents/CustomizedPaperOutside';
 import CustomizedButton from '../../components/CustomizedComponents/CustomizedButton';
 import CustomizedLinearProgress from '../../components/CustomizedComponents/CustomizedLinearProgress';
 import { lightBackgroundToTop } from '../../components/CustomizedComponents/NeumorphismTheme';
-import CustomizedIconButton from '../../components/CustomizedComponents/CustomizedIconButton';
-import Iconify from '../../components/Iconify';
 
 const TABLE_HEAD = [
   { id: 'promotionName', label: 'nom promotion', alignleft: true },
@@ -34,7 +28,6 @@ const HistoricPromotion = () => {
   nbPage : 1
   nbResult : 4 *
   */
-  const context = useContext(ThemeContext);
   const order = 'asc';
   const selected = [];
   const orderBy = 'name';
@@ -118,7 +111,6 @@ const HistoricPromotion = () => {
               <>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                   <CustomizedTitle text="Historique modifications promotions" size={20} />
-                  <CustomizedButton onClick={() => navigate('addForm')} text='Ajouter' component={RouterLink} to="#" />
                 </Stack>
                 <CustomizedPaperOutside sx={{ ...lightBackgroundToTop, background: '#E3EDF7', p: 5, minHeight: '100vh' }}>
                   {/* <UserListToolbar 
