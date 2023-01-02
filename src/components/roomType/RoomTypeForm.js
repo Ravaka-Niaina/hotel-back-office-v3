@@ -82,6 +82,21 @@ const RoomTypeForm = ({
       imgCrop: '',
     });
 
+    setErrors({
+      nameInFrench: '',
+      nameInEnglish: '',
+      numberOfRoom: '',
+      areaSize: '',
+      stageNumber: '',
+      adultNumber: '',
+      childNumber: '',
+      descriptionInFrench: '',
+      descriptionInEnglish: '',
+      videos: '',
+      photo: '',
+      imgCrop: '',
+    });
+
     const equipmentsTmp = [...equipments];
     equipmentsTmp.forEach(equipment => {
       equipment.checked = false;
@@ -113,6 +128,7 @@ const RoomTypeForm = ({
   }, []);
   const handleClose = () => {
     setOpen(false);
+    clearForm();
     
     const equipmentsTemp = [ ...equipments ];
     equipmentsTemp.forEach(equipment => {
@@ -278,6 +294,89 @@ const RoomTypeForm = ({
     setErrors(clearedErrors);
   };
 
+  const validate = () => {
+    console.log({
+      _id: roomTypeId,
+      nom: roomType.nameInFrench,
+      name: roomType.nameInEnglish,
+      chambreTotal: roomType.numberOfRoom,
+      superficie: roomType.areaSize,
+      etage: roomType.stageNumber,
+      nbAdulte: roomType.adultNumber,
+      nbEnfant: roomType.childNumber,
+      description: roomType.descriptionInFrench,
+      desc: roomType.descriptionInEnglish,
+      photo: photoSortie, 
+      videos: [],
+    });
+    if (roomType.nameInFrench.trim() === '') {
+      context.changeResultErrorMessage("Vous avez oublié de donner le nom en français");
+      context.showResultError(true);
+      return false;
+    }
+
+    if (roomType.nameInEnglish.trim() === '') {
+      context.changeResultErrorMessage("Vous avez oublié de donner le nom en anglais");
+      context.showResultError(true);
+      return false;
+    }
+
+    if (roomType.numberOfRoom.trim() === '') {
+      context.changeResultErrorMessage("Vous avez oublié de donner le nombre de chambres");
+      context.showResultError(true);
+      return false;
+    }
+
+    if (roomType.areaSize.trim() === '') {
+      context.changeResultErrorMessage("Vous avez oublié de donner la superficie");
+      context.showResultError(true);
+      return false;
+    }
+
+    if (roomType.stageNumber.trim() === '') {
+      context.changeResultErrorMessage("Vous avez oublié de donner le nombre d'étages");
+      context.showResultError(true);
+      return false;
+    }
+
+    if (roomType.adultNumber.trim() === '') {
+      context.changeResultErrorMessage("Vous avez oublié de donner le nombre d'adultes");
+      context.showResultError(true);
+      return false;
+    }
+
+    if (roomType.childNumber.trim() === '') {
+      context.changeResultErrorMessage("Vous avez oublié de donner le nombre d'enfants");
+      context.showResultError(true);
+      return false;
+    }
+
+    if (roomType.descriptionInFrench.trim() === '') {
+      context.changeResultErrorMessage("Vous avez oublié de donner la description en français");
+      context.showResultError(true);
+      return false;
+    }
+
+    if (roomType.descriptionInEnglish.trim() === '') {
+      context.changeResultErrorMessage("Vous avez oublié de donner la description en anglais");
+      context.showResultError(true);
+      return false;
+    }
+
+    if (output === null) {
+      context.changeResultErrorMessage("Vous avez oublié d'ajouter une image pour l'aperçu de la chambre");
+      context.showResultError(true);
+      return false;
+    }
+    if (photoSortie.length === 0) {
+      context.changeResultErrorMessage("Vous avez oublié de choisir des photos à partir de la galerie");
+      context.showResultError(true);
+      return false;
+    }
+    
+    return true;
+  };
+
   const addRoomType = () => {
     context.showLoader(true);
     const equipmentsId = [];
@@ -312,6 +411,7 @@ const RoomTypeForm = ({
         videos: [],
       }
     };
+    
     createRoomType(payload)
       .then(result => {
         if (result.data.status === 200) {
@@ -321,12 +421,14 @@ const RoomTypeForm = ({
           clearForm();
           reload();
         } else {
+          validate()
           setExistingErrors(result.data.errors);
-          context.changeResultErrorMessage("Une erreur interne s'est produite");
-          context.showResultError(true);
+          // context.changeResultErrorMessage("Une erreur interne s'est produite");
+          // context.showResultError(true);
         }
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err);
         context.changeResultErrorMessage("Une erreur interne s'est produite");
         context.showResultError(true);
       }).finally(() => {
@@ -608,7 +710,7 @@ const RoomTypeForm = ({
           
           <Stack sx={{ p: 2 }} direction="row" spacing={2}>
             <CustomizedButton text={`Choisir à partir de la gallerie`} onClick={() => setShowGalerie(true)} component={RouterLink} to="#"/>
-            <CustomizedButton text={`Uploader une image`} component={RouterLink} to="#"/>
+            {/* <CustomizedButton text={`Uploader une image`} component={RouterLink} to="#"/> */}
           </Stack>
           <Galerie 
             showGalerie={showGalerie} 
