@@ -13,8 +13,10 @@ export const getRoomType = (roomTypeId) =>
   axios.get(`${config.host}/typeChambre/detailsChambre/${ roomTypeId }`, {
     timeout: 10000,
     headers: {
-      hotel_id: localStorage.getItem('hotel_id'),
-    }
+      Authorization: localStorage.getItem("id_token"),
+      partner_id: localStorage.getItem("partner_id"),
+      hotel_id: localStorage.getItem('hotel_id')
+    },
   });
 
 export const createRoomType = (payload) =>
