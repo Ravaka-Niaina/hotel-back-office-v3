@@ -269,7 +269,7 @@ const AddPoliticDialog = ({ reload }) => {
                   reload();
                 } else {
                   context.showLoader(false);
-                  context.changeResultErrorMessage(`Veuillez renseigner tous les champs avant de valider`);
+                  context.changeResultErrorMessage(datas.data.message || `Veuillez renseigner tous les champs avant de valider`);
                   context.showResultError(true);
                 }
               }
