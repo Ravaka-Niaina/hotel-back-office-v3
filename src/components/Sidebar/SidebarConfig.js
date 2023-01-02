@@ -144,7 +144,7 @@ export const getSidebarConfig = async (context) => {
           userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/historic/promotion')),
         },
         {
-          title: 'Politic',
+          title: 'Politique d\'annulation',
           path: '/dashboard/historic/politic',
           userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/historic/politic')),
         }

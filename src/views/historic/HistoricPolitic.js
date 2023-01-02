@@ -113,7 +113,6 @@ const HistoricPolitic = () => {
               <>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                   <CustomizedTitle text="Historique modifications politique d'annulation" size={20} />
-                  <CustomizedButton onClick={() => navigate('addForm')} text='Ajouter' component={RouterLink} to="#" />
                 </Stack>
                 <CustomizedPaperOutside sx={{ ...lightBackgroundToTop, background: '#E3EDF7', p: 5, minHeight: '100vh' }}>
                   {/* <UserListToolbar 
