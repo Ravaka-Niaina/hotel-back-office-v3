@@ -15,7 +15,15 @@ import config from '../../config/api';
 const maxWidth = 350;
 const maxHeight = 350;
 
-const AddImageCrop = ({addCropedImage, output, setOutput,imgCrop,}) => {
+const AddImageCrop = ({
+  addCropedImage, 
+  output, 
+  setOutput,
+  imgCrop,
+  removePreviewedImage,
+  previewedImage,
+  setPreviewedImage,
+}) => {
   const context = useContext(ThemeContext);
   const [open, setOpen] = useState(false);
   // functions to close and open the dialog of the image crop
@@ -28,10 +36,7 @@ const AddImageCrop = ({addCropedImage, output, setOutput,imgCrop,}) => {
     setSrc(null);
     setImage(null);
   };
-  const removePreviewedImage = () => {
-    setPreviewedImage(null);
-  };
-  const [previewedImage, setPreviewedImage] = useState(imgCrop ? `${config.host}/${imgCrop}` : null);
+  
   const [src, setSrc] = useState(null);
   const [image, setImage] = useState(null);
   const [crop, setCrop] = useState({
