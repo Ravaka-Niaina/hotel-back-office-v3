@@ -65,6 +65,7 @@ const RoomTypeForm = ({
   const [ratePlans, setRatePlans] = useState([]);
   const [photoSortie, setPhotoSortie] = useState([]);
   const [previewSortie, setPreviewSortie] = useState([]);
+  const [previewedImage, setPreviewedImage] = useState(imgCrop ? `${config.host}/${roomType.imgCrop}` : null);
 
   const clearForm = () => {
     setRoomType({
@@ -219,8 +220,9 @@ const RoomTypeForm = ({
           descriptionInEnglish: desc,
           videos,
           photo,
-          imgCrop: photoCrop,
+          imgCrop: photoCrop[0],
         });
+        setPreviewedImage(`${config.host}/${photoCrop[0]}`);
         setRatePlans(planTarifaire);
         setEquipments(equipements);
         setPhotoSortie(photo);
@@ -471,7 +473,7 @@ const RoomTypeForm = ({
       },
       imgCrop: {
         imageCrop: roomType.imgCrop,
-        isModifPhoto: false,
+        isModifPhoto: true,
       }
     };
     updateRoomType(payload)
@@ -492,6 +494,14 @@ const RoomTypeForm = ({
     }).finally(()=>{
       context.showLoader(false);
     });
+  };
+  console.log(roomType.imgCrop);
+  const removePreviewedImage = () => {
+    setRoomType({
+      ...roomType,
+      imgCrop: null,
+    });
+    setPreviewedImage(null);
   };
 
   return (
@@ -683,6 +693,9 @@ const RoomTypeForm = ({
               output={output}
               setOutput={setOutput}
               imgCrop={roomType.imgCrop}
+              removePreviewedImage={removePreviewedImage}
+              previewedImage={previewedImage}
+              setPreviewedImage={setPreviewedImage}
             />
           </Stack>
           <CustomizedTitle text='Image de la chambre' size={18} level={0} />
