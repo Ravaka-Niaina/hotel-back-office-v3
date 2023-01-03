@@ -266,7 +266,8 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
                         <DateRangePicker
                             container={() => document.getElementById("pickerHere")}
                             onClick={() => setOpenPicker(!openPicker)}
-                            editable={false}
+                            // editable={false}
+                            onOk={()=>setOpenPicker(false)}
                             open={openPicker}
                             placement='autoVerticalStart'
                             style={{ border: '2px #2476d2 solid', borderRadius: '8px', zIndex: 999}}
