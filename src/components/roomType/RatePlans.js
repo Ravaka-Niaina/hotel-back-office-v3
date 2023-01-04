@@ -19,7 +19,7 @@ const RatePlans = ({ ratePlans, setRatePlans }) => {
           ratePlans.map((ratePlan, i) => (
             <tr className={ ratePlan._id }>
               <td><Checkbox checked={ ratePlan.checked } onChange={() => switchCheckboxRatePlan(i)} /></td>
-              <td>{ ratePlan.nom }</td>
+              <td>{ ratePlan.name }</td>
             </tr>
           ))
         }
