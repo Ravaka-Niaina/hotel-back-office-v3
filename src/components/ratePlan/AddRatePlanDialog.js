@@ -127,6 +127,7 @@ const AddRatePlanDialog = ({ reload , navigate}) => {
   const formatPayloadToSend = () => {
     const payloadToSend = {
       nom: ratePlan.french_name,
+      name: ratePlan.english_name,
       description: ratePlan.french_description,
       dateReservation: {
         debut: ratePlan.booking_all_time === 'true' ? '' : ratePlan.start_date_of_booking,
@@ -158,6 +159,7 @@ const AddRatePlanDialog = ({ reload , navigate}) => {
         context.showLoader(true);
         createRatePlan(formatPayloadToSend())
           .then((result) => {
+            console.log(result.data);
             if (result.data.status === 200) {
               handleClose();
               reload();

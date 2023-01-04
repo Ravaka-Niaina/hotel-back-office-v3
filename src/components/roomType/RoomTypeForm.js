@@ -478,12 +478,14 @@ const RoomTypeForm = ({
     };
     updateRoomType(payload)
     .then(result => {
+      console.log(result);
       if (result.data.status === 200) {
         setOpen(false);
         context.changeResultSuccessMessage('Enregistrement inséré avec succès');
         context.showResultSuccess(true);
         reload();
       } else {
+        setExistingErrors(result.data.errors);
         context.changeResultErrorMessage("Une erreur interne s'est produite");
         context.showResultError(true);
       }
@@ -495,7 +497,6 @@ const RoomTypeForm = ({
       context.showLoader(false);
     });
   };
-  console.log(roomType.imgCrop);
   const removePreviewedImage = () => {
     setRoomType({
       ...roomType,
