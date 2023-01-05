@@ -748,7 +748,7 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
             <Stack sx={{ p: 2 }} direction="row" spacing={3}>
               <CustomizedInput
                 name='first_day'
-                value={promotion.specific_days_of_stay ? promotion.first_day : 999}
+                value={promotion.specific_days_of_stay ? promotion.first_day : 360}
                 onChange={(e) => handleChangeInputs3(e, 'first_day')}
                 id={promotion.specific_days_of_stay ? 'outlined-basic' : 'filled-disabled'}
                 type="number"
