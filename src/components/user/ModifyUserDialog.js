@@ -259,18 +259,21 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
               />
               <CustomizedLabel label={`Droits d'acces de l'utilisateur`} />
               <CustomizedCard sx={{ background: '#E3EDF7', p: 5 }}>
-                {accessRights &&
-                  accessRights.map((accessRight, index) => (
-                    <div key={index}>
-                      <CustomizedSwitch
-                        checked={user.user_access_rights.some(
-                          (userAccessRight) => userAccessRight === accessRight?._id
-                        )}
-                        onClick={() => handleModifyAccessRight(accessRight?._id)}
-                      />
-                      {accessRight?.nom}
-                    </div>
-                  ))}
+                <div style={{ columnCount: 2 }}>
+                  {accessRights &&
+                    accessRights.map((accessRight, index) => (
+                      <div key={index}>
+                        <CustomizedSwitch
+                          checked={user.user_access_rights.some(
+                            (userAccessRight) => userAccessRight === accessRight?._id
+                          )}
+                          onClick={() => handleModifyAccessRight(accessRight?._id)}
+                        />
+                        {accessRight?.nom}
+                      </div>
+                    ))
+                  }
+                </div>
               </CustomizedCard>
               {/* <button onClick={()=>{console.log(user?.user_access_rights)}}>Click</button> */}
             </Stack>
