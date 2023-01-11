@@ -37,6 +37,7 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
   });
 
   const fetchData = async () => {
+    console.log(userDetails);
     setUser({
       id: userDetails?._id,
       last_name: userDetails?.nom,
@@ -174,8 +175,22 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
   const handleModifyAccessRight = (idAccessRight) => {
     const tempUser = { ...user };
     const tempUserAccessRights = tempUser?.user_access_rights;
-    const newAccessRights = tempUserAccessRights.filter((accessRight) => accessRight !== idAccessRight);
-    if(newAccessRights.length === tempUserAccessRights.length) newAccessRights.push(idAccessRight)
+    let newAccessRights = tempUserAccessRights.filter((accessRight) => accessRight !== idAccessRight);
+    if (newAccessRights.length === tempUserAccessRights.length) {
+      if (idAccessRight === 'superAdmin' || idAccessRight === 'admin') {
+        for (let i = 0; i < accessRights.length; i += 1) {
+          const accessRightAlreadyChecked = newAccessRights.some(newAccessRight => 
+            accessRights[i]._id === newAccessRight 
+            || accessRights[i]._id === idAccessRight);
+          if (!accessRightAlreadyChecked) {
+            newAccessRights.push(accessRights[i]._id);
+          }
+        }
+        const exception = idAccessRight === 'superAdmin' ? 'admin' : 'superAdmin';
+        newAccessRights = newAccessRights.filter(newAccessRight => newAccessRight !== exception);
+      }
+      newAccessRights.push(idAccessRight);
+    }
     setUser({
       ...tempUser,
       user_access_rights: [...newAccessRights]
@@ -185,6 +200,7 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
     // console.log(initialAccessRights)
     // console.log(user.user_access_rights)
   },[user])
+  
   return (
     <>
       <CustomizedIconButton variant="contained" onClick={handleClickOpen}>
