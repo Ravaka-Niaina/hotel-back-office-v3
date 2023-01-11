@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from 'react';
 import { Table, Stack, TableRow, TableBody, Container, TableContainer } from '@mui/material';
 // import { useNavigate } from 'react-router-dom';
 import ModifyHotelDialog from '../../components/hotel/ModifyHotelDialog';
-import CustomizedCheckbox from '../../components/CustomizedComponents/CustomizedCheckbox';
 import CustomizedTitle from '../../components/CustomizedComponents/CustomizedTitle';
 import TableCellStyled from '../../components/CustomizedComponents/CustomizedTableCell';
 import Page from '../../components/Page';
@@ -165,9 +164,6 @@ const UpdateHotel = () => {
                               selected={isItemSelected}
                               aria-checked={isItemSelected}
                             >
-                              <TableCellStyled padding="checkbox">
-                                <CustomizedCheckbox />
-                              </TableCellStyled>
                               <TableCellStyled align="left">{name}</TableCellStyled>
                               <TableCellStyled align="left">{address}</TableCellStyled>
                               <TableCellStyled align="left">

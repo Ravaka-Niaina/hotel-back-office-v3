@@ -1,8 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Table, Stack, TableRow, TableBody, Container, TableContainer } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import {Link as RouterLink , useNavigate } from 'react-router-dom';
 import AddHotelDialog from '../../components/hotel/AddHotelDialog';
-import CustomizedCheckbox from '../../components/CustomizedComponents/CustomizedCheckbox';
 import CustomizedTitle from '../../components/CustomizedComponents/CustomizedTitle';
 import TableCellStyled from '../../components/CustomizedComponents/CustomizedTableCell';
 import Page from '../../components/Page';
@@ -11,17 +10,18 @@ import { ThemeContext } from '../../components/context/Wrapper';
 import { UserListHead, UserListToolbar } from '../../components/table';
 import { getHotelList } from '../../services/Hotel';
 import CustomizedPaperOutside from '../../components/CustomizedComponents/CustomizedPaperOutside';
+import CustomizedButton from '../../components/CustomizedComponents/CustomizedButton';
 import CustomizedIconButton from '../../components/CustomizedComponents/CustomizedIconButton';
 import { lightBackgroundToTop } from '../../components/CustomizedComponents/NeumorphismTheme';
 import Iconify from '../../components/Iconify';
 import config from '../../config/api';
+import DeleteHotelDialog from "../../components/hotel/DeleteHotelDialog";
 
 
 const TABLE_HEAD = [
   { id: 'nom', label: 'Nom', alignRight: false },
   { id: 'adresse', label: 'Adresse', alignRight: false },
   { id: 'lien', label: 'Lien', alignRight: false },
-  { id: 'lien', label: 'Front office', alignRight: false },
   { id: 'action', label: 'Actions', alignRight: true, alignCenter: true },
 ];
 
@@ -116,7 +116,11 @@ const CreateOrDeleteHotel = () => {
   };
 
   return (
-    <Page title="AIOLIA | Créer ou Supprimer hôtel">
+    <Page title="AIOLIA | Choisir hôtel à gérer"  style={{
+      backgroundColor: '#e6eff8', 
+      paddingTop: '25px',
+      paddingBottom: '25px'
+    }}>
       <Container>
         {
           location === 'addForm' && (
@@ -128,6 +132,7 @@ const CreateOrDeleteHotel = () => {
             <>
               <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                 <CustomizedTitle size={20} text="Choisir hôtel à gérer" />
+                <CustomizedButton onClick={() => navigate('addForm')} text="Ajouter" variant="contained" component={RouterLink} to="#" />
               </Stack>
               <CustomizedPaperOutside
                 sx={{
@@ -138,7 +143,6 @@ const CreateOrDeleteHotel = () => {
                   padding: 5,
                 }}
               >
-                <UserListToolbar numSelected={selected.length} filterName={filterName} />
                 <Scrollbar>
                   <TableContainer sx={{ minWidth: 800 }}>
                     <Table>
@@ -164,16 +168,8 @@ const CreateOrDeleteHotel = () => {
                               selected={isItemSelected}
                               aria-checked={isItemSelected}
                             >
-                              <TableCellStyled padding="checkbox">
-                                <CustomizedCheckbox />
-                              </TableCellStyled>
                               <TableCellStyled align="left">{name}</TableCellStyled>
                               <TableCellStyled align="left">{address}</TableCellStyled>
-                              <TableCellStyled align="left">
-                                <a href={`https://${link}`} target="_blank" rel="noreferrer noopener">
-                                  {link}
-                                </a>
-                              </TableCellStyled>
                               <TableCellStyled align="left">
                                 <a href={`${config.frontOffice}/${name}`} target="_blank" rel="noreferrer noopener">
                                   {`${config.frontOffice}/${name}`}
@@ -184,6 +180,7 @@ const CreateOrDeleteHotel = () => {
                                   <CustomizedIconButton variant="contained" onClick={() => manageHotelContent(row._id)}>
                                     <Iconify icon="bxs:user-check" width={20} height={20} color="rgba(140, 159, 177, 1)" />
                                   </CustomizedIconButton>
+                                  <DeleteHotelDialog hotelId={row._id} reload={reload} />
                                 </Stack>
 
                               </TableCellStyled>

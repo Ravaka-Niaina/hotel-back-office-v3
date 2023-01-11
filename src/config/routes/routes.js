@@ -10,7 +10,6 @@ import Preloader from '../../components/Preloader/Preloader';
 //
 const Politic = lazy(()=>import('../../views/Politic'));
 const UpdateHotel = lazy(() => import('../../views/Hotel/UpdateHotel'));
-const CreateOrDeleteHotel = lazy(() => import('../../views/Hotel/CreateOrDeleteHotel'));
 const ChooseHotelToManage = lazy(() => import('../../views/Hotel/ChooseHotelToManage'));
 const RatePlan = lazy(() => import('../../views/RatePlan'));
 const Calendar = lazy(() => import('../../views/Calendar'));
@@ -105,14 +104,6 @@ export default function Router() {
           element: <Protected child={<UpdateHotel />} allowedRoles={getAllowedRoles(`${dashboardPath}/hotel`)} />,
         },
         {
-          path: 'createOrDeleteHotel',
-          element: <Protected child={<CreateOrDeleteHotel />} allowedRoles={getAllowedRoles(`${dashboardPath}/hotel`)} />,
-        },
-        {
-          path: 'chooseHotelToManage',
-          element: <Protected child={<ChooseHotelToManage />} allowedRoles={getAllowedRoles(`${dashboardPath}/hotel`)} />,
-        },
-        {
           path: 'historic/roomType',
           element: <Protected child={<HistoricRoomType />} allowedRoles={getAllowedRoles(`${dashboardPath}/historic/roomType`)} />,
         },
@@ -154,6 +145,10 @@ export default function Router() {
     { path: 'sendCodeResetPassword', element: <SendCodeResetPassword /> },
     { path: 'enterCodeResetPassword/:userId', element: <EnterCodeResetPassword /> },
     { path: 'enterNewPassword/:userId', element: <EnterNewPassword /> },
+    {
+      path: 'chooseHotelToManage',
+      element: <Protected child={<ChooseHotelToManage />} allowedRoles={getAllowedRoles(`${dashboardPath}/hotel`)} />,
+    },
     { path: '*', element: <NotFound /> },
   ]);
 }

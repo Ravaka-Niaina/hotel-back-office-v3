@@ -45,13 +45,6 @@ export default function UserListHead({
   return (
     <TableHead>
       <TableRow>
-        <TableCellStyled padding="checkbox">
-          <CustomizedCheckbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-          />
-        </TableCellStyled>
         {headLabel.map((headCell,i) => (
           <TableCellStyled
             key={i}

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Table, Stack, TableRow, TableBody, Container, TableCell, Box, Typography, TableContainer, TablePagination } from '@mui/material';
 import AccessRightMoreMenu from '../components/accessRight/AccessRightMoreMenu';
 import AddAccessRightDialog from '../components/accessRight/AddAccessRightDialog';
-import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
 import TableCellStyled from '../components/CustomizedComponents/CustomizedTableCell';
 import Page from '../components/Page';
 import { ThemeContext } from '../components/context/Wrapper';
@@ -199,9 +198,6 @@ const AccessRight = () => {
                         selected={isItemSelected}
                         aria-checked={isItemSelected}
                       >
-                        <TableCellStyled padding="checkbox">
-                          <CustomizedCheckbox />
-                        </TableCellStyled>
                         <TableCellStyled align="left">{nom}</TableCellStyled>
 
                         <TableCellStyled align="right">
