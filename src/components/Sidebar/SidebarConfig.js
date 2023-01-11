@@ -101,12 +101,6 @@ export const getSidebarConfig = async (context) => {
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/user')),
     },
     {
-      title: "droit d'accès",
-      path: '/dashboard/accessRight',
-      icon: getIcon('bx:shield-quarter'),
-      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/accessRight')),
-    },
-    {
       title: "modèle email",
       path: '/dashboard/emailModel',
       icon: getIcon('bx:mail-send'),

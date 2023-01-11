@@ -15,7 +15,6 @@ const RatePlan = lazy(() => import('../../views/RatePlan'));
 const Calendar = lazy(() => import('../../views/Calendar'));
 const Promotion = lazy(() => import('../../views/Promotion'));
 const TypeChambre = lazy(() => import('../../views/RoomType'));
-const AccessRight = lazy(() => import('../../views/AccessRight'));
 const User = lazy(() => import('../../views/User'));
 const Login = lazy(() => import('../../views/Login'));
 const VerifyCode = lazy(() => import('../../views/VerifyCode'));
@@ -78,10 +77,6 @@ export default function Router() {
         {
           path: 'calendar',
           element: <Protected child={<Calendar />} allowedRoles={getAllowedRoles(`${dashboardPath}/calendar`)} />,
-        },
-        {
-          path: 'accessRight',
-          element: <Protected child={<AccessRight />} allowedRoles={getAllowedRoles(`${dashboardPath}/accessRight`)} />,
         },
         {
           path: 'user',
