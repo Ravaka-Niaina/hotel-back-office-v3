@@ -42,6 +42,7 @@ const AddHotelDialog = (props) => {
     typography_h1: '',
     typography_h2: '',
     typography_h3: '',
+    politic: '',
   });
 
   const handleChange = (e) => {
@@ -85,6 +86,7 @@ const AddHotelDialog = (props) => {
     if ('typography_h1' in fieldValues) temp.typography_h1 = fieldValues.typography_h1 ? '' : requiredFieldMessage;
     if ('typography_h2' in fieldValues) temp.typography_h2 = fieldValues.typography_h2 ? '' : requiredFieldMessage;
     if ('typography_h3' in fieldValues) temp.typography_h3 = fieldValues.typography_h3 ? '' : requiredFieldMessage;
+    if ('politic' in fieldValues) temp.politic = fieldValues.politic.trim() ? '' : requiredFieldMessage;
     setErrors({
       ...temp,
     });
@@ -146,6 +148,7 @@ const AddHotelDialog = (props) => {
       typography_h3: hotel.typography_h3,
       primary_button_color: hotel.primary_button_color,
       secondary_button_color: hotel.secondary_button_color,
+      politic: hotel.politic,
     };
     return payload;
   };
@@ -619,6 +622,24 @@ const AddHotelDialog = (props) => {
                   {...(errors.typography_h3 && {
                     error: true,
                     helpertext: errors.typography_h3,
+                  })}
+                />
+              </Stack>
+            </Stack>
+            <Stack spacing={1}>
+              <Stack direction="row" spacing={2} alignItems="center">
+                <CustomizedInput
+                  sx={{ width: 1 }}
+                  value={hotel.politic}
+                  label="Politique"
+                  name="politic"
+                  type="text"
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                  {...(errors.politic && {
+                    error: true,
+                    helpertext: errors.politic,
                   })}
                 />
               </Stack>
