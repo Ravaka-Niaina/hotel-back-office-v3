@@ -17,7 +17,6 @@ import {
 import AddPromotionDialog from '../components/promotion/AddPromotionDialog';
 import ModifyPromotionDialog from '../components/promotion/ModifyPromotionDialog';
 import Page from '../components/Page';
-import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
 import TableCellStyled from '../components/CustomizedComponents/CustomizedTableCell';
 import PromotionMoreMenu from '../components/promotion/PromotionMoreMenu';
 import { ThemeContext } from '../components/context/Wrapper';
@@ -278,10 +277,6 @@ const Promotion = () => {
                                 tabIndex={-1}
                                 role="checkbox"
                               >
-                                <TableCellStyled padding="checkbox">
-                                  <CustomizedCheckbox
-                                  />
-                                </TableCellStyled>
                                 <TableCellStyled component="th" scope="row" padding="none">
                                   <Typography variant="subtitle2" noWrap>
                                     {nom}
