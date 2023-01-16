@@ -101,7 +101,7 @@ const TypeChambre = () => {
             setRoomTypeList(roomTypeData.list);
           } else {
             setRoomTypeList([]);
-            navigate('/dashboard/chooseHotelToManage');
+            navigate('/chooseHotelToManage');
           }
         }) 
         .catch(() => {})

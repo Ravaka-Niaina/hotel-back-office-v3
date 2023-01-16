@@ -5,7 +5,6 @@ import { getHistoricModifRoomType } from '../../services/HistoricModifRoomType';
 import AddRatePlanDialog from '../../components/ratePlan/AddRatePlanDialog';
 import ModifyRatePlanDialog from '../../components/ratePlan/ModifyRatePlanDialog';
 import RatePlanMoreMenu from '../../components/ratePlan/RatePlanMoreMenu';
-import CustomizedCheckbox from '../../components/CustomizedComponents/CustomizedCheckbox';
 import TableCellStyled from '../../components/CustomizedComponents/CustomizedTableCell';
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
@@ -165,9 +164,6 @@ const HistoricRoomType = () => {
                                 tabIndex={-1}
                                 role="checkbox"
                               >
-                                <TableCellStyled padding="checkbox">
-                                  <CustomizedCheckbox />
-                                </TableCellStyled>
                                 <TableCellStyled align="left">{roomTypeName}</TableCellStyled>
                                 <TableCellStyled align="left">{modifier}</TableCellStyled>
                                 <TableCellStyled align="left">{modificationDate}</TableCellStyled>

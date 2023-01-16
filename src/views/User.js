@@ -242,9 +242,6 @@ export default function User() {
                         selected={isItemSelected}
                         aria-checked={isItemSelected}
                       >
-                        <TableCellStyled padding="checkbox">
-                          <CustomizedCheckbox checked={isItemSelected} />
-                        </TableCellStyled>
                         <TableCellStyled align="left">{nom}</TableCellStyled>
                         <TableCellStyled align="left">{prenom}</TableCellStyled>
                         <TableCellStyled align="left">{telephone}</TableCellStyled>

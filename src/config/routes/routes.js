@@ -10,13 +10,11 @@ import Preloader from '../../components/Preloader/Preloader';
 //
 const Politic = lazy(()=>import('../../views/Politic'));
 const UpdateHotel = lazy(() => import('../../views/Hotel/UpdateHotel'));
-const CreateOrDeleteHotel = lazy(() => import('../../views/Hotel/CreateOrDeleteHotel'));
 const ChooseHotelToManage = lazy(() => import('../../views/Hotel/ChooseHotelToManage'));
 const RatePlan = lazy(() => import('../../views/RatePlan'));
 const Calendar = lazy(() => import('../../views/Calendar'));
 const Promotion = lazy(() => import('../../views/Promotion'));
 const TypeChambre = lazy(() => import('../../views/RoomType'));
-const AccessRight = lazy(() => import('../../views/AccessRight'));
 const User = lazy(() => import('../../views/User'));
 const Login = lazy(() => import('../../views/Login'));
 const VerifyCode = lazy(() => import('../../views/VerifyCode'));
@@ -81,10 +79,6 @@ export default function Router() {
           element: <Protected child={<Calendar />} allowedRoles={getAllowedRoles(`${dashboardPath}/calendar`)} />,
         },
         {
-          path: 'accessRight',
-          element: <Protected child={<AccessRight />} allowedRoles={getAllowedRoles(`${dashboardPath}/accessRight`)} />,
-        },
-        {
           path: 'user',
           element: <Protected child={<User />} allowedRoles={getAllowedRoles(`${dashboardPath}/user`)} />,
         },
@@ -103,14 +97,6 @@ export default function Router() {
         {
           path: 'updateHotel',
           element: <Protected child={<UpdateHotel />} allowedRoles={getAllowedRoles(`${dashboardPath}/hotel`)} />,
-        },
-        {
-          path: 'createOrDeleteHotel',
-          element: <Protected child={<CreateOrDeleteHotel />} allowedRoles={getAllowedRoles(`${dashboardPath}/hotel`)} />,
-        },
-        {
-          path: 'chooseHotelToManage',
-          element: <Protected child={<ChooseHotelToManage />} allowedRoles={getAllowedRoles(`${dashboardPath}/hotel`)} />,
         },
         {
           path: 'historic/roomType',
@@ -154,6 +140,10 @@ export default function Router() {
     { path: 'sendCodeResetPassword', element: <SendCodeResetPassword /> },
     { path: 'enterCodeResetPassword/:userId', element: <EnterCodeResetPassword /> },
     { path: 'enterNewPassword/:userId', element: <EnterNewPassword /> },
+    {
+      path: 'chooseHotelToManage',
+      element: <Protected child={<ChooseHotelToManage />} allowedRoles={getAllowedRoles(`${dashboardPath}/hotel`)} />,
+    },
     { path: '*', element: <NotFound /> },
   ]);
 }

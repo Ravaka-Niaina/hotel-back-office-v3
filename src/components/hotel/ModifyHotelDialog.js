@@ -13,17 +13,17 @@ import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutsi
 import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
 import { lightBackgroundToTop } from '../CustomizedComponents/NeumorphismTheme';
 import { ThemeContext } from '../context/Wrapper';
-import { updateHotel } from '../../services/Hotel';
+import { updateHotel , getHotelDetails } from '../../services/Hotel';
 import config from '../../config/api';
 
-const ModifyHotelDialog = (props) => {
-  const { row, reload , navigate } = props;
+const ModifyHotelDialog = () => {
   const context = useContext(ThemeContext);
   const [pictureList, setPictureList] = useState(new Array(0));
   const [logo, setLogo] = useState(new Array(0));
   const [banner, setBanner] = useState(new Array(0));
   const [errors, setErrors] = useState(false);
   const [hotel, setHotel] = useState({
+    _id: '',
     name: '',
     link: '',
     phone_number: '',
@@ -45,6 +45,7 @@ const ModifyHotelDialog = (props) => {
     typography_h3: '',
     primary_button_color: '',
     secondary_button_color: '',
+    politic: '',
   });
 
   const handleChange = (e) => {
@@ -89,6 +90,7 @@ const ModifyHotelDialog = (props) => {
     if ('typography_h1' in fieldValues) temp.typography_h1 = fieldValues.typography_h1 ? '' : requiredFieldMessage;
     if ('typography_h2' in fieldValues) temp.typography_h2 = fieldValues.typography_h2 ? '' : requiredFieldMessage;
     if ('typography_h3' in fieldValues) temp.typography_h3 = fieldValues.typography_h3 ? '' : requiredFieldMessage;
+    if ('politic' in fieldValues) temp.politic = fieldValues.politic.trim() ? '' : requiredFieldMessage;
     setErrors({
       ...temp,
     });
@@ -102,7 +104,7 @@ const ModifyHotelDialog = (props) => {
 
   const formatPayloadToSend = () => {
     const payload = {
-      _id: row._id,
+      _id: hotel._id,
       name: hotel.name,
       link: hotel.link,
       phoneNum: hotel.phone_number,
@@ -124,6 +126,7 @@ const ModifyHotelDialog = (props) => {
       typography_h3: hotel.typography_h3,
       primary_button_color: hotel.primary_button_color,
       secondary_button_color: hotel.secondary_button_color,
+      politic: hotel.politic,
     };
     return payload;
   };
@@ -151,33 +154,6 @@ const ModifyHotelDialog = (props) => {
       }
     }
   };
-  const cleanHotelState = () => {
-    setHotel({
-      name: '',
-      link: '',
-      phone_number: '',
-      email_address: '',
-      check_in: '',
-      check_out: '',
-      address: '',
-      min_kid_age: '',
-      max_kid_age: '',
-      tourist_sticker: '',
-      is_tva_included: 'true',
-      tva: '',
-      location_lat: '',
-      location_lng: '',
-      logo: '',
-      banner: '',
-      typography_h1: '',
-      typography_h2: '',
-      typography_h3: '',
-      primary_button_color: '',
-      secondary_button_color: '',
-    });
-    setErrors(false);
-    setPictureList(new Array(0));
-  };
   const modifyHotel = (e) => {
     e.preventDefault();
     const errorsTemp = validate(hotel);
@@ -186,9 +162,7 @@ const ModifyHotelDialog = (props) => {
       const idToken = localStorage.getItem('id_token');
       updateHotel(formatPayloadToSend(), idToken)
         .then((result) => {
-          console.log(result.data);
           if (result.data.status === 200) {
-            handleClose();
             context.changeResultSuccessMessage('Enregistrement effectué');
             context.showResultSuccess(true);
           } else if (result.data.errors) {
@@ -211,41 +185,10 @@ const ModifyHotelDialog = (props) => {
           context.showLoader(false);
         });
     }
-  };
-  useEffect(()=>{
-    setHotel({
-      name: row.name,
-      link: row.link,
-      phone_number: row.phoneNum,
-      email_address: row.emailAddress,
-      check_in: row.checkIn,
-      check_out: row.checkOut,
-      address: row.address,
-      min_kid_age: row.minKidAge,
-      max_kid_age: row.maxKidAge,
-      tourist_sticker: row.vignette,
-      is_tva_included: row.isTVAIncluded ? 'true' : 'false',
-      tva: row.TVA,
-      location_lat: row.location.lat,
-      location_lng: row.location.lng,
-      primary_button_color: row.primary_button_color,
-      secondary_button_color: row.secondary_button_color,
-      typography_h1: row.typography_h1,
-      typography_h2: row.typography_h2,
-      typography_h3: row.typography_h3,
-    });
-    // console.log(row);
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);    
-  
+  };   
 
-  const handleClose = () => {
-    navigate('list');
-    cleanHotelState();
-    reload();
-  };
-  const loadPictureList = () =>{
-    const files = props.row.photo.map((e)=>
+  const loadPictureList = (photo) =>{
+    const files = photo?.map((e)=>
       fetch(`${config.host}/${e}`)
         .then((result) =>
           result.blob()
@@ -266,39 +209,79 @@ const ModifyHotelDialog = (props) => {
     
    
   }
-  const loadLogo = () => {
-    fetch(`${config.host}/${props.row.logo}`)
+  const loadLogo = (logo) => {
+    fetch(`${config.host}/${logo}`)
       .then((result) =>
         result.blob()
       )
       .then(blobFile => {
         const temp = {
           target: {
-            files: [new File([blobFile], props.row.logo, { type: "image/png" })],
+            files: [new File([blobFile], hotel.logo, { type: "image/png" })],
           }
         }
         handlePhotoChange(temp, logo, setLogo, 'logo')
       });
   };
-  const loadBanner = () => {
-    fetch(`${config.host}/${ props.row.banner }`)
+  const loadBanner = (banner) => {
+    fetch(`${config.host}/${ banner }`)
       .then((result) =>
         result.blob()
       )
       .then(blobFile => {
         const temp = {
           target: {
-            files: [new File([blobFile], props.row.banner, { type: "image/png" })],
+            files: [new File([blobFile], hotel.banner, { type: "image/png" })],
           }
         }
         handlePhotoChange(temp, banner, setBanner, 'banner')
       });
-    
   }
+  const fetchHotelDetails = () => {
+    context.showLoader(true);
+    getHotelDetails()
+      .then((response) => {
+        const hotelTemp = response.data.hotel;
+        setHotel({
+          _id: hotelTemp._id,
+          name: hotelTemp.name,
+          link: hotelTemp.link,
+          phone_number: hotelTemp.phoneNum,
+          email_address: hotelTemp.emailAddress,
+          check_in: hotelTemp.checkIn,
+          check_out: hotelTemp.checkOut,
+          address: hotelTemp.address,
+          min_kid_age: hotelTemp.minKidAge,
+          max_kid_age: hotelTemp.maxKidAge,
+          tourist_sticker: hotelTemp.vignette,
+          is_tva_included: hotelTemp.isTVAIncluded ? 'true' : 'false',
+          tva: hotelTemp.TVA,
+          location_lat: hotelTemp.location.lat,
+          location_lng: hotelTemp.location.lng,
+          primary_button_color: hotelTemp.theme.btn.primary,
+          secondary_button_color: hotelTemp.theme.btn.secondary,
+          typography_h1: hotelTemp.theme.typography.h1,
+          typography_h2: hotelTemp.theme.typography.h2,
+          typography_h3: hotelTemp.theme.typography.h3,
+          photo: hotelTemp.photo,
+          logo: hotelTemp.logo,
+          banner: hotelTemp.banner,
+        });
+        loadPictureList(hotelTemp.photo);
+        loadLogo(hotelTemp.logo);
+        loadBanner(hotelTemp.banner);
+      })
+      .catch((e) => {
+        context.changeResultErrorMessage(e.message);
+        context.showResultError(true);
+      })
+      .finally(() => {
+        context.showLoader(false);
+      });
+  };
+
   useEffect(() => {
-    loadPictureList();
-    loadLogo();
-    loadBanner();
+    fetchHotelDetails();
      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -314,9 +297,8 @@ const ModifyHotelDialog = (props) => {
   return (
     <>
       
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+      <Stack direction="hotel" alignItems="center" justifyContent="space-between" mb={5}>
         <CustomizedTitle size={20} text="Modifier cet hotel" />
-        <CustomizedButton onClick={handleClose} text="retour" variant="contained" component={RouterLink} to="#" />
       </Stack>
       <CustomizedPaperOutside
         sx={{
@@ -335,9 +317,9 @@ const ModifyHotelDialog = (props) => {
           spacing={{ xs: 1, sm: 2, md: 4 }}
         >
             <CustomizedTitle text='Information hotel' />
-            <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent='space-between'>
+            <Stack direction="hotel" spacing={2} alignItems="flex-start" justifyContent='space-between'>
               <CustomizedInput
-                defaultValue={row.name}
+                value={hotel.name}
                 placeholder="nom"
                 sx={{ width: 1 }}
                 id="nom"
@@ -353,7 +335,7 @@ const ModifyHotelDialog = (props) => {
                 })}
               />
               <CustomizedInput
-                defaultValue={row.link}
+                value={hotel.link}
                 placeholder="ex: www.nom-de-domaine.com"
                 sx={{ width: 1 }}
                 id="Lien"
@@ -369,9 +351,9 @@ const ModifyHotelDialog = (props) => {
                 })}
               />
             </Stack>
-            <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent='space-between'>
+            <Stack direction="hotel" spacing={2} alignItems="flex-start" justifyContent='space-between'>
               <CustomizedInput
-                defaultValue={row.phoneNum}
+                value={hotel.phone_number}
                 placeholder="telephone"
                 sx={{ width: 1 }}
                 id="Telephone"
@@ -387,7 +369,7 @@ const ModifyHotelDialog = (props) => {
                 })}
               />
               <CustomizedInput
-                defaultValue={row.emailAddress}
+                value={hotel.email_address}
                 placeholder="ex: xxx@yyyy.com"
                 sx={{ width: 1 }}
                 id="Email"
@@ -404,9 +386,9 @@ const ModifyHotelDialog = (props) => {
               />
             </Stack>
             <CustomizedTitle text='Photos' />
-            <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent='space-between'>
+            <Stack direction="hotel" spacing={2} alignItems="flex-start" justifyContent='space-between'>
               <CustomizedInput
-                defaultValue={row.address}
+                value={hotel.address}
                 placeholder="ex:  Alarobia Antananarivo Antananarivo, 101"
                 sx={{ width: 1 }}
                 id="Adresse"
@@ -422,7 +404,7 @@ const ModifyHotelDialog = (props) => {
                 })}
               />
               <CustomizedInput
-                defaultValue={row.vignette}
+                value={hotel.tourist_sticker}
                 placeholder="vignette touristique"
                 sx={{ width: 1 }}
                 id="Vignette touristique"
@@ -439,7 +421,7 @@ const ModifyHotelDialog = (props) => {
               />
             </Stack>
             <CustomizedTitle text='Photos' />
-            <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent='space-between'>
+            <Stack direction="hotel" spacing={2} alignItems="flex-start" justifyContent='space-between'>
               <CustomizedInput
                 sx={{ width: 1 }}
                 id="photos"
@@ -460,9 +442,9 @@ const ModifyHotelDialog = (props) => {
             <ListPicturePreview itemData={pictureList} setPictureList={setPictureList} />
 
             <CustomizedTitle text='Horaire' />
-            <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent='space-between'>
+            <Stack direction="hotel" spacing={2} alignItems="flex-start" justifyContent='space-between'>
               <CustomizedInput
-                defaultValue={row.checkIn}
+                value={hotel.check_in}
                 sx={{ width: 1 }}
                 label="checkIn"
                 name="check_in"
@@ -476,7 +458,7 @@ const ModifyHotelDialog = (props) => {
                 })}
               />
               <CustomizedInput
-                defaultValue={row.checkOut}
+                value={hotel.check_out}
                 sx={{ width: 1 }}
                 label="checkOut"
                 name="check_out"
@@ -509,7 +491,7 @@ const ModifyHotelDialog = (props) => {
               </RadioGroup>
               {hotel.is_tva_included === 'true' && (
                 <CustomizedInput
-                  defaultValue={row.TVA}
+                  value={hotel.TVA}
                   placeholder="tva"
                   sx={{ width: 1 }}
                   label="Taxes communale"
@@ -528,9 +510,9 @@ const ModifyHotelDialog = (props) => {
             <CustomizedTitle text='Age' />
             <Stack spacing={1}>
               <CustomizedTitle text='Enfant' level={0} size={15} />
-              <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent='space-between'>
+              <Stack direction="hotel" spacing={2} alignItems="flex-start" justifyContent='space-between'>
                 <CustomizedInput
-                  defaultValue={row.minKidAge}
+                  value={hotel.min_kid_age}
                   placeholder="ex: 4 ans"
                   sx={{ width: 1 }}
                   label="A partir de"
@@ -545,7 +527,7 @@ const ModifyHotelDialog = (props) => {
                   })}
                 />
                 <CustomizedInput
-                  defaultValue={row.maxKidAge}
+                  value={hotel.max_kid_age}
                   placeholder="ex: 11 ans"
                   sx={{ width: 1 }}
                   label="Jusqu'à"
@@ -564,7 +546,7 @@ const ModifyHotelDialog = (props) => {
             <CustomizedTitle text='Coordonnées gps' />
             <Stack spacing={1}>
               <MapDialog hotel={hotel} setHotel={setHotel} />
-              <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent='space-between'>
+              <Stack direction="hotel" spacing={2} alignItems="flex-start" justifyContent='space-between'>
                 <CustomizedInput
                   sx={{ width: 1 }}
                   value={hotel.location_lat}
@@ -598,7 +580,7 @@ const ModifyHotelDialog = (props) => {
               </Stack>
             </Stack>
             <Stack spacing={1}>
-              <Stack direction="row" spacing={2} alignItems="center">
+              <Stack direction="hotel" spacing={2} alignItems="center">
                 <CustomizedInput
                   sx={{ width: 1 }}
                   id="photos"
@@ -620,7 +602,7 @@ const ModifyHotelDialog = (props) => {
             </Stack>
             <CustomizedTitle text='Themes (contenu front-office)' />
             <Stack spacing={1}>
-              <Stack direction="row" spacing={2} alignItems="center">
+              <Stack direction="hotel" spacing={2} alignItems="center">
                 <CustomizedInput
                   sx={{ width: 1 }}
                   id="photos"
@@ -642,7 +624,7 @@ const ModifyHotelDialog = (props) => {
             </Stack>
           <CustomizedTitle text='Thème principal' size={15} level={0} />
             <Stack spacing={1}>
-              <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent='space-between'>
+              <Stack direction="hotel" spacing={2} alignItems="flex-start" justifyContent='space-between'>
                 <CustomizedInput
                   sx={{ width: 1 }}
                   value={hotel.primary_button_color}
@@ -677,7 +659,7 @@ const ModifyHotelDialog = (props) => {
             </Stack>
             <CustomizedTitle text='Typography' size={15} level={0} />
             <Stack spacing={1}>
-              <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent='space-between'>
+              <Stack direction="hotel" spacing={2} alignItems="flex-start" justifyContent='space-between'>
                 <CustomizedInput
                   sx={{ width: 1 }}
                   value={hotel.typography_h1}
@@ -711,7 +693,7 @@ const ModifyHotelDialog = (props) => {
               </Stack>
             </Stack>
             <Stack spacing={1}>
-              <Stack direction="row" spacing={2} alignItems="center">
+              <Stack direction="hotel" spacing={2} alignItems="center">
                 <CustomizedInput
                   sx={{ width: 1 }}
                   value={hotel.typography_h3}
@@ -729,9 +711,24 @@ const ModifyHotelDialog = (props) => {
                 />
               </Stack>
             </Stack>
-            <Button onClick={handleClose} sx={{ fontSize: 12, height: '100%' }}>
-              Annuler
-            </Button>
+            <Stack spacing={1}>
+              <Stack direction="row" spacing={2} alignItems="center">
+                <CustomizedInput
+                  sx={{ width: 1 }}
+                  value={hotel.politic}
+                  label="Politique"
+                  name="politic"
+                  type="text"
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                  {...(errors.politic && {
+                    error: true,
+                    helpertext: errors.politic,
+                  })}
+                />
+              </Stack>
+            </Stack>
             <CustomizedButton text="Enregistrer" component={RouterLink} onClick={modifyHotel} to="#" />
           </Stack>
         </CustomizedPaperOutside>
@@ -739,9 +736,8 @@ const ModifyHotelDialog = (props) => {
   );
 };
 ModifyHotelDialog.propTypes = {
-  row: PropTypes.any,
+  hotel: PropTypes.any,
   reload: PropTypes.func,
   newHotel: PropTypes.any,
-  navigate: PropTypes.any,
 };
 export default ModifyHotelDialog;
