@@ -235,7 +235,7 @@ const CalendarEditor = ({room , dateRange , reloadRoom}) => {
                                             cleanOthers={cleanOthers}
                                             onClick={(e) => handleSelectOneRatePlan(e, item)}
                                         >
-                                            {pt.versions[index]?.prix}$
+                                            {pt.versions[index]?.prix}€
                                         </SelectableRatePlanCell>
                                         
                                     </td>

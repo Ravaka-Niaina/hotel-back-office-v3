@@ -27,7 +27,7 @@ export const getSidebarConfig = async (context) => {
       isAuthorized: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/app')),
     },
     {
-      title: 'Hotels',
+      title: 'Gestion hôtels',
       path: '/dashboard/createOrDeleteHotel',
       icon: getIcon('bxs:building-house'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/hotel')),
@@ -45,20 +45,20 @@ export const getSidebarConfig = async (context) => {
       ]
     },
     {
-      title: 'rapports',
+      title: 'Gestion rapports',
       path: '/dashboard/rapport',
       icon: getIcon('wpf:statistics'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/rapport')),
     },
     {
-      title: 'reservations',
+      title: 'Gestion réservations',
       path: '/dashboard/booking',
       icon: getIcon('teenyicons:appointments-solid'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/booking')),
       // notificationComponent:(<NotificationBadge />),
     },
     {
-      title: 'plans tarifaires',
+      title: 'Gestion plans tarifaires',
       path: '/dashboard/ratePlan',
       icon: getIcon('eva:file-text-fill'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/ratePlan'))
@@ -77,37 +77,37 @@ export const getSidebarConfig = async (context) => {
       ],
     },
     {
-      title: 'types de chambre',
+      title: 'Gestion types de chambre',
       path: '/dashboard/typeChambre',
       icon: getIcon('bxs:hotel'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/typeChambre')),
     },
     {
-      title: 'promotions',
+      title: 'Gestion promotions',
       path: '/dashboard/promotion',
       icon: getIcon('eva:star-fill'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/promotion')),
     },
     {
-      title: 'politiques',
+      title: 'Gestion politiques',
       path: '/dashboard/politic',
       icon: getIcon('bxs:shield-alt-2'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/politic')),
     },
     {
-      title: 'utilisateurs',
+      title: 'Gestion utilisateurs',
       path: '/dashboard/user',
       icon: getIcon('eva:people-fill'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/user')),
     },
     {
-      title: "modèle email",
+      title: "Gestion modèle email",
       path: '/dashboard/emailModel',
       icon: getIcon('bx:mail-send'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/emailModel')),
     },
     {
-      title: 'Historique modifications',
+      title: 'Gestinon historique modifications',
       path: '/dashboard/historic',
       icon: getIcon('material-symbols:menu-book-rounded'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/historic')),

@@ -37,7 +37,6 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
   });
 
   const fetchData = async () => {
-    console.log(userDetails);
     setUser({
       id: userDetails?._id,
       last_name: userDetails?.nom,
