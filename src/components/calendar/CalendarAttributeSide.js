@@ -5,7 +5,14 @@ import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
 
 import EditorCustomizingDialog from './EditorCustomizingDialog';
 
-const CalendarAttributeSide = ({chambre, ratePlanAttributeList , reloadRoom}) => (
+const CalendarAttributeSide = ({
+    chambre, 
+    ratePlanAttributeList , 
+    reloadRoom, 
+    dateRange,
+    setDateRange,
+    fetchData,
+}) => (
         <div className='calendarEditor'>
             <table >
                 <thead>
@@ -19,7 +26,13 @@ const CalendarAttributeSide = ({chambre, ratePlanAttributeList , reloadRoom}) =>
                             >
                                 <CustomizedTitle text={chambre.nom} />
                                 <Stack direction='row' spacing={1} alignItems='center'>
-                                    <EditorCustomizingDialog chambre={chambre} reloadRoom={reloadRoom}/>
+                                    <EditorCustomizingDialog 
+                                        chambre={chambre} 
+                                        reloadRoom={reloadRoom}
+                                        dateRange={dateRange}
+                                        setDateRange={setDateRange}
+                                        fetchData={fetchData}
+                                    />
                                 </Stack>
                             </Stack>
                         </th>
