@@ -25,12 +25,11 @@ import {configPrix} from '../../services/TCTarif';
 import './index.css';
 import './dateRangePicker.module.css';
 
-const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
+const EditorCustomizingDialog = ({chambre , reloadRoom, dateRange, setDateRange, fetchData,}) => {
     const today = new Date();
     const nextWeek = new Date(today);
     nextWeek.setDate(nextWeek.getDate() + 7);
     const context = useContext(ThemeContext);
-    const [dateRange, setDateRange] = useState([moment(today), moment(nextWeek)]);
     const [openPicker,setOpenPicker] = useState(false);
     const [open , setOpen ] = useState(false);
     const [isRoomOpen , setIsRoomOpen ] = useState(true);
@@ -278,6 +277,7 @@ const EditorCustomizingDialog = ({chambre , reloadRoom}) => {
                                     newValue[i] = moment(new Date(newValue[i]));
                                 }
                                 setDateRange(newValue);
+                                fetchData(newValue);
                                 // if(newValue !== undefined && newValue[0] !== null && newValue[1] !== null){
                                 //     getPrix(newValue);
                                 // }
