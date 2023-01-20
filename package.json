@@ -10,7 +10,7 @@
   "scripts": {
     "docs": "./node_modules/jsdoc/jsdoc.js -c ./.jsdoc.conf.json",
     "dev": "set PORT=3005 && react-scripts start",
-    "start": "serve -s build",
+    "start": "HTTPS=true SSL_CRT_FILE=localhost.pem SSL_KEY_FILE=localhost-key.pem react-scripts start",
     "build": "react-scripts build",
     "heroku-postbuild": "npm run build",
     "test": "jest --watchAll",
