@@ -24,6 +24,7 @@ const AddHotelDialog = (props) => {
   const [errors, setErrors] = useState(false);
   const [hotel, setHotel] = useState({
     name: '',
+    url_name: '',
     link: '',
     phone_number: '',
     email_address: '',
@@ -87,6 +88,13 @@ const AddHotelDialog = (props) => {
     if ('typography_h2' in fieldValues) temp.typography_h2 = fieldValues.typography_h2 ? '' : requiredFieldMessage;
     if ('typography_h3' in fieldValues) temp.typography_h3 = fieldValues.typography_h3 ? '' : requiredFieldMessage;
     if ('politic' in fieldValues) temp.politic = fieldValues.politic.trim() ? '' : requiredFieldMessage;
+    if ('url_name' in fieldValues) {
+      if (!/^[a-z0-9_-]+$/.test(fieldValues.url_name)) {
+        temp.url_name = 'Tous les lettres doivent être en miniscules et les espaces remplacés par des tirets';
+      } else {
+        temp.url_name = '';
+      } 
+    }
     setErrors({
       ...temp,
     });
@@ -149,6 +157,7 @@ const AddHotelDialog = (props) => {
       primary_button_color: hotel.primary_button_color,
       secondary_button_color: hotel.secondary_button_color,
       politic: hotel.politic,
+      urlName: hotel.url_name,
     };
     return payload;
   };
@@ -277,6 +286,24 @@ const AddHotelDialog = (props) => {
                   helpertext: errors.link,
                 })}
               />
+            </Stack>
+            <Stack spacing={1}>
+              <Stack direction="row" spacing={2} alignItems="center">
+                <CustomizedInput
+                  sx={{ width: 1 }}
+                  value={hotel.url_name}
+                  label="Nom Url"
+                  name="url_name"
+                  type="text"
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                  {...(errors.url_name && {
+                    error: true,
+                    helpertext: errors.url_name,
+                  })}
+                />
+              </Stack>
             </Stack>
             <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent='space-between'>
               <CustomizedInput
