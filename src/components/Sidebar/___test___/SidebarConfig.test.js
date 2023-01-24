@@ -49,10 +49,6 @@ const superAdminUser = {
               "nom": "Supprimer un hotel"
           },
           {
-              "_id": "insertDroitAcces",
-              "nom": "Créer un droit d'accès"
-          },
-          {
               "_id": "insertHotel",
               "nom": "Créer un hotel"
           },
@@ -97,10 +93,6 @@ const superAdminUser = {
               "nom": "Créer un partenaire"
           },
           {
-              "_id": "updateDroitAcces",
-              "nom": "Modifier un droit d'accès"
-          },
-          {
               "_id": "getTypeChambre",
               "nom": "Voir informations type chambre"
           },
@@ -143,10 +135,6 @@ const superAdminUser = {
           {
               "_id": "insertTypeChambre",
               "nom": "Créer un type chambre"
-          },
-          {
-              "_id": "deleteDroitAcces",
-              "nom": "Supprimer un droit d'accès"
           },
           {
               "_id": "updatePartenaire",
@@ -212,10 +200,6 @@ const restrictedPartner = {
               "nom": "Supprimer un hotel"
           },
           {
-              "_id": "insertDroitAcces",
-              "nom": "Créer un droit d'accès"
-          },
-          {
               "_id": "insertHotel",
               "nom": "Créer un hotel"
           },
@@ -254,10 +238,6 @@ const restrictedPartner = {
           {
               "_id": "insertPartenaire",
               "nom": "Créer un partenaire"
-          },
-          {
-              "_id": "updateDroitAcces",
-              "nom": "Modifier un droit d'accès"
           },
           {
               "_id": "getTypeChambre",
@@ -302,10 +282,6 @@ const restrictedPartner = {
           {
               "_id": "insertTypeChambre",
               "nom": "Créer un type chambre"
-          },
-          {
-              "_id": "deleteDroitAcces",
-              "nom": "Supprimer un droit d'accès"
           },
           {
               "_id": "updatePartenaire",

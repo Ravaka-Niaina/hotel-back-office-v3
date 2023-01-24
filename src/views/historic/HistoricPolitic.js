@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Box, Table, Stack, TableRow, TableBody, Container, Typography, TableCell, TableContainer, TablePagination } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { getHistoricModifCancelingPolitic } from '../../services/HistoricModifCancelingPolitic';
-import CustomizedCheckbox from '../../components/CustomizedComponents/CustomizedCheckbox';
 import TableCellStyled from '../../components/CustomizedComponents/CustomizedTableCell';
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
@@ -159,9 +158,6 @@ const HistoricPolitic = () => {
                                 tabIndex={-1}
                                 role="checkbox"
                               >
-                                <TableCellStyled padding="checkbox">
-                                  <CustomizedCheckbox />
-                                </TableCellStyled>
                                 <TableCellStyled align="left">{cancelingPoliticName}</TableCellStyled>
                                 <TableCellStyled align="left">{modifier}</TableCellStyled>
                                 <TableCellStyled align="left">{modificationDate}</TableCellStyled>

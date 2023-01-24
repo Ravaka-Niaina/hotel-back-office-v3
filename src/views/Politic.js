@@ -4,7 +4,6 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 import AddPoliticDialog from '../components/politic/AddPoliticDialog';
-import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
 import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
 import TableCellStyled from '../components/CustomizedComponents/CustomizedTableCell';
 import Page from '../components/Page';
@@ -220,9 +219,6 @@ const Politic = () => {
                       const i = index;
                       return (
                         <TableRow hover key={i} tabIndex={-1} role="checkbox">
-                          <TableCellStyled padding="checkbox">
-                            <CustomizedCheckbox />
-                          </TableCellStyled>
                           <TableCellStyled align="left">{row.nom}</TableCellStyled>
                           <TableCellStyled component="th" scope="row" padding="none">
                             {row.description}

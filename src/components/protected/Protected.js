@@ -83,7 +83,7 @@ const Protected = ({ child, allowedRoles }) => {
               || accessRightsIds.includes('admin')
             ) && !localStorage.getItem('hotel_id')
           ) {
-            navigate('/dashboard/chooseHotelToManage');
+            navigate('/chooseHotelToManage');
           }
         }
         else if(results.data.errors){

@@ -64,7 +64,7 @@ const VerifyCodeForm = () => {
                 }
                 localStorage.setItem("user_details",JSON.stringify(userDetailsSaved));
                 window.location = userAccessRights.some(({ _id }) => _id === 'superAdmin' || _id === 'admin')
-                ? "/dashboard/chooseHotelToManage"
+                ? "/chooseHotelToManage"
                 : "/dashboard/app";
               }
               else{

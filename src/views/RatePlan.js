@@ -4,7 +4,6 @@ import { Link as RouterLink } from 'react-router-dom';
 import AddRatePlanDialog from '../components/ratePlan/AddRatePlanDialog';
 import ModifyRatePlanDialog from '../components/ratePlan/ModifyRatePlanDialog';
 import RatePlanMoreMenu from '../components/ratePlan/RatePlanMoreMenu';
-import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
 import TableCellStyled from '../components/CustomizedComponents/CustomizedTableCell';
 import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
@@ -244,9 +243,6 @@ const RatePlan = () => {
                                 selected={isItemSelected}
                                 aria-checked={isItemSelected}
                               >
-                                <TableCellStyled padding="checkbox">
-                                  <CustomizedCheckbox />
-                                </TableCellStyled>
                                 <TableCellStyled align="left">{nom}</TableCellStyled>
                                 <TableCellStyled align="left">
                                   <ul>
