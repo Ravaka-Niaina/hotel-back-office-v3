@@ -55,10 +55,10 @@ const Politic = () => {
     setRowsPerPage(row);
     const payload = {
       tableName: 'politiqueAnnulation',
-      valuesToSearch: [],
+      valueToSearch: filterName,
       fieldsToPrint: [],
-      nbContent: 200,
-      numPage: 1,
+      nbContent: row,
+      numPage: p,
     };
     const idToken = localStorage.getItem('id_token');
     getPolitics({ ...payload }, idToken)
@@ -102,10 +102,9 @@ const Politic = () => {
   const getAllPolitics = () => {
     context.showLoader(true);
     const payload = {
-      tableName: 'politiqueAnnulation',
       valueToSearch: filterName,
       fieldsToPrint: [],
-      nbContent: 200,
+      nbContent: 5,
       numPage: 1,
     };
     const idToken = localStorage.getItem('id_token');

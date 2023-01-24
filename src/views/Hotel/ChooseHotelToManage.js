@@ -67,6 +67,7 @@ const CreateOrDeleteHotel = () => {
         'typography_h1',
         'typography_h2',
         'typography_h3',
+        'urlName',
       ],
       nbContent: 200,
       numPage: 1,
@@ -115,6 +116,8 @@ const CreateOrDeleteHotel = () => {
     navigatePage('/');
   };
 
+  console.log(hotelList);
+
   return (
     <Page title="AIOLIA | Choisir hôtel à gérer"  style={{
       backgroundColor: '#e6eff8', 
@@ -155,7 +158,7 @@ const CreateOrDeleteHotel = () => {
                       />
                       <TableBody>
                         {hotelList.map((row,i) => {
-                          const { name, address, link } = row;
+                          const { name, address, link, urlName } = row;
                           
                           const isItemSelected = selected.indexOf(name) !== -1;
 
@@ -171,8 +174,8 @@ const CreateOrDeleteHotel = () => {
                               <TableCellStyled align="left">{name}</TableCellStyled>
                               <TableCellStyled align="left">{address}</TableCellStyled>
                               <TableCellStyled align="left">
-                                <a href={`${config.frontOffice}/${name}`} target="_blank" rel="noreferrer noopener">
-                                  {`${config.frontOffice}/${name}`}
+                                <a href={`${config.frontOffice}/${urlName}`} target="_blank" rel="noreferrer noopener">
+                                  {`${config.frontOffice}/${urlName}`}
                                 </a>
                               </TableCellStyled>
                               <TableCellStyled align="right">

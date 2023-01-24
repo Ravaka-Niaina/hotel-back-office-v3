@@ -36,7 +36,7 @@ function initializeDateList(dateRange){
     });
     return list;
 };
-const CalendarEditor = ({room , dateRange , reloadRoom}) => {
+const CalendarEditor = ({ room , dateRange , setDateRange, reloadRoom, fetchData, }) => {
     const list = initializeDateList(dateRange);
     const [chambre,setChambre] = useState(room);
     const [selectedRoom, setSelectedRoom] = useState(new Array(0));
@@ -330,6 +330,9 @@ const CalendarEditor = ({room , dateRange , reloadRoom}) => {
                         chambre={chambre} 
                         ratePlanAttributeList={ratePlanAttributList}
                         reloadRoom={reloadRoom}
+                        dateRange={dateRange}
+                        setDateRange={setDateRange}
+                        fetchData={fetchData}
                     />
                 </Grid>
                 <Grid item xs={8}>

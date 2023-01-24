@@ -202,7 +202,14 @@ const Calendar = () => {
                     roomList.map((room,i)=>
                         loading || partialRoomLoading === room._id? 
                             (<CalendarEditorSkeleton key={i}/>) : 
-                            (<CalendarEditor room={room} dateRange={dateRange} key={i} reloadRoom={reloadOneRoom}/>)
+                            (<CalendarEditor 
+                                room={room} 
+                                dateRange={dateRange} 
+                                setDateRange={setDateRange} 
+                                key={i} 
+                                reloadRoom={reloadOneRoom}
+                                fetchData={fetchData}
+                            />)
                     )
                 }
                 

@@ -25,6 +25,7 @@ const ModifyHotelDialog = () => {
   const [hotel, setHotel] = useState({
     _id: '',
     name: '',
+    url_name: '',
     link: '',
     phone_number: '',
     email_address: '',
@@ -91,6 +92,13 @@ const ModifyHotelDialog = () => {
     if ('typography_h2' in fieldValues) temp.typography_h2 = fieldValues.typography_h2 ? '' : requiredFieldMessage;
     if ('typography_h3' in fieldValues) temp.typography_h3 = fieldValues.typography_h3 ? '' : requiredFieldMessage;
     if ('politic' in fieldValues) temp.politic = fieldValues.politic.trim() ? '' : requiredFieldMessage;
+    if ('url_name' in fieldValues) {
+      if (!/^[a-z0-9_-]+$/.test(fieldValues.url_name)) {
+        temp.url_name = 'Tous les lettres doivent être en miniscules et les espaces remplacés par des tirets';
+      } else {
+        temp.url_name = '';
+      } 
+    }
     setErrors({
       ...temp,
     });
@@ -127,6 +135,7 @@ const ModifyHotelDialog = () => {
       primary_button_color: hotel.primary_button_color,
       secondary_button_color: hotel.secondary_button_color,
       politic: hotel.politic,
+      urlName: hotel.url_name,
     };
     return payload;
   };
@@ -242,9 +251,11 @@ const ModifyHotelDialog = () => {
     getHotelDetails()
       .then((response) => {
         const hotelTemp = response.data.hotel;
+        console.log(hotelTemp);
         setHotel({
           _id: hotelTemp._id,
           name: hotelTemp.name,
+          url_name: hotelTemp.urlName,
           link: hotelTemp.link,
           phone_number: hotelTemp.phoneNum,
           email_address: hotelTemp.emailAddress,
@@ -266,6 +277,7 @@ const ModifyHotelDialog = () => {
           photo: hotelTemp.photo,
           logo: hotelTemp.logo,
           banner: hotelTemp.banner,
+          politic: hotelTemp.politic,
         });
         loadPictureList(hotelTemp.photo);
         loadLogo(hotelTemp.logo);
@@ -350,6 +362,24 @@ const ModifyHotelDialog = () => {
                   helpertext: errors.link,
                 })}
               />
+            </Stack>
+            <Stack spacing={1}>
+              <Stack direction="row" spacing={2} alignItems="center">
+                <CustomizedInput
+                  sx={{ width: 1 }}
+                  value={hotel.url_name}
+                  label="Nom Url"
+                  name="url_name"
+                  type="text"
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                  {...(errors.url_name && {
+                    error: true,
+                    helpertext: errors.url_name,
+                  })}
+                />
+              </Stack>
             </Stack>
             <Stack direction="hotel" spacing={2} alignItems="flex-start" justifyContent='space-between'>
               <CustomizedInput
