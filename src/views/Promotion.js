@@ -215,7 +215,7 @@ const Promotion = () => {
 
   return (
     <Page title="AIOLIA | Promotions">
-      <Container>
+      <Container sx={{maxWidth: '100%!important'}}>
         {
           location === 'addForm' && (
             <AddPromotionDialog reload={reload} navigate={navigate} />

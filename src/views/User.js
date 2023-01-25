@@ -190,7 +190,7 @@ export default function User() {
   
   return (
     <Page title="AIOLIA | Utilisateurs">
-      <Container>
+      <Container sx={{maxWidth: '100%!important'}}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <CustomizedTitle size={20} text='Utilisateur'/>
           <AddUserDialog accessRights={accessRights} reload={reload} />

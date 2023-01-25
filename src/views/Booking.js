@@ -181,7 +181,7 @@ const Booking = () => {
     },[]);
     return (
         <Page title="AIOLIA | Reservations">
-            <Container>
+            <Container sx={{maxWidth: '100%!important'}}>
                 {
                     location === 'details' && currentReservation !== null && currentItineraireIndex >-1 && 
                     currentTarifIndex >-1 && (
