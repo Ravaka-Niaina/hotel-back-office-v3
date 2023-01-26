@@ -143,7 +143,6 @@ const Promotion = () => {
     setPage(p);
     setRowsPerPage(row);
     const payload = {
-      tableName: 'promotion',
       valueToSearch: filterName,
       fieldsToPrint: ['nom', 'sejourMin', 'planTarifaire', 'typeChambre', 'dateDebutS', 'dateFinS'],
       nbContent: row,
@@ -215,7 +214,7 @@ const Promotion = () => {
 
   return (
     <Page title="AIOLIA | Promotions">
-      <Container>
+      <Container sx={{maxWidth: '100%!important'}}>
         {
           location === 'addForm' && (
             <AddPromotionDialog reload={reload} navigate={navigate} />

@@ -165,7 +165,7 @@ const TypeChambre = () => {
   const isUserNotFound = filteredUsers?.length === 0;
   return (
     <Page title="AIOLIA | Types de chambres">
-      <Container>
+      <Container sx={{maxWidth: '100%!important'}}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <CustomizedTitle size={20} text="Type de chambre" />
           <AddRoomTypeDialog reload={reload} />

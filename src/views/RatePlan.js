@@ -185,7 +185,7 @@ const RatePlan = () => {
 
   return (
     <Page title="AIOLIA | Plans tarifaires">
-      <Container>
+      <Container sx={{maxWidth: '100%!important'}}>
           {
             location === 'addForm' && (
               <AddRatePlanDialog reload={reload} navigate={navigate}/>
@@ -209,7 +209,7 @@ const RatePlan = () => {
                     onFilterName={handleFilterByName}
                   />
                   {ratePlanList && <Scrollbar>
-                    <TableContainer sx={{ minWidth: 800 }}>
+                    <TableContainer sx={{ minWidth: 800, }}>
                       <Table>
                         <UserListHead
                           order={order}

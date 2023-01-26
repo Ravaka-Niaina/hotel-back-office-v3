@@ -8,7 +8,8 @@ import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import { ThemeContext } from '../context/Wrapper';
-import { addAccessRight, updateUser } from '../../services/User';
+import { addAccessRight, updateUser , getAllHotelsAssociatedToAUser, } from '../../services/User';
+
 import Iconify from '../Iconify';
 import CustomizedLabel from '../CustomizedComponents/CustomizedLabel';
 import CustomizedCard from '../CustomizedComponents/CustomizedCard';
@@ -35,6 +36,9 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
     phone_number: '',
     user_access_rights: [],
   });
+  const [hotels, setHotels] = useState([]);
+  const [associatedHotelsId, setAssociatedHotelsId] = useState([]);
+  const [isUserAdminOrSuperAdmin, setIsUserAdminOrSuperAdmin] = useState(false);
 
   const fetchData = async () => {
     setUser({
@@ -46,6 +50,7 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
       phone_number: userDetails?.telephone,
       user_access_rights: userDetails?.idDroitAcces,
     });
+    setAssociatedHotelsId(userDetails.hotelPartenaire.map(association => association.hotel[0]._id));
   };
 
   const getClearedErrors = () => ({
@@ -55,10 +60,27 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
       backup_email: '',
       phone_number: '',
       user_access_rights: [],
-    });
+  });
+
+  const getAllHotelsAssociatedToCurrentPartner = () => {
+    const partnerId = JSON.parse(localStorage.getItem('user_details')).data.user._id;
+    getAllHotelsAssociatedToAUser(partnerId)
+      .then((result) => {
+        setHotels(result.data.allHotelsAssociatedToAPartner);
+      })
+      .catch(err => console.error(err));
+  };
 
   useEffect(() => {
     fetchData();
+    getAllHotelsAssociatedToCurrentPartner();
+    setIsUserAdminOrSuperAdmin(JSON
+      .parse(localStorage.getItem('user_details'))
+      .data
+      .atribAR
+      .some(accessRight => accessRight._id === 'admin' 
+        || accessRight._id === 'superAdmin'
+      ));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleChange = (e) => {
@@ -120,7 +142,9 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
       prenom: user.first_name,
       email: user.email,
       backup_email: user.backup_email,
-      idDroitAcces: user.user_access_rights
+      phone_number: user.phone_number,
+      idDroitAcces: user.user_access_rights,
+      associatedHotelsId,
     };
     return payload;
   };
@@ -142,7 +166,6 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
       const payloadToSend = formatPayloadToSend()
       updateUser(payloadToSend)
         .then(async(result) => {
-          console.log(result.data);
           if (result.data.status === 200) {
             await addAccessRights(user?.id, user?.user_access_rights)
             setOpen(false);
@@ -168,9 +191,23 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
       context.showResultError(true);
     }
   };
-  useEffect(() => {
-    // console.log(user)
-  }, [user]);
+
+  const handleModifyAssociatedHotel = (hotelId) => {
+    let hotelAlreadyAssociated = false;
+    const tempAssociatedHotels = [...associatedHotelsId];
+    for (let i = 0; i < associatedHotelsId.length; i += 1) {
+      if (associatedHotelsId[i] === hotelId) {
+        hotelAlreadyAssociated = true;
+        tempAssociatedHotels.splice(i, 1);
+        break;
+      }
+    }
+    if (!hotelAlreadyAssociated) {
+      tempAssociatedHotels.push(hotelId);
+    }
+    setAssociatedHotelsId(tempAssociatedHotels);
+  };
+
   const handleModifyAccessRight = (idAccessRight) => {
     const tempUser = { ...user };
     const tempUserAccessRights = tempUser?.user_access_rights;
@@ -195,10 +232,6 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
       user_access_rights: [...newAccessRights]
     })
   };
-  useEffect(()=>{
-    // console.log(initialAccessRights)
-    // console.log(user.user_access_rights)
-  },[user])
   
   return (
     <>
@@ -250,6 +283,18 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
               <CustomizedInput
                 onChange={handleChange}
                 required
+                {...(errors.backup_email && {
+                  error: true,
+                  helpertext: errors.backup_email,
+                })}
+                value={user.backup_email}
+                placeholder="Adresse e-mail de secours"
+                name="backup_email"
+                label="Adresse e-mail de secours"
+              />
+              <CustomizedInput
+                onChange={handleChange}
+                required
                 {...(errors.phone_number && {
                   error: true,
                   helpertext: errors.phone_number,
@@ -259,18 +304,6 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
                 placeholder="Telephone"
                 name="phone_number"
                 label="Telephone"
-              />
-              <CustomizedInput
-                onChange={handleChange}
-                required
-                {...(errors.backup_email && {
-                  error: true,
-                  helpertext: errors.backup_email,
-                })}
-                value={user.backup_email}
-                placeholder="Adresse e-mail de secours"
-                name="backup_email"
-                label="Adresse e-mail de secours"
               />
               <CustomizedLabel label={`Droits d'acces de l'utilisateur`} />
               <CustomizedCard sx={{ background: '#E3EDF7', p: 5 }}>
@@ -290,7 +323,28 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights }) => {
                   }
                 </div>
               </CustomizedCard>
-              {/* <button onClick={()=>{console.log(user?.user_access_rights)}}>Click</button> */}
+              {
+                isUserAdminOrSuperAdmin && (
+                <>
+                  <CustomizedLabel label={`Associer hôtels`} />
+                  <CustomizedCard sx={{ background: '#E3EDF7', p: 5 }}>
+                    <div style={{ columnCount: 2 }}>
+                      {
+                        hotels.map((hotel) => ( 
+                          <div key={hotel._id}>
+                            <CustomizedSwitch checked={associatedHotelsId.some(
+                                associatedHotel => associatedHotel === hotel._id
+                              )} 
+                              onClick = { () => handleModifyAssociatedHotel(hotel._id) }
+                            />
+                            { hotel.name }
+                          </div>
+                        ))
+                      }
+                    </div>
+                  </CustomizedCard>
+                </>
+              ) }
             </Stack>
           </DialogContent>
           <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px' }}>

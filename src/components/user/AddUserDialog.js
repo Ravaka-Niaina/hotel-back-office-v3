@@ -6,7 +6,10 @@ import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import { ThemeContext } from '../context/Wrapper';
-import { register } from '../../services/User';
+import { getAllHotelsAssociatedToAUser, register } from '../../services/User';
+import CustomizedCard from '../CustomizedComponents/CustomizedCard';
+import CustomizedSwitch from '../CustomizedComponents/CustomizedSwitch';
+import CustomizedLabel from '../CustomizedComponents/CustomizedLabel';
 
 const AddUserDialog = ({reload}) => {
   const context = useContext(ThemeContext);
@@ -29,9 +32,29 @@ const AddUserDialog = ({reload}) => {
     password: '',
     confirmPassword: '',
   });
+  const [hotels, setHotels] = useState([]);
+  const [associatedHotelsId, setAssociatedHotelsId] = useState([]);
+  const [isUserAdminOrSuperAdmin, setIsUserAdminOrSuperAdmin] = useState(false);
+
+  const getAllHotelsAssociatedToCurrentPartner = () => {
+    const partnerId = JSON.parse(localStorage.getItem('user_details')).data.user._id;
+    getAllHotelsAssociatedToAUser(partnerId)
+      .then((result) => {
+        setHotels(result.data.allHotelsAssociatedToAPartner);
+      })
+      .catch(err => console.error(err));
+  };
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    getAllHotelsAssociatedToCurrentPartner();
+    setIsUserAdminOrSuperAdmin(JSON
+      .parse(localStorage.getItem('user_details'))
+      .data
+      .atribAR
+      .some(accessRight => accessRight._id === 'admin' 
+        || accessRight._id === 'superAdmin'
+      ));
   }, []);
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -80,6 +103,22 @@ const AddUserDialog = ({reload}) => {
     setOpen(false);
   };
 
+  const handleModifyAssociatedHotel = (hotelId) => {
+    let hotelAlreadyAssociated = false;
+    const tempAssociatedHotels = [...associatedHotelsId];
+    for (let i = 0; i < associatedHotelsId.length; i += 1) {
+      if (associatedHotelsId[i] === hotelId) {
+        hotelAlreadyAssociated = true;
+        tempAssociatedHotels.splice(i, 1);
+        break;
+      }
+    }
+    if (!hotelAlreadyAssociated) {
+      tempAssociatedHotels.push(hotelId);
+    }
+    setAssociatedHotelsId(tempAssociatedHotels);
+  };
+
   const createUser = (event) => {
     event.preventDefault();
     let errorExists = false;
@@ -114,7 +153,7 @@ const AddUserDialog = ({reload}) => {
       address_type: '',
       town: '',
       postal_code: '',
-
+      associatedHotelsId,
     })
       .then(result => {
         console.log(result);
@@ -250,6 +289,28 @@ const AddUserDialog = ({reload}) => {
               type="password"
               autoComplete={false}
             />
+            {
+              isUserAdminOrSuperAdmin && (
+              <>
+                <CustomizedLabel label={`Associer hôtels`} />
+                <CustomizedCard sx={{ background: '#E3EDF7', p: 5 }}>
+                  <div style={{ columnCount: 2 }}>
+                    {
+                      hotels.map((hotel) => ( 
+                        <div key={hotel._id}>
+                          <CustomizedSwitch checked={associatedHotelsId.some(
+                              associatedHotel => associatedHotel === hotel._id
+                            )} 
+                            onClick = { () => handleModifyAssociatedHotel(hotel._id) }
+                          />
+                          { hotel.name }
+                        </div>
+                      ))
+                    }
+                  </div>
+                </CustomizedCard>
+              </>
+            ) }
           </Stack>
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px' }}>
