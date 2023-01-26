@@ -116,8 +116,6 @@ const CreateOrDeleteHotel = () => {
     navigatePage('/');
   };
 
-  console.log(hotelList);
-
   return (
     <Page title="AIOLIA | Choisir hôtel à gérer"  style={{
       backgroundColor: '#e6eff8', 

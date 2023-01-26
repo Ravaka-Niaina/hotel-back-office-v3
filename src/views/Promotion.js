@@ -143,7 +143,6 @@ const Promotion = () => {
     setPage(p);
     setRowsPerPage(row);
     const payload = {
-      tableName: 'promotion',
       valueToSearch: filterName,
       fieldsToPrint: ['nom', 'sejourMin', 'planTarifaire', 'typeChambre', 'dateDebutS', 'dateFinS'],
       nbContent: row,

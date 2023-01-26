@@ -74,7 +74,7 @@ export const sendDeletePartner = (userId) =>
   axios.delete(`${config.host}/user/deletePartner/${userId}`)
 
 export const getUserList = (payload) =>
-  axios.post(`${config.host}/user/list`, payload, {
+  axios.post(`${config.host}/user/partnerList`, payload, {
     timeout: 10000,
     headers: {
       Authorization: localStorage.getItem("id_token"),
@@ -92,11 +92,13 @@ export const getUserDetails = (id,idToken) =>
   });
 
 export const updateUser = (payload) =>
-  axios.post(`${config.host}/user/update`, payload, {
+  axios.post(`${config.host}/user/updatePartner`, payload, {
     timeout: 10000,
-    /* headers: {
-            Authorization: token,
-        }, */
+    headers: {
+      ispartner: true,
+      Authorization: localStorage.getItem('id_token'),
+      hotel_id: localStorage.getItem('hotel_id'),
+    },
   });
 
 export const addAccessRight = (payload) => {
@@ -113,6 +115,11 @@ export const addAccessRight = (payload) => {
         }, */
   });
 };
+
+export const getAllHotelsAssociatedToAUser = (partnerId) => 
+  axios.get(`${config.host}/hotel/getAllHotelsAssociatedToAPartner/${partnerId}`, {
+    timeout: 10000,
+  });
 
 /**
  * @function checkAuthWithRole
