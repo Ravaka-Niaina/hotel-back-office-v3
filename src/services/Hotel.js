@@ -11,11 +11,11 @@ export const getHotelList = (payload) =>
 
 
 export const getHotelDetails = (payload) => 
-    axios.get(`${config.host}/hotel/details/${localStorage.getItem('hotel_id')}`,{
+    axios.get(`${config.host}/hotel/details/${localStorage.getItem('hotelid')}`,{
         timeout: 10000,
         headers: {
             Authorization: localStorage.getItem("id_token"),
-            hotel_id: localStorage.getItem('hotel_id'),
+            hotelid: localStorage.getItem('hotelid'),
         },
 });
 

@@ -9,7 +9,7 @@ export const saveEmailModelToBackEnd = (payload) =>
       timeout: 10000,
       headers: {
         Authorization: localStorage.getItem("id_token"),
-        hotel_id: localStorage.getItem('hotel_id'),
+        hotelid: localStorage.getItem('hotelid'),
       },
     }
   );
@@ -21,7 +21,7 @@ export const getEmailModelFromBackEnd = (emailType) =>
       timeout: 10000,
       headers: {
         Authorization: localStorage.getItem("id_token"),
-        hotel_id: localStorage.getItem('hotel_id'),
+        hotelid: localStorage.getItem('hotelid'),
       },
     }
 );
@@ -34,7 +34,7 @@ axios.post(
     timeout: 10000,
     headers: {
       Authorization: localStorage.getItem("id_token"),
-      hotel_id: localStorage.getItem('hotel_id'),
+      hotelid: localStorage.getItem('hotelid'),
     },
   }
 );
@@ -46,7 +46,7 @@ export const getGalleryPhotos = () =>
       timeout: 10000,
       headers: {
         Authorization: localStorage.getItem("id_token"),
-        hotel_id: localStorage.getItem('hotel_id'),
+        hotelid: localStorage.getItem('hotelid'),
       },
     }
 );

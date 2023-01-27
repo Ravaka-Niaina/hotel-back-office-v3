@@ -85,7 +85,7 @@ const RapportForm = ({ setStateDataSalesReport }) => {
   };
 
   useEffect(() => {
-    if (!localStorage.getItem('hotel_id')) {
+    if (!localStorage.getItem('hotelid')) {
       context.changeResultErrorMessage('Veuillez d\'abord choisir un hôtel à gérer');
       context.showResultError(true);
       navigate('/chooseHotelToManage/');

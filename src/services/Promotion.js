@@ -6,7 +6,7 @@ export const getPromotionList = (payload, idToken) =>
     timeout: 10000,
     headers: {
       Authorization: idToken,
-      hotel_id: localStorage.getItem('hotel_id'),
+      hotelid: localStorage.getItem('hotelid'),
     },
   });
 export const createPromotion = (payload, idToken) =>
@@ -14,7 +14,7 @@ export const createPromotion = (payload, idToken) =>
     timeout: 10000,
     headers: {
       Authorization: idToken,
-      hotel_id: localStorage.getItem('hotel_id'),
+      hotelid: localStorage.getItem('hotelid'),
     },
   });
 export const deletePromotion = (payload) =>
@@ -28,7 +28,7 @@ export const getListTarifAndRoom = () => axios.get(`${config.host}/TCTarif/list`
     timeout: 10000,
     headers: {
       Authorization: localStorage.getItem('id_token'),
-      hotel_id: localStorage.getItem('hotel_id'),
+      hotelid: localStorage.getItem('hotelid'),
     },
   }
 );
@@ -37,7 +37,7 @@ export const getPromotionDetail = (promotionId) =>
     timeout: 10000,
     headers: {
       Authorization: localStorage.getItem('id_token'),
-      hotel_id: localStorage.getItem('hotel_id'),
+      hotelid: localStorage.getItem('hotelid'),
     },
   });
 export const updatePromotion = (payload) => 
@@ -45,6 +45,6 @@ export const updatePromotion = (payload) =>
     timeout: 10000,
     headers: {
       Authorization: localStorage.getItem('id_token'),
-      hotel_id: localStorage.getItem('hotel_id'),
+      hotelid: localStorage.getItem('hotelid'),
     },
   });
