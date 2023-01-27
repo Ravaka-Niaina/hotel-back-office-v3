@@ -67,6 +67,8 @@ export const register = (payload) =>
       ispartner: true,
       Authorization: localStorage.getItem('id_token'),
       hotel_id: localStorage.getItem('hotel_id'),
+      hotelid: localStorage.getItem('hotel_id'),
+      'hotel-id': localStorage.getItem('hotel_id'),
     },
   });
 
