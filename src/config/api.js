@@ -1,6 +1,6 @@
 // const hosturl = 'http://localhost:3000';
-const hosturl = 'http://www.aiolia.us:3000';
-const frontOffice = 'http://www.aiolia.us:5000';
+const hosturl = 'https://api.aiolia.us';
+const frontOffice = 'https://www.aiolia.us';
 
 const config = {
     host: hosturl,
