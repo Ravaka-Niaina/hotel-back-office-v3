@@ -63,9 +63,7 @@ const VerifyCodeForm = () => {
                 data:userDetails.data,
                 }
                 localStorage.setItem("user_details",JSON.stringify(userDetailsSaved));
-                window.location = userAccessRights.some(({ _id }) => _id === 'superAdmin' || _id === 'admin')
-                ? "/chooseHotelToManage"
-                : "/dashboard/app";
+                window.location = "/chooseHotelToManage";
               }
               else{
                 context.changeResultErrorMessage('Impossible d\'obtenir les informations de l\'utilisateur');

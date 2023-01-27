@@ -106,7 +106,7 @@ const HistoricPolitic = () => {
 
   return (
     <Page title="AIOLIA | Plans tarifaires">
-      <Container>
+      <Container sx={{maxWidth: '100%!important'}}>
           {
             location === 'list' && (
               <>

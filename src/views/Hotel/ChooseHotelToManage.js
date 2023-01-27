@@ -116,15 +116,13 @@ const CreateOrDeleteHotel = () => {
     navigatePage('/');
   };
 
-  console.log(hotelList);
-
   return (
     <Page title="AIOLIA | Choisir hôtel à gérer"  style={{
       backgroundColor: '#e6eff8', 
       paddingTop: '25px',
       paddingBottom: '25px'
     }}>
-      <Container>
+      <Container sx={{maxWidth: '100%!important'}}>
         {
           location === 'addForm' && (
             <AddHotelDialog reload={reload} navigate={navigate}/>

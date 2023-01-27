@@ -74,12 +74,12 @@ export default function User() {
     setPage(p);
     setRowsPerPage(row);
     const payloadListUser = {
-      tableName: 'partenaire',
-      valuesToSearch: [],
+      valueToSearch: filterName,
       fieldsToPrint: [],
       nbContent: row,
       numPage: p,
     };
+    console.log(payloadListUser);
     // const accessRights = await getAccessRightList({})
     // console.log(accessRights)
     const idToken = localStorage.getItem('id_token');
@@ -117,7 +117,6 @@ export default function User() {
   const getAllUser = async (p = 1, row = rowsPerPage) => {
     context.showLoader(true);
     const payloadListUser = {
-      tableName: 'partenaire',
       valueToSearch: filterName,
       fieldsToPrint: [],
       nbContent: row,
@@ -190,7 +189,7 @@ export default function User() {
   
   return (
     <Page title="AIOLIA | Utilisateurs">
-      <Container>
+      <Container sx={{maxWidth: '100%!important'}}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <CustomizedTitle size={20} text='Utilisateur'/>
           <AddUserDialog accessRights={accessRights} reload={reload} />
