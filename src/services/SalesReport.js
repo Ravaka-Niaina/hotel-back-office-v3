@@ -9,7 +9,7 @@ export const getReservationSalesReport = (payload) =>
       timeout: 10000,
       headers: {
           Authorization: localStorage.getItem('id_token'),
-          hotel_id: localStorage.getItem('hotel_id'),
+          hotelid: localStorage.getItem('hotelid'),
       },
     }
   );

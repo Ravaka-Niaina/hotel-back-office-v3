@@ -81,7 +81,7 @@ const Protected = ({ child, allowedRoles }) => {
             && (
               accessRightsIds.includes('superAdmin') 
               || accessRightsIds.includes('admin')
-            ) && !localStorage.getItem('hotel_id')
+            ) && !localStorage.getItem('hotelid')
           ) {
             navigate('/chooseHotelToManage');
           }

@@ -7,6 +7,6 @@ export const getHistoricModifPromotion = (payload) =>
     headers: {
       Authorization: localStorage.getItem("id_token"),
       partner_id: localStorage.getItem("partner_id"),
-      hotel_id: localStorage.getItem('hotel_id')
+      hotelid: localStorage.getItem('hotelid')
     },
   });

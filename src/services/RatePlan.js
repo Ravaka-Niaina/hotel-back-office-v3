@@ -6,7 +6,7 @@ export const getRatePlanList = (payload, idToken) =>
         timeout: 10000,
         headers: {
             Authorization: idToken,
-            hotel_id: localStorage.getItem('hotel_id'),
+            hotelid: localStorage.getItem('hotelid'),
         },
 });
 export const createRatePlan = (payload) =>
@@ -14,7 +14,7 @@ export const createRatePlan = (payload) =>
         timeout: 10000,
         headers: {
             Authorization: localStorage.getItem('id_token'),
-            hotel_id: localStorage.getItem('hotel_id'),
+            hotelid: localStorage.getItem('hotelid'),
         },
 });
 
@@ -23,7 +23,7 @@ export const updateRatePlan = (payload) =>
         timeout: 10000,
         headers: {
             Authorization: localStorage.getItem('id_token'),
-            hotel_id: localStorage.getItem('hotel_id'),
+            hotelid: localStorage.getItem('hotelid'),
         },
 });
 
@@ -40,7 +40,7 @@ export const getRoomTypeAndCancelingPoliticList = () =>
         timeout: 10000,
         headers: {
             Authorization: localStorage.getItem('id_token'),
-            hotel_id: localStorage.getItem('hotel_id'),
+            hotelid: localStorage.getItem('hotelid'),
         },
 });
 

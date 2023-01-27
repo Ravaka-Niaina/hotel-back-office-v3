@@ -6,7 +6,7 @@ export const getPolitics = (payload) =>
     timeout: 10000,
     headers: {
       Authorization: localStorage.getItem("id_token"),
-      hotel_id: localStorage.getItem('hotel_id'),
+      hotelid: localStorage.getItem('hotelid'),
     },
   });
 export const createPolitic = (payload) =>
@@ -14,7 +14,7 @@ export const createPolitic = (payload) =>
     timeout: 10000,
     headers: {
       Authorization: localStorage.getItem("id_token"),
-      hotel_id: localStorage.getItem('hotel_id'),
+      hotelid: localStorage.getItem('hotelid'),
     },
   });
 
@@ -31,7 +31,7 @@ export const modifyPolitic = (payload, idPolitic) =>
     timeout: 10000,
     headers: {
       Authorization: localStorage.getItem("id_token"),
-      hotel_id: localStorage.getItem('hotel_id'),
+      hotelid: localStorage.getItem('hotelid'),
     },
 })
 // export const updatePolitic = (payload) =>

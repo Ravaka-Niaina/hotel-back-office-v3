@@ -66,9 +66,7 @@ export const register = (payload) =>
     headers: {
       ispartner: true,
       Authorization: localStorage.getItem('id_token'),
-      'hotel_id': localStorage.getItem('hotel_id'),
-      hotelId: localStorage.getItem('hotel_id'),
-      'hotel-id': localStorage.getItem('hotel_id'),
+      'hotelid': localStorage.getItem('hotelid'),
     },
   });
 
@@ -80,7 +78,7 @@ export const getUserList = (payload) =>
     timeout: 10000,
     headers: {
       Authorization: localStorage.getItem("id_token"),
-      hotel_id: localStorage.getItem('hotel_id'),
+      hotelid: localStorage.getItem('hotelid'),
     },
   });
 
@@ -99,7 +97,7 @@ export const updateUser = (payload) =>
     headers: {
       ispartner: true,
       Authorization: localStorage.getItem('id_token'),
-      hotel_id: localStorage.getItem('hotel_id'),
+      hotelid: localStorage.getItem('hotelid'),
     },
   });
 
