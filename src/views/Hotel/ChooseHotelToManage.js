@@ -75,6 +75,7 @@ const CreateOrDeleteHotel = () => {
     context.showLoader(true);
     getHotelList(payload)
       .then((fetch) => {
+        console.log(fetch);
         fetch.data.status = 200;
         if (fetch.data.status === 200) {
           setHotelList(fetch.data.list);
