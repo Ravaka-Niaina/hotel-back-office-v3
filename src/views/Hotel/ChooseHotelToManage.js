@@ -113,7 +113,7 @@ const CreateOrDeleteHotel = () => {
   }, []);
 
   const manageHotelContent = (hotelId) => {
-    localStorage.setItem('hotel_id', hotelId);
+    localStorage.setItem('hotelid', hotelId);
     navigatePage('/');
   };
 

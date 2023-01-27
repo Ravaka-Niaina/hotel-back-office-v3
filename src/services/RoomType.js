@@ -6,7 +6,7 @@ export const getRoomTypeList = (payload, idToken) =>
     timeout: 10000,
     headers: {
       Authorization: idToken,
-      hotel_id: localStorage.getItem('hotel_id'),
+      hotelid: localStorage.getItem('hotelid'),
     },
   });
 export const getRoomType = (roomTypeId) =>
@@ -15,7 +15,7 @@ export const getRoomType = (roomTypeId) =>
     headers: {
       Authorization: localStorage.getItem("id_token"),
       partner_id: localStorage.getItem("partner_id"),
-      hotel_id: localStorage.getItem('hotel_id')
+      hotelid: localStorage.getItem('hotelid')
     },
   });
 
@@ -25,7 +25,7 @@ export const createRoomType = (payload) =>
     headers: {
       Authorization: localStorage.getItem("id_token"),
       partner_id: localStorage.getItem("partner_id"),
-      hotel_id: localStorage.getItem('hotel_id')
+      hotelid: localStorage.getItem('hotelid')
     },
   });
 
@@ -35,7 +35,7 @@ export const updateRoomType = (payload, partnerId) =>
     headers: {
       Authorization: localStorage.getItem("id_token"),
       partner_id: partnerId,
-      hotel_id: localStorage.getItem('hotel_id')
+      hotelid: localStorage.getItem('hotelid')
     },
   });
 
@@ -44,7 +44,7 @@ export const deleteRoomType = (payload) =>
     timeout: 10000,
     headers: {
       isPartner: true,
-      hotel_id: localStorage.getItem('hotel_id')
+      hotelid: localStorage.getItem('hotelid')
     },
   });
 
@@ -54,7 +54,7 @@ export const changeOpenStatus = (payload) =>
     headers: {
       Authorization: localStorage.getItem("id_token"),
       partner_id: localStorage.getItem("partner_id"),
-      hotel_id: localStorage.getItem('hotel_id')
+      hotelid: localStorage.getItem('hotelid')
     },
   });
   
@@ -68,6 +68,6 @@ export const fetchListRatePlans = (payload) =>
     timeout: 10000,
     headers: {
       Authorization: localStorage.getItem("id_token"),
-      hotel_id: localStorage.getItem('hotel_id'),
+      hotelid: localStorage.getItem('hotelid'),
     },
   })
