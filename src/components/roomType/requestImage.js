@@ -8,8 +8,8 @@ export function uploadImage({method, url, data, callback, setProgress, errorCall
         formData.append("image", blob);
         
         const headers = {
-            "Content-Type": "multipart/form-data; boundary=&"
-            // "Content-Type": "multipart/form-data"
+            "Content-Type": "multipart/form-data; boundary=&",
+            "hotelid": localStorage.getItem("hotelid")
         };
         
         axios({
