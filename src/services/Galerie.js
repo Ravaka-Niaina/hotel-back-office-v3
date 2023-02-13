@@ -4,6 +4,9 @@ import config from '../config/api';
 export const getPhotosOfGallery= () => 
     axios.get(`${config.host}/galerie`,{
       timeout: 10000,
+      headers: {
+        hotelid: localStorage.getItem('hotelid'),
+      }
     });
 
 export const removePhotoFromGalerry = (payload) =>
