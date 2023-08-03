@@ -99,8 +99,8 @@ const Politic = () => {
         setLoading(false);
       });
   };
-  const getAllPolitics = () => {
-    context.showLoader(true);
+  const getAllPolitics = async () => {
+    setLoading(true);
     const payload = {
       valueToSearch: filterName,
       fieldsToPrint: [],
@@ -108,44 +108,35 @@ const Politic = () => {
       numPage: 1,
     };
     const idToken = localStorage.getItem('id_token');
-    getPolitics({ ...payload }, idToken)
-    .then((result) => {
-      console.log(result);
-      try {
-          const status = result?.data.status;
-          if (status === 200) {
-            const list = result.data?.list;
-            setPoliticList(list);
-            setResultCount(result.data.nbResult);
-          }
-          else if (result.data.errors) {
-            const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
-            const indication = result.data.errors[item];
-            const message = `${item}: ${indication}`;
-            context.changeResultErrorMessage(message);
-            context.showResultError(true);
-          }
-          else if (result.data.message) {
-            context.changeResultErrorMessage(result.data.message);
-            context.showResultError(true);
-          }
-          else {
-            context.changeResultErrorMessage('Une erreur est survenue lors du chargement des données');
-            context.showResultError(true);
-            context.showResultError(true);
-          }
-        } catch (err) {
-            context.changeResultErrorMessage(err.message);
-            context.showResultError(true);
-        }
-      })
-      .catch((err) => {
-        context.changeResultErrorMessage(err.message);
+    try {
+      const result = await getPolitics({ ...payload }, idToken);
+      const status = result?.data.status;
+      if (status === 200) {
+        const list = result.data?.list;
+        setPoliticList(list);
+        setResultCount(result.data.nbResult);
+      }
+      else if (result.data.errors) {
+        const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+        const indication = result.data.errors[item];
+        const message = `${item}: ${indication}`;
+        context.changeResultErrorMessage(message);
         context.showResultError(true);
-      })
-      .finally(() => {
-        context.showLoader(false);
-      });
+      }
+      else if (result.data.message) {
+        context.changeResultErrorMessage(result.data.message);
+        context.showResultError(true);
+      }
+      else {
+        context.changeResultErrorMessage('Une erreur est survenue lors du chargement des données');
+        context.showResultError(true);
+      }
+      setLoading(false);
+    } catch (err) {
+      context.changeResultErrorMessage(err.message);
+      context.showResultError(true);
+      setLoading(false);
+    }
   };
 
   const handleFilterByName = (event) => {
@@ -211,7 +202,7 @@ const Politic = () => {
                               </TableRow>
                             )
                   }
-                  {politicList &&
+                  {!loading && politicList &&
                     politicList.map((row, index) => {
                       // const { _id, nom, isActif } = row;
                       // const isItemSelected = selected.indexOf(nom) !== -1;
