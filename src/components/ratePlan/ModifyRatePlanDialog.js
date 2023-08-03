@@ -52,6 +52,7 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
     context.showLoader(true);
     getRoomTypeAndCancelingPoliticList()
       .then((result) => {
+        console.log(result.data);
         if (result.data.listType) {
           setListRoom(result.data.listType);
           setListPolitic(result.data.listPolitique);

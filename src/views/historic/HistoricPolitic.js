@@ -81,6 +81,7 @@ const HistoricPolitic = () => {
   };
 
   const fetchHistoricModifCancelingPolitic = ({ nbContent = 5, numPage = 1 }) => {
+    setLoading(true);
     const payload = {
       nbContent,
       numPage,
@@ -95,8 +96,12 @@ const HistoricPolitic = () => {
         setResultCount(result.data.nbResult);
         setRowsPerPage(result.data.nbContentPerPage);
         setPage(numPage);
+        setLoading(false);
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+        console.error(err);
+        setLoading(false);
+      });
   };
   
   useEffect(() => {

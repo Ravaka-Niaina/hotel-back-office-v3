@@ -26,7 +26,8 @@ import { formatDate } from '../services/Util';
 
 const Booking = () => {
     const context = useContext(ThemeContext);
-    const [ loading, setLoading] = useState(false);
+    const [ loadingFetchNewReservationList, setLoadingFetchNewReservationList] = useState(false);
+    const [loadingFetchReservationList, setLoadingFetchReservationList] = useState(false);
     const [ location, setLocation] = useState('list');
     const [ currentReservation, setCurrentDetails] = useState(null);
     const [ currentItineraireIndex, setCurrentItineraireIndex] = useState(-1);
@@ -72,7 +73,7 @@ const Booking = () => {
     };
     
     const fetchFilter = (p = 1,row = rowsPerPage) => {
-        setLoading(true);
+        setLoadingFetchNewReservationList(true);
         setPage(p);
         setRowsPerPage(row);
         const payload = {
@@ -112,12 +113,11 @@ const Booking = () => {
                 context.showResultError(true);
             })
             .finally(() => {
-                setLoading(false);
+                setLoadingFetchNewReservationList(false);
             })
     };
-    const fetchReservationList = () => {
-        console.log('feetch reservation list');
-        context.showLoader(true);
+    const fetchReservationList = async () => {
+        setLoadingFetchReservationList(true);
         const payload = {
             "filter": {
                 "statut": "",
@@ -128,53 +128,47 @@ const Booking = () => {
             "nbContent": rowsPerPage,
             "numPage": 1
         };
-        console.log('before call');
-        getReservationList(payload)
-            .then((result) => {
-                console.log('result coming');
-                console.log(result);
-                if(result.data.status === 200){
-                    setReservationList(result.data.list);
-                    setResultCount(result.data.nbResult);
-                }
-                else if(result.data.errors)
-                {
-                    context.changeResultErrorMessage('errors');
-                    context.showResultError(true);
-                }
-                else{
-                    context.changeResultErrorMessage('others');
-                    context.showResultError(true);
-                }
-            })
-            .catch((e) => {
-                context.changeResultErrorMessage(e.message);
+        try {
+            const result = await getReservationList(payload);
+            if(result.data.status === 200){
+                setReservationList(result.data.list);
+                setResultCount(result.data.nbResult);
+            }
+            else if(result.data.errors)
+            {
+                context.changeResultErrorMessage('errors');
                 context.showResultError(true);
-            })
-            .finally(()=>{
-                context.showLoader(false);
-                console.log('finally');
-            })
+            }
+            else{
+                context.changeResultErrorMessage('others');
+                context.showResultError(true);
+            }
+            setLoadingFetchReservationList(false);
+        } catch (e) {
+            context.changeResultErrorMessage(e.message);
+            setLoadingFetchReservationList(false);
+        }
         
     };
-    const fetchNewReservationList = () => {
-        getNotificationReservationList()
-            .then((result) => {
-                if(result.data.status === 200){
-                    setNewReservationList(result.data.list);
-                }
-                else{
-                    context.changeResultErrorMessage(`Une erreur est survenue: Nouvelle reservation.`);
-                    context.showResultError(true);
-                }
-            })
-            .catch((e) => {
-                context.changeResultErrorMessage(e.message);
+    const fetchNewReservationList = async () => {
+        setLoadingFetchNewReservationList(true);
+        try {
+            const result = await getNotificationReservationList();
+            if(result.data.status === 200){
+                setNewReservationList(result.data.list);
+            }
+            else{
+                context.changeResultErrorMessage(`Une erreur est survenue: Nouvelle reservation.`);
                 context.showResultError(true);
-            })
+            }
+            setLoadingFetchNewReservationList(false);
+        } catch (err) {
+            context.changeResultErrorMessage(err.message);
+            context.showResultError(true);
+            setLoadingFetchNewReservationList(false);   
+        }
     };
     useEffect(() => {
-        console.log('useEffect and fecth');
         fetchNewReservationList();
         fetchReservationList();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -301,7 +295,7 @@ const Booking = () => {
                                             </TableHead>
                                             <TableBody>
                                                 {
-                                                    loading && (
+                                                    (loadingFetchNewReservationList || loadingFetchReservationList) && (
                                                         <TableRow>
                                                             <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                                                                     <Box sx={{ margin: 1, textAlign: 'center' }} >
@@ -311,11 +305,11 @@ const Booking = () => {
                                                         </TableRow>
                                                     )
                                                 }
-                                                { !loading && reservationList.map((row,i) => (
+                                                { !loadingFetchNewReservationList && !loadingFetchReservationList && reservationList.map((row,i) => (
                                                     <ReservationRow key={i+1} row={{...row,new:newReservationList.find((elem)=>elem._id === row._id)}} navigate={navigate}/>
                                                 ))}
                                                 {
-                                                    !loading && reservationList.length < 1 && (
+                                                    !loadingFetchNewReservationList && !loadingFetchReservationList && reservationList.length < 1 && (
                                                         <TableRow>
                                                             <TableCell style={{ textAlign:'center' }} colSpan={6}>
                                                                 <CustomizedTitle text={`Pas de résultats`} color='#212B36' level={3}/>

@@ -85,7 +85,8 @@ const HistoricRoomType = () => {
     }
   };
 
-  const fetchHistoricModifRoomType = ({ nbContent = 5, numPage = 1 }) => {
+  const fetchHistoricModifRoomType = async ({ nbContent = 5, numPage = 1 }) => {
+    setLoading(true);
     const payload = {
       nbContent,
       numPage,
@@ -93,15 +94,17 @@ const HistoricRoomType = () => {
     setRowsPerPage(nbContent);
     setPage(numPage);
 
-    getHistoricModifRoomType(payload)
-      .then(result => {
-        console.log(result);
-        setHistoricRoomTypeList(result.data.list);
-        setResultCount(result.data.nbResult);
-        setRowsPerPage(result.data.nbContentPerPage);
-        setPage(numPage);
-      })
-      .catch(err => console.error(err));
+    try {
+      const result = await getHistoricModifRoomType(payload);
+      setHistoricRoomTypeList(result.data.list);
+      setResultCount(result.data.nbResult);
+      setRowsPerPage(result.data.nbContentPerPage);
+      setPage(numPage);
+      setLoading(false);
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+    }
   };
   
   useEffect(() => {
@@ -145,7 +148,7 @@ const HistoricRoomType = () => {
                               </TableRow>
                             )
                           }
-                          {historicRoomTypeList.map((row) => {
+                          {!loading && historicRoomTypeList.map((row) => {
                             const { 
                               _id,
                               idRoomType, 

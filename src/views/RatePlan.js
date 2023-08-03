@@ -59,7 +59,7 @@ const RatePlan = () => {
     setFilterName(event.target.value);
   };
 
-  const fetchFilter = (p = 1, row = rowsPerPage) => {
+  const fetchFilter = async (p = 1, row = rowsPerPage) => {
     setLoading(true);
     setPage(p);
     setRowsPerPage(row);
@@ -71,39 +71,36 @@ const RatePlan = () => {
       numPage: p,
     };
     const idToken = localStorage.getItem('id_token');
-    getRatePlanList(payload, idToken)
-      .then((result) => {
-        // console.log(result);
-        // const status = 200;
-        if (result.data.status === 200) {
-          setRatePlanList(result.data.list);
-          setResultCount(result.data.nbResult);
-        } 
-        else if (result.data.errors) {
-          const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
-          const indication = result.data.errors[item];
-          const message = `${item}: ${indication}`;
-          context.changeResultErrorMessage(message);
-          context.showResultError(true);
-        }
-        else if (result.data.message) {
-          context.changeResultErrorMessage(result.data.message);
-          context.showResultError(true);
-        }
-        else {
-          context.changeResultErrorMessage('Une erreur est survenue lors du chargement des données');
-          context.showResultError(true);
-          context.showResultError(true);
-        }
-      })
-      .catch((e) => {
-        context.changeResultErrorMessage(e.message);
+    try {
+      const result = await getRatePlanList(payload, idToken);
+      if (result.data.status === 200) {
+        setRatePlanList(result.data.list);
+        setResultCount(result.data.nbResult);
+      } 
+      else if (result.data.errors) {
+        const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+        const indication = result.data.errors[item];
+        const message = `${item}: ${indication}`;
+        context.changeResultErrorMessage(message);
         context.showResultError(true);
-      })
-      .finally(() => {
-        setLoading(false);
+      }
+      else if (result.data.message) {
+        context.changeResultErrorMessage(result.data.message);
+        context.showResultError(true);
+      }
+      else {
+        context.changeResultErrorMessage('Une erreur est survenue lors du chargement des données');
+        context.showResultError(true);
+        context.showResultError(true);
+      }
+      setLoading(false);
+    } catch(e) {
+      setLoading(false);
+      context.changeResultErrorMessage(e.message);
+      context.showResultError(true);
+    } finally {
         context.setPartialLoading({ ...context.partialLoading, loading: false, identifier: '' });
-      });
+      };
   };
   const getAllRatePlan = (noLoading,p = 1, row = rowsPerPage) => {
     const payload = {
@@ -173,6 +170,7 @@ const RatePlan = () => {
   };
   
   useEffect(() => {
+    setLoading(true);
     // reload();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -230,7 +228,7 @@ const RatePlan = () => {
                               </TableRow>
                             )
                           }
-                          {ratePlanList.map((row) => {
+                          {!loading && ratePlanList.map((row) => {
                             const { _id, nom, isActif,chambresAtrb,politiqueAnnulAtrb } = row;
                             const isItemSelected = selected.indexOf(nom) !== -1;
 

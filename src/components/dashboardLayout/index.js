@@ -6,6 +6,7 @@ import { styled } from '@mui/material/styles';
 import DashboardNavbar from './DashboardNavbar';
 import DashboardSidebar from '../Sidebar/DashboardSidebar';
 // ----------------------------------------------------------------------
+import HotelName from './HotelName';
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;
@@ -41,6 +42,7 @@ export default function DashboardLayout() {
       <DashboardNavbar onOpenSidebar={() => setOpen(true)} />
       <DashboardSidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
       <MainStyle>
+        <HotelName/>
         <Outlet />
       </MainStyle>
     </RootStyle>
