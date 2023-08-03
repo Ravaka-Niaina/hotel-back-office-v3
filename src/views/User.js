@@ -58,7 +58,9 @@ export default function User() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const [loading, setLoading] = useState(false);
+  const [loadingGetAllUser, setLoadingGetAllUser] = useState(false);
+  
+  const [loadingGetAccessRights, setLoadingGetAccessRights] = useState(false);
 
   const [filterName, setFilterName] = useState('');
   
@@ -70,7 +72,7 @@ export default function User() {
     handleChangePage(null, 0, row);
   };
   const fetchFilter = (p = 1, row = rowsPerPage) => {
-    setLoading(true);
+    setLoadingGetAllUser(true);
     setPage(p);
     setRowsPerPage(row);
     const payloadListUser = {
@@ -111,59 +113,63 @@ export default function User() {
         context.showResultError(true);
       })
       .finally(() => {
-        setLoading(false);
+        setLoadingGetAllUser(false);
       });
   };
   const getAllUser = async (p = 1, row = rowsPerPage) => {
-    context.showLoader(true);
+    setLoadingGetAllUser(true);
     const payloadListUser = {
       valueToSearch: filterName,
       fieldsToPrint: [],
       nbContent: row,
       numPage: p,
     };
-    // const accessRights = await getAccessRightList({})
-    // console.log(accessRights)
-    getUserList(payloadListUser)
-      .then((result) => {
-        if (result.data.status === 200) {
-          setUserList(result.data.list);
-          setResultCount(result.data.nbResult);
-        } 
-        else if (result.data.errors) {
-          const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
-          const indication = result.data.errors[item];
-          const message = `${item}: ${indication}`;
-          context.changeResultErrorMessage(message);
-          context.showResultError(true);
-        }
-        else if (result.data.message) {
-          context.changeResultErrorMessage(result.data.message);
-          context.showResultError(true);
-        }
-        else {
-          context.changeResultErrorMessage('Une erreur est survenue lors du chargement des données');
-          context.showResultError(true);
-          context.showResultError(true);
-        }
-      })
-      .catch((e) => {
-        context.changeResultErrorMessage(e.message);
+
+    try {
+      const result = await getUserList(payloadListUser);
+      if (result.data.status === 200) {
+        setUserList(result.data.list);
+        setResultCount(result.data.nbResult);
+      } 
+      else if (result.data.errors) {
+        const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+        const indication = result.data.errors[item];
+        const message = `${item}: ${indication}`;
+        context.changeResultErrorMessage(message);
         context.showResultError(true);
-      })
-      .finally(() => {
-        context.showLoader(false);
-      });
+      }
+      else if (result.data.message) {
+        context.changeResultErrorMessage(result.data.message);
+        context.showResultError(true);
+      }
+      else {
+        context.changeResultErrorMessage('Une erreur est survenue lors du chargement des données');
+        context.showResultError(true);
+        context.showResultError(true);
+      }
+      setLoadingGetAllUser(false);
+    } catch (e) {
+      context.changeResultErrorMessage(e.message);
+      context.showResultError(true);
+      setLoadingGetAllUser(false);
+    }
   };
 
-  const getAccessRights = () => {
-    getAccessRightList().then(result=>{
+  const getAccessRights = async () => {
+    setLoadingGetAccessRights(true);
+    try {
+      const result = await getAccessRightList();
       if(result.status !== 200) return
       if (!result.data) return
       if(result.data.status !== 200) return
       if(!result.data?.list) return
-      setAccessRights(result?.data?.list)
-    })
+      setAccessRights(result?.data?.list);
+      setLoadingGetAccessRights(false);
+    } catch(e) {
+      context.changeResultErrorMessage(e.message);      
+      context.showResultError(true);
+      setLoadingGetAccessRights(false);
+    }
   }
 
   const handleFilterByName = (event) => {
@@ -218,7 +224,7 @@ export default function User() {
                 />
                 <TableBody>
                   {
-                            loading && (
+                            (loadingGetAllUser || loadingGetAccessRights) && (
                               <TableRow>
                                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={TABLE_HEAD.length + 1}>
                                   <Box sx={{ margin: 1, textAlign: 'center' }} >
@@ -228,7 +234,7 @@ export default function User() {
                               </TableRow>
                             )
                   }
-                  {userList && userList.map((row) => {
+                  {!loadingGetAllUser && !loadingGetAccessRights && userList && userList.map((row) => {
                     const { _id, nom, prenom, telephone, isActive } = row;
                     const isItemSelected = selected.indexOf(nom) !== -1;
 
@@ -259,7 +265,7 @@ export default function User() {
                     );
                   })}
                   {
-                          !loading && userList.length < 1 && (
+                          (!loadingGetAllUser && !loadingGetAccessRights) && userList.length < 1 && (
                             <TableRow>
                             <TableCell style={{ textAlign: 'center' }} colSpan={TABLE_HEAD.length + 1}>
                                 <CustomizedTitle text={`Pas de résultats`} color='#212B36' level={3} />

@@ -112,8 +112,9 @@ const CreateOrDeleteHotel = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const manageHotelContent = (hotelId) => {
+  const manageHotelContent = (hotelId, hotelName) => {
     localStorage.setItem('hotelid', hotelId);
+    localStorage.setItem('hotelName', hotelName);
     navigatePage('/');
   };
 
@@ -179,7 +180,7 @@ const CreateOrDeleteHotel = () => {
                               </TableCellStyled>
                               <TableCellStyled align="right">
                                 <Stack direction="row" spacing={2} justifyContent='center'>
-                                  <CustomizedIconButton variant="contained" onClick={() => manageHotelContent(row._id)}>
+                                  <CustomizedIconButton variant="contained" onClick={() => manageHotelContent(row._id, row.name)}>
                                     <Iconify icon="bxs:user-check" width={20} height={20} color="rgba(140, 159, 177, 1)" />
                                   </CustomizedIconButton>
                                   <DeleteHotelDialog hotelId={row._id} reload={reload} />

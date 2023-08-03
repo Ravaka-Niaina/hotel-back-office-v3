@@ -83,6 +83,7 @@ const HistoricRatePlan = () => {
   };
 
   const fetchHistoricModifRatePlan = ({ nbContent = 5, numPage = 1 }) => {
+    setLoading(true);
     const payload = {
       nbContent,
       numPage,
@@ -97,8 +98,12 @@ const HistoricRatePlan = () => {
         setResultCount(result.data.nbResult);
         setRowsPerPage(result.data.nbContentPerPage);
         setPage(numPage);
+        setLoading(false);
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+        console.error(err);
+        setLoading(false);
+      });
   };
   
   useEffect(() => {
@@ -142,7 +147,7 @@ const HistoricRatePlan = () => {
                               </TableRow>
                             )
                           }
-                          {historicRoomTypeList.map((row) => {
+                          {!loading && historicRoomTypeList.map((row) => {
                             const { 
                               _id,
                               idRoomType, 

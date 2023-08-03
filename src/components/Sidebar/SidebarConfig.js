@@ -61,20 +61,7 @@ export const getSidebarConfig = async (context) => {
       title: 'Gestion plans tarifaires',
       path: '/dashboard/ratePlan',
       icon: getIcon('eva:file-text-fill'),
-      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/ratePlan'))
-        || checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/calendar')),
-      children: [
-        {
-          title: 'tarifs',
-          path: '/dashboard/ratePlan',
-          userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/ratePlan')),
-        },
-        {
-          title: 'calendrier',
-          path: '/dashboard/calendar',
-          userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/calendar')),
-        },
-      ],
+      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/ratePlan')),
     },
     {
       title: 'Gestion types de chambre',

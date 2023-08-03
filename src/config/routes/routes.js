@@ -56,7 +56,7 @@ export default function Router() {
       children: [
         {
           path: 'app',
-          element: <Protected child={<DashboardApp />} allowedRoles={getAllowedRoles(`${dashboardPath}/app`)} />,
+          element: <Protected child={<Calendar />} allowedRoles={getAllowedRoles(`${dashboardPath}/app`)} />,
         },
         {
           path: 'homeForm',
@@ -74,10 +74,10 @@ export default function Router() {
           path: 'ratePlan',
           element: <Protected child={<RatePlan />} allowedRoles={getAllowedRoles(`${dashboardPath}/ratePlan`)} />,
         },
-        {
-          path: 'calendar',
-          element: <Protected child={<Calendar />} allowedRoles={getAllowedRoles(`${dashboardPath}/calendar`)} />,
-        },
+        // {
+        //   path: 'calendar',
+        //   element: <Protected child={<Calendar />} allowedRoles={getAllowedRoles(`${dashboardPath}/calendar`)} />,
+        // },
         {
           path: 'user',
           element: <Protected child={<User />} allowedRoles={getAllowedRoles(`${dashboardPath}/user`)} />,

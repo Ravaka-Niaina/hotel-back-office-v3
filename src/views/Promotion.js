@@ -138,8 +138,8 @@ const Promotion = () => {
       context.showResultError(true);
     }
   };
-  const getAllPromotion = (p = 1, row = rowsPerPage) => {
-    context.showLoader(true);
+  const getAllPromotion = async (p = 1, row = rowsPerPage) => {
+    setLoading(true);
     setPage(p);
     setRowsPerPage(row);
     const payload = {
@@ -151,43 +151,34 @@ const Promotion = () => {
     // const user = JSON.parse(localStorage.getItem('partner_id'));
     try {
       const idToken = localStorage.getItem("id_token");
-      getPromotionList(payload, idToken)
-        .then((result) => {
-          console.log(result);
-          const dataStatus = result.data.status;
-          const dataList = result.data.list;
+      const result = await getPromotionList(payload, idToken);
+      const dataStatus = result.data.status;
+      const dataList = result.data.list;
 
-          if (dataStatus === 200) {
-            setPromotionList(dataList);
-            setResultCount(result.data.nbResult);
-          }
-          else if (result.data.errors) {
-            const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
-            const indication = result.data.errors[item];
-            const message = `${item}: ${indication}`;
-            context.changeResultErrorMessage(message);
-            context.showResultError(true);
-          }
-          else if (result.data.message) {
-            context.changeResultErrorMessage(result.data.message);
-            context.showResultError(true);
-          }
-          else {
-            context.changeResultErrorMessage('Une erreur est survenue lors du chargement des données');
-            context.showResultError(true);
-            context.showResultError(true);
-          }
-        })
-        .catch((e) => {
-          context.changeResultErrorMessage(e.message);
-          context.showResultError(true);
-        })
-        .finally(() => {
-          context.showLoader(false);
-        });
+      if (dataStatus === 200) {
+        setPromotionList(dataList);
+        setResultCount(result.data.nbResult);
+      }
+      else if (result.data.errors) {
+        const item = Object.keys(result.data.errors).filter((e, i) => i === 0)[0];
+        const indication = result.data.errors[item];
+        const message = `${item}: ${indication}`;
+        context.changeResultErrorMessage(message);
+        context.showResultError(true);
+      }
+      else if (result.data.message) {
+        context.changeResultErrorMessage(result.data.message);
+        context.showResultError(true);
+      }
+      else {
+        context.changeResultErrorMessage('Une erreur est survenue lors du chargement des données');
+        context.showResultError(true);
+      }
+      setLoading(false);
     } catch (e) {
       context.changeResultErrorMessage(e.message);
       context.showResultError(true);
+      setLoading(false);
     }
   };
 

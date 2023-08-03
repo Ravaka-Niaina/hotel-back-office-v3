@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 // material
 import {
+  Box,
   Table,
   Stack,
   TableRow,
@@ -28,6 +29,7 @@ import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle'
 import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
 import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
 import { lightBackgroundToTop } from '../components/CustomizedComponents/NeumorphismTheme';
+import CustomizedLinearProgress from '../components/CustomizedComponents/CustomizedLinearProgress';
 
 // ----------------------------------------------------------------------
 
@@ -61,6 +63,8 @@ const TypeChambre = () => {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const reload = async () => {
@@ -81,9 +85,8 @@ const TypeChambre = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterName]);
 
-  function getAllRoomType() {
-    context.showLoader(true);
-
+  async function getAllRoomType() {
+    setLoading(true);
     const payload = {
       tableName: 'typeChambre',
       valueToSearch: filterName,
@@ -94,24 +97,18 @@ const TypeChambre = () => {
 
     const idToken = localStorage.getItem('id_token');
     try {
-      getRoomTypeList(payload, idToken)
-        .then((datas) => {
-          if (datas.data.status === 200) {
-            const roomTypeData = datas.data;
-            setRoomTypeList(roomTypeData.list);
-          } else {
-            setRoomTypeList([]);
-            navigate('/chooseHotelToManage');
-          }
-        }) 
-        .catch(() => {})
-        .finally(() => {
-          context.showLoader(false);
-        });
+      const datas = await getRoomTypeList(payload, idToken);
+      if (datas.data.status === 200) {
+        const roomTypeData = datas.data;
+        setRoomTypeList(roomTypeData.list);
+      } else {
+        setRoomTypeList([]);
+        navigate('/chooseHotelToManage');
+      }
+      setLoading(false);
     } catch (e) {
       context.changeResultErrorMessage(e.message);
-      context.showResultError(true);
-      context.showLoader(false);
+      setLoading(false);
     }
   }
 
@@ -194,7 +191,16 @@ const TypeChambre = () => {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {roomTypeList.map((row) => {
+                  { loading && (
+                    <TableRow>
+                      <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={TABLE_HEAD.length + 1}>
+                        <Box sx={{ margin: 1, textAlign: 'center' }} >
+                          <CustomizedLinearProgress />
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                  {!loading && roomTypeList && roomTypeList.map((row) => {
                     const { _id, nom, nbAdulte, nbEnfant, chambreTotal, superficie } = row;
                     const isItemSelected = selected.indexOf(nom) !== -1;
                     return (
@@ -229,6 +235,26 @@ const TypeChambre = () => {
                       <TableCellStyled colSpan={6} />
                     </TableRow>
                   )}
+                  {
+                    !loading && roomTypeList.length < 1 && (
+                      <TableRow>
+                        <TableCell style={{ textAlign: 'center' }} colSpan={TABLE_HEAD.length + 1}>
+                          <CustomizedTitle text={`Pas de résultats`} color='#212B36' level={3} />
+                          <Typography variant="body2" align="center">
+                            Pas de types chambres trouvés &nbsp;
+                            {/* <strong>
+                              &quot;
+                              Statut: &nbsp; {filter.status === 'none' ? ' tous ,' : `${filter.status} ,`}
+                              {
+                                filter.dateOf !== 'none' && `  ${filter.dateOf} entre le ${format(new Date(filter.dateFrom), 'dd MMMM yyyy')} et ${format(new Date(filter.dateUntil), 'dd MMMM yyyy')}.`
+                              }
+                              &quot;
+                            </strong>. */}
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  }
                 </TableBody>
 
                 {isUserNotFound && (
