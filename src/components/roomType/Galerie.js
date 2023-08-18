@@ -90,7 +90,6 @@ const Galerie = ({showGalerie, setShowGalerie, photoSortie, setPhotoSortie, prev
             }
         })
         .catch(err => console.error(err));
-        // callAPI('get', '/galerie', {}, displayResult);
     }
 
     useEffect(() => {
