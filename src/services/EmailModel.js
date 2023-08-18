@@ -28,7 +28,7 @@ export const getEmailModelFromBackEnd = (emailType) =>
 
 export const removePhotoFromGallery = (payload) =>
 axios.post(
-  `${config.host}/galerie/remove`,
+  `${config.host}/galeriePhoto/remove`,
   payload,
   {
     timeout: 10000,
@@ -41,7 +41,7 @@ axios.post(
 
 export const getGalleryPhotos = () =>
   axios.get(
-    `${config.host}/galerie`,
+    `${config.host}/galeriePhoto`,
     {
       timeout: 10000,
       headers: {
