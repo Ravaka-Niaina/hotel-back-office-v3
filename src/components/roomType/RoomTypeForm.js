@@ -4,8 +4,11 @@ import { Link as RouterLink } from 'react-router-dom';
 // material
 import { Stack, Button, Dialog, DialogActions, DialogContent, Checkbox } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
 // components
-import { createRoomType, fetchListEquipments, fetchListRatePlans, getRoomType, updateRoomType, } from '../../services/RoomType';
+import { createRoomType, fetchListEquipments, fetchListRatePlans, getRoomType, updateRoomType, fetchListLanguages } from '../../services/RoomType';
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
@@ -39,8 +42,7 @@ const RoomTypeForm = ({
     stageNumber: '',
     adultNumber: '',
     childNumber: '',
-    descriptionInFrench: '',
-    descriptionInEnglish: '',
+    descriptions: {},
     videos: [],
     photo: [],
     imgCrop: '',
@@ -66,7 +68,10 @@ const RoomTypeForm = ({
   const [photoSortie, setPhotoSortie] = useState([]);
   const [previewSortie, setPreviewSortie] = useState([]);
   const [previewedImage, setPreviewedImage] = useState(imgCrop ? `${config.host}/${roomType.imgCrop}` : null);
-
+  const [languageValue, setLanguageValue] = useState(0);
+  const [languages, setLanguages] = useState([]);
+  const [choosedLanguageAbbrev, setChoosedLanguageAbbrev] = useState('');
+  
   const clearForm = () => {
     setRoomType({
       nameInFrench: '',
@@ -154,6 +159,12 @@ const RoomTypeForm = ({
     //   [name]: value, 
   };
 
+  const handleChangeDescriptionValue = (e) => {
+    const tempRoomType = { ...roomType};
+    tempRoomType.descriptions[choosedLanguageAbbrev] = e.target.value;
+    setRoomType(tempRoomType);
+  };
+
   const getListEquipments = () => {
     fetchListEquipments()
     .then(result => {
@@ -186,6 +197,23 @@ const RoomTypeForm = ({
       setRatePlans(ratePlansTemp);
     })
     .catch(err => console.error(err))
+  };
+
+  const getListLanguages = () => {
+    fetchListLanguages()
+    .then(result => {
+      console.log(result.data.listLanguages);
+      setLanguages(result.data.listLanguages);
+      const tempDesc = {};
+      result.data.listLanguages.forEach(language => {
+        tempDesc[language.abbrev] = '';
+      });
+      setRoomType({
+        ...roomType,
+        descriptions: tempDesc,
+      });
+      setChoosedLanguageAbbrev(tempDesc[Object.keys(roomType.descriptions)[0]]);
+    });
   };
 
   const getInfoRoomType = () => {
@@ -257,6 +285,7 @@ const RoomTypeForm = ({
     if (roomTypeId) return;
     getListEquipments();
     getListRatePlans();
+    getListLanguages();
   }, []);
 
   const getClearedErrors = () => ({
@@ -505,6 +534,20 @@ const RoomTypeForm = ({
     setPreviewedImage(null);
   };
 
+  const value = 'hehe';
+
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
+
+  const handleChangeLanguage = (event: React.SyntheticEvent, newValue: number) => {
+    setLanguageValue(newValue);
+    setChoosedLanguageAbbrev(Object.keys(roomType.descriptions)[languageValue]);
+  }
+
   return (
     <>
       <Dialog open={open} onClose={handleClose} maxWidth={'md'}>
@@ -642,14 +685,25 @@ const RoomTypeForm = ({
           </Stack>
           <CustomizedTitle text='Description' size={18} level={0} />
           <Stack sx={{ p: 2 }} direction={{ xs: 'column', md: 'row' }} spacing={2}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs 
+              value={languageValue} 
+              onChange={handleChangeLanguage} 
+              aria-label="basic tabs example"
+            >
+              {languages.map((language, index) => 
+                <Tab key={language.abbrev} label={language.name} {...a11yProps(index)} />
+              )}
+            </Tabs>
+          </Box>
             <CustomizedInput
               placeholder="description"
-              onChange={handleChange}
+              onChange={handleChangeDescriptionValue}
               error={false}
               margin="dense"
               id="description"
               name="descriptionInFrench"
-              label="Description"
+              // label="Description"
               type="text"
               fullWidth
               required
@@ -658,25 +712,7 @@ const RoomTypeForm = ({
                 error: true,
                 helpertext: errors.descriptionInFrench,
               })}
-              value={roomType.descriptionInFrench}
-            />
-            <CustomizedInput
-              placeholder="description en anglais"
-              onChange={handleChange}
-              error={false}
-              margin="dense"
-              id="description_anglais"
-              name="descriptionInEnglish"
-              label="Description en anglais"
-              type="text"
-              fullWidth
-              required
-              multiline
-              {...(errors.descriptionInEnglish && {
-                error: true,
-                helpertext: errors.descriptionInEnglish,
-              })}
-              value={roomType.descriptionInEnglish}
+              value={roomType.descriptions[choosedLanguageAbbrev]}
             />
           </Stack>
           <Equipments

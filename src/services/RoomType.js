@@ -70,4 +70,9 @@ export const fetchListRatePlans = (payload) =>
       Authorization: localStorage.getItem("id_token"),
       hotelid: localStorage.getItem('hotelid'),
     },
-  })
+  });
+
+export const fetchListLanguages = () => 
+  axios.get(`${config.host}/language`, {
+    timeout: 10000,
+  });
