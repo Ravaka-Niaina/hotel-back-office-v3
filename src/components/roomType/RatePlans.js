@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Stack, Checkbox } from '@mui/material';
 import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
 
@@ -29,4 +29,4 @@ const RatePlans = ({ ratePlans, setRatePlans }) => {
   );
 };
 
-export default RatePlans;
+export default memo(RatePlans);

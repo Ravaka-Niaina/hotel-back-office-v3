@@ -106,7 +106,7 @@ const AddImageCrop = ({
   };
   useEffect(()=>{
     addCropedImage(previewedImage)
-  },[previewedImage,addCropedImage])
+  },[previewedImage])
 
   return (
     <Stack direction={`column`}>
