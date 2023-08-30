@@ -34,6 +34,7 @@ import CustomizedLinearProgress from '../components/CustomizedComponents/Customi
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
+  { id: ' ', label: ' ', alignRight: false },
   { id: 'nom', label: 'Nom', alignRight: false },
   { id: 'nombreAdultes', label: 'Nombre Adultes', alignRight: false },
   { id: 'nombreEnfants', label: 'Nombre Enfants', alignRight: false },
@@ -167,7 +168,7 @@ const TypeChambre = () => {
           <CustomizedTitle size={20} text="Type de chambre" />
           <AddRoomTypeDialog reload={reload} />
         </Stack>
-
+        
         <CustomizedPaperOutside
           sx={{
             ...lightBackgroundToTop,
@@ -201,8 +202,8 @@ const TypeChambre = () => {
                     </TableRow>
                   )}
                   {!loading && roomTypeList && roomTypeList.map((row) => {
-                    const { _id, nom, nbAdulte, nbEnfant, chambreTotal, superficie } = row;
-                    const isItemSelected = selected.indexOf(nom) !== -1;
+                    const { _id, names, nbAdulte, nbEnfant, chambreTotal, superficie } = row;
+                    const isItemSelected = selected.indexOf(names) !== -1;
                     return (
                       <TableRow
                         hover
@@ -213,11 +214,11 @@ const TypeChambre = () => {
                         aria-checked={isItemSelected}
                       >
                         <TableCellStyled padding="checkbox">
-                          <CustomizedCheckbox checked={isItemSelected} onChange={(event) => handleClick(event, nom)} />
+                          <CustomizedCheckbox checked={isItemSelected} onChange={(event) => handleClick(event, names)} />
                         </TableCellStyled>
                         <TableCellStyled component="th" scope="row" padding="none">
                           <Typography variant="subtitle2" noWrap>
-                            {nom}
+                            {names?.[Object.keys(names)[0]]}
                           </Typography>
                         </TableCellStyled>
                         <TableCellStyled align="left">{nbAdulte}</TableCellStyled>

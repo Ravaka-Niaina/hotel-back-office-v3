@@ -250,40 +250,71 @@ const RoomTypeForm = ({
     });
   };
 
+  const getMissingLanguages = useCallback(async (names, descriptions) => {
+    const result = await fetchListLanguages();
+    setLanguages(result.data.listLanguages);
+    const tempLanguagesContent = {};
+    result.data.listLanguages.forEach(language => {
+      tempLanguagesContent[language.abbrev] = '';
+    });
+
+    const tempNames = {...tempLanguagesContent};
+    const tempDescriptions = {...tempLanguagesContent};
+
+    if (!names || !descriptions) {
+      return { names: tempNames, descriptions: tempDescriptions };
+    }
+
+    const languagesAbbrevForName = Object?.keys(names);
+    languagesAbbrevForName.forEach(languageAbbrev => {
+      tempNames[languageAbbrev] = names[languageAbbrev];
+    });
+    
+    const languagesAbbrevForDesc = Object?.keys(descriptions);
+    languagesAbbrevForDesc.forEach(languageAbbrev => {
+      tempDescriptions[languageAbbrev] = descriptions[languageAbbrev];
+    });
+
+    setChoosedDescriptionLanguageAbbrev(result.data.listLanguages[0].abbrev);
+    setChoosedNameLanguageAbbrev(result.data.listLanguages[0].abbrev);
+
+    return { names: tempNames, descriptions: tempDescriptions };
+  }, [roomType]);
+
   const getInfoRoomType = () => {
     getRoomType(roomTypeId)
     .then(result => {
       if (result.data.status === 200) {
         const {
-          nom, 
+          names, 
           nbAdulte, 
           nbEnfant, 
-          name, 
-          desc, 
           photo, 
           chambreTotal,
           etage,
           superficie,
-          description,
+          descriptions,
           equipements,
           planTarifaire,
           videos,
           photoCrop,
         } = result.data.typeChambre;
-        setRoomType({
-          nameInFrench: nom,
-          nameInEnglish: name,
-          numberOfRoom: chambreTotal,
-          areaSize: superficie,
-          stageNumber: etage,
-          adultNumber: nbAdulte,
-          childNumber: nbEnfant,
-          descriptionInFrench: description,
-          descriptionInEnglish: desc,
-          videos,
-          photo,
-          imgCrop: photoCrop[0],
+        getMissingLanguages(names, descriptions)
+        .then(({ names, descriptions }) => {
+          setRoomType({
+            names,
+            numberOfRoom: chambreTotal,
+            areaSize: superficie,
+            stageNumber: etage,
+            adultNumber: nbAdulte,
+            childNumber: nbEnfant,
+            descriptions,
+            videos,
+            photo,
+            imgCrop: photoCrop[0],
+          });
         });
+        
         setPreviewedImage(`${config.host}/${photoCrop[0]}`);
         setRatePlans(planTarifaire);
         setEquipments(equipements);
@@ -492,15 +523,13 @@ const RoomTypeForm = ({
     const payload = {
       toSend: {
         _id: roomTypeId,
-        nom: roomType.nameInFrench,
-        name: roomType.nameInEnglish,
+        names: roomType.names,
         chambreTotal: roomType.numberOfRoom,
         superficie: roomType.areaSize,
         etage: roomType.stageNumber,
         nbAdulte: roomType.adultNumber,
         nbEnfant: roomType.childNumber,
-        description: roomType.descriptionInFrench,
-        desc: roomType.descriptionInEnglish,
+        descriptions: roomType.descriptions,
         photo: photoSortie, 
         equipements: equipmentsId,
         planTarifaire: ratePlansId, 
@@ -513,7 +542,6 @@ const RoomTypeForm = ({
     };
     updateRoomType(payload)
     .then(result => {
-      console.log(result);
       if (result.data.status === 200) {
         setOpen(false);
         context.changeResultSuccessMessage('Enregistrement inséré avec succès');
