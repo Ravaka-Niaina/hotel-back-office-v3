@@ -8,7 +8,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 // components
-import { createRoomType, fetchListEquipments, fetchListRatePlans, getRoomType, updateRoomType, fetchListLanguages } from '../../services/RoomType';
+import { createRoomType, fetchListEquipments, fetchListRatePlans, getRoomType, updateRoomType } from '../../services/RoomType';
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
@@ -20,6 +20,7 @@ import RatePlans from './RatePlans';
 import styles from './RoomTypeForm.module.css';
 import config from '../../config/api';
 
+import { fetchListLanguages } from '../../services/Common';
 import { ThemeContext } from '../context/Wrapper';
 
 const imgCrop = null;

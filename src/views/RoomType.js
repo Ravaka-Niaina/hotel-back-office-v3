@@ -218,7 +218,7 @@ const TypeChambre = () => {
                         </TableCellStyled>
                         <TableCellStyled component="th" scope="row" padding="none">
                           <Typography variant="subtitle2" noWrap>
-                            {names?.[Object.keys(names)[0]]}
+                            {names?.fr}
                           </Typography>
                         </TableCellStyled>
                         <TableCellStyled align="left">{nbAdulte}</TableCellStyled>
