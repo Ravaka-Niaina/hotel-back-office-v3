@@ -13,6 +13,15 @@ function getNumberOfNights(date1, date2) {
     const daydiff = (diff / 86400000);
     return daydiff;
 }
+
+function formatDate(dateString) {
+    try {
+        return format(new Date(dateString), 'dd MMMM yyyy');
+    } catch (err) {
+        return dateString;
+    }
+}
+
 const ReservationRow = ({row,navigate}) => {
     const [open, setOpen] = useState(false);
 
@@ -77,14 +86,13 @@ const ReservationRow = ({row,navigate}) => {
                                             <TableCell component="th" scope="row">
                                                 {itineraire.NumeroITineraire}
                                             </TableCell>
-                                            <TableCell>{format(new Date(itineraire.dateSejour.debut), 'dd MMMM yyyy')}</TableCell>
-                                            <TableCell>{format(new Date(itineraire.dateSejour.fin), 'dd MMMM yyyy')}</TableCell>
+                                            <TableCell>{formatDate(new Date(itineraire.dateSejour.debut), 'dd MMMM yyyy')}</TableCell>
+                                            <TableCell>{formatDate(new Date(itineraire.dateSejour.fin), 'dd MMMM yyyy')}</TableCell>
                                             <TableCell>{getNumberOfNights(itineraire.dateSejour.debut, itineraire.dateSejour.fin)}</TableCell>
                                             <TableCell >
                                                 <ul>
                                                     {
-                                                        itineraire.tarifReserves.map((tarif,j) => {
-                                                            return (
+                                                        itineraire.tarifReserves.map((tarif,j) => (
                                                                 <li key={j}>
                                                                     <Link href="#" underline="hover" onClick={()=>navigate('details',row,i,j)}>
                                                                         {tarif.nomTypeChambre}
@@ -103,8 +111,7 @@ const ReservationRow = ({row,navigate}) => {
                                                                         </li>
                                                                     </ul>
                                                                 </li>
-                                                            );
-                                                        })}
+                                                            ))}
                                                 </ul>
                                             </TableCell>
                                             <TableCell>

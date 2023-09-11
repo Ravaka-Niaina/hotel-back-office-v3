@@ -278,7 +278,7 @@ const CalendarEditor = ({ room , dateRange , setDateRange, reloadRoom, fetchData
                                 <Grid item xs={8} sx={{overflowX:'auto',overflowY:'hidden',maxWidth:'100',maxHeight:'25px'}}>
                                     <Stack justifyContent='flex-start' >
                                         <p >
-                                            {tarif.nom}
+                                            {tarif.names.fr}
                                         </p>
                                     </Stack>
                                 </Grid>

@@ -215,16 +215,16 @@ const RoomTypeForm = ({
     fetchListRatePlans({
       tableName: 'tarif',
       valuesToSearch: [],
-      fieldsToPrint: ['_id', 'nom'],
+      fieldsToPrint: ['_id', 'names.fr'],
       nbContent: 1000,
       numPage: 1,
     })
     .then(result => {
       const ratePlansTemp = [];
-      result.data.list?.forEach(({ _id, nom, }) => {
+      result.data.list?.forEach(({ _id, names, }) => {
         ratePlansTemp.push({
           _id,
-          name: nom,
+          names,
           checked: false,
         });
       });
@@ -236,6 +236,7 @@ const RoomTypeForm = ({
   const getListLanguages = () => {
     fetchListLanguages()
     .then(result => {
+      console.log(result.data);
       setLanguages(result.data.listLanguages);
       const tempLanguagesContent = {};
       result.data.listLanguages.forEach(language => {
@@ -600,7 +601,7 @@ const RoomTypeForm = ({
                 onChange={handleChangeTabNameValue} 
                 aria-label="basic tabs example"
               >
-                {languages.map((language, index) => 
+                {languages?.map((language, index) => 
                   <Tab key={language.abbrev} label={language.name} {...a11yProps(index)} />
                 )}
               </Tabs>

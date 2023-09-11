@@ -592,7 +592,7 @@ const AddRatePlanDialog = ({ reload , navigate}) => {
                           onClick={() => handleChangeAssignedList(k._id, 'assigned_canceling_politic')}
                         />
                       }
-                      label={k.nom}
+                      label={k.names.fr}
                     />
                   ))}
                 </div>

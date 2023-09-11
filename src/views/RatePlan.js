@@ -230,6 +230,8 @@ const RatePlan = () => {
                           }
                           {!loading && ratePlanList.map((row) => {
                             const { _id, names, isActif,chambresAtrb,politiqueAnnulAtrb } = row;
+                            console.log(chambresAtrb);
+                            console.log(politiqueAnnulAtrb);
                             const isItemSelected = selected.indexOf(names?.fr) !== -1;
                             
                             return (

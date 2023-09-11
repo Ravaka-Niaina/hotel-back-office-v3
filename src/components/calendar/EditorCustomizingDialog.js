@@ -218,7 +218,7 @@ const EditorCustomizingDialog = ({chambre , reloadRoom, dateRange, setDateRange,
             chambre.planTarifaire.map((oneRP)=>(
                 {
                     _id:oneRP._id,
-                    nom:oneRP.nom,
+                    nom:oneRP.names.fr,
                     checked:false,
                 }
             ))
