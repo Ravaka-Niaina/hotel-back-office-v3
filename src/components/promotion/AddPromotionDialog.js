@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { PropTypes } from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 // material
@@ -13,6 +13,8 @@ import {
   Button,
   FormControlLabel,
 } from '@mui/material';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -25,6 +27,7 @@ import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import { lightBackgroundToTop } from '../CustomizedComponents/NeumorphismTheme';
 import { createPromotion, getListTarifAndRoom } from '../../services/Promotion';
+import { fetchListLanguages } from '../../services/Common';
 import { ThemeContext } from '../context/Wrapper';
 import { formatDate } from '../../services/Util';
 
@@ -45,8 +48,7 @@ const AddPromotionDialog = ({reload,navigate}) => {
   const [allRoomType, setAllRoomType] = useState(true);
 
   const [promotion, setPromotion] = useState({
-    french_name: '',
-    english_name: '',
+    names: {},
     rate_plan: [],
     room_type: [],
     start_date_of_stay: formatDate(new Date().toLocaleDateString('en-US')),
@@ -76,10 +78,62 @@ const AddPromotionDialog = ({reload,navigate}) => {
     book_any_time: true,
     specific_days_of_stay: false,
   });
+
+  const [tabNameValue, setTabNameValue] = useState(0);
+  const [choosedNameLanguageAbbrev, setChoosedNameLanguageAbbrev] = useState('');
+
+  const [languages, setLanguages] = useState([]);
+
   const tarifSelected = [];
   const roomSelected = [];
   const promotionTemp = promotion;
-  useEffect(() => {}, []);
+
+  const getListLanguages = () => {
+    fetchListLanguages()
+    .then(result => {
+      setLanguages(result.data.listLanguages);
+      const tempLanguagesContent = {};
+      result.data.listLanguages.forEach(language => {
+        tempLanguagesContent[language.abbrev] = '';
+      });
+      setPromotion({
+        ...promotion,
+        names: tempLanguagesContent,
+      });
+      setChoosedNameLanguageAbbrev(result.data.listLanguages[0].abbrev);
+    });
+  };
+
+  const handleChangeNameValue = (e) => {
+    const tempPromotion = { ...promotion};
+    tempPromotion.names[choosedNameLanguageAbbrev] = e.target.value;
+    setPromotion(tempPromotion);
+
+    if (e.target.value.trim() === '') {
+      setErrors({
+        ...errors,
+        names: 'Il manque un ou plusieurs noms',
+      });
+    } else if (errors.names) {
+      setErrors({
+        ...errors,
+        names: '',
+      });
+    }
+  };
+
+
+  const handleChangeTabNameValue = (event: React.SyntheticEvent, newValue: number) => {
+    setTabNameValue(newValue);
+    setChoosedNameLanguageAbbrev(Object.keys(promotion.names)[newValue]);
+  };
+
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
 
   const handleChangeWeekDays = (k) => {
     const weekDaysTemp = promotion.week_days;
@@ -201,8 +255,14 @@ const AddPromotionDialog = ({reload,navigate}) => {
 
   const validate = (fieldValues) => {
     const temp = { ...errors };
-    if ('french_name' in fieldValues) temp.french_name = fieldValues.french_name ? '' : 'Ce champ est requis.';
-    if ('english_name' in fieldValues) temp.english_name = fieldValues.english_name ? '' : 'Ce champ est requis.';
+    const languagesAbbrev = Object.keys (fieldValues.names);
+    for (let i = 0; i < languagesAbbrev.length; i += 1) {
+      if (!fieldValues.names[languagesAbbrev[i]].trim()) {
+        temp.names = 'Il manque un ou plusieurs noms';
+        break;
+      }
+    }
+
     if ('discount' in fieldValues) temp.discount = fieldValues.discount !== '' ? '' : 'Ce champ est requis.';
     if ('min_stay' in fieldValues) temp.min_stay = fieldValues.min_stay !== '' ? '' : 'Ce champ est requis.';
     if (fieldValues.lead) {
@@ -223,9 +283,16 @@ const AddPromotionDialog = ({reload,navigate}) => {
   };
 
   const formIsValid = (newPromotion) => {
+    let areNamesOK = true;
+    const languagesAbbrev = Object.keys(newPromotion.names);
+    for (let i = 0; i < languagesAbbrev.length; i += 1) {
+      if (!newPromotion.names[languagesAbbrev[i]].trim()) {
+        areNamesOK = false;
+        break;
+      }
+    }
     const isValid =
-      newPromotion.french_name &&
-      newPromotion.english_name &&
+      areNamesOK &&
       newPromotion.discount &&
       newPromotion.min_stay !== '' &&
       (newPromotion.lead.min !== '' || !newPromotion.is_with_lead) &&
@@ -294,9 +361,13 @@ const AddPromotionDialog = ({reload,navigate}) => {
 
   const cleanPromotion = () => {
     setErrors(false);
+    const languagesAbbrev = Object.keys(promotion.names);
+    const emptyNames = {};
+    languagesAbbrev.forEach(languageAbbrev => {
+      emptyNames[languagesAbbrev] = '';
+    });
     setPromotion({
-      french_name: '',
-      english_name: '',
+      names: emptyNames,
       rate_plan: [],
       room_type: [],
       start_date_of_stay: formatDate(new Date().toLocaleDateString('en-US')),
@@ -330,7 +401,7 @@ const AddPromotionDialog = ({reload,navigate}) => {
 
   const formatPayloadToSend = () => {
     const payload = {
-      nom: promotion.french_name,
+      names: promotion.names,
       planTarifaire: promotion.rate_plan,
       typeChambre: promotion.room_type,
       dateDebutS: promotion.start_date_of_stay,
@@ -352,7 +423,6 @@ const AddPromotionDialog = ({reload,navigate}) => {
         min: promotion.is_with_lead ? promotion.lead.min : '',
         max: promotion.is_with_lead ? promotion.lead.max : '',
       },
-      name: promotion.english_name,
       isRemiseEuro: promotion.is_discount_euro,
       remise: promotion.discount,
       leadMinInfini: promotion.lead.min === '',
@@ -405,8 +475,11 @@ const AddPromotionDialog = ({reload,navigate}) => {
 
   useEffect(()=>{
     fetchData();
+    getListLanguages();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
+
+  console.log(choosedNameLanguageAbbrev);
   return (
     <>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
@@ -798,29 +871,30 @@ const AddPromotionDialog = ({reload,navigate}) => {
               Comment voulez-vous nommer cette promotion ?
             </FormLabel>
 
-            <Stack sx={{ p: 2 }} direction="row" spacing={3}>
+            <Stack sx={{ p: 2 }} >
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <Tabs 
+                value={tabNameValue} 
+                onChange={handleChangeTabNameValue} 
+                aria-label="basic tabs example"
+              >
+                {languages.map((language, index) => 
+                  <Tab key={language.abbrev} label={language.name} {...a11yProps(index)} />
+                )}
+              </Tabs>
+            </Box>
               <CustomizedInput
+                value={promotion.names?.[choosedNameLanguageAbbrev]}
                 name="french_name"
-                onChange={(e) => handleChangeInputs(e, 'french_name')}
+                onChange={handleChangeNameValue}
                 id="outlined-basic"
-                label="Nom"
+                // label="Nom"
                 variant="outlined"
-                {...(errors.french_name && {
+                {...(errors.names && {
                   error: true,
-                  helpertext: errors.french_name,
+                  helpertext: errors.names,
                 })}
-              />
-              <CustomizedInput
-                name="english_name"
-                // value={promotion.english_name}
-                onChange={(e) => handleChangeInputs(e, 'english_name')}
-                id="outlined-basic"
-                label="Name"
-                variant="outlined"
-                {...(errors.english_name && {
-                  error: true,
-                  helpertext: errors.english_name,
-                })}
+                style={{ marginLeft: '-15px' }}
               />
             </Stack>
           </FormControl>

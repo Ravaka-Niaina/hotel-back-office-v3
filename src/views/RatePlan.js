@@ -66,7 +66,7 @@ const RatePlan = () => {
     const payload = {
       tableName: 'tarif',
       valueToSearch: filterName,
-      fieldsToPrint: ['_id', 'nom', 'politiqueAnnulAtrb', 'chambresAtrb'],
+      fieldsToPrint: ['_id', 'names', 'politiqueAnnulAtrb', 'chambresAtrb'],
       nbContent: row,
       numPage: p,
     };
@@ -229,9 +229,9 @@ const RatePlan = () => {
                             )
                           }
                           {!loading && ratePlanList.map((row) => {
-                            const { _id, nom, isActif,chambresAtrb,politiqueAnnulAtrb } = row;
-                            const isItemSelected = selected.indexOf(nom) !== -1;
-
+                            const { _id, names, isActif,chambresAtrb,politiqueAnnulAtrb } = row;
+                            const isItemSelected = selected.indexOf(names?.fr) !== -1;
+                            
                             return (
                               <TableRow
                                 hover
@@ -241,7 +241,7 @@ const RatePlan = () => {
                                 selected={isItemSelected}
                                 aria-checked={isItemSelected}
                               >
-                                <TableCellStyled align="left">{nom}</TableCellStyled>
+                                <TableCellStyled align="left">{names?.fr}</TableCellStyled>
                                 <TableCellStyled align="left">
                                   <ul>
                                     {
@@ -269,6 +269,7 @@ const RatePlan = () => {
                                     <CustomizedIconButton 
                                       variant="contained" 
                                       onClick={()=>{
+                                        console.log(_id);
                                         navigate('modifyForm',_id);
                                       }}
                                     >

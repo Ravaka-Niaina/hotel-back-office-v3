@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Stack, Checkbox } from '@mui/material';
 import AccessibleIcon from '@mui/icons-material/Accessible';
 import ConnectedTvIcon from '@mui/icons-material/ConnectedTv';
@@ -179,4 +179,4 @@ const Equipments = ({ equipments, setEquipments }) => {
   );
 };
 
-export default Equipments;
+export default memo(Equipments);

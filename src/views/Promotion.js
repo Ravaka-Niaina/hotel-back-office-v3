@@ -144,7 +144,7 @@ const Promotion = () => {
     setRowsPerPage(row);
     const payload = {
       valueToSearch: filterName,
-      fieldsToPrint: ['nom', 'sejourMin', 'planTarifaire', 'typeChambre', 'dateDebutS', 'dateFinS'],
+      fieldsToPrint: ['names', 'sejourMin', 'planTarifaire', 'typeChambre', 'dateDebutS', 'dateFinS'],
       nbContent: row,
       numPage: p,
     };
@@ -258,7 +258,7 @@ const Promotion = () => {
                         }
                         {!loading && promotionList &&
                           promotionList.map((row) => {
-                            const { _id, nom, sejourMin, planTarifaire, typeChambre, dateDebutS, dateFinS } = row;
+                            const { _id, names, sejourMin, planTarifaire, typeChambre, dateDebutS, dateFinS } = row;
 
                             return (
                               <TableRow
@@ -269,7 +269,7 @@ const Promotion = () => {
                               >
                                 <TableCellStyled component="th" scope="row" padding="none">
                                   <Typography variant="subtitle2" noWrap>
-                                    {nom}
+                                    {names?.fr}
                                   </Typography>
                                 </TableCellStyled>
                                 <TableCellStyled align="left">{sejourMin}</TableCellStyled>

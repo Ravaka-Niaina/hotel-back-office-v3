@@ -151,7 +151,7 @@ const HistoricRatePlan = () => {
                             const { 
                               _id,
                               idRoomType, 
-                              roomTypeName, 
+                              ratePlanName, 
                               modifier, 
                               modificationDate, 
                               modifiedField, 
@@ -166,7 +166,7 @@ const HistoricRatePlan = () => {
                                 tabIndex={-1}
                                 role="checkbox"
                               >
-                                <TableCellStyled align="left">{roomTypeName}</TableCellStyled>
+                                <TableCellStyled align="left">{ratePlanName}</TableCellStyled>
                                 <TableCellStyled align="left">{modifier}</TableCellStyled>
                                 <TableCellStyled align="left">{modificationDate}</TableCellStyled>
                                 <TableCellStyled align="left">{modifiedField}</TableCellStyled>

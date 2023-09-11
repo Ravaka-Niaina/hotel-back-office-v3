@@ -9,9 +9,13 @@ import {
   Button,
   Stack,
 } from '@mui/material';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { fetchListLanguages } from '../../services/Common';
 import { ThemeContext } from '../context/Wrapper';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
@@ -27,10 +31,8 @@ const AddRatePlanDialog = ({ reload , navigate}) => {
   const context = useContext(ThemeContext);
   const [errors, setErrors] = useState(false);
   const [ratePlan, setRatePlan] = useState({
-    french_name: '',
-    english_name: '',
-    french_description: '',
-    english_description: '',
+    names: '',
+    descriptions: '',
     booking_all_time: 'true',
     start_date_of_booking: formatDate(new Date().toLocaleDateString('en-US')),
     end_date_of_booking: formatDate(new Date().toLocaleDateString('en-US')),
@@ -47,8 +49,42 @@ const AddRatePlanDialog = ({ reload , navigate}) => {
 
   const [listRoom, setListRoom] = useState(new Array(0));
   const [listPolitic, setListPolitic] = useState(new Array(0));
+
+  const [languages, setLanguages] = useState([]);
+
+  const [tabNameValue, setTabNameValue] = useState(0);
+  const [choosedNameLanguageAbbrev, setChoosedNameLanguageAbbrev] = useState('');
+
+  const [tabDescriptionValue, setTabDescriptionValue] = useState(0);
+  const [choosedDescriptionLanguageAbbrev, setChoosedDescriptionLanguageAbbrev] = useState('');
+  const getListLanguages = () => {
+    fetchListLanguages()
+    .then(result => {
+      setLanguages(result.data.listLanguages);
+      const tempLanguagesContent = {};
+      result.data.listLanguages.forEach(language => {
+        tempLanguagesContent[language.abbrev] = '';
+      });
+      setRatePlan({
+        ...ratePlan,
+        names: {...tempLanguagesContent},
+        descriptions: {...tempLanguagesContent},
+      });
+      setChoosedDescriptionLanguageAbbrev(result.data.listLanguages[0].abbrev);
+      setChoosedNameLanguageAbbrev(result.data.listLanguages[0].abbrev);
+    });
+  };
+
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
+
   useEffect(() => {
     getItems();
+    getListLanguages();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const getItems = () => {
@@ -96,12 +132,22 @@ const AddRatePlanDialog = ({ reload , navigate}) => {
 
   const validate = (fieldValues) => {
     const temp = { ...errors };
-    if ('french_name' in fieldValues) temp.french_name = fieldValues.french_name ? '' : 'Ce champ est requis.';
-    if ('english_name' in fieldValues) temp.english_name = fieldValues.english_name ? '' : 'Ce champ est requis.';
-    if ('french_description' in fieldValues)
-      temp.french_description = fieldValues.french_description ? '' : 'Ce champ est requis.';
-    if ('english_description' in fieldValues)
-      temp.english_description = fieldValues.english_description ? '' : 'Ce champ est requis.';
+    
+    const languagesAbbrev = Object.keys(fieldValues.names);
+    for (let i = 0; i < languagesAbbrev.length; i +=1) {
+      if (!fieldValues.names[languagesAbbrev[i]].trim()) {
+        temp.names = 'Il manque un ou plusieurs noms';
+        break;
+      }
+    }
+
+    for (let i = 0; i < languagesAbbrev.length; i +=1) {
+      if (!fieldValues.descriptions[languagesAbbrev[i]].trim()) {
+        temp.descriptions = 'Il manque une ou plusieurs descriptions';
+        break;
+      }
+    }
+
     if ('lead_min' in fieldValues && !ratePlan.no_lead_min)
       temp.lead_min = fieldValues.lead_min ? '' : 'Ce champ est requis.';
     if ('lead_max' in fieldValues && !ratePlan.no_lead_min)
@@ -113,11 +159,26 @@ const AddRatePlanDialog = ({ reload , navigate}) => {
   };
 
   const formIsValid = (newRatePlan) => {
+    const languagesAbbrev = Object.keys(newRatePlan.names);
+    let areNamesValid = true;
+    for (let i = 0; i < languagesAbbrev.length; i += 1) {
+      if (!newRatePlan.names[languagesAbbrev[i]].trim()) {
+        areNamesValid = false;
+        break;
+      }
+    }
+
+    let areDescriptionsValid = true;
+    for (let i = 0; i < languagesAbbrev.length; i += 1) {
+      if (!newRatePlan.descriptions[languagesAbbrev[i]].trim()) {
+        areDescriptionsValid = false;
+        break;
+      }
+    }
+
     const isValid =
-      newRatePlan.french_name &&
-      newRatePlan.english_name &&
-      newRatePlan.french_description &&
-      newRatePlan.english_description &&
+      areNamesValid &&
+      areDescriptionsValid &&
       (newRatePlan.lead_min || newRatePlan.no_lead_min) &&
       (newRatePlan.lead_max || newRatePlan.no_lead_min) &&
       Object.values(errors).every((x) => x === '');
@@ -126,9 +187,8 @@ const AddRatePlanDialog = ({ reload , navigate}) => {
 
   const formatPayloadToSend = () => {
     const payloadToSend = {
-      nom: ratePlan.french_name,
-      name: ratePlan.english_name,
-      description: ratePlan.french_description,
+      names: ratePlan.names,
+      descriptions: ratePlan.descriptions,
       dateReservation: {
         debut: ratePlan.booking_all_time === 'true' ? '' : ratePlan.start_date_of_booking,
         fin: ratePlan.booking_all_time === 'true' ? '' : ratePlan.end_date_of_booking,
@@ -151,12 +211,49 @@ const AddRatePlanDialog = ({ reload , navigate}) => {
     return payloadToSend;
   };
 
+  const handleChangeNameValue = (e) => {
+    const tempRatePlan = { ...ratePlan};
+    tempRatePlan.names[choosedNameLanguageAbbrev] = e.target.value;
+    setRatePlan(tempRatePlan);
+
+    if (e.target.value.trim() === '') {
+      setErrors({
+        ...errors,
+        names: 'Il manque un ou plusieurs noms',
+      });
+    } else if (errors.names) {
+      setErrors({
+        ...errors,
+        names: '',
+      });
+    }
+  };
+
+  const handleChangeDescriptionValue = (e) => {
+    const tempRatePlan = { ...ratePlan};
+    tempRatePlan.descriptions[choosedDescriptionLanguageAbbrev] = e.target.value;
+    setRatePlan(tempRatePlan);
+
+    if (e.target.value.trim() === '') {
+      setErrors({
+        ...errors,
+        descriptions: 'Il manque une ou plusieurs descriptions',
+      });
+    } else if (errors.descriptions) {
+      setErrors({
+        ...errors,
+        descriptions: '',
+      });
+    }
+  };
+
   const addNewRatePlan = () => {
     try{
       validate(ratePlan);
       if (formIsValid(ratePlan)) {
         const idToken = localStorage.getItem('id_token')
         context.showLoader(true);
+        console.log(formatPayloadToSend());
         createRatePlan(formatPayloadToSend())
           .then((result) => {
             console.log(result.data);
@@ -193,6 +290,17 @@ const AddRatePlanDialog = ({ reload , navigate}) => {
   const handleClose = () => {
     navigate('list');
   };
+
+  const handleChangeTabNameValue = (event: React.SyntheticEvent, newValue: number) => {
+    setTabNameValue(newValue);
+    setChoosedNameLanguageAbbrev(Object.keys(ratePlan.names)[newValue]);
+  };
+
+  const handleChangeLanguage = (event: React.SyntheticEvent, newValue: number) => {
+    setTabDescriptionValue(newValue);
+    setChoosedDescriptionLanguageAbbrev(Object.keys(ratePlan.descriptions)[newValue]);
+  };
+
   return (
     <>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
@@ -202,54 +310,53 @@ const AddRatePlanDialog = ({ reload , navigate}) => {
       <CustomizedPaperOutside sx={{ ...lightBackgroundToTop, background: '#E3EDF7', p: 5, minHeight: '100vh',width:0.8,margin:'auto' }}>
         <Stack justifyContent='flex-start' spacing={2} >
           <CustomizedTitle text="Nom" size={16} />
-            <Stack
-              justifyContent="space-between"
-              alignItems="center"
-              direction={{ xs: 'column', sm: 'row' }}
-              spacing={{ xs: 1, sm: 2, md: 4 }}
-            >
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <Tabs 
+                value={tabNameValue} 
+                onChange={handleChangeTabNameValue} 
+                aria-label="basic tabs example"
+              >
+                {languages.map((language, index) => 
+                  <Tab key={language.abbrev} label={language.name} {...a11yProps(index)} />
+                )}
+              </Tabs>
+            </Box>
+            <Stack spacing={{ xs: 1, sm: 2, md: 4 }} >
               <CustomizedInput
-                value={ratePlan.french_name}
-                onChange={handleChange}
+                value={ratePlan.names?.[choosedNameLanguageAbbrev]}
+                onChange={handleChangeNameValue}
                 placeholder="Nom"
                 sx={{ width: 1 }}
                 error={false}
                 margin="dense"
                 id="nom"
                 name="french_name"
-                label="Nom"
+                // label="Nom"
                 type="text"
                 fullWidth
                 required
-                {...(errors.french_name && {
+                {...(errors.names && {
                   error: true,
-                  helpertext: errors.french_name,
-                })}
-              />
-              <CustomizedInput
-                value={ratePlan.english_name}
-                onChange={handleChange}
-                placeholder="Name"
-                sx={{ width: 1 }}
-                error={false}
-                margin="dense"
-                id="name"
-                name="english_name"
-                label="Name"
-                type="text"
-                fullWidth
-                required
-                {...(errors.english_name && {
-                  error: true,
-                  helpertext: errors.english_name,
+                  helpertext: errors.names,
                 })}
               />
             </Stack>
             <CustomizedTitle text="Description" size={16} />
-            <Stack  direction="column" spacing={3}>
+            <Stack sx={{ p: 2 }} direction={{ xs: 'column', md: 'row' }} spacing={2}>
+              <Tabs 
+                value={tabDescriptionValue} 
+                onChange={handleChangeLanguage} 
+                aria-label="basic tabs example"
+              >
+                {languages.map((language, index) => 
+                  <Tab key={language.abbrev} label={language.name} {...a11yProps(index)} />
+                )}
+              </Tabs>
+            </Stack>
+            <Stack spacing={{ xs: 1, sm: 2, md: 4 }} style={{marginTop: '-3px'}} >
               <CustomizedInput
-                value={ratePlan.french_description}
-                onChange={handleChange}
+                value={ratePlan.descriptions?.[choosedDescriptionLanguageAbbrev]}
+                onChange={handleChangeDescriptionValue}
                 sx={{ width: 1 }}
                 placeholder="Votre description"
                 multiline
@@ -259,34 +366,13 @@ const AddRatePlanDialog = ({ reload , navigate}) => {
                 margin="dense"
                 id="nom"
                 name="french_description"
-                label="Description"
+                // label="Description"
                 type="text"
                 fullWidth
                 required
-                {...(errors.french_description && {
+                {...(errors.descriptions && {
                   error: true,
-                  helpertext: errors.french_description,
-                })}
-              />
-              <CustomizedInput
-                value={ratePlan.english_description}
-                onChange={handleChange}
-                sx={{ width: 1 }}
-                placeholder="Votre descripiton..."
-                multiline
-                rows={2}
-                rowsmax={2}
-                error={false}
-                margin="dense"
-                id="english_description"
-                name="english_description"
-                label="Description en anglais"
-                type="text"
-                fullWidth
-                required
-                {...(errors.english_description && {
-                  error: true,
-                  helpertext: errors.english_description,
+                  helpertext: errors.descriptions,
                 })}
               />
             </Stack>
@@ -487,7 +573,7 @@ const AddRatePlanDialog = ({ reload , navigate}) => {
                           onClick={() => handleChangeAssignedList(k._id, 'assigned_room')}
                         />
                       }
-                      label={k.nom}
+                      label={k?.names?.[Object.keys(k.names)[0]]}
                     />
                   ))}
                 </div>

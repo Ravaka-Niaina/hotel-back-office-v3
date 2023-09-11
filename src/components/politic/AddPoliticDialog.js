@@ -11,15 +11,19 @@ import {
   Typography,
   Stack,
 } from '@mui/material';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
 import Iconify from '../Iconify';
 
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
-
+import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
 import CustomizedRadio from '../CustomizedComponents/CustomizedRadio';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import CustomizedIconButton from '../CustomizedComponents/CustomizedIconButton';
 import { createPolitic } from '../../services/Politic';
+import { fetchListLanguages } from '../../services/Common';
 import { ThemeContext } from '../context/Wrapper';
 
 const AddPoliticDialog = ({ reload }) => {
@@ -27,10 +31,8 @@ const AddPoliticDialog = ({ reload }) => {
   // function to reinitialize politic
   const reinitializePolitic = () => {
     setPolitic({
-      frenchName: '',
-      englishName: '',
-      englishDescription: '',
-      frenchDescription: '',
+      names: {},
+      descriptions: {},
       type: 'jour',
       refundable: false,
       datePrice: [],
@@ -41,10 +43,8 @@ const AddPoliticDialog = ({ reload }) => {
   const [open, setOpen] = useState(false);
   // State of the politic to create (in english)
   const [politic, setPolitic] = useState({
-    frenchName: '',
-    englishName: '',
-    englishDescription: '',
-    frenchDescription: '',
+    names: {},
+    descriptions: {},
     type: 'jour',
     refundable: false,
     datePrice: [],
@@ -54,22 +54,55 @@ const AddPoliticDialog = ({ reload }) => {
   // State of the errors
   const [errors, setErrors] = useState(false);
 
+  const [languages, setLanguages] = useState([]);
+
+  const [tabNameValue, setTabNameValue] = useState(0);
+  const [choosedNameLanguageAbbrev, setChoosedNameLanguageAbbrev] = useState('');
+
+  const [tabDescriptionValue, setTabDescriptionValue] = useState(0);
+  const [choosedDescriptionLanguageAbbrev, setChoosedDescriptionLanguageAbbrev] = useState('');
+
+  const getListLanguages = () => {
+    fetchListLanguages()
+    .then(result => {
+      setLanguages(result.data.listLanguages);
+      const tempLanguagesContent = {};
+      result.data.listLanguages.forEach(language => {
+        tempLanguagesContent[language.abbrev] = '';
+      });
+      setPolitic({
+        ...politic,
+        names: {...tempLanguagesContent},
+        descriptions: {...tempLanguagesContent},
+      });
+      setChoosedDescriptionLanguageAbbrev(result.data.listLanguages[0].abbrev);
+      setChoosedNameLanguageAbbrev(result.data.listLanguages[0].abbrev);
+    });
+  };
+
   // Function to validate input fields
   const validate = (fieldValues) => {
     const temp = { ...errors };
     // For example : temp.nom is handling the string that contains the errors for the field nom
     // There is no error if temp.field is ''
-    if ('frenchName' in fieldValues) {
-      temp.frenchName = fieldValues.frenchName ? '' : 'Ce champ est requis.';
+    const languagesAbbrev = Object.keys(fieldValues.names);
+    for (let i = 0;i < languagesAbbrev.length; i += 1) {
+      if (!fieldValues.names[languagesAbbrev[i]].trim()) {
+        temp.names = 'Il manque un ou plusieurs noms';
+        break;
+      }
     }
-    if ('englishName' in fieldValues) {
-      temp.englishName = fieldValues.englishName ? '' : 'Ce champ est requis.';
+    for (let i = 0;i < languagesAbbrev.length; i += 1) {
+      if (!fieldValues.names[languagesAbbrev[i]].trim()) {
+        temp.names = 'Il manque un ou plusieurs noms';
+        break;
+      }
     }
-    if ('englishDescription' in fieldValues) {
-      temp.englishDescription = fieldValues.englishDescription ? '' : 'Ce champ est requis.';
-    }
-    if ('frenchDescription' in fieldValues) {
-      temp.frenchDescription = fieldValues.frenchDescription ? '' : 'Ce champ est requis.';
+    for (let i = 0;i < languagesAbbrev.length; i += 1) {
+      if (!fieldValues.descriptions[languagesAbbrev[i]].trim()) {
+        temp.descriptions = 'Il manque une ou plusieurs descriptions';
+        break;
+      }
     }
     if ('type' in fieldValues) {
       temp.type = fieldValues.type ? '' : 'Ce champ est requis.';
@@ -80,13 +113,29 @@ const AddPoliticDialog = ({ reload }) => {
   };
   // Function returning true if there is no error , otherwise it'll return false
   const formIsValid = (newPolitic) => {
+    const languagesAbbrev = Object.keys(newPolitic.names);
+
+    let areNamesOK = true;
+    for (let i = 0; i < languagesAbbrev.length; i += 1) {
+      if (!newPolitic.names[languagesAbbrev[i]]) {
+        areNamesOK = false;
+        break;
+      }
+    }
+
+    let areDescriptionsOK = true;
+    for (let i = 0; i < languagesAbbrev.length; i += 1) {
+      if (!newPolitic.descriptions[languagesAbbrev[i]]) {
+        areDescriptionsOK = false;
+        break;
+      }
+    }
+
     const testEveryField = () => {
       let test = false;
       if (
-        newPolitic.frenchName &&
-        newPolitic.englishName &&
-        newPolitic.englishDescription &&
-        newPolitic.frenchDescription &&
+        areNamesOK &&
+        areDescriptionsOK &&
         newPolitic.type &&
         newPolitic.refundable !== null &&
         newPolitic.refundable !== undefined &&
@@ -165,10 +214,67 @@ const AddPoliticDialog = ({ reload }) => {
     ]);
   };
 
+  const handleChangeNameValue = (e) => {
+    const tempPolitic = { ...politic};
+    tempPolitic.names[choosedNameLanguageAbbrev] = e.target.value;
+    setPolitic(tempPolitic);
+
+    if (e.target.value.trim() === '') {
+      setErrors({
+        ...errors,
+        names: 'Il manque un ou plusieurs noms',
+      });
+    } else if (errors.names) {
+      setErrors({
+        ...errors,
+        names: '',
+      });
+    }
+  };
+
   // UseEffect to set politics.datePrice to be values from conditions
   useEffect(() => {
     setPolitic((politic) => ({ ...politic, datePrice: [...conditions] }));
   }, [conditions]);
+
+  useEffect(() => {
+    getListLanguages();
+  }, []);
+
+  const handleChangeTabNameValue = (event: React.SyntheticEvent, newValue: number) => {
+    setTabNameValue(newValue);
+    setChoosedNameLanguageAbbrev(Object.keys(politic.names)[newValue]);
+  };
+
+  const handleChangeLanguage = (event: React.SyntheticEvent, newValue: number) => {
+    setTabDescriptionValue(newValue);
+    setChoosedDescriptionLanguageAbbrev(Object.keys(politic.descriptions)[newValue]);
+  };
+
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
+
+  const handleChangeDescriptionValue = (e) => {
+    const tempPolitic = { ...politic};
+    tempPolitic.descriptions[choosedDescriptionLanguageAbbrev] = e.target.value;
+    setPolitic(tempPolitic);
+
+    if (e.target.value.trim() === '') {
+      setErrors({
+        ...errors,
+        descriptions: 'Il manque une ou plusieurs descriptions',
+      });
+    } else if (errors.descriptions) {
+      setErrors({
+        ...errors,
+        descriptions: '',
+      });
+    }
+  };
 
   // Function to format the payload to send to the politics state
   const formatPayloadToSend = async () => {
@@ -212,10 +318,8 @@ const AddPoliticDialog = ({ reload }) => {
     const newRefundableValue = politic.refundable === 'true' || politic.refundable === true;
     // Formated Payload
     const formatedPayload = {
-      nom: politic.frenchName,
-      name: politic.englishName,
-      desc: politic.englishDescription,
-      description: politic.frenchDescription,
+      names: politic.names,
+      descriptions: politic.descriptions,
       type: politic.type,
       datePrice: newPoliticDatePrice,
       remboursable: newRefundableValue,
@@ -362,49 +466,61 @@ const AddPoliticDialog = ({ reload }) => {
           <Typography variant="subtitle1" sx={{ fontWeight: 800, textDecoration: 'underline', mb: 2 }}>
             Informations sur la politique d'annulation
           </Typography>
-          <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+          <Stack>
+            <CustomizedTitle text="Nom" size={16} style={{ marginBottom: '-20px' }} />
+            <Stack sx={{ p: 2 }} direction={{ xs: 'column', md: 'row' }} spacing={2}>
+              <Tabs 
+                value={tabNameValue} 
+                onChange={handleChangeTabNameValue} 
+                aria-label="basic tabs example"
+              >
+                {languages.map((language, index) => 
+                  <Tab key={language.abbrev} label={language.name} {...a11yProps(index)} />
+                )}
+              </Tabs>
+            </Stack>
             <CustomizedInput
               name="frenchName"
-              value={politic?.frenchName}
-              onChange={handleChange}
-              label={'Nom en français'}
+              value={politic.names?.[choosedNameLanguageAbbrev]}
+              onChange={handleChangeNameValue}
               {...(errors.frenchName && {
                 error: true,
                 helpertext: errors.frenchName,
               })}
-            />
-            <CustomizedInput
-              name="englishName"
-              value={politic?.englishName}
-              onChange={handleChange}
-              label={'Nom en anglais'}
-              {...(errors.englishName && {
-                error: true,
-                helpertext: errors.englishName,
-              })}
+              placeholder="Nom"
+              {...(errors.names && {
+                  error: true,
+                  helpertext: errors.names,
+                })}
+              required
             />
           </Stack>
-          <Stack sx={{ mb: 2 }}>
+          <Stack>
+            <CustomizedTitle 
+              text="Description" 
+              size={16} style={{ marginBottom: '-20px', marginTop: '20px' }} 
+            />
+            <Stack sx={{ p: 2 }} direction={{ xs: 'column', md: 'row' }} spacing={2}>
+              <Tabs 
+                value={tabDescriptionValue} 
+                onChange={handleChangeLanguage} 
+                aria-label="basic tabs example"
+              >
+                {languages.map((language, index) => 
+                  <Tab key={language.abbrev} label={language.name} {...a11yProps(index)} />
+                )}
+              </Tabs>
+            </Stack>
             <CustomizedInput
               name="frenchDescription"
-              value={politic?.frenchDescription}
-              onChange={handleChange}
-              label={'Description'}
+              value={politic.descriptions?.[choosedDescriptionLanguageAbbrev]}
+                onChange={handleChangeDescriptionValue}
+              // label={'Description'}
               multiline
-              {...(errors.frenchDescription && {
-                error: true,
-                helpertext: errors.frenchDescription,
-              })}
-            />
-            <CustomizedInput
-              name="englishDescription"
-              value={politic?.englishDescription}
-              onChange={handleChange}
-              label={'Description en anglais'}
-              multiline
-              {...(errors.englishDescription && {
-                error: true,
-                helpertext: errors.englishDescription,
+              required
+              {...(errors.descriptions && {
+                  error: true,
+                  helpertext: errors.descriptions,
               })}
             />
           </Stack>

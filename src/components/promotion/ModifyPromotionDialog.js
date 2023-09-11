@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import {Link as RouterLink} from 'react-router-dom';
 // material
@@ -12,6 +12,8 @@ import {
   Button,
   FormControlLabel,
 } from '@mui/material';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -19,6 +21,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Box } from '@mui/system';
 import { getListTarifAndRoom, getPromotionDetail, updatePromotion } from '../../services/Promotion';
 import { formatDate } from '../../services/Util';
+import { fetchListLanguages } from '../../services/Common';
 import { ThemeContext } from '../context/Wrapper';
 import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
 import CustomizedCheckbox from '../CustomizedComponents/CustomizedCheckbox';
@@ -37,8 +40,7 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
   const [listRoom, setListRoom] = useState([]);
   const [promotion, setPromotion] = useState({
     _id:'',
-    french_name: '',
-    english_name: '',
+    names: {},
     rate_plan: [],
     room_type: [],
     start_date_of_stay: formatDate(new Date().toLocaleDateString('en-US')),
@@ -78,6 +80,11 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
   const [allRatePlan, setAllRatePlan] = useState(true);
   const [allRoomType, setAllRoomType] = useState(true);
 
+  const [tabNameValue, setTabNameValue] = useState(0);
+  const [choosedNameLanguageAbbrev, setChoosedNameLanguageAbbrev] = useState('');
+
+  const [languages, setLanguages] = useState([]);
+
   const handleChangeWeekDays = (k) => {
     const weekDaysTemp = promotion.week_days;
     weekDaysTemp[k] = promotion.week_days[k] === 0 ? 1 : 0;
@@ -103,30 +110,32 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
           const oldPromotion = promotionDetail.data.promotion;
           delete oldPromotion.userIdInsert;
           delete oldPromotion.hotelUser;
-          setPromotion({
-            etat:oldPromotion.etat,
-            dateCreation:oldPromotion.dateCreation,
-            french_name: oldPromotion.nom,
-            english_name: oldPromotion.name,
-            rate_plan: oldPromotion.planTarifaire,
-            room_type: oldPromotion.typeChambre,
-            start_date_of_stay: oldPromotion.dateDebutS,
-            end_date_of_stay: oldPromotion.dateFinS,
-            week_days: oldPromotion.weekDays,
-            min_stay: oldPromotion.sejourMin,
-            first_day: oldPromotion.premierJour,
-            last_day: oldPromotion.dernierJour,
-            is_lead_hour: oldPromotion.isLeadHour,
-            lead: oldPromotion.lead,
-            is_discount_euro: oldPromotion.isRemiseEuro,
-            discount: oldPromotion.remise,
-            beginning_of_reservation: oldPromotion.debutReserv,
-            end_of_reservation: oldPromotion.finReserv,
-            is_with_lead: oldPromotion.isWithLead,
-            book_any_time: oldPromotion.reservAllTime,
-            specific_days_of_stay: oldPromotion.withNbDaysGetProm,
-            _id: row._id
-          });
+          getMissingLanguages(oldPromotion.names)
+          .then(resultMissingLanguages => {
+            setPromotion({
+              etat:oldPromotion.etat,
+              dateCreation:oldPromotion.dateCreation,
+              names: resultMissingLanguages.names,
+              rate_plan: oldPromotion.planTarifaire,
+              room_type: oldPromotion.typeChambre,
+              start_date_of_stay: oldPromotion.dateDebutS,
+              end_date_of_stay: oldPromotion.dateFinS,
+              week_days: oldPromotion.weekDays,
+              min_stay: oldPromotion.sejourMin,
+              first_day: oldPromotion.premierJour,
+              last_day: oldPromotion.dernierJour,
+              is_lead_hour: oldPromotion.isLeadHour,
+              lead: oldPromotion.lead,
+              is_discount_euro: oldPromotion.isRemiseEuro,
+              discount: oldPromotion.remise,
+              beginning_of_reservation: oldPromotion.debutReserv,
+              end_of_reservation: oldPromotion.finReserv,
+              is_with_lead: oldPromotion.isWithLead,
+              book_any_time: oldPromotion.reservAllTime,
+              specific_days_of_stay: oldPromotion.withNbDaysGetProm,
+              _id: row._id
+            });
+          })
           setSpecificDay(Object.values(oldPromotion.weekDays).some((elem)=>elem === 0));
         } else {
           context.changeResultErrorMessage('Une erreur interne est survenue lors du chargemenent des données.');
@@ -211,8 +220,13 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
 
   const validate = (fieldValues) => {
     const temp = { ...errors };
-    if ('french_name' in fieldValues) temp.french_name = fieldValues.french_name ? '' : 'Ce champ est requis.';
-    if ('english_name' in fieldValues) temp.english_name = fieldValues.english_name ? '' : 'Ce champ est requis.';
+    const languagesAbbrev = Object.keys(fieldValues.names);
+    for (let i = 0; i < languagesAbbrev.length; i += 1) {
+      if (!fieldValues.names[languagesAbbrev[i]].trim()) {
+        temp.names = 'Il manque un ou plusieurs noms';
+        break;
+      }
+    }
     if ('discount' in fieldValues) temp.discount = fieldValues.discount !== '' ? '' : 'Ce champ est requis.';
     if ('min_stay' in fieldValues) temp.min_stay = fieldValues.min_stay !== '' ? '' : 'Ce champ est requis.';
     if (fieldValues.lead) {
@@ -232,7 +246,16 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
   };
 
   const formIsValid = (newPromotion) => {
-    const isValid = newPromotion.french_name && newPromotion.english_name && newPromotion.discount &&
+    let areNamesOK = true;
+    const languagesAbbrev = Object.keys(newPromotion.names);
+    for (let i = 0; i < languagesAbbrev.length; i += 1) {
+      if (!newPromotion.names[languagesAbbrev[i]].trim()) {
+        areNamesOK = false;
+        break;
+      }
+    }
+    const isValid = areNamesOK 
+      && newPromotion.discount &&
       newPromotion.min_stay !== '' && (newPromotion.lead.min !== '' || !newPromotion.is_with_lead)
       && (newPromotion.lead.max !== '' || !newPromotion.is_with_lead)
       && (newPromotion.last_day !== '' || !newPromotion.specific_days_of_stay)
@@ -334,7 +357,7 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
     
     const payload = {
       _id: promotion._id,
-      nom: promotion.french_name,
+      names: promotion.names,
       planTarifaire: promotion.rate_plan,
       typeChambre: promotion.room_type,
       dateDebutS: promotion.start_date_of_stay,
@@ -404,6 +427,61 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
         });
     }
   };
+
+  const getMissingLanguages = useCallback(async (names) => {
+    const result = await fetchListLanguages();
+    setLanguages(result.data.listLanguages);
+    const tempLanguagesContent = {};
+    result.data.listLanguages.forEach(language => {
+      tempLanguagesContent[language.abbrev] = '';
+    });
+
+    const tempNames = {...tempLanguagesContent};
+
+    if (!names) {
+      return { names: tempNames };
+    }
+
+    const languagesAbbrevForName = Object?.keys(names);
+    languagesAbbrevForName.forEach(languageAbbrev => {
+      tempNames[languageAbbrev] = names[languageAbbrev];
+    });
+
+    setChoosedNameLanguageAbbrev(result.data.listLanguages[0].abbrev);
+
+    return { names: tempNames };
+  }, [promotion]);
+
+  const handleChangeNameValue = (e) => {
+    const tempPromotion = { ...promotion};
+    tempPromotion.names[choosedNameLanguageAbbrev] = e.target.value;
+    setPromotion(tempPromotion);
+
+    if (e.target.value.trim() === '') {
+      setErrors({
+        ...errors,
+        names: 'Il manque un ou plusieurs noms',
+      });
+    } else if (errors.names) {
+      setErrors({
+        ...errors,
+        names: '',
+      });
+    }
+  };
+
+  const handleChangeTabNameValue = (event: React.SyntheticEvent, newValue: number) => {
+    setTabNameValue(newValue);
+    setChoosedNameLanguageAbbrev(Object.keys(promotion.names)[newValue]);
+  };
+
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
+
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -802,29 +880,28 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
               Comment voulez-vous nommer cette promotion ?
             </FormLabel>
 
-            <Stack sx={{ p: 2 }} direction='row' spacing={3}>
+            <Stack sx={{ p: 2 }}>
+              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Tabs 
+                  value={tabNameValue} 
+                  onChange={handleChangeTabNameValue} 
+                  aria-label="basic tabs example"
+                >
+                  {languages.map((language, index) => 
+                    <Tab key={language.abbrev} label={language.name} {...a11yProps(index)} />
+                  )}
+                </Tabs>
+              </Box>
               <CustomizedInput
-                name='french_name'
-                value={promotion.french_name}
-                onChange={(e) => handleChangeInputs(e, 'french_name')}
-                id="outlined-basic"
-                label="Nom"
-                variant="outlined"
-                {...(errors.french_name && {
-                  error: true,
-                  helpertext: errors.french_name,
-                })}
-              />
-              <CustomizedInput
+                value={promotion.names?.[choosedNameLanguageAbbrev]}
                 name='english_name'
-                value={promotion.english_name}
-                onChange={(e) => handleChangeInputs(e, 'english_name')}
+                onChange={handleChangeNameValue}
                 id="outlined-basic"
-                label="Name"
+                // label="Name"
                 variant="outlined"
-                {...(errors.english_name && {
+                {...(errors.names && {
                   error: true,
-                  helpertext: errors.english_name,
+                  helpertext: errors.names,
                 })}
               />
             </Stack>

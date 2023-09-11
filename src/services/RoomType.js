@@ -70,4 +70,4 @@ export const fetchListRatePlans = (payload) =>
       Authorization: localStorage.getItem("id_token"),
       hotelid: localStorage.getItem('hotelid'),
     },
-  })
+  });

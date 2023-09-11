@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useCallback } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   FormControlLabel,
@@ -9,6 +9,9 @@ import {
   Button,
   Stack,
 } from '@mui/material';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -19,6 +22,7 @@ import CustomizedCheckbox from '../CustomizedComponents/CustomizedCheckbox';
 import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
 import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
 import { lightBackgroundToTop } from '../CustomizedComponents/NeumorphismTheme';
+import { fetchListLanguages } from '../../services/Common';
 import { ThemeContext } from '../context/Wrapper';
 import { formatDate } from '../../services/Util';
 import { getRoomTypeAndCancelingPoliticList, getRatePlanDetails, updateRatePlan } from '../../services/RatePlan';
@@ -28,10 +32,8 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
   const [errors, setErrors] = useState(false);
   const [ratePlan, setRatePlan] = useState({
     _id: ratePlanId,
-    french_name: '',
-    english_name: '',
-    french_description: '',
-    english_description: '',
+    names: {},
+    descriptions: {},
     booking_all_time: 'true',
     start_date_of_booking: formatDate(new Date().toLocaleDateString('en-US')),
     end_date_of_booking: formatDate(new Date().toLocaleDateString('en-US')),
@@ -48,6 +50,99 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
 
   const [listRoom, setListRoom] = useState(new Array(0));
   const [listPolitic, setListPolitic] = useState(new Array(0));
+  
+  const [languages, setLanguages] = useState([]);
+
+  const [tabNameValue, setTabNameValue] = useState(0);
+  const [choosedNameLanguageAbbrev, setChoosedNameLanguageAbbrev] = useState('');
+
+  const [tabDescriptionValue, setTabDescriptionValue] = useState(0);
+  const [choosedDescriptionLanguageAbbrev, setChoosedDescriptionLanguageAbbrev] = useState('');
+
+  const handleChangeTabNameValue = (event: React.SyntheticEvent, newValue: number) => {
+    setTabNameValue(newValue);
+    setChoosedNameLanguageAbbrev(Object.keys(ratePlan.names)[newValue]);
+  };
+
+  const handleChangeLanguage = (event: React.SyntheticEvent, newValue: number) => {
+    setTabDescriptionValue(newValue);
+    setChoosedDescriptionLanguageAbbrev(Object.keys(ratePlan.descriptions)[newValue]);
+  };
+
+  const handleChangeNameValue = (e) => {
+    const tempRatePlan = { ...ratePlan};
+    tempRatePlan.names[choosedNameLanguageAbbrev] = e.target.value;
+    setRatePlan(tempRatePlan);
+
+    if (e.target.value.trim() === '') {
+      setErrors({
+        ...errors,
+        names: 'Il manque un ou plusieurs noms',
+      });
+    } else if (errors.names) {
+      setErrors({
+        ...errors,
+        names: '',
+      });
+    }
+  };
+
+  const handleChangeDescriptionValue = (e) => {
+    const tempRatePlan = { ...ratePlan};
+    tempRatePlan.descriptions[choosedDescriptionLanguageAbbrev] = e.target.value;
+    setRatePlan(tempRatePlan);
+
+    if (e.target.value.trim() === '') {
+      setErrors({
+        ...errors,
+        descriptions: 'Il manque une ou plusieurs descriptions',
+      });
+    } else if (errors.descriptions) {
+      setErrors({
+        ...errors,
+        descriptions: '',
+      });
+    }
+  };
+
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
+
+  const getMissingLanguages = useCallback(async (names, descriptions) => {
+    const result = await fetchListLanguages();
+    setLanguages(result.data.listLanguages);
+    const tempLanguagesContent = {};
+    result.data.listLanguages.forEach(language => {
+      tempLanguagesContent[language.abbrev] = '';
+    });
+
+    const tempNames = {...tempLanguagesContent};
+    const tempDescriptions = {...tempLanguagesContent};
+
+    if (!names || !descriptions) {
+      return { names: tempNames, descriptions: tempDescriptions };
+    }
+
+    const languagesAbbrevForName = Object?.keys(names);
+    languagesAbbrevForName.forEach(languageAbbrev => {
+      tempNames[languageAbbrev] = names[languageAbbrev];
+    });
+    
+    const languagesAbbrevForDesc = Object?.keys(descriptions);
+    languagesAbbrevForDesc.forEach(languageAbbrev => {
+      tempDescriptions[languageAbbrev] = descriptions[languageAbbrev];
+    });
+
+    setChoosedDescriptionLanguageAbbrev(result.data.listLanguages[0].abbrev);
+    setChoosedNameLanguageAbbrev(result.data.listLanguages[0].abbrev);
+
+    return { names: tempNames, descriptions: tempDescriptions };
+  }, [ratePlan]);
+
   const getItems = () => {
     context.showLoader(true);
     getRoomTypeAndCancelingPoliticList()
@@ -67,8 +162,10 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
         context.changeResultErrorMessage(`Une erreur interne est survenue`);
         context.showResultError(true);
       });
+    
     getRatePlanDetails(ratePlanId)
       .then((result) => {
+        console.log(result.data);
         if (result.data.status === 200) {
           const checkedRoom = [];
           const checkedCancelingPolitic = [];
@@ -82,25 +179,28 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
               checkedCancelingPolitic.push(e._id);
             }
           });
-          setRatePlan({
-            _id: ratePlanId,
-            french_name: result.data.planTarifaire.nom,
-            english_name: result.data.planTarifaire.name,
-            french_description: result.data.planTarifaire.description,
-            english_description: result.data.planTarifaire.desc,
-            booking_all_time: result.data.planTarifaire.reservAToutMoment ? 'true' : 'false',
-            start_date_of_booking: result.data.planTarifaire.dateReservation.debut,
-            end_date_of_booking: result.data.planTarifaire.dateReservation.fin,
-            start_date_of_stay: result.data.planTarifaire.dateSejour.debut,
-            end_date_of_stay: result.data.planTarifaire.dateSejour.fin,
-            no_end_date_of_stay: result.data.planTarifaire.aucunFinDateSejour,
-            no_lead_min: result.data.planTarifaire.leadMinInfini,
-            lead_min: result.data.planTarifaire.lead.min,
-            lead_max: result.data.planTarifaire.lead.max,
-            is_lead_hour: result.data.planTarifaire.isLeadHour ? 'true' : 'false',
-            assigned_room: checkedRoom,
-            assigned_canceling_politic: checkedCancelingPolitic,
+          const { names, descriptions } = result.data.planTarifaire;
+          getMissingLanguages(names, descriptions)
+          .then((resultLanguages) => {
+            setRatePlan({
+              _id: ratePlanId,
+              names: resultLanguages.names,
+              descriptions: resultLanguages.descriptions,
+              booking_all_time: result.data.planTarifaire.reservAToutMoment ? 'true' : 'false',
+              start_date_of_booking: result.data.planTarifaire.dateReservation.debut,
+              end_date_of_booking: result.data.planTarifaire.dateReservation.fin,
+              start_date_of_stay: result.data.planTarifaire.dateSejour.debut,
+              end_date_of_stay: result.data.planTarifaire.dateSejour.fin,
+              no_end_date_of_stay: result.data.planTarifaire.aucunFinDateSejour,
+              no_lead_min: result.data.planTarifaire.leadMinInfini,
+              lead_min: result.data.planTarifaire.lead.min,
+              lead_max: result.data.planTarifaire.lead.max,
+              is_lead_hour: result.data.planTarifaire.isLeadHour ? 'true' : 'false',
+              assigned_room: checkedRoom,
+              assigned_canceling_politic: checkedCancelingPolitic,
+            });
           });
+          
         } else {
           context.changeResultErrorMessage(`les anciennes valeurs n'ont pas pu être chargé`);
           context.showResultError(true);
@@ -142,6 +242,21 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
 
   const validate = (fieldValues) => {
     const temp = { ...errors };
+    const languagesAbbrev = Object.keys(fieldValues.names);
+    for (let i = 0; i < languagesAbbrev.length; i += 1) {
+      if (!fieldValues.names[languagesAbbrev[i]].trim()) {
+        temp.names = 'Il manque un ou plusieurs noms';
+        break;
+      }
+    }
+
+    for (let i = 0; i < languagesAbbrev.length; i += 1) {
+      if (!fieldValues.descriptions[languagesAbbrev[i]].trim()) {
+        temp.descriptions = 'Il manque une ou plusieurs descriptions';
+        break;
+      }
+    }
+
     if ('french_name' in fieldValues) temp.french_name = fieldValues.french_name ? '' : 'Ce champ est requis.';
     if ('english_name' in fieldValues) temp.english_name = fieldValues.english_name ? '' : 'Ce champ est requis.';
     if ('french_description' in fieldValues)
@@ -159,9 +274,26 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
   };
 
   const formIsValid = (newRatePlan) => {
+    const languagesAbbrev = Object.keys(newRatePlan.names);
+    let areNamesOK = true;
+    for (let i = 0; i < languagesAbbrev.length; i += 1) {
+      if (!newRatePlan.names[languagesAbbrev[i]].trim()) {
+        areNamesOK = false;
+        break;
+      }
+    }
+
+    let areDescriptionsOK = true;
+    for (let i = 0; i < languagesAbbrev.length; i += 1) {
+      if (!newRatePlan.descriptions[languagesAbbrev[i]].trim()) {
+        areDescriptionsOK = false;
+        break;
+      }
+    }
+  
     const isValid =
-      newRatePlan.french_name &&
-      newRatePlan.english_name &&
+      areNamesOK &&
+      areDescriptionsOK &&
       newRatePlan.french_description &&
       newRatePlan.english_description &&
       (newRatePlan.lead_min || newRatePlan.no_lead_min) &&
@@ -173,10 +305,8 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
   const formatPayloadToSend = () => {
     const payloadToSend = {
       _id: ratePlanId,
-      nom: ratePlan.french_name,
-      name: ratePlan.english_name,
-      description: ratePlan.french_description,
-      desc: ratePlan.english_description,
+      names: ratePlan.names,
+      descriptions: ratePlan.descriptions,
       dateReservation: {
         debut: ratePlan.booking_all_time === 'true' ? '' : ratePlan.start_date_of_booking,
         fin: ratePlan.booking_all_time === 'true' ? '' : ratePlan.end_date_of_booking,
@@ -236,7 +366,8 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
   };
   useEffect(() => {
     getItems();
-  },[])
+  },[]);
+
   return (
     <>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
@@ -246,54 +377,53 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
       <CustomizedPaperOutside sx={{ ...lightBackgroundToTop, background: '#E3EDF7', p: 5, minHeight: '100vh',width: 0.8, margin: 'auto' }}>
         <Stack justifyContent='flex-start' spacing={2} >
           <CustomizedTitle text="Nom" size={16} />
-          <Stack
-            justifyContent="space-between"
-            alignItems="center"
-            direction={{ xs: 'column', sm: 'row' }}
-            spacing={{ xs: 1, sm: 2, md: 4 }}
-          >
-            <CustomizedInput
-              value={ratePlan.french_name}
-              onChange={handleChange}
-              placeholder="Nom"
-              sx={{ width: 1 }}
-              error={false}
-              margin="dense"
-              id="nom"
-              name="french_name"
-              label="Nom"
-              type="text"
-              fullWidth
-              required
-              {...(errors.french_name && {
-                error: true,
-                helpertext: errors.french_name,
-              })}
-            />
-            <CustomizedInput
-              value={ratePlan.english_name}
-              onChange={handleChange}
-              placeholder="Name"
-              sx={{ width: 1 }}
-              error={false}
-              margin="dense"
-              id="name"
-              name="english_name"
-              label="Name"
-              type="text"
-              fullWidth
-              required
-              {...(errors.english_name && {
-                error: true,
-                helpertext: errors.english_name,
-              })}
-            />
-          </Stack>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs 
+              value={tabNameValue} 
+              onChange={handleChangeTabNameValue} 
+              aria-label="basic tabs example"
+            >
+              {languages.map((language, index) => 
+                <Tab key={language.abbrev} label={language.name} {...a11yProps(index)} />
+              )}
+            </Tabs>
+          </Box>
+            <Stack spacing={{ xs: 1, sm: 2, md: 4 }} >
+              <CustomizedInput
+                value={ratePlan.names?.[choosedNameLanguageAbbrev]}
+                onChange={handleChangeNameValue}
+                placeholder="Nom"
+                sx={{ width: 1 }}
+                error={false}
+                margin="dense"
+                id="nom"
+                name="french_name"
+                // label="Nom"
+                type="text"
+                fullWidth
+                required
+                {...(errors.names && {
+                  error: true,
+                  helpertext: errors.names,
+                })}
+              />
+            </Stack>
           <CustomizedTitle text="Description" size={16} />
+          <Stack sx={{ p: 2 }} direction={{ xs: 'column', md: 'row' }} spacing={2}>
+            <Tabs 
+              value={tabDescriptionValue} 
+              onChange={handleChangeLanguage} 
+              aria-label="basic tabs example"
+            >
+              {languages.map((language, index) => 
+                <Tab key={language.abbrev} label={language.name} {...a11yProps(index)} />
+              )}
+            </Tabs>
+          </Stack>
           <Stack  direction="column" spacing={3}>
             <CustomizedInput
-              value={ratePlan.french_description}
-              onChange={handleChange}
+              value={ratePlan.descriptions?.[choosedDescriptionLanguageAbbrev]}
+              onChange={handleChangeDescriptionValue}
               sx={{ width: 1 }}
               placeholder="Votre description"
               multiline
@@ -307,9 +437,9 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
               type="text"
               fullWidth
               required
-              {...(errors.french_description && {
+              {...(errors.descriptions && {
                 error: true,
-                helpertext: errors.french_description,
+                helpertext: errors.descriptions,
               })}
             />
             <CustomizedInput
@@ -566,7 +696,7 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
                         onClick={() => handleChangeAssignedList(k._id, 'assigned_room')}
                       />
                     }
-                    label={k.nom}
+                    label={k.names?.fr}
                   />
                 ))}
               </div>

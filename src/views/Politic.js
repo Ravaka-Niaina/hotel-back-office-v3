@@ -110,6 +110,7 @@ const Politic = () => {
     const idToken = localStorage.getItem('id_token');
     try {
       const result = await getPolitics({ ...payload }, idToken);
+      console.log(result.data);
       const status = result?.data.status;
       if (status === 200) {
         const list = result.data?.list;
@@ -158,6 +159,8 @@ const Politic = () => {
     delaySearchRef = setTimeout(() => getAllPolitics(), 2000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterName]);
+
+  console.log(politicList);
 
   return (
     <Page title="AIOLIA | Politiques d'annulation">
@@ -209,9 +212,9 @@ const Politic = () => {
                       const i = index;
                       return (
                         <TableRow hover key={i} tabIndex={-1} role="checkbox">
-                          <TableCellStyled align="left">{row.nom}</TableCellStyled>
+                          <TableCellStyled align="left">{row?.names?.fr}</TableCellStyled>
                           <TableCellStyled component="th" scope="row" padding="none">
-                            {row.description}
+                            {row.descriptions?.fr}
                           </TableCellStyled>
                           <TableCellStyled component="th" scope="row" padding="none">
                             {row.remboursable ? (

@@ -4,8 +4,11 @@ import { Link as RouterLink } from 'react-router-dom';
 // material
 import { Stack, Button, Dialog, DialogActions, DialogContent, Checkbox } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
 // components
-import { createRoomType, fetchListEquipments, fetchListRatePlans, getRoomType, updateRoomType, } from '../../services/RoomType';
+import { createRoomType, fetchListEquipments, fetchListRatePlans, getRoomType, updateRoomType } from '../../services/RoomType';
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
@@ -17,6 +20,7 @@ import RatePlans from './RatePlans';
 import styles from './RoomTypeForm.module.css';
 import config from '../../config/api';
 
+import { fetchListLanguages } from '../../services/Common';
 import { ThemeContext } from '../context/Wrapper';
 
 const imgCrop = null;
@@ -32,29 +36,25 @@ const RoomTypeForm = ({
   const context = useContext(ThemeContext);
   // const [errors, setErrors] = useState({});
   const [roomType, setRoomType] = useState({
-    nameInFrench: '',
-    nameInEnglish: '',
+    names: {},
     numberOfRoom: '',
     areaSize: '',
     stageNumber: '',
     adultNumber: '',
     childNumber: '',
-    descriptionInFrench: '',
-    descriptionInEnglish: '',
+    descriptions: {},
     videos: [],
     photo: [],
     imgCrop: '',
   });
   const [errors, setErrors] = useState({
-    nameInFrench: '',
-    nameInEnglish: '',
+    names: '',
     numberOfRoom: '',
     areaSize: '',
     stageNumber: '',
     adultNumber: '',
     childNumber: '',
-    descriptionInFrench: '',
-    descriptionInEnglish: '',
+    descriptions: '',
     videos: '',
     photo: '',
     imgCrop: '',
@@ -66,33 +66,42 @@ const RoomTypeForm = ({
   const [photoSortie, setPhotoSortie] = useState([]);
   const [previewSortie, setPreviewSortie] = useState([]);
   const [previewedImage, setPreviewedImage] = useState(imgCrop ? `${config.host}/${roomType.imgCrop}` : null);
+  
+  const [languages, setLanguages] = useState([]);
+
+  const [tabDescriptionValue, setTabDescriptionValue] = useState(0);
+  const [choosedDescriptionLanguageAbbrev, setChoosedDescriptionLanguageAbbrev] = useState('');
+  
+  const [tabNameValue, setTabNameValue] = useState(0);
+  const [choosedNameLanguageAbbrev, setChoosedNameLanguageAbbrev] = useState('');
 
   const clearForm = () => {
+    const languagesAbbrev = Object.keys(roomType.names);
+    const emptyNames = {};
+    languagesAbbrev.forEach((abbrev) => {
+      emptyNames[abbrev] = '';
+    });
     setRoomType({
-      nameInFrench: '',
-      nameInEnglish: '',
+      names: {...emptyNames},
       numberOfRoom: '',
       areaSize: '',
       stageNumber: '',
       adultNumber: '',
       childNumber: '',
-      descriptionInFrench: '',
-      descriptionInEnglish: '',
+      descriptions: {...emptyNames},
       videos: [],
       photo: [],
       imgCrop: '',
     });
 
     setErrors({
-      nameInFrench: '',
-      nameInEnglish: '',
+      names: '',
       numberOfRoom: '',
       areaSize: '',
       stageNumber: '',
       adultNumber: '',
       childNumber: '',
-      descriptionInFrench: '',
-      descriptionInEnglish: '',
+      descriptions: '',
       videos: '',
       photo: '',
       imgCrop: '',
@@ -124,9 +133,9 @@ const RoomTypeForm = ({
     setPreviewSortie(previewSortieTmp);
   };
 
-  const addCropedImage = useCallback((cropedImage) => {
+  const addCropedImage = (cropedImage) => {
     setRoomType((roomType) => ({ ...roomType, imgCrop: cropedImage }));
-  }, []);
+  };
   const handleClose = () => {
     setOpen(false);
     clearForm();
@@ -152,6 +161,42 @@ const RoomTypeForm = ({
     // formIsValid({
     //   ...accessRight,
     //   [name]: value, 
+  };
+
+  const handleChangeNameValue = (e) => {
+    const tempRoomType = { ...roomType};
+    tempRoomType.names[choosedNameLanguageAbbrev] = e.target.value;
+    setRoomType(tempRoomType);
+
+    if (e.target.value.trim() === '') {
+      setErrors({
+        ...errors,
+        names: 'Il manque un ou plusieurs noms',
+      });
+    } else if (errors.names) {
+      setErrors({
+        ...errors,
+        names: '',
+      });
+    }
+  };
+
+  const handleChangeDescriptionValue = (e) => {
+    const tempRoomType = { ...roomType};
+    tempRoomType.descriptions[choosedDescriptionLanguageAbbrev] = e.target.value;
+    setRoomType(tempRoomType);
+
+    if (e.target.value.trim() === '') {
+      setErrors({
+        ...errors,
+        descriptions: 'Il manque une ou plusieurs descriptions',
+      });
+    } else if (errors.descriptions) {
+      setErrors({
+        ...errors,
+        descriptions: '',
+      });
+    }
   };
 
   const getListEquipments = () => {
@@ -188,40 +233,89 @@ const RoomTypeForm = ({
     .catch(err => console.error(err))
   };
 
+  const getListLanguages = () => {
+    fetchListLanguages()
+    .then(result => {
+      setLanguages(result.data.listLanguages);
+      const tempLanguagesContent = {};
+      result.data.listLanguages.forEach(language => {
+        tempLanguagesContent[language.abbrev] = '';
+      });
+      setRoomType({
+        ...roomType,
+        names: {...tempLanguagesContent},
+        descriptions: {...tempLanguagesContent},
+      });
+      setChoosedDescriptionLanguageAbbrev(result.data.listLanguages[0].abbrev);
+      setChoosedNameLanguageAbbrev(result.data.listLanguages[0].abbrev);
+    });
+  };
+
+  const getMissingLanguages = useCallback(async (names, descriptions) => {
+    const result = await fetchListLanguages();
+    setLanguages(result.data.listLanguages);
+    const tempLanguagesContent = {};
+    result.data.listLanguages.forEach(language => {
+      tempLanguagesContent[language.abbrev] = '';
+    });
+
+    const tempNames = {...tempLanguagesContent};
+    const tempDescriptions = {...tempLanguagesContent};
+
+    if (!names || !descriptions) {
+      return { names: tempNames, descriptions: tempDescriptions };
+    }
+
+    const languagesAbbrevForName = Object?.keys(names);
+    languagesAbbrevForName.forEach(languageAbbrev => {
+      tempNames[languageAbbrev] = names[languageAbbrev];
+    });
+    
+    const languagesAbbrevForDesc = Object?.keys(descriptions);
+    languagesAbbrevForDesc.forEach(languageAbbrev => {
+      tempDescriptions[languageAbbrev] = descriptions[languageAbbrev];
+    });
+
+    setChoosedDescriptionLanguageAbbrev(result.data.listLanguages[0].abbrev);
+    setChoosedNameLanguageAbbrev(result.data.listLanguages[0].abbrev);
+
+    return { names: tempNames, descriptions: tempDescriptions };
+  }, [roomType]);
+
   const getInfoRoomType = () => {
     getRoomType(roomTypeId)
     .then(result => {
       if (result.data.status === 200) {
         const {
-          nom, 
+          names, 
           nbAdulte, 
           nbEnfant, 
-          name, 
-          desc, 
           photo, 
           chambreTotal,
           etage,
           superficie,
-          description,
+          descriptions,
           equipements,
           planTarifaire,
           videos,
           photoCrop,
         } = result.data.typeChambre;
-        setRoomType({
-          nameInFrench: nom,
-          nameInEnglish: name,
-          numberOfRoom: chambreTotal,
-          areaSize: superficie,
-          stageNumber: etage,
-          adultNumber: nbAdulte,
-          childNumber: nbEnfant,
-          descriptionInFrench: description,
-          descriptionInEnglish: desc,
-          videos,
-          photo,
-          imgCrop: photoCrop[0],
+        getMissingLanguages(names, descriptions)
+        .then(({ names, descriptions }) => {
+          setRoomType({
+            names,
+            numberOfRoom: chambreTotal,
+            areaSize: superficie,
+            stageNumber: etage,
+            adultNumber: nbAdulte,
+            childNumber: nbEnfant,
+            descriptions,
+            videos,
+            photo,
+            imgCrop: photoCrop[0],
+          });
         });
+        
         setPreviewedImage(`${config.host}/${photoCrop[0]}`);
         setRatePlans(planTarifaire);
         setEquipments(equipements);
@@ -257,18 +351,17 @@ const RoomTypeForm = ({
     if (roomTypeId) return;
     getListEquipments();
     getListRatePlans();
+    getListLanguages();
   }, []);
 
   const getClearedErrors = () => ({
-      nameInFrench: '',
-      nameInEnglish: '',
+      names: '',
       numberOfRoom: '',
       areaSize: '',
       stageNumber: '',
       adultNumber: '',
       childNumber: '',
-      descriptionInFrench: '',
-      descriptionInEnglish: '',
+      descriptions: '',
       videos: '',
       photo: '',
       imgCrop: '',
@@ -276,15 +369,13 @@ const RoomTypeForm = ({
 
   const setExistingErrors = (errors) => {
     const correspondence = {
-      nom: 'nameInFrench',
-      name: 'nameInEnglish',
+      names: 'names',
       chambreTotal: 'numberOfRoom',
       superficie: 'areaSize',
       etage: 'stageNumber',
       nbAdulte: 'adultNumber',
       nbEnfant: 'childNumber',
-      description: 'descriptionInFrench',
-      desc: 'descriptionInEnglish',
+      descriptions: 'descriptions',
       videos: '',
       photo: 'photo',
       imgCrop: '',
@@ -297,30 +388,21 @@ const RoomTypeForm = ({
   };
 
   const validate = () => {
-    console.log({
-      _id: roomTypeId,
-      nom: roomType.nameInFrench,
-      name: roomType.nameInEnglish,
-      chambreTotal: roomType.numberOfRoom,
-      superficie: roomType.areaSize,
-      etage: roomType.stageNumber,
-      nbAdulte: roomType.adultNumber,
-      nbEnfant: roomType.childNumber,
-      description: roomType.descriptionInFrench,
-      desc: roomType.descriptionInEnglish,
-      photo: photoSortie, 
-      videos: [],
-    });
-    if (roomType.nameInFrench.trim() === '') {
-      context.changeResultErrorMessage("Vous avez oublié de donner le nom en français");
-      context.showResultError(true);
-      return false;
+    const languagesAbbrev = Object.keys(roomType.names);
+    for (let i = 0; i < languagesAbbrev.length; i += 1) {
+      if (roomType.names[languagesAbbrev[i]] === '') {
+        context.changeResultErrorMessage("Vous avez oublié de donner le nom pour un ou plusieurs languages");
+        context.showResultError(true);
+        return false;
+      }
     }
 
-    if (roomType.nameInEnglish.trim() === '') {
-      context.changeResultErrorMessage("Vous avez oublié de donner le nom en anglais");
-      context.showResultError(true);
-      return false;
+    for (let i = 0; i < languagesAbbrev.length; i += 1) {
+      if (roomType.descriptions[languagesAbbrev[i]] === '') {
+        context.changeResultErrorMessage("Vous avez oublié de donner la description pour un ou plusieurs languages");
+        context.showResultError(true);
+        return false;
+      }
     }
 
     if (roomType.numberOfRoom.trim() === '') {
@@ -349,18 +431,6 @@ const RoomTypeForm = ({
 
     if (roomType.childNumber.trim() === '') {
       context.changeResultErrorMessage("Vous avez oublié de donner le nombre d'enfants");
-      context.showResultError(true);
-      return false;
-    }
-
-    if (roomType.descriptionInFrench.trim() === '') {
-      context.changeResultErrorMessage("Vous avez oublié de donner la description en français");
-      context.showResultError(true);
-      return false;
-    }
-
-    if (roomType.descriptionInEnglish.trim() === '') {
-      context.changeResultErrorMessage("Vous avez oublié de donner la description en anglais");
       context.showResultError(true);
       return false;
     }
@@ -397,15 +467,13 @@ const RoomTypeForm = ({
 
     const payload = {
       toSend: {
-        nom: roomType.nameInFrench,
-        name: roomType.nameInEnglish,
+        names: roomType.names,
         chambreTotal: roomType.numberOfRoom,
         superficie: roomType.areaSize,
         etage: roomType.stageNumber,
         nbAdulte: roomType.adultNumber,
         nbEnfant: roomType.childNumber,
-        description: roomType.descriptionInFrench,
-        desc: roomType.descriptionInEnglish,
+        descriptions: roomType.descriptions,
         imgCrop: output,
         photo: photoSortie, 
         equipements: equipmentsId,
@@ -413,7 +481,6 @@ const RoomTypeForm = ({
         videos: [],
       }
     };
-    
     createRoomType(payload)
       .then(result => {
         if (result.data.status === 200) {
@@ -457,15 +524,13 @@ const RoomTypeForm = ({
     const payload = {
       toSend: {
         _id: roomTypeId,
-        nom: roomType.nameInFrench,
-        name: roomType.nameInEnglish,
+        names: roomType.names,
         chambreTotal: roomType.numberOfRoom,
         superficie: roomType.areaSize,
         etage: roomType.stageNumber,
         nbAdulte: roomType.adultNumber,
         nbEnfant: roomType.childNumber,
-        description: roomType.descriptionInFrench,
-        desc: roomType.descriptionInEnglish,
+        descriptions: roomType.descriptions,
         photo: photoSortie, 
         equipements: equipmentsId,
         planTarifaire: ratePlansId, 
@@ -478,7 +543,6 @@ const RoomTypeForm = ({
     };
     updateRoomType(payload)
     .then(result => {
-      console.log(result);
       if (result.data.status === 200) {
         setOpen(false);
         context.changeResultSuccessMessage('Enregistrement inséré avec succès');
@@ -505,49 +569,60 @@ const RoomTypeForm = ({
     setPreviewedImage(null);
   };
 
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
+
+  const handleChangeLanguage = (event: React.SyntheticEvent, newValue: number) => {
+    setTabDescriptionValue(newValue);
+    setChoosedDescriptionLanguageAbbrev(Object.keys(roomType.descriptions)[newValue]);
+  };
+
+  const handleChangeTabNameValue = (event: React.SyntheticEvent, newValue: number) => {
+    setTabNameValue(newValue);
+    setChoosedNameLanguageAbbrev(Object.keys(roomType.names)[newValue]);
+  };
+
   return (
     <>
       <Dialog open={open} onClose={handleClose} maxWidth={'md'}>
         <CustomizedDialogTitle text={isUpdate ? "Modifier un type chambre" : "Ajouter un nouveau type de chambre"} />
-
         <DialogContent style={{ backgroundColor: '#E8F0F8', paddingTop: 15 }}>
           <CustomizedTitle text='Informations chambre' size={18} level={0} />
+          <CustomizedTitle text='Nom' size={18} level={0} />
           <Stack sx={{ p: 2 }} direction={{ xs: 'column', md: 'row' }} spacing={2}>
-            <CustomizedInput
-              placeholder="nom"
-              onChange={handleChange}
-              error={false}
-              margin="dense"
-              id="nom"
-              name="nameInFrench"
-              label="Nom"
-              type="text"
-              fullWidth
-              required
-              {...(errors.nameInFrench && {
-                error: true,
-                helpertext: errors.nameInFrench,
-              })}
-              value={roomType.nameInFrench}
-            />
-            <CustomizedInput
-              placeholder="name"
-              onChange={handleChange}
-              error={false}
-              margin="dense"
-              id="name"
-              name="nameInEnglish"
-              label="Name"
-              type="text"
-              fullWidth
-              required
-              {...(errors.nameInEnglish && {
-                error: true,
-                helpertext: errors.nameInEnglish,
-              })}
-              value={roomType.nameInEnglish}
-            />
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <Tabs 
+                value={tabNameValue} 
+                onChange={handleChangeTabNameValue} 
+                aria-label="basic tabs example"
+              >
+                {languages.map((language, index) => 
+                  <Tab key={language.abbrev} label={language.name} {...a11yProps(index)} />
+                )}
+              </Tabs>
+            </Box>
           </Stack>
+          <CustomizedInput
+            sx={{marginLeft: '16px'}}
+            placeholder="nom"
+            onChange={handleChangeNameValue}
+            error={false}
+            margin="dense"
+            id="nom"
+            name="nameInFrench"
+            type="text"
+            fullWidth
+            required
+            {...(errors.names && {
+              error: true,
+              helpertext: errors.names,
+            })}
+            value={roomType.names?.[choosedNameLanguageAbbrev]}
+          />
           <Stack sx={{ p: 2 }} direction={{ xs: 'column', md: 'row' }} spacing={2}>
             <CustomizedInput
               placeholder="Nombre de chambre"
@@ -642,43 +717,37 @@ const RoomTypeForm = ({
           </Stack>
           <CustomizedTitle text='Description' size={18} level={0} />
           <Stack sx={{ p: 2 }} direction={{ xs: 'column', md: 'row' }} spacing={2}>
-            <CustomizedInput
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <Tabs 
+                value={tabDescriptionValue} 
+                onChange={handleChangeLanguage} 
+                aria-label="basic tabs example"
+              >
+                {languages.map((language, index) => 
+                  <Tab key={language.abbrev} label={language.name} {...a11yProps(index)} />
+                )}
+              </Tabs>
+            </Box>
+          </Stack>
+          <CustomizedInput
+              sx={{marginLeft: '16px'}}
               placeholder="description"
-              onChange={handleChange}
+              onChange={handleChangeDescriptionValue}
               error={false}
               margin="dense"
               id="description"
-              name="descriptionInFrench"
-              label="Description"
+              name="descriptions"
+              // label="Description"
               type="text"
               fullWidth
               required
               multiline
-              {...(errors.descriptionInFrench && {
+              {...(errors.descriptions && {
                 error: true,
-                helpertext: errors.descriptionInFrench,
+                helpertext: errors.descriptions,
               })}
-              value={roomType.descriptionInFrench}
+              value={roomType.descriptions?.[choosedDescriptionLanguageAbbrev]}
             />
-            <CustomizedInput
-              placeholder="description en anglais"
-              onChange={handleChange}
-              error={false}
-              margin="dense"
-              id="description_anglais"
-              name="descriptionInEnglish"
-              label="Description en anglais"
-              type="text"
-              fullWidth
-              required
-              multiline
-              {...(errors.descriptionInEnglish && {
-                error: true,
-                helpertext: errors.descriptionInEnglish,
-              })}
-              value={roomType.descriptionInEnglish}
-            />
-          </Stack>
           <Equipments
             equipments={equipments}
             setEquipments={setEquipments}
