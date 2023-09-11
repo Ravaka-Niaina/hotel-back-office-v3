@@ -152,6 +152,7 @@ const Promotion = () => {
     try {
       const idToken = localStorage.getItem("id_token");
       const result = await getPromotionList(payload, idToken);
+      console.log(result);
       const dataStatus = result.data.status;
       const dataList = result.data.list;
 
