@@ -236,6 +236,7 @@ const RoomTypeForm = ({
   const getListLanguages = () => {
     fetchListLanguages()
     .then(result => {
+      console.log(result.data);
       setLanguages(result.data?.listLanguages);
       const tempLanguagesContent = {};
       result.data.listLanguages.forEach(language => {
