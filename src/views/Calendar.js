@@ -40,7 +40,7 @@ const Calendar = () => {
                 dateDebut: format(dateRange[0].toDate(), 'yyyy-MM-dd'),
                 dateFin: format(dateRange[1].toDate(), 'yyyy-MM-dd'),
             };
-            console.log(payload);
+            // console.log(payload);
             context.showLoader(true);
             getTcTarifPrix(payload)
                 .then((result) => {

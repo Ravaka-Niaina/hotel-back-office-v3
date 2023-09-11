@@ -540,7 +540,7 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
                     control={
                       <CustomizedCheckbox checked={promotion?.rate_plan?.find((elem) => elem === e._id) !== undefined} />
                     }
-                    label={e.nom}
+                    label={e.names.fr}
                   />
                 ))}
               </div>
@@ -576,7 +576,7 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
                     control={
                       <CustomizedCheckbox checked={promotion?.room_type?.find((elem) => elem === e._id) !== undefined} />
                     }
-                    label={e.nom}
+                    label={e.names.fr}
                   />
                 ))}
               </div>
