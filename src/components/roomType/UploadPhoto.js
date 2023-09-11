@@ -100,7 +100,7 @@ const PreviewPhotoToUpload = ({imgSrc, preview, setPreview, photo, setPhoto, i, 
             console.log(`${id  } , ${  isUploadCompleted}`);
             uploadImage({
                 method: 'post',
-                url: '/galerie/add',
+                url: '/galeriePhoto/add',
                 data: {file: photo},
                 callback: callbackUpload,
                 setProgress,

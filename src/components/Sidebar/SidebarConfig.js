@@ -94,7 +94,7 @@ export const getSidebarConfig = async (context) => {
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/emailModel')),
     },
     {
-      title: 'Gestinon historique modifications',
+      title: 'Gestion historique modifications',
       path: '/dashboard/historic',
       icon: getIcon('material-symbols:menu-book-rounded'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/historic')),
