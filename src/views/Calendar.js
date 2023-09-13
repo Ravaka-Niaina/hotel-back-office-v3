@@ -20,7 +20,7 @@ import { getTcTarifPrix } from '../services/TCTarif';
 
 const Calendar = () => {
     
-    const page='CALENDAR';
+    const page='Calendrier';
     const context = useContext(ThemeContext);
     const today = new Date();
     const nextWeek = new Date(today);

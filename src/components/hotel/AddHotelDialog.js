@@ -434,7 +434,7 @@ const AddHotelDialog = (props) => {
                   value="false"
                 />
               </RadioGroup>
-              {hotel.is_tva_included === 'true' && (
+              {hotel.is_tva_included === 'false' && (
                 <CustomizedInput
                   placeholder="tva"
                   sx={{ width: 1 }}
