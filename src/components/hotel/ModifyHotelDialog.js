@@ -519,7 +519,7 @@ const ModifyHotelDialog = () => {
                   value="false"
                 />
               </RadioGroup>
-              {hotel.is_tva_included === 'true' && (
+              {hotel.is_tva_included === 'false' && (
                 <CustomizedInput
                   value={hotel.TVA}
                   placeholder="tva"

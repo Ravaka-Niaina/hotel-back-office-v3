@@ -93,6 +93,12 @@ export default function LoginForm({ onSubmit }) {
     }
   };
 
+  const onKeyUp = (event) => {
+    if (event.charCode === 13) {// Enter key was pressed
+      utilLogin.handleSubmit();
+    }
+  };
+
   return (
     <form>
       <Stack spacing={3}>
@@ -136,6 +142,7 @@ export default function LoginForm({ onSubmit }) {
               </InputAdornment>
             ),
           }}
+          onKeyPress={onKeyUp}
         />
       </Stack>
 
@@ -152,7 +159,6 @@ export default function LoginForm({ onSubmit }) {
         component={RouterLink} 
         to="#"
       />
-      {/* <button onClick={utilLogin.handleSubmit} >Se connecter</button> */}
     </form>
   );
 }
