@@ -133,8 +133,8 @@ const CreateOrDeleteHotel = () => {
         {
           location === 'list' && (
             <>
+              <img src={`${process.env.PUBLIC_URL}/images/logo/logowcolor.png`} alt={`logo aiolia`} style={{ margin: 'auto', marginBottom: '-80px' }} width={250} height={250} />
               <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-                <CustomizedTitle size={20} text="Choisir hôtel à gérer" />
                 <CustomizedButton onClick={() => navigate('addForm')} text="Ajouter" variant="contained" component={RouterLink} to="#" />
               </Stack>
               <CustomizedPaperOutside

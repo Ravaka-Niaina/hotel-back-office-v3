@@ -53,31 +53,4 @@ describe('login', () => {
     expect(onSubmit).toBeCalled();
   });
 
-  // test('check submit login redirect to verifyCode', async () => {
-  //   const { 
-  //     getByPlaceholderText, getByText, findByDisplayValue 
-  //   } = render(
-  //     <Wrapper>
-  //       <Router>
-  //         <LoginForm />
-  //       </Router>
-  //     </Wrapper>
-  //   );
-      
-
-  //     const inputPassword = screen.getByPlaceholderText(/mot de passe/);
-  //     fireEvent.change(inputPassword, { target: { value: '1234' } });
-  //     await findByDisplayValue(/1234/);
-
-  //     const buttonSubmit = screen.getByText(/Se connecter/);
-  //     fireEvent.click(buttonSubmit);
-
-  //   expect(login).toHaveBeenCalledWith({
-  //     is_partner: true,
-  //     email: 'adrhotel@yopmail.com',
-  //     mdp: '1234',
-  //     browser: 'temp',
-  //   });
-  // })
-
 });

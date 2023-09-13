@@ -119,6 +119,12 @@ const VerifyCodeForm = () => {
         context.showLoader(false);
       });
   };
+
+  const onKeyUp = (event) => {
+    if (event.charCode === 13) {// Enter key was pressed
+      onSubmit();
+    }
+  };
   return (
     <>
       <Stack spacing={3}>
@@ -135,6 +141,7 @@ const VerifyCodeForm = () => {
               error: true,
               helpertext: errors.code,
             })}
+            onKeyPress={onKeyUp}
           />
           <CustomizedButton text='Verifier' onClick={onSubmit} />
         </Stack>

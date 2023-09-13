@@ -24,7 +24,7 @@ const CalendarAttributeSide = ({
                                 justifyContent="center"
                                 alignItems="center"
                             >
-                                <CustomizedTitle text={chambre.nom} />
+                                <CustomizedTitle text={chambre.names.fr} />
                                 <Stack direction='row' spacing={1} alignItems='center'>
                                     <EditorCustomizingDialog 
                                         chambre={chambre} 
