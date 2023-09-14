@@ -78,7 +78,7 @@ const ModifyHotelDialog = () => {
     if ('tourist_sticker' in fieldValues)
       temp.tourist_sticker = fieldValues.tourist_sticker ? '' : requiredFieldMessage;
     if ('tva' in fieldValues)
-      temp.tva = fieldValues.tva || hotel.is_tva_included === 'false' ? '' : requiredFieldMessage;
+      temp.tva = hotel.is_tva_included === 'true' ? '' : requiredFieldMessage;
     if ('location_lat' in fieldValues) temp.location_lat = fieldValues.location_lat ? '' : requiredFieldMessage;
     if ('location_lng' in fieldValues) temp.location_lng = fieldValues.location_lng ? '' : requiredFieldMessage;
     if (!pictureList || pictureList.length === 0) temp.photos = requiredFieldMessage;

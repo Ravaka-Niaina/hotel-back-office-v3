@@ -3,6 +3,7 @@ import React, { useState, useContext } from 'react';
 // @mui
 import { Stack } from '@mui/material';
 // components
+import { useNavigate } from 'react-router-dom';
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import { verifyCode, resendCode } from '../../services/User';
@@ -15,6 +16,7 @@ const VerifyCodeForm = () => {
   const context = useContext(ThemeContext);
   const [code, setCode] = useState('');
   const [errors, setErrors] = useState(false);
+  const navigate = useNavigate();
   const removeDoubleQuotes = (str) => {
     const toReplace = '"';
     return str.replaceAll(toReplace, '');
@@ -52,29 +54,28 @@ const VerifyCodeForm = () => {
           if (verifyResult.data.status === 200) {
             localStorage.setItem('id_token', removeDoubleQuotes(verifyResult.data.id_token));
             localStorage.setItem('user_attr', JSON.stringify(verifyResult.data.user_attr));
-            // window.location = "/dashboard/app";
 
             context.getUserDetails()
             .then(userDetails => {
               if(userDetails.data.status === 200)
               {
-                const userAccessRights = userDetails.data.atribAR;
+                // const userAccessRights = userDetails.data.atribAR;
                 const userDetailsSaved = {
                 data:userDetails.data,
                 }
                 localStorage.setItem("user_details",JSON.stringify(userDetailsSaved));
-                window.location = "/chooseHotelToManage";
+                navigate("/chooseHotelToManage");
               }
               else{
                 context.changeResultErrorMessage('Impossible d\'obtenir les informations de l\'utilisateur');
                 context.showResultError(true);
-                window.location = "/dashboard/app";
+                navigate("/dashboard/app");
               }
             }).catch(err => {
               console.error(err);
               context.changeResultErrorMessage('Impossible d\'obtenir les informations de l\'utilisateur');
               context.showResultError(true);
-              window.location = "/dashboard/app";
+              navigate("/dashboard/app");
             })
             .finally(()=>{
               context.showLoader(false);
