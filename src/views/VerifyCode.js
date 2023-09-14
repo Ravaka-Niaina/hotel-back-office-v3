@@ -64,7 +64,7 @@ const VerifyCode = () => {
 
   // const mdUp = useResponsive('up', 'md');
   const phoneNumber = JSON.parse(localStorage.getItem('phone_number'));
-  const censoredPhoneNumber = `+261-${phoneNumber.substring(1,3)}-XX-XXX-${phoneNumber.substring(phoneNumber.length-2,phoneNumber.length)}`;
+  const censoredPhoneNumber = `+261-${phoneNumber.substring(0,2)}-XX-XXX-${phoneNumber.substring(phoneNumber.length-2,phoneNumber.length)}`;
 
   return (
     <Page title="AIOLIA | Verification de code" sx={{ backgroundColor: '#E8F0F8' }}> 
@@ -76,8 +76,7 @@ const VerifyCode = () => {
           <ContentStyle>
             {/* <img src={`${process.env.PUBLIC_URL}/images/logo/logowcolor.png`} alt={`login_logo`} style={{ margin: 'auto' }} width={250} height={250} /> */}
             <CustomizedTitle text='Code de vérification' size='34' level={2}/>
-            <Typography sx={{ color: 'text.secondary', mb: 5 }}>Entrez le code que nous avons envoyé à {censoredPhoneNumber} pour vous connecter.</Typography>
-
+            <Typography sx={{ color: 'text.secondary', mb: 5 }}>Entrez le code que nous avons envoyé à {censoredPhoneNumber} pour vous connecter.(Le code est 9595)</Typography>
             <VerifyCodeForm />
             
           </ContentStyle>
