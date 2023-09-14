@@ -90,11 +90,12 @@ const Calendar = () => {
         setLoading(true);
         getTcTarifPrix(payload)
             .then((result) => {
+                console.log(result.data);
                 if (result.data.status === 200) {
                     setRoomList(result.data.typeChambre);
                 }
                 else {
-                    context.changeResultErrorMessage('Chargement des données  non autorisées');
+                    context.changeResultErrorMessage('Vous devez créer au moins un type chambre');
                     context.showResultError(true);
                 }
             })

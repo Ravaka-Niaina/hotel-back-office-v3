@@ -1,4 +1,4 @@
-import React, { useState, createContext } from 'react';
+import React, { useEffect, useState, createContext } from 'react';
 import jwtDecode from 'jwt-decode';
 import PropTypes from 'prop-types';
 import Backdrop from '@mui/material/Backdrop';
@@ -94,6 +94,20 @@ const Wrapper = ({ children }) => {
     const userDetails = await details;
     return userDetails
   };
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
+  const handleBeforeUnload = () => {
+    alert('the window is being closed');
+    localStorage.clear();
+  }
+  
   return (
     <ThemeContext.Provider
       value={{
