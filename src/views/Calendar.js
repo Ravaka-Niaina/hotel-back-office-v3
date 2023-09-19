@@ -90,7 +90,6 @@ const Calendar = () => {
         setLoading(true);
         getTcTarifPrix(payload)
             .then((result) => {
-                console.log(result.data);
                 if (result.data.status === 200) {
                     setRoomList(result.data.typeChambre);
                 }
@@ -121,7 +120,7 @@ const Calendar = () => {
     return (
             <Stack spacing={4} sx={{p:2}}> 
                 <CustomizedTitle text={page} />
-                <Stack direction='row' spacing={4} justifyContent='center'  alignItems='flex-end' >
+                <Stack direction='row' spacing={4} justifyContent='start'  alignItems='flex-start' style={{ marginLeft: '0' }} >
                     
                     <DateRangePicker
                         onClick={()=>setOpen((prev)=>!prev)}
@@ -129,7 +128,14 @@ const Calendar = () => {
                         open={open}
                         onOk={(e)=>handleClickOk(e)}
                         placement='autoVerticalStart'
-                        style={{border:'2px #2476d2 solid',borderRadius:'8px',width:'200px'}}
+                        style={{
+                            border:'2px #2476d2 solid',
+                            borderRadius:'8px', 
+                            marginLeft: '60px', 
+                            bottom: '-18px',
+                            position: 'relative',
+                            zIndex: -1,
+                        }}
                         value={[dateRange[0].toDate(), dateRange[1].toDate()]}
                         onChange={(val) => {
                             const newValue = JSON.parse(JSON.stringify(val));
@@ -142,7 +148,17 @@ const Calendar = () => {
                             // }
                         }}
                     />
-                    <CustomizedPaperOutside sx={{width:'300px',height:'60px',p:1,background:'#E3EDF7',borderRadius:1}}>
+                    <CustomizedPaperOutside 
+                        onClick={()=>setOpen((prev)=>!prev)} 
+                        sx={{
+                            width:'305px',
+                            height:'60px',
+                            p:1,
+                            background:'#E3EDF7',
+                            borderRadius:1, 
+                            marginLeft: '-234 px',
+                            cursor: 'pointer',
+                        }}>
                         <Grid 
                            
                             container
@@ -153,7 +169,6 @@ const Calendar = () => {
                         >
                             <Grid item xs={2}>
                                 <CustomizedIconButton
-                                    onClick={()=>setOpen((prev)=>!prev)}
                                     sx={{
                                         background: '#E3EDF7',
                                         opacity: 0.7,
@@ -168,12 +183,13 @@ const Calendar = () => {
                                 <div style={{lineHeight:'18px'}}>
                                    <span
                                         style={{
-                                            fontFamily: 'Raleway',
+                                            fontFamily: 'RalewayBold',
                                             fontStyle: 'normal',
-                                            fontWeight: '500',
-                                            fontSize: '10px',
-                                            lineHeight:'5px',
+                                            fontWeight: '700',
+                                            fontSize: '18px',
+                                            lineHeight:'20px',
                                             color: '#8B9EB0',
+                                            letterSpacing: '-0.4px',
                                         }}
                                    >                                    
                                         plage de dates sélectionnée

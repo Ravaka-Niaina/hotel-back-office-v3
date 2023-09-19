@@ -286,10 +286,10 @@ const Booking = () => {
                                                 <TableRow>
                                                     <TableCell />
                                                     <TableCell>
-                                                        <CustomizedTitle text='Reservateur' level={0} color="white"/>
+                                                        <CustomizedTitle text='Reservateur' level={2} color="white" />
                                                     </TableCell>
                                                     <TableCell>
-                                                        <CustomizedTitle text='Date de reservation' level={0} color="white"/>
+                                                        <CustomizedTitle text='Date de reservation' level={2} color="white"/>
                                                     </TableCell>
                                                 </TableRow>
                                             </TableHead>
