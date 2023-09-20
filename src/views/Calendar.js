@@ -156,8 +156,9 @@ const Calendar = () => {
                             p:1,
                             background:'#E3EDF7',
                             borderRadius:1, 
-                            marginLeft: '-234 px',
+                            marginLeft: '56 px',
                             cursor: 'pointer',
+                            position: 'fixed'
                         }}>
                         <Grid 
                            

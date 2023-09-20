@@ -3,19 +3,13 @@ import PropTypes from 'prop-types';
 import { NavLink as RouterLink, matchPath, useLocation } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
-import { Box, List, Collapse, ListItemText, ListItemIcon, ListItemButton, makeStyles } from '@mui/material';
+import { Box, List, Collapse, ListItemText, ListItemIcon, ListItemButton } from '@mui/material';
 
 //
 // import NotificationBadge from '../reservation/NotificationBadge';
 import Iconify from '../Iconify';
 
 // ----------------------------------------------------------------------
-
-const useStyles = makeStyles((theme) => ({
-  noUppercase: {
-    textTransform: 'none', // Disable uppercase transformation
-  },
-}));
 
 export const ListItemStyle = styled((props) => <ListItemButton disableGutters {...props} />)(({ theme }) => ({
   ...theme.typography.body2,
