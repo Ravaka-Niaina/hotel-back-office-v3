@@ -20,7 +20,7 @@ export const getSidebarConfig = async (context) => {
   const userRoles = userAccessRights.map((accessRight) => accessRight?._id);
   const sidebarConfig = [
     {
-      title: 'tableau de bord',
+      title: 'Calendrier',
       path: '/dashboard/app',
       icon: getIcon('eva:pie-chart-2-fill'),
       userIsAllowed: getAllowedRoles('/dashboard/app'),
@@ -33,7 +33,7 @@ export const getSidebarConfig = async (context) => {
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/hotel')),
       children: [
         {
-          title: 'Modifier hôtel',
+          title: 'Information sur l’établissement',
           path: '/dashboard/updateHotel',
           userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/hotel')),
         },
@@ -45,56 +45,56 @@ export const getSidebarConfig = async (context) => {
       ]
     },
     {
-      title: 'Gestion rapports',
+      title: 'Rapport de production',
       path: '/dashboard/rapport',
       icon: getIcon('wpf:statistics'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/rapport')),
     },
     {
-      title: 'Gestion réservations',
+      title: 'Liste des réservations',
       path: '/dashboard/booking',
       icon: getIcon('teenyicons:appointments-solid'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/booking')),
       // notificationComponent:(<NotificationBadge />),
     },
     {
-      title: 'Gestion plans tarifaires',
+      title: 'Gestion des plans tarifaires',
       path: '/dashboard/ratePlan',
       icon: getIcon('eva:file-text-fill'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/ratePlan')),
     },
     {
-      title: 'Gestion types de chambre',
+      title: 'Type de chambre',
       path: '/dashboard/typeChambre',
       icon: getIcon('bxs:hotel'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/typeChambre')),
     },
     {
-      title: 'Gestion promotions',
+      title: 'Gestion des promotions',
       path: '/dashboard/promotion',
       icon: getIcon('eva:star-fill'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/promotion')),
     },
     {
-      title: 'Gestion politiques',
+      title: 'Gestion des politiques d’annulation',
       path: '/dashboard/politic',
       icon: getIcon('bxs:shield-alt-2'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/politic')),
     },
     {
-      title: 'Gestion utilisateurs',
+      title: 'Gestion des utilisateurs',
       path: '/dashboard/user',
       icon: getIcon('eva:people-fill'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/user')),
     },
     {
-      title: "Gestion modèle email",
+      title: "Gestion des modèles d’e-mail",
       path: '/dashboard/emailModel',
       icon: getIcon('bx:mail-send'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/emailModel')),
     },
     {
-      title: 'Gestion historique modifications',
+      title: 'Historique des modifications',
       path: '/dashboard/historic',
       icon: getIcon('material-symbols:menu-book-rounded'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/historic')),

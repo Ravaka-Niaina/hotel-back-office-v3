@@ -25,6 +25,7 @@ function formatDate(dateString) {
 const ReservationRow = ({row,navigate}) => {
     const [open, setOpen] = useState(false);
 
+    console.log(row.itineraires);
     return (
         <>
             <TableRow sx={{ '& > *': { borderBottom: 'unset' } }} selected={open}>
@@ -42,7 +43,7 @@ const ReservationRow = ({row,navigate}) => {
                 </TableCell>
                 <TableCell component="th" scope="row">
                     <Stack direction='row' spacing={2} alignItems='center'>
-                        <CustomizedTitle text={format(new Date(row.dateValidation), 'dd MMMM yyyy ~ HH:mm:SS')} size={15} level={0} />
+                        <CustomizedTitle text={format(new Date(row.dateValidation), 'dd MMMM yyyy ~ HH:mm:SS')} size={15} level={2} />
                         {
                             row.new !== undefined && (
                                 <Chip label="nouveau" color="primary" variant="outlined" />
