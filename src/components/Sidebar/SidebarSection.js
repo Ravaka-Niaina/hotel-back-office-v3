@@ -11,7 +11,7 @@ import Iconify from '../Iconify';
 
 // ----------------------------------------------------------------------
 
-const ListItemStyle = styled((props) => <ListItemButton disableGutters {...props} />)(({ theme }) => ({
+export const ListItemStyle = styled((props) => <ListItemButton disableGutters {...props} />)(({ theme }) => ({
   ...theme.typography.body2,
   height: 48,
   position: 'relative',
@@ -20,7 +20,7 @@ const ListItemStyle = styled((props) => <ListItemButton disableGutters {...props
   borderRadius: theme.shape.borderRadius,
 }));
 
-const ListItemIconStyle = styled(ListItemIcon)({
+export const ListItemIconStyle = styled(ListItemIcon)({
   width: 22,
   height: 22,
   color: '#45ABE4',
