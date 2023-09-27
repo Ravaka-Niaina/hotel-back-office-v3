@@ -10,15 +10,17 @@ export default function HotelName () {
   return(
     <ListItemStyle 
       className={styles.hotelName}
-      onClick={() => navigate("/chooseHotelToManage")}>
+      onClick={() => navigate("/chooseHotelToManage")}
+      sx={{textTransform: 'none'}}
+    >
       <ListItemIconStyle>
         <Iconify 
           icon={'bxs:building-house'} 
-          width={22} 
-          height={22}
+          width={30}
+          height={30}
         />
       </ListItemIconStyle>
-      <ListItemText disableTypography primary={localStorage.getItem('hotelName')} />
+      <ListItemText style={{marginLeft: '-8px'}} disableTypography primary={localStorage.getItem('hotelName')} />
     </ListItemStyle>
   );
 }

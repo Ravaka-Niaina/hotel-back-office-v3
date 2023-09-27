@@ -72,10 +72,11 @@ function NavItem({ item, active }) {
           onClick={handleOpen}
           sx={{
             ...(isActiveRoot && activeRootStyle),
+            textTransform: 'none',
           }}
         >
           <ListItemIconStyle>{icon && icon}</ListItemIconStyle>
-          <ListItemText disableTypography primary={title} />
+          <ListItemText disableTypography primary={title} />{/* has dropdown menu */}
           {info && info}
           <ListItemIconStyle>
             <Iconify icon={open ? 'eva:arrow-ios-upward-fill' : 'eva:arrow-ios-downward-fill'} width={22} height={22} />
@@ -95,6 +96,7 @@ function NavItem({ item, active }) {
                   to={path}
                   sx={{
                     ...(isActiveSub && activeSubStyle),
+                    textTransform: 'none',
                   }}
                 >
                   <ListItemIconStyle>
@@ -132,6 +134,7 @@ function NavItem({ item, active }) {
       to={path}
       sx={{
         ...(isActiveRoot && activeRootStyle),
+        textTransform: 'none',
       }}
     >
       <ListItemIconStyle>{icon && icon}</ListItemIconStyle>
