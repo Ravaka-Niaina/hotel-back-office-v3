@@ -36,19 +36,32 @@ export const getSidebarConfig = async (context) => {
           title: 'Information sur l’établissement',
           path: '/dashboard/updateHotel',
           userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/hotel')),
-        },
-        {
-          title: 'Choisir hôtel à gérer',
-          path: '/chooseHotelToManage/',
-          userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/hotel')),
         }
       ]
     },
     {
-      title: 'Rapport de production',
-      path: '/dashboard/rapport',
-      icon: getIcon('wpf:statistics'),
-      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/rapport')),
+      title: 'Type de chambre',
+      path: '/dashboard/typeChambre',
+      icon: getIcon('bxs:hotel'),
+      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/typeChambre')),
+    },
+    {
+      title: 'Gestion des plans tarifaires',
+      path: '/dashboard/ratePlan',
+      icon: getIcon('eva:file-text-fill'),
+      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/ratePlan')),
+    },
+    {
+      title: 'Gestion des politiques d’annulation',
+      path: '/dashboard/politic',
+      icon: getIcon('bxs:shield-alt-2'),
+      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/politic')),
+    },
+    {
+      title: 'Gestion des promotions',
+      path: '/dashboard/promotion',
+      icon: getIcon('eva:star-fill'),
+      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/promotion')),
     },
     {
       title: 'Liste des réservations',
@@ -58,28 +71,10 @@ export const getSidebarConfig = async (context) => {
       // notificationComponent:(<NotificationBadge />),
     },
     {
-      title: 'Gestion des plans tarifaires',
-      path: '/dashboard/ratePlan',
-      icon: getIcon('eva:file-text-fill'),
-      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/ratePlan')),
-    },
-    {
-      title: 'Type de chambre',
-      path: '/dashboard/typeChambre',
-      icon: getIcon('bxs:hotel'),
-      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/typeChambre')),
-    },
-    {
-      title: 'Gestion des promotions',
-      path: '/dashboard/promotion',
-      icon: getIcon('eva:star-fill'),
-      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/promotion')),
-    },
-    {
-      title: 'Gestion des politiques d’annulation',
-      path: '/dashboard/politic',
-      icon: getIcon('bxs:shield-alt-2'),
-      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/politic')),
+      title: 'Rapport de production',
+      path: '/dashboard/rapport',
+      icon: getIcon('wpf:statistics'),
+      userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/rapport')),
     },
     {
       title: 'Gestion des utilisateurs',
