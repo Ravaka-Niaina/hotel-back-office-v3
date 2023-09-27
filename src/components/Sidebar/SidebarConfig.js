@@ -27,17 +27,10 @@ export const getSidebarConfig = async (context) => {
       isAuthorized: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/app')),
     },
     {
-      title: 'Gestion hôtels',
-      path: '/dashboard/createOrDeleteHotel',
+      title: 'Information sur l’établissement',
+      path: '/dashboard/updateHotel',
       icon: getIcon('bxs:building-house'),
       userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/hotel')),
-      children: [
-        {
-          title: 'Information sur l’établissement',
-          path: '/dashboard/updateHotel',
-          userIsAllowed: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/hotel')),
-        }
-      ]
     },
     {
       title: 'Type de chambre',

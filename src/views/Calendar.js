@@ -191,6 +191,7 @@ const Calendar = () => {
                                             lineHeight:'20px',
                                             color: '#8B9EB0',
                                             letterSpacing: '-0.4px',
+                                            width: '400px'
                                         }}
                                    >                                    
                                         plage de dates sélectionnée

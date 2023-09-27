@@ -40,6 +40,7 @@ export default function RapportApp() {
     setDataSalesReport(data);
     setBreakdownReport(breakdown);
   };
+  console.log(breakdownReport)
   return (
     <Page title="AIOLIA | Rapports">
       <Container maxWidth="xl">

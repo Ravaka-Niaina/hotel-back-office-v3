@@ -1,4 +1,4 @@
-.hotelName{
+.hotelName {
   width: fit-content;
   float: right;
   font-family: RalewayBold;
@@ -6,7 +6,7 @@
   font-weight: 700;
   line-height: 20px;
   letter-spacing: -0.4px;
-  color: #8B9EB0;
+  color: #8b9eb0;
   font-size: 20px;
   position: absolute;
   right: 30px;
