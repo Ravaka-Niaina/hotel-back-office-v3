@@ -137,6 +137,12 @@ const AddUserDialog = ({reload}) => {
     setErrors(errorsTmp);
     if (errorExists) return 0;
     context.showLoader(true);
+    if (associatedHotelsId.length === 0) {
+      context.changeResultErrorMessage("Veuillez associer l'utilisateur à au moins un hôtel");
+      context.showResultError(true);
+      context.showLoader(false);
+      return;
+    }
     register({
       isPartner: true,
       name: user.last_name,

@@ -225,7 +225,7 @@ export default function RapportApp() {
                                             </TableCell>
                                             <TableCell component="th" scope="row" align='right'>
                                               {
-                                                breakdownReport[room][tarif].prix
+                                                breakdownReport[room][tarif].prix.toFixed(2)
                                               }
                                             </TableCell>
                                             <TableCell component="th" scope="row" align='right'>
