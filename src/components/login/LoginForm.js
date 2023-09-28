@@ -70,12 +70,12 @@ export default function LoginForm({ onSubmit }) {
       const payloads = formatPayloadToSend();
       login(payloads)
         .then((datas) => {
+          context.showLoader(false);
           const dataMessage = datas.data.message;
           const dataPartnerId = datas.data.partner_id;
           if (dataMessage === 'OK') {
             localStorage.setItem('partner_id', JSON.stringify(dataPartnerId));
             localStorage.setItem('phone_number', JSON.stringify(datas.data.phoneNumber || '034 00 000 00'));
-            context.showLoader(false);
             navigate('/verifycode');
             
           } else {

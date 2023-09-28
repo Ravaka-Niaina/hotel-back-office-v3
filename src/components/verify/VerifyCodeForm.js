@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 // form
 // @mui
 import { Stack } from '@mui/material';
@@ -126,6 +126,11 @@ const VerifyCodeForm = () => {
       onSubmit();
     }
   };
+
+  useEffect(() => {
+    context.showLoader(false);
+  }, []);
+
   return (
     <>
       <Stack spacing={3}>
