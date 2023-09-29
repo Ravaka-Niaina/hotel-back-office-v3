@@ -17,7 +17,7 @@ import { formatDate } from '../../services/Util';
 import { ThemeContext } from '../context/Wrapper';
 
 
-const RapportForm = ({ setStateDataSalesReport }) => {
+const RapportForm = ({ setStateDataSalesReport, setDataSalesReport }) => {
   // const [date, setDate] = useState(formatDate(new Date().toLocaleDateString('en-US')));
   // const dateNow = new Date();
   const context = useContext(ThemeContext);
@@ -65,6 +65,7 @@ const RapportForm = ({ setStateDataSalesReport }) => {
 
   const getSalesReport = () => {
     context.showLoader(true);
+    setDataSalesReport({});
     const payload = {
       vue: salesReport.view,
       debutPlage: salesReport.startDate,
