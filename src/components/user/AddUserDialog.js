@@ -143,6 +143,7 @@ const AddUserDialog = ({reload}) => {
       context.showLoader(false);
       return;
     }
+    
     register({
       isPartner: true,
       name: user.last_name,
@@ -187,7 +188,7 @@ const AddUserDialog = ({reload}) => {
         }
       })
       .catch(err => {
-        context.changeResultErrorMessage();
+        context.changeResultErrorMessage(err);
         context.showResultError(true);
         console.log(err);
       })

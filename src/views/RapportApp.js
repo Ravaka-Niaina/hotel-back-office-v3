@@ -48,7 +48,7 @@ export default function RapportApp() {
         <Grid container spacing={3} sx={{mt:2}}>
           <Grid item xs={12} md={12} lg={12} container spacing={2}>
             <Grid item xs={12}>
-              <RapportForm setStateDataSalesReport={setStateDataSalesReport} />
+              <RapportForm setStateDataSalesReport={setStateDataSalesReport} setDataSalesReport={setDataSalesReport} />
             </Grid>
             <Grid item xs={12}>
               {Object.keys(dataSalesReport).length > 0 && (

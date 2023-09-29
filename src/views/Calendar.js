@@ -151,7 +151,7 @@ const Calendar = () => {
                     <CustomizedPaperOutside 
                         onClick={()=>setOpen((prev)=>!prev)} 
                         sx={{
-                            width:'305px',
+                            width:'325px',
                             height:'60px',
                             p:1,
                             background:'#E3EDF7',
@@ -191,7 +191,6 @@ const Calendar = () => {
                                             lineHeight:'20px',
                                             color: '#8B9EB0',
                                             letterSpacing: '-0.4px',
-                                            width: '400px'
                                         }}
                                    >                                    
                                         plage de dates sélectionnée
