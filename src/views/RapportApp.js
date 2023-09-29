@@ -200,14 +200,14 @@ export default function RapportApp() {
                                         <TableCell component="th" scope="row" align='right' sx={{ color: 'black', fontSize: '16px' }}>
                                           <strong>
                                             {
-                                              total.prix.toFixed(2)
+                                              total.prix?.toFixed(2)
                                             }
                                           </strong>
                                         </TableCell>
                                         <TableCell component="th" scope="row" align='right' sx={{ color: 'black', fontSize: '16px' }}>
                                           <strong>
                                             {
-                                              ((total.prix) / (total.nuitee)).toFixed(2)
+                                              ((total.prix) / (total.nuitee))?.toFixed(2)
                                             }
                                           </strong>
                                         </TableCell>
@@ -225,12 +225,12 @@ export default function RapportApp() {
                                             </TableCell>
                                             <TableCell component="th" scope="row" align='right'>
                                               {
-                                                breakdownReport[room][tarif].prix.toFixed(2)
+                                                breakdownReport[room][tarif].prix?.toFixed(2)
                                               }
                                             </TableCell>
                                             <TableCell component="th" scope="row" align='right'>
                                               {
-                                                ((breakdownReport[room][tarif].prix) / (breakdownReport[room][tarif].nuitee)).toFixed(2)
+                                                ((breakdownReport[room][tarif].prix) / (breakdownReport[room][tarif].nuitee))?.toFixed(2)
                                               }
                                             </TableCell>
                                           </CustomizedTableRow>
