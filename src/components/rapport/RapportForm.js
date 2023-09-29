@@ -5,6 +5,7 @@ import { Grid, MenuItem, FormControlLabel, RadioGroup, Stack } from '@mui/materi
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import RoomTypeAndRatePlanForm from './RoomTypeAndRatePlanForm';
 import { getReservationSalesReport } from '../../services/SalesReport';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import CustomizedRadio from '../CustomizedComponents/CustomizedRadio';
@@ -14,6 +15,7 @@ import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutsi
 import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
 import { formatDate } from '../../services/Util';
 import { ThemeContext } from '../context/Wrapper';
+
 
 const RapportForm = ({ setStateDataSalesReport }) => {
   // const [date, setDate] = useState(formatDate(new Date().toLocaleDateString('en-US')));
@@ -28,6 +30,8 @@ const RapportForm = ({ setStateDataSalesReport }) => {
     startDate: formatDate(new Date().toLocaleDateString('en-US')),
     endDate: formatDate(new Date().toLocaleDateString('en-US')),
   });
+  const [idSelectedRoomTypes, setIdSelectedRoomTypes] = useState([]);
+  const [idSelectedRatePlans, setIdSelectedRatePlans] = useState([]);
   const formIntervals = useMemo(
     () => [
       {
@@ -65,6 +69,8 @@ const RapportForm = ({ setStateDataSalesReport }) => {
       vue: salesReport.view,
       debutPlage: salesReport.startDate,
       finPlage: salesReport.endDate,
+      idSelectedRoomTypes,
+      idSelectedRatePlans,
     };
     getReservationSalesReport(payload)
       .then((results) => {
@@ -152,14 +158,9 @@ const RapportForm = ({ setStateDataSalesReport }) => {
                       renderInput={(params) => <CustomizedInput sx={{ width: 1 }} {...params} />}
                     />
                   </Grid>
-                    
-                  
                 </LocalizationProvider>
               </Grid>
             </Grid>
-            
-            
-            
 
             <CustomizedTitle text='Comparaison avec:' level={0} />
             <div>
@@ -174,6 +175,12 @@ const RapportForm = ({ setStateDataSalesReport }) => {
                 <MenuItem value={30}>2020</MenuItem>
               </CustomizedSelect>
             </div>
+            <RoomTypeAndRatePlanForm
+              idSelectedRoomTypes={idSelectedRoomTypes}
+              setIdSelectedRoomTypes={setIdSelectedRoomTypes}
+              idSelectedRatePlans={idSelectedRatePlans}
+              setIdSelectedRatePlans={setIdSelectedRatePlans}
+            />
             <CustomizedButton onClick={getSalesReport} text="Obtenir rapport" sx={{ width: 0.5 }} component={RouterLink} to="#" />
           </Stack>
         </CustomizedPaperOutside>
