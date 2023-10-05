@@ -62,7 +62,7 @@ export const resendCode = (payload) =>
  */
 export const register = (payload) =>
   axios.post(`${config.host}/user/registerPartner`, payload, {
-    timeout: 10000,
+    timeout: 20000,
     headers: {
       ispartner: true,
       Authorization: localStorage.getItem('id_token'),
