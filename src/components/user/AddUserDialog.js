@@ -163,7 +163,7 @@ const AddUserDialog = ({reload}) => {
       associatedHotelsId,
     })
       .then(result => {
-        console.log(result);
+        context.showLoader(false);
         if (result.data.status === 200) {
           clearForm();
           setOpen(false);
