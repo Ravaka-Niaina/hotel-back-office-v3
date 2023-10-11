@@ -3,9 +3,7 @@ import { Stack } from '@mui/material';
 import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
 import './index.scss';
 
-const Preloader = () => {
-
-    return (
+const Preloader = () => (
         <Stack  spacing={3} justifyContent='center' alignItems='center' sx={{background:'#E3EDF7',height:'100vh'}}> 
             { /* eslint-disable */}
             <div className='circle'>
@@ -30,5 +28,4 @@ const Preloader = () => {
             
         </Stack>
     );
-};
 export default Preloader;
