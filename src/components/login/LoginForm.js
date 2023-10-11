@@ -76,7 +76,9 @@ export default function LoginForm({ onSubmit }) {
           if (dataMessage === 'OK') {
             localStorage.setItem('partner_id', JSON.stringify(dataPartnerId));
             localStorage.setItem('phone_number', JSON.stringify(datas.data.phoneNumber || '034 00 000 00'));
-            navigate('/verifycode');
+            setTimeout(() => {
+              navigate('/verifycode');
+            }, 1000);
             
           } else {
             context.changeResultErrorMessage('Vos identifiants sont incorrects,veuillez réessayer.');
