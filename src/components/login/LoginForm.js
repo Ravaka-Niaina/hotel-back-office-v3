@@ -70,6 +70,7 @@ export default function LoginForm({ onSubmit }) {
       const payloads = formatPayloadToSend();
       login(payloads)
         .then((datas) => {
+          context.showLoader(false);
           const dataMessage = datas.data.message;
           const dataPartnerId = datas.data.partner_id;
           if (dataMessage === 'OK') {
@@ -83,13 +84,10 @@ export default function LoginForm({ onSubmit }) {
           }
         })
         .catch(() => {
+          context.showLoader(false);
           context.changeResultErrorMessage(`Une erreur s'est produite,veuillez réessayer plus tard.`);
           context.showResultError(true);
         })
-        .finally(() => {
-          console.log('tokony mikatona le loader');
-          context.showLoader(false);
-        });
     }
   };
 

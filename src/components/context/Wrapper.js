@@ -47,7 +47,7 @@ const Wrapper = ({ children }) => {
   };
 
   const showLoader = (show) => {
-
+      console.log('show: ', show);
       setDisable(show);
 
   };
