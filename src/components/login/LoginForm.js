@@ -74,11 +74,11 @@ export default function LoginForm({ onSubmit }) {
           const dataMessage = datas.data.message;
           const dataPartnerId = datas.data.partner_id;
           if (dataMessage === 'OK') {
-            localStorage.setItem('partner_id', JSON.stringify(dataPartnerId));
+            localStorage.setItem('partner_id', dataPartnerId);
             localStorage.setItem('phone_number', JSON.stringify(datas.data.phoneNumber || '034 00 000 00'));
             setTimeout(() => {
               navigate('/verifycode');
-            }, 1000);
+            }, 500);
             
           } else {
             context.changeResultErrorMessage('Vos identifiants sont incorrects,veuillez réessayer.');

@@ -133,7 +133,7 @@ export default function Router() {
         { path: '*', element: <NotFound /> },
       ],
     },
-    { path: '/', element: <Navigate to="/dashboard/app" /> },
+    { path: '/', element: <Navigate to="/login" /> },
     { path: 'load', element: <Preloader /> },
     { path: 'login', element: <Login /> },
     { path: 'verifycode', element: <VerifyCode /> },
