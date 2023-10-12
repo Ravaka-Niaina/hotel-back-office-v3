@@ -115,7 +115,7 @@ const CreateOrDeleteHotel = () => {
   const manageHotelContent = (hotelId, hotelName) => {
     localStorage.setItem('hotelid', hotelId);
     localStorage.setItem('hotelName', hotelName);
-    navigatePage('/');
+    navigatePage('/dashboard/app');
   };
 
   return (
