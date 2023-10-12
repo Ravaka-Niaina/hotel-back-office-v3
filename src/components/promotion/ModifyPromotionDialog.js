@@ -100,7 +100,7 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
   
   const fetchData = async () => {
     context.showLoader(true);
-    const user = JSON.parse(localStorage.getItem('partner_id'));
+    const user = localStorage.getItem('partner_id');
     getPromotionDetail(row._id, user)
       .then((promotionDetail) => {
         // console.log(promotionDetail.data);
