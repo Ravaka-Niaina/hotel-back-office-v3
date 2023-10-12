@@ -98,7 +98,7 @@ const VerifyCodeForm = () => {
   const onSubmitResend = async (e) => {
     e.preventDefault();
     context.showLoader(true);
-    const user = JSON.parse(localStorage.getItem('partner_id'));
+    const user = localStorage.getItem('partner_id');
     const payload = {
       isPartner: true,
       idUser: user,

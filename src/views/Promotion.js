@@ -96,7 +96,7 @@ const Promotion = () => {
       nbContent: row,
       numPage: p,
     };
-    // const user = JSON.parse(localStorage.getItem('partner_id'));
+    // const user = localStorage.getItem('partner_id');
     try {
       const idToken = localStorage.getItem("id_token");
       getPromotionList(payload, idToken)
@@ -148,7 +148,7 @@ const Promotion = () => {
       nbContent: row,
       numPage: p,
     };
-    // const user = JSON.parse(localStorage.getItem('partner_id'));
+    // const user = localStorage.getItem('partner_id');
     try {
       const idToken = localStorage.getItem("id_token");
       const result = await getPromotionList(payload, idToken);
