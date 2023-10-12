@@ -82,14 +82,15 @@ export const getUserList = (payload) =>
     },
   });
 
-export const getUserDetails = (id,idToken) =>
-  axios.get(`${config.host}/user/details/${id}`, {
-    timeout: 10000,
-    headers: {
-      ispartner: true,
-      Authorization: idToken,
-    },
-  });
+export const getUserDetails = (id,idToken) => (
+    axios.get(`${config.host}/user/details/${id}`, {
+      timeout: 10000,
+      headers: {
+        ispartner: true,
+        Authorization: idToken,
+      },
+    }))
+  
 
 export const updateUser = (payload) =>
   axios.post(`${config.host}/user/updatePartner`, payload, {
@@ -152,6 +153,7 @@ export const getPayloadFromToken = (jwtDecode, token) => {
     const payload = jwtDecode(token);
     return payload;
   } catch (err) {
+    console.error(err);
     return null;
   }
 };

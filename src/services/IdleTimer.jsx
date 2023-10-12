@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 import { useIdleTimer } from 'react-idle-timer';
-import { useHistory , useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 const IdleTimerContext = createContext({});

@@ -47,7 +47,6 @@ const Wrapper = ({ children }) => {
   };
 
   const showLoader = (show) => {
-      console.log('show: ', show);
       setDisable(show);
 
   };
@@ -76,9 +75,6 @@ const Wrapper = ({ children }) => {
     }
     setOpenAlertSuccess(false);
   };
-
-
-  
 
   const getUserDetails = async () => {
     const savedUserDetails = localStorage.getItem("user_details");
