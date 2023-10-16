@@ -1,7 +1,10 @@
 import { useContext, useMemo, useState, useEffect, } from 'react';
 import {Link as RouterLink, useNavigate} from "react-router-dom";
 import PropTypes from 'prop-types'
-import { Grid, MenuItem, FormControlLabel, RadioGroup, Stack } from '@mui/material';
+import { Grid, FormControlLabel, RadioGroup, Stack,
+  FormGroup,
+  FormLabel,
+  Button,} from '@mui/material';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -16,8 +19,15 @@ import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
 import { formatDate } from '../../services/Util';
 import { ThemeContext } from '../context/Wrapper';
 
+const dateNow = formatDate(new Date().toLocaleDateString('en-US'));
 
-const RapportForm = ({ setStateDataSalesReport, setDataSalesReport }) => {
+const RapportForm = ({ 
+  setStateDataSalesReport, 
+  setStateDataSalesReportLastYear,
+  setDataSalesReport,
+  isToCompare,
+  setIsToCompare,
+}) => {
   // const [date, setDate] = useState(formatDate(new Date().toLocaleDateString('en-US')));
   // const dateNow = new Date();
   const context = useContext(ThemeContext);
@@ -27,8 +37,10 @@ const RapportForm = ({ setStateDataSalesReport, setDataSalesReport }) => {
 
   const [salesReport, setSalesReport] = useState({
     view: 'jour',
-    startDate: formatDate(new Date().toLocaleDateString('en-US')),
-    endDate: formatDate(new Date().toLocaleDateString('en-US')),
+    startDate: dateNow,
+    endDate: dateNow,
+    startCompare: dateNow,
+    endCompare: dateNow,
   });
   const [idSelectedRoomTypes, setIdSelectedRoomTypes] = useState([]);
   const [idSelectedRatePlans, setIdSelectedRatePlans] = useState([]);
@@ -52,7 +64,10 @@ const RapportForm = ({ setStateDataSalesReport, setDataSalesReport }) => {
 
   const handleChange = (e, field) => {
     let newValue;
-    if (field === 'startDate' || field === 'endDate') {
+    if (field === 'startDate' || 
+      field === 'endDate' || 
+      field === 'startCompare' || 
+      field === 'endCompare') {
       newValue = formatDate(e.toLocaleDateString('en-US'));
     } else {
       newValue = e.target.value;
@@ -70,14 +85,18 @@ const RapportForm = ({ setStateDataSalesReport, setDataSalesReport }) => {
       vue: salesReport.view,
       debutPlage: salesReport.startDate,
       finPlage: salesReport.endDate,
+      aComparer: isToCompare,
+      debutPlageComparaison: salesReport.startCompare,
+      finPlageComparaison: salesReport.endCompare,
       idSelectedRoomTypes,
       idSelectedRatePlans,
     };
     getReservationSalesReport(payload)
       .then((results) => {
-        console.log(results);
+        console.log(results.data);
         if (results.data.status === 200) {
           setStateDataSalesReport(results.data.stats, results.data.reservPerDay);
+          setStateDataSalesReportLastYear(results.data.stats_last_year, results.data.reserv_per_day_last_year);
           context.showLoader(false);
         } else {
           context.showLoader(false);
@@ -145,7 +164,6 @@ const RapportForm = ({ setStateDataSalesReport, setDataSalesReport }) => {
                       inputFormat="dd/MM/yyyy"
                       value={new Date(salesReport.startDate)}
                       onChange={(e) => handleChange(e, 'startDate')}
-                      // onChange={(e) => setDate(formatDate(e.toLocaleDateString('en-US')))}
                       renderInput={(params) => <CustomizedInput sx={{ width: 1 }} {...params} />}
                     />
                   </Grid>
@@ -155,7 +173,6 @@ const RapportForm = ({ setStateDataSalesReport, setDataSalesReport }) => {
                       inputFormat="dd/MM/yyyy"
                       value={new Date(salesReport.endDate)}
                       onChange={(e) => handleChange(e, 'endDate')}
-                      // onChange={(e) => setDate(formatDate(e.toLocaleDateString('en-US')))}
                       renderInput={(params) => <CustomizedInput sx={{ width: 1 }} {...params} />}
                     />
                   </Grid>
@@ -164,18 +181,53 @@ const RapportForm = ({ setStateDataSalesReport, setDataSalesReport }) => {
             </Grid>
 
             <CustomizedTitle text='Comparaison avec:' level={0} />
-            <div>
-              <CustomizedSelect label="Annee">
-                <MenuItem disabled value="">
-                  <em>Placeholder</em>
-                </MenuItem>
-                <MenuItem selected value={10}>
-                  2000
-                </MenuItem>
-                <MenuItem value={20}>2010</MenuItem>
-                <MenuItem value={30}>2020</MenuItem>
-              </CustomizedSelect>
-            </div>
+            
+            <Grid item xs={8} container
+              justifyContent="flex-star"
+              alignItems="center"
+              direction='row'
+              spacing={2}
+            >
+              <FormGroup>
+                <RadioGroup aria-labelledby="demo-controlled-radio-buttons-group" name="controlled-radio-buttons-group">
+                  <FormControlLabel
+                    control={
+                      <CustomizedRadio
+                        onClick={() => {
+                          setIsToCompare(!isToCompare);
+                          setDataSalesReport({});
+                        }}
+                        checked={isToCompare}
+                      />
+                    }
+                    label="A comparer"
+                  />
+                </RadioGroup>
+              </FormGroup>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <Grid item xs={4}>
+                  <MobileDatePicker
+                    label="Debut"
+                    inputFormat="dd/MM/yyyy"
+                    value={new Date(salesReport.startCompare)}
+                    onChange={(e) => handleChange(e, 'startCompare')}
+                    renderInput={(params) => <CustomizedInput sx={{ width: 1 }} {...params} />}
+                    disabled={!isToCompare}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <MobileDatePicker
+                    label="Fin"
+                    inputFormat="dd/MM/yyyy"
+                    value={new Date(salesReport.endCompare)}
+                    onChange={(e) => handleChange(e, 'endCompare')}
+                    renderInput={(params) => <CustomizedInput sx={{ width: 1 }} {...params} />}
+                    disabled={!isToCompare}
+                  />
+                </Grid>
+              </LocalizationProvider>
+            </Grid>
+            
             <RoomTypeAndRatePlanForm
               idSelectedRoomTypes={idSelectedRoomTypes}
               setIdSelectedRoomTypes={setIdSelectedRoomTypes}
