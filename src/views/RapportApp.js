@@ -35,12 +35,59 @@ const translatedLabel = {
 export default function RapportApp() {
   // const theme = useTheme();
   const [dataSalesReport, setDataSalesReport] = useState({});
+  const [dataSalesReportLastYear, setDataSalesReportLastYear] = useState({});
   const [breakdownReport, setBreakdownReport] = useState({});
+  const [breakdownReportLastYear, setBreakdownReportLastYear] = useState({});
+  const [isToCompare, setIsToCompare] = useState(false);
+  
   const setStateDataSalesReport = (data,breakdown) => {
     setDataSalesReport(data);
     setBreakdownReport(breakdown);
   };
-  console.log(breakdownReport)
+
+  const setStateDataSalesReportLastYear = (data,breakdown) => {
+    setDataSalesReportLastYear(data);
+    setBreakdownReportLastYear(breakdown);
+  };
+
+  const chartData = [
+    {
+      name: 'Nuitée',
+      type: 'column',
+      fill: 'solid',
+      data: dataSalesReport.night,
+    },
+    {
+      name: 'Prix moyen',
+      type: 'line',
+      fill: 'solid',
+      data: dataSalesReport.average_price,
+    },
+    {
+      name: 'Revenu par chambre',
+      type: 'area',
+      fill: 'gradient',
+      data: dataSalesReport.revenue_per_room,
+    },
+  ];
+
+  if (isToCompare) {
+    chartData.unshift({
+      name: "Nuitée (comparaison)",
+      type: 'column',
+      fill: 'solid',
+      data: dataSalesReportLastYear.night,
+    });
+    chartData.splice(2, 0, {
+      name: "Prix moyen  (comparaison)",
+      type: 'line',
+      fill: 'solid',
+      data: dataSalesReportLastYear.average_price,
+    });
+  }
+  
+  console.log(dataSalesReport);
+
   return (
     <Page title="AIOLIA | Rapports">
       <Container maxWidth="xl">
@@ -48,59 +95,21 @@ export default function RapportApp() {
         <Grid container spacing={3} sx={{mt:2}}>
           <Grid item xs={12} md={12} lg={12} container spacing={2}>
             <Grid item xs={12}>
-              <RapportForm setStateDataSalesReport={setStateDataSalesReport} setDataSalesReport={setDataSalesReport} />
+              <RapportForm 
+                setStateDataSalesReport={setStateDataSalesReport}
+                setStateDataSalesReportLastYear={setStateDataSalesReportLastYear}
+                setDataSalesReport={setDataSalesReport} 
+                isToCompare={isToCompare}
+                setIsToCompare={setIsToCompare}
+              />
             </Grid>
             <Grid item xs={12}>
               {Object.keys(dataSalesReport).length > 0 && (
                 <ReservationSalesReport
-                  title="Website Visits"
-                  subheader="(+43%) than last year"
+                  // title="Website Visits"
+                  // subheader="(+43%) than last year"
                   chartLabels={dataSalesReport.date}
-                  chartData={[
-                    {
-                      name: "Nuitée (l'année derniere)",
-                      type: 'column',
-                      fill: 'solid',
-                      data: dataSalesReport.night_last_year,
-                    },
-                    {
-                      name: 'Nuitée',
-                      type: 'column',
-                      fill: 'solid',
-                      data: dataSalesReport.night,
-                    },
-                    {
-                      name: "Prix moyen  (l'année derniere)",
-                      type: 'line',
-                      fill: 'solid',
-                      data: dataSalesReport.average_price_last_year,
-                    },
-                    {
-                      name: 'Prix moyen',
-                      type: 'line',
-                      fill: 'solid',
-                      data: dataSalesReport.average_price,
-                    },
-                    {
-                      name: 'Revenu par chambre',
-                      type: 'area',
-                      fill: 'gradient',
-                      data: dataSalesReport.revenue_per_room,
-                    },
-                    // {
-                    //   name: 'Team C',
-                    //   type: 'line',
-                    //   fill: 'solid',
-                    //   data: [30, 25, 36],
-                    // },
-
-                    // {
-                    //   name: 'Team C',
-                    //   type: 'line',
-                    //   fill: 'solid',
-                    //   data: [30, 25, 36],
-                    // },
-                  ]}
+                  chartData={chartData}
                 />
               )}
             </Grid>
