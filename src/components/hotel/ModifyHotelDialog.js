@@ -78,7 +78,7 @@ const ModifyHotelDialog = () => {
     if ('tourist_sticker' in fieldValues)
       temp.tourist_sticker = fieldValues.tourist_sticker ? '' : requiredFieldMessage;
     if ('tva' in fieldValues)
-      temp.tva = hotel.is_tva_included === 'true' ? '' : requiredFieldMessage;
+      temp.tva = (hotel.is_tva_included === 'true' || (hotel.is_tva_included !== 'true' && fieldValues.tva)) ? '' : requiredFieldMessage;
     if ('location_lat' in fieldValues) temp.location_lat = fieldValues.location_lat ? '' : requiredFieldMessage;
     if ('location_lng' in fieldValues) temp.location_lng = fieldValues.location_lng ? '' : requiredFieldMessage;
     if (!pictureList || pictureList.length === 0) temp.photos = requiredFieldMessage;
@@ -125,7 +125,7 @@ const ModifyHotelDialog = () => {
       vignette: Number.parseFloat(hotel.tourist_sticker, 10),
       photo: pictureList.map((e) => e.img),
       isTVAIncluded: hotel.is_tva_included === 'true',
-      TVA: hotel.is_tva_included === 'true' ? Number.parseFloat(hotel.tva) : 0,
+      TVA: hotel.is_tva_included === 'true' ? 0 : Number.parseFloat(hotel.tva),
       location: { lat: Number.parseFloat(hotel.location_lat, 10), lng: Number.parseFloat(hotel.location_lng, 10) },
       logo: logo[0].img,
       banner: banner[0].img,
@@ -250,6 +250,7 @@ const ModifyHotelDialog = () => {
     context.showLoader(true);
     getHotelDetails()
       .then((response) => {
+        console.log(response.data);
         const hotelTemp = response.data.hotel;
         console.log(hotelTemp);
         setHotel({
