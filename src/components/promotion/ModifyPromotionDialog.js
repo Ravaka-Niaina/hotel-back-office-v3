@@ -85,6 +85,14 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
 
   const [languages, setLanguages] = useState([]);
 
+  const handleChangeMinStay = (value) => {
+    setPromotion({...promotion, min_stay: value});
+  };
+
+  const handleChangeDiscount = (value) => {
+    setPromotion({...promotion, discount: value});
+  };
+
   const handleChangeWeekDays = (k) => {
     const weekDaysTemp = promotion.week_days;
     weekDaysTemp[k] = promotion.week_days[k] === 0 ? 1 : 0;
@@ -597,7 +605,7 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
                 value={promotion.discount}
                 type="number"
                 variant="outlined"
-                onChange={(e) => handleChangeInputs(e, 'discount')}
+                onChange={(e) => handleChangeDiscount(e.target.value)}
                 label="remise"
                 {...(errors.discount && {
                   error: true,
@@ -714,7 +722,7 @@ const ModifyPromotionDialog = ({ row, reload , navigate}) => {
               <CustomizedInput
                 name='min_stay'
                 value={promotion.min_stay}
-                onChange={(e) => handleChangeInputs(e, 'min_stay')}
+                onChange={(e) => handleChangeMinStay(e.target.value)}
                 type="number"
                 id="outlined-basic"
                 label="min"

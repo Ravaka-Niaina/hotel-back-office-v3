@@ -88,7 +88,15 @@ const AddPromotionDialog = ({reload,navigate}) => {
   const roomSelected = [];
   const promotionTemp = promotion;
 
-  const getListLanguages = () => {
+  const handleChangeMinStay = (value) => {
+    setPromotion({...promotion, min_stay: value});
+  };
+
+  const handleChangeDiscount = (value) => {
+    setPromotion({...promotion, discount: value});
+  };
+
+  const getListLanguages = (tempPromotion) => {
     fetchListLanguages()
     .then(result => {
       setLanguages(result.data.listLanguages);
@@ -97,7 +105,7 @@ const AddPromotionDialog = ({reload,navigate}) => {
         tempLanguagesContent[language.abbrev] = '';
       });
       setPromotion({
-        ...promotion,
+        ...tempPromotion,
         names: tempLanguagesContent,
       });
       setChoosedNameLanguageAbbrev(result.data.listLanguages[0].abbrev);
@@ -160,7 +168,8 @@ const AddPromotionDialog = ({reload,navigate}) => {
           fetch.data.listTypeChambre.forEach((e) => {
             roomSelected.push(e._id);
           });
-          setPromotion({ ...promotionTemp, room_type: [...roomSelected], rate_plan: [...tarifSelected] });
+          const tempPromotion = { ...promotionTemp, room_type: [...roomSelected], rate_plan: [...tarifSelected] };
+          getListLanguages(tempPromotion);
         } else {
           context.changeResultErrorMessage('Une erreur est interne survenue lors du chargement des  listes.');
           context.showResultError(true);
@@ -250,7 +259,6 @@ const AddPromotionDialog = ({reload,navigate}) => {
     promotionTemp.lead = { ...leadTemp };
     setPromotion({ ...promotionTemp });
     validate({ lead: { [field2]: e.target.value } });
-    // console.log(promotion);
   };
 
   const validate = (fieldValues) => {
@@ -332,7 +340,6 @@ const AddPromotionDialog = ({reload,navigate}) => {
       }
       setPromotion({ ...promotionTemp });
     });
-    // console.log(promotion);
   };
 
   const handleChangeSelected = (id, field) => {
@@ -440,11 +447,11 @@ const AddPromotionDialog = ({reload,navigate}) => {
   const addPromotion = async () => {
     validate(promotion);
     if (formIsValid(promotion)) {
-      context.showLoader(true);
+      // context.showLoader(true);
       const idToken = localStorage.getItem('id_token');
+      console.log(formatPayloadToSend());
       createPromotion(formatPayloadToSend(), idToken)
         .then((result) => {
-          // console.log(result);
           if (result.data.status === 200){
             handleClose();
             context.changeResultSuccessMessage('Enregistrement inséré avec succès');
@@ -475,11 +482,9 @@ const AddPromotionDialog = ({reload,navigate}) => {
 
   useEffect(()=>{
     fetchData();
-    getListLanguages();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
 
-  console.log(choosedNameLanguageAbbrev);
   return (
     <>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
@@ -589,7 +594,7 @@ const AddPromotionDialog = ({reload,navigate}) => {
                 name="discount"
                 type="number"
                 variant="outlined"
-                onChange={(e) => handleChangeInputs(e, 'discount')}
+                onChange={(e) => handleChangeDiscount(e.target.value)}
                 label="remise"
                 {...(errors.discount && {
                   error: true,
@@ -705,7 +710,7 @@ const AddPromotionDialog = ({reload,navigate}) => {
             <Stack sx={{ p: 2 }} direction="row" spacing={3} alignItems="center">
               <CustomizedInput
                 name="min_stay"
-                onChange={(e) => handleChangeInputs(e, 'min_stay')}
+                onChange={(e) => handleChangeMinStay(e.target.value)}
                 type="number"
                 id="outlined-basic"
                 label="min"
