@@ -17,6 +17,7 @@ import CustomizedRadio from '../CustomizedComponents/CustomizedRadio';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
 import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
 import InvisibleBackdrop from '../CustomizedComponents/InvisibleBackdrop';
+import styles from './EditorCustomizingDialog.module.css';
 
 import { ThemeContext } from '../context/Wrapper';
 
@@ -253,12 +254,13 @@ const EditorCustomizingDialog = ({chambre , reloadRoom, dateRange, setDateRange,
                 PaperComponent={CustomizedPaperOutside}
     
             >
-                <CustomizedDialogTitle   text={`Editor (${chambre.nom})`} />
+                <CustomizedDialogTitle   text={`Editor (${chambre.names.fr})`} />
                 <DialogContent 
                     style={{
                         background: 'linear-gradient(308.48deg, rgba(255, 255, 255, 0.53) 2.36%, rgba(255, 255, 255, 0) 61.95%), #E3EDF7',
-                        paddingTop: 15 
+                        paddingTop: 15 ,
                     }}
+                    className={styles.containerForm}
                 >
                     <Stack spacing={5} style={{ paddingLeft: '2em', paddingRight: '2em' }}>
                         <div id="pickerHere" />
