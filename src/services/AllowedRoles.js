@@ -10,6 +10,10 @@
 export const getAllowedRoles = (pageSectionPath) => {
   const paths = [
     {
+      path: '/dashboard/index',
+      allowedRoles: ['superAdmin', 'admin'],
+    },
+    {
       path: '/dashboard/app',
       allowedRoles: ['*'],
     },
