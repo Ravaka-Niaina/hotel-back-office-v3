@@ -22,6 +22,7 @@ const SendCodeResetPassword = lazy(() => import('../../views/SendCodeResetPasswo
 const EnterCodeResetPassword = lazy(() => import('../../views/EnterCodeResetPassword'));
 const EnterNewPassword = lazy(() => import('../../views/EnterNewPassword'));
 
+const Dashboard = lazy(() => import('../../views/dashboard/Dashboard.tsx'));
 const NotFound = lazy(() => import('../../views/Page404'));
 const DashboardApp = lazy(() => import('../../views/DashboardApp'));
 const HomeForm = lazy(() => import('../../views/HomeForm'));
@@ -54,6 +55,10 @@ export default function Router() {
       path: dashboardPath,
       element: <DashboardLayout />,
       children: [
+        {
+          path: 'index',
+          element: <Protected child={<Dashboard />} allowedRoles={getAllowedRoles(`${dashboardPath}/index`)} />,
+        },
         {
           path: 'app',
           element: <Protected child={<Calendar />} allowedRoles={getAllowedRoles(`${dashboardPath}/app`)} />,

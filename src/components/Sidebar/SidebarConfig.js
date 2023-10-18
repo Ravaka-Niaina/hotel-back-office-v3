@@ -20,6 +20,13 @@ export const getSidebarConfig = async (context) => {
   const userRoles = userAccessRights.map((accessRight) => accessRight?._id);
   const sidebarConfig = [
     {
+      title: 'Tableau de bord',
+      path: '/dashboard/index',
+      icon: '',
+      userIsAllowed: getAllowedRoles('/dashboard/index'),
+      isAuthorized: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/index')),
+    },
+    {
       title: 'Calendrier',
       path: '/dashboard/app',
       icon: getIcon('eva:pie-chart-2-fill'),
