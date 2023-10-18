@@ -84,7 +84,7 @@ const AddPromotionDialog = ({reload,navigate}) => {
 
   const [languages, setLanguages] = useState([]);
 
-  const tarifSelected = [];
+const tarifSelected = [];
   const roomSelected = [];
   const promotionTemp = promotion;
 
@@ -308,9 +308,7 @@ const AddPromotionDialog = ({reload,navigate}) => {
       (newPromotion.last_day !== '' || !newPromotion.specific_days_of_stay) &&
       (newPromotion.first_day !== '' || !newPromotion.specific_days_of_stay) &&
       Object.values(errors).every((x) => x === '');
-    if (isValid) {
-      console.log('valid');
-    }
+      
     return isValid;
   };
 
