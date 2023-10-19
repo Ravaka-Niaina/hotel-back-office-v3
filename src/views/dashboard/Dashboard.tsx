@@ -1,13 +1,15 @@
-import { Component } from 'react';
+import { useState } from 'react';
+
+/* global DashboardProps, DashboardState */
 
 interface DashboardProps {}
 
 interface DashboardState {}
 
-class Dashboard extends Component<DashboardProps, DashboardState> {
-  render() {
-    return <h1>Hello Aiolia, Serge Miranda, Steave Leong</h1>;
-  }
-}
+const Dashboard: React.FC = () => {
+  const [state, setState] = useState<DashboardState>({});
+
+  return <h1>Hello Aiolia, Serge Miranda, Steave Leong</h1>;
+};
 
 export default Dashboard;
