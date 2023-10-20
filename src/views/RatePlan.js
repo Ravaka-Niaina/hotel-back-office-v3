@@ -150,7 +150,7 @@ const RatePlan = () => {
   };
 
   const reload = (noLoading = false) => {
-    getAllRatePlan(noLoading);
+    fetchFilter(1, rowsPerPage);
   };
 
   const navigate = (itinerary , rateCurrentId = -1) => {
@@ -231,7 +231,7 @@ const RatePlan = () => {
                           {!loading && ratePlanList.map((row) => {
                             const { _id, names, isActif,chambresAtrb,politiqueAnnulAtrb } = row;
                             const isItemSelected = selected.indexOf(names?.fr) !== -1;
-                            
+                            console.log(row);
                             return (
                               <TableRow
                                 hover

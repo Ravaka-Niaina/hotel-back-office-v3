@@ -442,27 +442,6 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
                 helpertext: errors.descriptions,
               })}
             />
-            <CustomizedInput
-              value={ratePlan.english_description}
-              onChange={handleChange}
-              sx={{ width: 1 }}
-              placeholder="Votre descripiton..."
-              multiline
-              rows={2}
-              rowsmax={2}
-              error={false}
-              margin="dense"
-              id="english_description"
-              name="english_description"
-              label="Description en anglais"
-              type="text"
-              fullWidth
-              required
-              {...(errors.english_description && {
-                error: true,
-                helpertext: errors.english_description,
-              })}
-            />
           </Stack>
           <CustomizedTitle text="Date de réservation" size={16} />
           <Stack  direction="column" spacing={3}>
