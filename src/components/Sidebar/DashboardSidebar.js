@@ -98,7 +98,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
             <Box>
               <Link underline="none" component={RouterLink} to="#">
                 <AccountStyle>
-                  <Avatar src="/static/mock-images/avatars/avatar_default.jpg" alt="photoURL" />
+                  <Avatar src="/user-icon.jpeg" alt="photoURL" />
                   <Box sx={{ ml: 2 }}>
                     <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
                       {`${userDetails?.partner_first_name} ${userDetails?.partner_name}`}

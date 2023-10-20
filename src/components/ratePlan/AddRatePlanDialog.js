@@ -274,7 +274,8 @@ const AddRatePlanDialog = ({ reload , navigate}) => {
               context.showResultError(true);
             }
           })
-          .catch(() => {
+          .catch((err) => {
+            console.log(err);
             context.changeResultErrorMessage('Enregistrement non effectué');
             context.showResultError(true);
           })
