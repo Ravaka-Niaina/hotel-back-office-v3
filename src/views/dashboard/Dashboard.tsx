@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Grid, Container, Typography, useTheme } from '@mui/material';
 
 import { faker } from '@faker-js/faker';
+import BookingDateChart from '../../components/dashboard/BookingDateChart';
 // sections
 import {
   AppTasks,
@@ -16,7 +17,7 @@ import {
   AppConversionRates,
 } from '../../components/stats';
 import Iconify from '../../components/Iconify';
-import Page from '../../components/Page';
+import StatisticOverviewChart from 'src/components/dashboard/StatisticOverviewChart';
 
 /* global DashboardProps, DashboardState */
 
@@ -36,21 +37,50 @@ const Dashboard: React.FC = () => {
           Tableau de bord
         </Typography>
 
-        <Grid container spacing={3}>
+        <Container fixed>
+          <Grid container spacing={2}>
+            {/* <Grid sx={{ bgcolor: '#FFF' }} xs={12} md={6} spacing={2}>
+              <ChartTest />
+            </Grid> */}
+            <Grid item borderRadius={3} sx={{ bgcolor: '#FFF' }} xs={12} md={6}>  
+              <BookingDateChart />
+            </Grid>
+          </Grid>
+        </Container>
+
+        {/* <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary title="Weekly Sales" total={714000} icon={'ant-design:android-filled'} sx={undefined} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="New Users" total={1352831} color="info" icon={'ant-design:apple-filled'} sx={undefined} />
+            <AppWidgetSummary
+              title="New Users"
+              total={1352831}
+              color="info"
+              icon={'ant-design:apple-filled'}
+              sx={undefined}
+            />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Item Orders" total={1723315} color="warning" icon={'ant-design:windows-filled'} sx={undefined} />
+            <AppWidgetSummary
+              title="Item Orders"
+              total={1723315}
+              color="warning"
+              icon={'ant-design:windows-filled'}
+              sx={undefined}
+            />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Bug Reports" total={234} color="error" icon={'ant-design:bug-filled'} sx={undefined} />
+            <AppWidgetSummary
+              title="Bug Reports"
+              total={234}
+              color="error"
+              icon={'ant-design:bug-filled'}
+              sx={undefined}
+            />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
@@ -107,7 +137,9 @@ const Dashboard: React.FC = () => {
                 theme.palette.info.light,
                 theme.palette.secondary.light,
                 theme.palette.warning.light,
-              ]} subheader={undefined}            />
+              ]}
+              subheader={undefined}
+            />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
@@ -138,7 +170,9 @@ const Dashboard: React.FC = () => {
                 { name: 'Series 2', data: [20, 30, 40, 80, 20, 80] },
                 { name: 'Series 3', data: [44, 76, 78, 13, 43, 10] },
               ]}
-              chartColors={[...Array(6)].map(() => theme.palette.text.secondary)} subheader={undefined}            />
+              chartColors={[...Array(6)].map(() => theme.palette.text.secondary)}
+              subheader={undefined}
+            />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
@@ -150,7 +184,9 @@ const Dashboard: React.FC = () => {
                 description: faker.name.jobTitle(),
                 image: `/static/mock-images/covers/cover_${index + 1}.jpg`,
                 postedAt: faker.date.recent(),
-              }))} subheader={undefined}            />
+              }))}
+              subheader={undefined}
+            />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
@@ -167,7 +203,9 @@ const Dashboard: React.FC = () => {
                 ][index],
                 type: `order${index + 1}`,
                 time: faker.date.past(),
-              }))} subheader={undefined}            />
+              }))}
+              subheader={undefined}
+            />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
@@ -194,7 +232,9 @@ const Dashboard: React.FC = () => {
                   value: 443232,
                   icon: <Iconify icon={'eva:twitter-fill'} color="#1C9CEA" width={32} height={32} sx={undefined} />,
                 },
-              ]} subheader={undefined}            />
+              ]}
+              subheader={undefined}
+            />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
@@ -206,9 +246,11 @@ const Dashboard: React.FC = () => {
                 { id: '3', label: 'Stakeholder Meeting' },
                 { id: '4', label: 'Scoping & Estimations' },
                 { id: '5', label: 'Sprint Showcase' },
-              ]} subheader={undefined}            />
+              ]}
+              subheader={undefined}
+            />
           </Grid>
-        </Grid>
+        </Grid> */}
       </Container>
     </div>
   );
