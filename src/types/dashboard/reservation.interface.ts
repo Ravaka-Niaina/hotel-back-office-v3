@@ -1,0 +1,32 @@
+export interface Reservation {
+  bookingId: number;
+  hotel: string;
+  bookingDate: string;
+  arrivalDate: string;
+  leadTime: number;
+  staysInWeekendNights: number;
+  staysInWeekNights: number;
+  adults: number;
+  children: number;
+  babies: number;
+  meal: string;
+  country: string;
+  marketSegment: string;
+  distributionChannel: string;
+  customerType: string;
+  depositType: string;
+  AvgDailyRate: number;
+  isCancelled: number;
+  isRepeatedGuest: number;
+  daysInWaitingList: number;
+  previousCancellations: number;
+  previousBookingsNotCanceled: number;
+  reservedRoomType: string;
+  assignedRoomType: string;
+  bookingChanges: number;
+  totalOfSpecialRequests: number;
+  revenue: number;
+  revenueLoss: number;
+  reservationStatus: string;
+  reservationStatusDate: Date;
+}
