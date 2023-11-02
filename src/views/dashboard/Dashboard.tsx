@@ -17,7 +17,7 @@ import {
   AppConversionRates,
 } from '../../components/stats';
 import Iconify from '../../components/Iconify';
-import StatisticOverviewChart from 'src/components/dashboard/StatisticOverviewChart';
+import StatOverviewCard from 'src/components/dashboard/StatOverviewCard';
 
 /* global DashboardProps, DashboardState */
 
@@ -37,52 +37,16 @@ const Dashboard: React.FC = () => {
           Tableau de bord
         </Typography>
 
-        <Container fixed>
-          <Grid container spacing={2}>
-            {/* <Grid sx={{ bgcolor: '#FFF' }} xs={12} md={6} spacing={2}>
-              <ChartTest />
-            </Grid> */}
-            <Grid item borderRadius={3} sx={{ bgcolor: '#FFF' }} xs={12} md={6}>  
-              <BookingDateChart />
-            </Grid>
+        <Grid container spacing={2}>
+          {/* <Grid sx={{ bgcolor: '#FFF' }} xs={12} md={6} spacing={2}>
+            <ChartTest />
+          </Grid> */}
+          <Grid item borderRadius={3} sx={{ bgcolor: '#FFF' }} xs={12} md={6}>  
+            <BookingDateChart />
           </Grid>
-        </Container>
+        </Grid>
 
-        {/* <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Weekly Sales" total={714000} icon={'ant-design:android-filled'} sx={undefined} />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary
-              title="New Users"
-              total={1352831}
-              color="info"
-              icon={'ant-design:apple-filled'}
-              sx={undefined}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary
-              title="Item Orders"
-              total={1723315}
-              color="warning"
-              icon={'ant-design:windows-filled'}
-              sx={undefined}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary
-              title="Bug Reports"
-              total={234}
-              color="error"
-              icon={'ant-design:bug-filled'}
-              sx={undefined}
-            />
-          </Grid>
-
+        <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={8}>
             <AppWebsiteVisits
               title="Website Visits"
@@ -250,7 +214,7 @@ const Dashboard: React.FC = () => {
               subheader={undefined}
             />
           </Grid>
-        </Grid> */}
+        </Grid>
       </Container>
     </div>
   );

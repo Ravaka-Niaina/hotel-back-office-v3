@@ -2,14 +2,15 @@ import { ApexOptions } from 'apexcharts';
 import { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import { calculateRevenueMonth } from 'src/services/Dashboard';
-import { Reservation } from 'src/types/dashboard/reservation.interface';
+import { Reservation } from 'src/types/reservation/reservation.interface';
 import './booking.module.css';
+import { DateRevenue } from 'src/types/dashboard/dateRevenue.interface';
 
 interface BookingDateChartProps {
   bookingData?: Reservation[];
 }
 
-function createChartOption(revenueList: Array<{ [key: string]: number }>): ApexOptions {
+function createChartOption(revenueList: Array<DateRevenue>): ApexOptions {
   const options: ApexOptions = {
     chart: {
       id: 'area-datetime',
@@ -43,7 +44,7 @@ function createChartOption(revenueList: Array<{ [key: string]: number }>): ApexO
     },
     xaxis: {
       type: 'datetime',
-      categories: revenueList.length > 0 ? Object.keys(revenueList[0]): []
+      categories: revenueList.length > 0 ? revenueList.map((item) => item.month) : []
     },
     yaxis: {
       labels: {
@@ -63,7 +64,7 @@ function createChartOption(revenueList: Array<{ [key: string]: number }>): ApexO
 }
 
 const BookingDateChart: React.FC<BookingDateChartProps> = (props) => {
-  const [results, setResults] = useState<Array<{ [key: string]: number }>>([]);
+  const [results, setResults] = useState<Array<DateRevenue>>([]);
   useEffect(() => {
     calculateRevenueMonth().then((resp) => {
       setResults(resp.data);
@@ -78,8 +79,8 @@ const BookingDateChart: React.FC<BookingDateChartProps> = (props) => {
   if (results.length > 0) {
     console.log(results);
     
-    revenueList = Object.values(results[0])
-    revenueLossList = Object.values(results[1])
+    revenueList = results.map((item) => item.totalRevenue)
+    revenueLossList = results.map((item) => item.totalLoss)
   }
   
   const series = [
