@@ -77,8 +77,6 @@ const BookingDateChart: React.FC<BookingDateChartProps> = (props) => {
   let revenueList: number[] = [];
   let revenueLossList: number[] = [];
   if (results.length > 0) {
-    console.log(results);
-    
     revenueList = results.map((item) => item.totalRevenue)
     revenueLossList = results.map((item) => item.totalLoss)
   }
@@ -95,9 +93,7 @@ const BookingDateChart: React.FC<BookingDateChartProps> = (props) => {
   ]
 
   return (
-    <div className="chart-container">
-      <Chart options={createChartOption(results)} series={series} />
-    </div>
+    <Chart options={createChartOption(results)} series={series} />
   );
 };
 
