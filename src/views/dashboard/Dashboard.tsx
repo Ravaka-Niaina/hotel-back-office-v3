@@ -17,7 +17,7 @@ import {
   AppConversionRates,
 } from '../../components/stats';
 import Iconify from '../../components/Iconify';
-import StatOverviewCard from 'src/components/dashboard/StatOverviewCard';
+import BookingMarketPieChart from 'src/components/dashboard/BookingMarketPieChart';
 
 /* global DashboardProps, DashboardState */
 
@@ -37,12 +37,12 @@ const Dashboard: React.FC = () => {
           Tableau de bord
         </Typography>
 
-        <Grid container spacing={2}>
-          {/* <Grid sx={{ bgcolor: '#FFF' }} xs={12} md={6} spacing={2}>
-            <ChartTest />
-          </Grid> */}
-          <Grid item borderRadius={3} sx={{ bgcolor: '#FFF' }} xs={12} md={6}>  
+        <Grid container spacing={3}>
+          <Grid item borderRadius={3} padding={2} sx={{ bgcolor: '#FFF' }} xs={12} md={5} lg={5}> 
             <BookingDateChart />
+          </Grid>
+          <Grid item borderRadius={3} padding={2} marginLeft={5} sx={{ bgcolor: '#FFF' }} xs={12} md={5} lg={5}> 
+            <BookingMarketPieChart />
           </Grid>
         </Grid>
 
