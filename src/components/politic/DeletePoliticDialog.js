@@ -77,7 +77,7 @@ const DeletePoliticDialog = ({ reload, politic }) => {
         </DialogTitle>
         <DialogContent sx={{ backgroundColor: '#D6E3F3' }}>
           <DialogContentText id="alert-dialog-description">
-            Souhaitez-vous vraiment supprimer la politique {politic?.nom} ?
+            Souhaitez-vous vraiment supprimer la politique {politic?.names.fr} ?
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#D6E3F3' }}>

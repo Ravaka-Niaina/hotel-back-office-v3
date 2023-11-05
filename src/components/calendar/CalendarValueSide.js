@@ -2,9 +2,12 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { Stack } from '@mui/material';
 // import StatusCell from './cells/StatusCell';
+import { format } from 'date-fns';
 import { dateIHMFormat } from '../../services/Util';
 
-const CalendarValueSide = ({list,ratePlanList,roomDetails}) => (
+const CalendarValueSide = ({list,ratePlanList,roomDetails}) => {
+    console.log(list);
+    return (
         <div className='calendarEditor value' style={{ overflowX: "auto" }}>
             <table>
                 <thead>
@@ -26,12 +29,9 @@ const CalendarValueSide = ({list,ratePlanList,roomDetails}) => (
                                     >
                                         <Stack spacing={1}>
                                             {
-                                                dateIHMFormat(e).split(' ').map((datePart)=>(
-                                                        <span key={datePart}>
-                                                            {datePart}
-                                                        </span>
-                                                    )
-                                                )
+                                                <span key={e}>
+                                                    {format(e, 'dd MMMM yyyy')}
+                                                </span>
                                             }
                                         </Stack>
                                                
@@ -60,7 +60,8 @@ const CalendarValueSide = ({list,ratePlanList,roomDetails}) => (
                 </tbody>
             </table>
         </div>
-);
+    )
+};
 CalendarValueSide.propTypes = {
     list: PropTypes.any,
     chambre: PropTypes.any,
