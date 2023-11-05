@@ -1,9 +1,10 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
 import { Stack } from '@mui/material';
-// import StatusCell from './cells/StatusCell';
-import { format } from 'date-fns';
 import { dateIHMFormat } from '../../services/Util';
+// import StatusCell from './cells/StatusCell';
+const { format } = require('date-fns');
+const { getFrenchDate } = require('../../utils/date');
 
 const CalendarValueSide = ({list,ratePlanList,roomDetails}) => {
     console.log(list);
@@ -30,7 +31,9 @@ const CalendarValueSide = ({list,ratePlanList,roomDetails}) => {
                                         <Stack spacing={1}>
                                             {
                                                 <span key={e}>
-                                                    {format(e, 'dd MMMM yyyy')}
+                                                    <div>{getFrenchDate(format(e, 'dd MMMM yyyy'))[0]}</div>
+                                                    <div>{getFrenchDate(format(e, 'dd MMMM yyyy'))[1]}</div>
+                                                    <div>{getFrenchDate(format(e, 'dd MMMM yyyy'))[2]}</div>
                                                 </span>
                                             }
                                         </Stack>
