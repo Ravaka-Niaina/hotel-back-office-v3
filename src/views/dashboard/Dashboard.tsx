@@ -17,7 +17,10 @@ import {
   AppConversionRates,
 } from '../../components/stats';
 import Iconify from '../../components/Iconify';
+import StatOverviewCard from 'src/components/dashboard/StatOverviewCard';
 import BookingMarketPieChart from 'src/components/dashboard/BookingMarketPieChart';
+import styles from 'src/components/dashboard/booking.module.css';
+import BookingRevenueChart from 'src/components/dashboard/BookingRevenueChart';
 
 /* global DashboardProps, DashboardState */
 
@@ -38,12 +41,20 @@ const Dashboard: React.FC = () => {
         </Typography>
 
         <Grid container spacing={3}>
-          <Grid item borderRadius={3} padding={2} sx={{ bgcolor: '#FFF' }} xs={12} md={5} lg={5}> 
-            <BookingDateChart />
-          </Grid>
-          <Grid item borderRadius={3} padding={2} marginLeft={5} sx={{ bgcolor: '#FFF' }} xs={12} md={5} lg={5}> 
-            <BookingMarketPieChart />
-          </Grid>
+          <StatOverviewCard />
+          <div className={styles.containerLine}>
+            <Grid item borderRadius={3} padding={2} sx={{ bgcolor: '#FFF' }} xs={12} md={5} lg={5}> 
+              <BookingDateChart />
+            </Grid>
+            <Grid item borderRadius={3} padding={2} marginLeft={5} sx={{ bgcolor: '#FFF' }} xs={12} md={5} lg={5}> 
+              <BookingMarketPieChart />
+            </Grid>
+          </div>
+          <div className={styles.containerLine}>
+            <Grid item className={styles.revenueChart} borderRadius={3} padding={2} sx={{ bgcolor: '#FFF' }} xs={12} md={8} lg={8}> 
+              <BookingRevenueChart />
+            </Grid>
+          </div>
         </Grid>
 
         <Grid container spacing={3}>
