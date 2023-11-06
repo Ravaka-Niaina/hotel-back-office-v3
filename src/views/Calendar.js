@@ -7,6 +7,7 @@ import { DateRangePicker } from 'rsuite';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 
 import "rsuite/dist/rsuite.min.css";
+import { getFrenchDate } from '../utils/date';
 import CalendarEditor from '../components/calendar/CalendarEditor';
 import CalendarEditorSkeleton from '../components/calendar/CalendarEditorSkeleton';
 import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
@@ -118,6 +119,13 @@ const Calendar = () => {
         fetchData(dateRange);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const firstDateElements = getFrenchDate(format(dateRange[0].toDate(), 'd MMMM yyyy'));
+    const dateRangeBeginning = `${firstDateElements[0]} ${firstDateElements[1]} ${firstDateElements[2]}`;
+
+    const secondDateElements = getFrenchDate(format(dateRange[1].toDate(), 'd MMMM yyyy'));
+    const dateRangeEnding = `${secondDateElements[0]} ${secondDateElements[1]} ${secondDateElements[2]}`;
+
     return (
             <Stack spacing={4} sx={{p:2}}> 
                 <CustomizedTitle text={page} />
@@ -206,7 +214,7 @@ const Calendar = () => {
                                             color: '#113A62',
                                         }}
                                    >
-                                    {format(dateRange[0].toDate(), 'd MMMM yyyy')} - {format(dateRange[1].toDate(), 'd MMMM yyyy')}
+                                    {dateRangeBeginning} - {dateRangeEnding}
                                    </span>
                                 </div>
                             </Grid>

@@ -22,6 +22,7 @@ import styles from './EditorCustomizingDialog.module.css';
 import { ThemeContext } from '../context/Wrapper';
 
 import {configPrix} from '../../services/TCTarif';
+import { getFrenchDate } from '../../utils/date';
 
 import './index.css';
 import './dateRangePicker.module.css';
@@ -41,13 +42,13 @@ const EditorCustomizingDialog = ({chambre , reloadRoom, dateRange, setDateRange,
     const [errors,setErrors] = useState(false);
     const [noVersionFilledError,setNoVersionFilledError] = useState(false);
     const [days, setDays] = React.useState([
-        { value: 1, checked: true, label: "Mon" },
-        { value: 2, checked: true, label: "Tue" },
-        { value: 3, checked: true, label: "Wed" },
-        { value: 4, checked: true, label: "Thu" },
-        { value: 5, checked: true, label: "Fri" },
-        { value: 6, checked: true, label: "Sat" },
-        { value: 7, checked: true, label: "Sun" },
+        { value: 1, checked: true, label: "Lundi" },
+        { value: 2, checked: true, label: "Mardi" },
+        { value: 3, checked: true, label: "Mercredi" },
+        { value: 4, checked: true, label: "Jeudi" },
+        { value: 5, checked: true, label: "Vendredi" },
+        { value: 6, checked: true, label: "Samedi" },
+        { value: 7, checked: true, label: "Dimanche" },
     ]);
     const isAllVersionNotFilled = () => {
         const allNotFilled = versions.every((v) => v.prix === "")
@@ -241,6 +242,13 @@ const EditorCustomizingDialog = ({chambre , reloadRoom, dateRange, setDateRange,
         setVersions(v);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
+
+    const dateRangeBeginningElts = getFrenchDate(moment(dateRange[0]).format('DD MMMM YYYY'));
+    const dateRangeBeginning = `${dateRangeBeginningElts[0]} ${dateRangeBeginningElts[1]} ${dateRangeBeginningElts[2]}`;
+
+    const dateRangeEndingElts = getFrenchDate(moment(dateRange[1]).format('DD MMMM YYYY'));
+    const dateRangeEnding = `${dateRangeEndingElts[0]} ${dateRangeEndingElts[1]} ${dateRangeEndingElts[2]}`;
+
     return (
         <>
             <CustomizedIconButton onClick={handleClickOpen}>
@@ -252,10 +260,9 @@ const EditorCustomizingDialog = ({chambre , reloadRoom, dateRange, setDateRange,
                 maxWidth={'sm'} 
                 BackdropComponent={InvisibleBackdrop}
                 PaperComponent={CustomizedPaperOutside}
-    
             >
-                <CustomizedDialogTitle   text={`Editor (${chambre.names.fr})`} />
-                <DialogContent 
+                <CustomizedDialogTitle   text={`Editeur (${chambre.names.fr})`} />
+                <DialogContent
                     style={{
                         background: 'linear-gradient(308.48deg, rgba(255, 255, 255, 0.53) 2.36%, rgba(255, 255, 255, 0) 61.95%), #E3EDF7',
                         paddingTop: 15 ,
@@ -264,14 +271,24 @@ const EditorCustomizingDialog = ({chambre , reloadRoom, dateRange, setDateRange,
                 >
                     <Stack spacing={5} style={{ paddingLeft: '2em', paddingRight: '2em' }}>
                         <div id="pickerHere" />
+                        <div 
+                            className={styles.customDateRangePicker}
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => setOpenPicker(!openPicker)}
+                            onKeyDown={() => setOpenPicker(true)}
+                        >
+                            <span>{dateRangeBeginning} - {dateRangeEnding}</span>
+                        </div>
                         <DateRangePicker
+                            format="dd MMMM yyyy"
                             container={() => document.getElementById("pickerHere")}
                             onClick={() => setOpenPicker(!openPicker)}
                             // editable={false}
                             onOk={()=>setOpenPicker(false)}
                             open={openPicker}
                             placement='autoVerticalStart'
-                            style={{ border: '2px #2476d2 solid', borderRadius: '8px', zIndex: 999}}
+                            style={{ border: '2px #2476d2 solid', borderRadius: '8px', zIndex: 999, display: 'none'}}
                             value={[dateRange[0].toDate(), dateRange[1].toDate()]}
                             onChange={(val) => {
                                 const newValue = JSON.parse(JSON.stringify(val));
@@ -316,13 +333,13 @@ const EditorCustomizingDialog = ({chambre , reloadRoom, dateRange, setDateRange,
                                 >
                                     <FormControlLabel
                                         control={<CustomizedRadio  />}
-                                        label="Open"
+                                        label="Ouvrir"
                                         value="open"
                                         onClick={()=>setIsRoomOpen(true)}
                                     />
                                     <FormControlLabel
                                         control={<CustomizedRadio />}
-                                        label="Close"
+                                        label="Fermer"
                                         value="close"
                                         onClick={()=>setIsRoomOpen(false)}
                                     />
@@ -365,7 +382,7 @@ const EditorCustomizingDialog = ({chambre , reloadRoom, dateRange, setDateRange,
                                                 />
                                             }
                                             onClick={() => handleChangeRatePlans(index)}
-                                            label={r.nom}
+                                            label={r.nom || r.names.fr}
                                         />
                                     ))}
                                 </div>
@@ -377,13 +394,13 @@ const EditorCustomizingDialog = ({chambre , reloadRoom, dateRange, setDateRange,
                                 >
                                     <FormControlLabel
                                         control={<CustomizedRadio />}
-                                        label="Open"
+                                        label="Ouvrir"
                                         value="open"
                                         onClick={()=>setIsRatePlanOpen(true)}
                                     />
                                     <FormControlLabel
                                         control={<CustomizedRadio />}
-                                        label="Close"
+                                        label="Fermer"
                                         value="close"
                                         onClick={()=>setIsRatePlanOpen(false)}
                                     />
