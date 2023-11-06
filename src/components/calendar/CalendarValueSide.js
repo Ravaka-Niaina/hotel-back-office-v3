@@ -6,9 +6,7 @@ import { dateIHMFormat } from '../../services/Util';
 const { format } = require('date-fns');
 const { getFrenchDate } = require('../../utils/date');
 
-const CalendarValueSide = ({list,ratePlanList,roomDetails}) => {
-    console.log(list);
-    return (
+const CalendarValueSide = ({list,ratePlanList,roomDetails}) => (
         <div className='calendarEditor value' style={{ overflowX: "auto" }}>
             <table>
                 <thead>
@@ -63,8 +61,7 @@ const CalendarValueSide = ({list,ratePlanList,roomDetails}) => {
                 </tbody>
             </table>
         </div>
-    )
-};
+    );
 CalendarValueSide.propTypes = {
     list: PropTypes.any,
     chambre: PropTypes.any,
