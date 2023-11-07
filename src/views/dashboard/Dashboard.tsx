@@ -34,14 +34,15 @@ const Dashboard: React.FC = () => {
 
   return (
     <div>
-      <h2>Hello Aiolia, Serge Miranda, Steave Leong</h2>
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
           Tableau de bord
         </Typography>
 
         <Grid container spacing={3}>
-          <StatOverviewCard />
+          <div className={styles.containerLine}>
+            <StatOverviewCard />
+          </div>
           <div className={styles.containerLine}>
             <Grid item borderRadius={3} padding={2} sx={{ bgcolor: '#FFF' }} xs={12} md={5} lg={5}> 
               <BookingDateChart />
@@ -51,7 +52,7 @@ const Dashboard: React.FC = () => {
             </Grid>
           </div>
           <div className={styles.containerLine}>
-            <Grid item className={styles.revenueChart} borderRadius={3} padding={2} sx={{ bgcolor: '#FFF' }} xs={12} md={8} lg={8}> 
+            <Grid item className={styles.revenueChart} borderRadius={3} padding={2} sx={{ bgcolor: '#FFF' }} xs={12} md={10} lg={10}> 
               <BookingRevenueChart />
             </Grid>
           </div>
