@@ -7,6 +7,9 @@
   margin: 20px;
   display: flex;
 }
+.containerLine > div {
+  margin: 0px 10px !important;
+}
 .revenueChart {
   width: 60%;
 }
