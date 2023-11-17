@@ -70,7 +70,7 @@ export default function EnterCodeResetPasswordForm() {
             // context.showLoader(false);
             setTimeout(() => {
               navigate(`/enterNewPassword/${params.userId}`);
-            }, 500);
+            }, 1000);
           }
           else
           {
