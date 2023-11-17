@@ -79,6 +79,13 @@ export default function SendCodeResetPasswordForm() {
         });
     }
   };
+
+  // const onKeyUp = (event) => {
+  //   if (event.charCode === 13) {// Enter key was pressed
+  //     handleSubmit();
+  //   }
+  // };
+
   return (
     <form>
       <Stack spacing={3}>
@@ -94,6 +101,7 @@ export default function SendCodeResetPasswordForm() {
             error: true,
             helpertext: errors.email,
           })}
+          // onKeyPress={onKeyUp}
         />
         
       </Stack>

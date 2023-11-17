@@ -68,10 +68,12 @@ export default function EnterNewPasswordForm() {
       const payloads = formatPayloadToSend();
       updatePassword(payloads)
         .then((datas) => {
-          console.log(datas);
+          context.showLoader(false);
           if (datas.data.status === 200) {
             localStorage.removeItem('codeTmp');
-            navigate('/login' , {replace:true});
+            setTimeout(() => {
+              navigate('/login' , {replace:true});
+            }, 500);
             context.changeResultSuccessMessage('Votre mot de passe a été réinitialisé');
             context.showResultSuccess(true);
           } else {
