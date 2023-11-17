@@ -64,25 +64,19 @@ export default function EnterCodeResetPasswordForm() {
       console.log(payloads);
       verifyCodeResetPassword(payloads)
         .then((datas) => {
+          context.showLoader(false);
           if (datas.data.status === 200) {
             localStorage.setItem('codeTmp', form.code);
             // context.showLoader(false);
-            navigate(`/enterNewPassword/${params.userId}`);
+            setTimeout(() => {
+              navigate(`/enterNewPassword/${params.userId}`);
+            }, 500);
           }
           else
           {
             context.changeResultErrorMessage(`Une erreur s'est produite,veuillez réessayer plus tard.`);
             context.showResultError(true);
           }
-          // const dataMessage = datas.data.message;
-          // const dataPartnerId = datas.data.partner_id;
-          // if (dataMessage === 'OK') {
-          //   localStorage.setItem('partner_id', JSON.stringify(dataPartnerId));
-          //   navigate('/verifycode');
-          // } else {
-          //   context.changeResultErrorMessage('Code invalide');
-          //   context.showResultError(true);
-          // }
         })
         .catch(() => {
           context.changeResultErrorMessage(`Une erreur s'est produite,veuillez réessayer plus tard.`);
