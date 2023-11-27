@@ -91,7 +91,7 @@ export default function RapportApp() {
   return (
     <Page title="AIOLIA | Rapports">
       <Container maxWidth="xl">
-        <CustomizedTitle text='Hi, Welcome back rapport' size={20} />
+        {/* <CustomizedTitle text='Hi, Welcome back rapport' size={20} /> */}
         <Grid container spacing={3} sx={{mt:2}}>
           <Grid item xs={12} md={12} lg={12} container spacing={2}>
             <Grid item xs={12}>
