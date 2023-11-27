@@ -261,9 +261,9 @@ const ModifyPoliticDialog = ({ reload, politic: politicToModify }) => {
         ...politic,
         names: result.names,
         descriptions: result.descriptions,
+        datePrice: [...conditions],
       });
     });
-    setPolitic((politic) => ({ ...politic, datePrice: [...conditions] }))
   }, [conditions]);
 
   // Function to format the payload to send to the politics state

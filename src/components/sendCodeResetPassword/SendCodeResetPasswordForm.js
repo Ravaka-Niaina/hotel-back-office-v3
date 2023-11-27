@@ -63,8 +63,11 @@ export default function SendCodeResetPasswordForm() {
       sendEmailUpdateAccountPassword(payloads)
         .then((datas) => {
           if (datas.data.status === 200) {
-            // context.showLoader(false);
-            navigate(`/enterCodeResetPassword/${datas.data.user_id}`);
+            context.showLoader(false);
+            setTimeout(() => {
+              navigate(`/enterCodeResetPassword/${datas.data.user_id}`);
+            }, 1000);
+            
           } else {
             context.changeResultErrorMessage('Vos identifiants sont incorrects,veuillez réessayer.');
             context.showResultError(true);
