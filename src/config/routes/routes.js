@@ -56,7 +56,7 @@ export default function Router() {
       children: [
         {
           path: 'app',
-          element: <Protected child={<Calendar />} allowedRoles={getAllowedRoles(`${dashboardPath}/app`)} />,
+          element: <Protected child={<Calendar />} allowedRoles={getAllowedRoles(`${dashboardPath}/calendar`)} />,
         },
         {
           path: 'homeForm',
