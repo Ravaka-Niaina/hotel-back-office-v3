@@ -13,6 +13,7 @@ import { getAllHotelsAssociatedToAUser, register } from '../../services/User';
 import CustomizedCard from '../CustomizedComponents/CustomizedCard';
 import CustomizedSwitch from '../CustomizedComponents/CustomizedSwitch';
 import CustomizedLabel from '../CustomizedComponents/CustomizedLabel';
+import { getListHotelForUserDialog } from '../../services/Hotel';
 
 const AddUserDialog = ({reload, setLocation}) => {
   const context = useContext(ThemeContext);
@@ -48,9 +49,15 @@ const AddUserDialog = ({reload, setLocation}) => {
       .catch(err => console.error(err));
   };
 
+  const getAllHotels = async () => {
+    const data = await getListHotelForUserDialog();
+    setHotels(data.data.hotels);
+  };
+
   useEffect(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    getAllHotelsAssociatedToCurrentPartner();
+    // getAllHotelsAssociatedToCurrentPartner();
+    getAllHotels();
     setIsUserAdminOrSuperAdmin(JSON
       .parse(localStorage.getItem('user_details'))
       .data
@@ -146,6 +153,7 @@ const AddUserDialog = ({reload, setLocation}) => {
       context.showLoader(false);
       return;
     }
+    console.log(associatedHotelsId);
     
     register({
       isPartner: true,

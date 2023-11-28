@@ -69,7 +69,6 @@ const Protected = ({ child, allowedRoles }) => {
           }
           localStorage.setItem("user_details",JSON.stringify(userDetailsSaved));
           const attributedAccessRights = results.data?.atribAR;
-          console.log('attributedAR', results);
           // only getting the id field from the arrays of the payload and storing it inside an array
           const accessRightsIds = attributedAccessRights.map((accessRight) => accessRight?._id);
           // checking if the user has the right access (returns true or false)

@@ -102,14 +102,14 @@ export const updateUser = (payload) =>
     },
   });
 
-export const addAccessRight = (payload) => {
+export const changeAccessRights = (payload) => {
   /**
    * @payload (raw json body) {
    *  idUser: xxx,
    *  idDroitAccess : xxx
    * }
    */
-   axios.post(`${config.host}/user/addAccessRight`, payload, {
+   axios.post(`${config.host}/user/changeAccessRights`, payload, {
      timeout: 10000,
     /* headers: {
             Authorization: token,
