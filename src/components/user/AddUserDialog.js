@@ -5,13 +5,16 @@ import { Stack, Dialog, DialogActions, DialogContent, Button } from '@mui/materi
 import CustomizedButton from '../CustomizedComponents/CustomizedButton';
 import CustomizedDialogTitle from '../CustomizedComponents/CustomizedDialogTitle';
 import CustomizedInput from '../CustomizedComponents/CustomizedInput';
+import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
+import { lightBackgroundToTop } from '../CustomizedComponents/NeumorphismTheme';
+import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
 import { ThemeContext } from '../context/Wrapper';
 import { getAllHotelsAssociatedToAUser, register } from '../../services/User';
 import CustomizedCard from '../CustomizedComponents/CustomizedCard';
 import CustomizedSwitch from '../CustomizedComponents/CustomizedSwitch';
 import CustomizedLabel from '../CustomizedComponents/CustomizedLabel';
 
-const AddUserDialog = ({reload}) => {
+const AddUserDialog = ({reload, setLocation}) => {
   const context = useContext(ThemeContext);
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState({
@@ -100,7 +103,7 @@ const AddUserDialog = ({reload}) => {
   };
   
   const handleClose = () => {
-    setOpen(false);
+    setLocation('list');
   };
 
   const handleModifyAssociatedHotel = (hotelId) => {
@@ -200,10 +203,11 @@ const AddUserDialog = ({reload}) => {
   
   return (
     <>
-      <CustomizedButton text={`Ajouter`} component={RouterLink} to="#" onClick={() => setOpen(true)} />
-      <Dialog open={open} onClose={handleClose} fullWidth maxWidth={'md'}>
-        <CustomizedDialogTitle text={`Ajouter l'utilisateur ${user?.first_name} ${user?.last_name}`} />
-        <DialogContent style={{ backgroundColor: '#E8F0F8', paddingTop: 15, paddingRight: 20, paddingLeft: 20 }}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <CustomizedTitle text={`Ajouter l'utilisateur ${user?.first_name} ${user?.last_name}`} size={20} />
+        <CustomizedButton onClick={handleClose} text='retour' component={RouterLink} to="#" />
+      </Stack>
+        <CustomizedPaperOutside sx={{ ...lightBackgroundToTop, background: '#E3EDF7', p: 5, minHeight: '100vh',width:0.8,margin:'auto' }}>
           <Stack spacing={1}>
             <CustomizedInput
               onChange={handleChange}
@@ -318,15 +322,12 @@ const AddUserDialog = ({reload}) => {
                 </CustomizedCard>
               </>
             ) }
+            <Button onClick={() => {handleClose(); clearForm()}} sx={{ fontSize: 12 }}>
+              Annuler
+            </Button>
+            <CustomizedButton onClick={createUser} text={`Valider`} component={RouterLink} to="#" />
           </Stack>
-        </DialogContent>
-        <DialogActions sx={{ backgroundColor: '#E8F0F8', height: '150px' }}>
-          <Button onClick={() => {handleClose(); clearForm()}} sx={{ fontSize: 12 }}>
-            Annuler
-          </Button>
-          <CustomizedButton onClick={createUser} text={`Valider`} component={RouterLink} to="#" />
-        </DialogActions>
-      </Dialog>
+        </CustomizedPaperOutside>
     </>
   );
 };
