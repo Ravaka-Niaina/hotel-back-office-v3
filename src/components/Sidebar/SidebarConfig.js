@@ -23,8 +23,8 @@ export const getSidebarConfig = async (context) => {
       title: 'Calendrier',
       path: '/dashboard/app',
       icon: getIcon('eva:pie-chart-2-fill'),
-      userIsAllowed: getAllowedRoles('/dashboard/app'),
-      isAuthorized: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/app')),
+      userIsAllowed: getAllowedRoles('/dashboard/calendar'),
+      // isAuthorized: checkAuthWithRole(userRoles, getAllowedRoles('/dashboard/calendar')),
     },
     {
       title: 'Information sur l’établissement',
