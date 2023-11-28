@@ -45,3 +45,7 @@ export const getAssociatedHotelsId = (payload) => axios.post(
     `${config.host}/user/associatedHotels`,
     payload,
 );
+
+export const getListHotelForUserDialog = () => axios.get(
+    `${config.host}/hotel/listForUserDialog`,
+);

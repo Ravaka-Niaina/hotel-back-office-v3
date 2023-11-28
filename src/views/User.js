@@ -188,6 +188,7 @@ export default function User() {
   const reload = () => {
     getAllUser();
     getAccessRights();
+    setLocation('list')
   };
 
   useEffect(() => {
@@ -212,7 +213,7 @@ export default function User() {
     <Page title="AIOLIA | Utilisateurs">
       <Container sx={{maxWidth: '100%!important'}}>
       { location === 'addUser' &&
-        <AddUserDialog setLocation={setLocation} />
+        <AddUserDialog reload={reload} setLocation={setLocation} />
       }
       { location === 'update' && 
       <ModifyUserDialog accessRights={accessRights} userDetails={userDetails} userId={userId} reload={reload} setLocation={setLocation} />

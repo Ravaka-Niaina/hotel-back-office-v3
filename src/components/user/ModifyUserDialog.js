@@ -10,13 +10,16 @@ import CustomizedTitle from '../CustomizedComponents/CustomizedTitle';
 import CustomizedPaperOutside from '../CustomizedComponents/CustomizedPaperOutside';
 import { lightBackgroundToTop } from '../CustomizedComponents/NeumorphismTheme';
 import { ThemeContext } from '../context/Wrapper';
-import { addAccessRight, updateUser , getAllHotelsAssociatedToAUser, } from '../../services/User';
+import { updateUser , getAllHotelsAssociatedToAUser, } from '../../services/User';
 
 import CustomizedLabel from '../CustomizedComponents/CustomizedLabel';
 import CustomizedCard from '../CustomizedComponents/CustomizedCard';
 import CustomizedSwitch from '../CustomizedComponents/CustomizedSwitch';
 import { getAccessRightList } from '../../services/AccessRight';
-import { getAssociatedHotelsId } from '../../services/Hotel';
+import { getAssociatedHotelsId , getListHotelForUserDialog } from '../../services/Hotel';
+
+
+let initialAccessRights = [];
 
 const ModifyUserDialog = ({ userDetails, userId, reload, accessRights, setLocation }) => {
   const context = useContext(ThemeContext);
@@ -29,7 +32,6 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights, setLocati
     user_access_rights: '',
   });
   const [open, setOpen] = useState(false);
-  const initialAccessRights = userDetails?.idDroitAcces
 
   const [user, setUser] = useState({
     last_name: '',
@@ -44,6 +46,10 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights, setLocati
   const [isUserAdminOrSuperAdmin, setIsUserAdminOrSuperAdmin] = useState(false);
   const [localAccessRights, setLocalAccessRights] = useState([]);
 
+  if (userDetails?.idDroitAcces) {
+    initialAccessRights = userDetails?.idDroitAcces;
+  }
+
   const navigate = useNavigate();
 
   const fetchData = async () => {
@@ -57,7 +63,7 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights, setLocati
         phone_number: userDetails?.telephone,
         user_access_rights: userDetails?.idDroitAcces,
       });
-      setAssociatedHotelsId(userDetails.hotelPartenaire.map(association => association.hotel[0]._id));
+      // setAssociatedHotelsId(userDetails.hotelPartenaire.map(association => association.hotel[0]._id));
     } else {
       const userDetails = JSON.parse(localStorage.getItem('user_details'));
       const {
@@ -69,6 +75,7 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights, setLocati
         telephone,
       } = userDetails.data.user;
       const userAccessRights = userDetails.data.atribAR.map(accessRight => accessRight._id);
+      initialAccessRights = userAccessRights;
       setUser({
         _id,
         last_name: nom,
@@ -115,22 +122,27 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights, setLocati
       user_access_rights: [],
   });
 
-  const getAllHotelsAssociatedToCurrentPartner = () => {
+  const getAllHotelsAssociatedToCurrentPartner = async () => {
     const partnerId = JSON.parse(localStorage.getItem('user_details'))?.data.user._id;
-    getAllHotelsAssociatedToAUser(partnerId)
-      .then((result) => {
-        setHotels(result.data.allHotelsAssociatedToAPartner);
-      })
-      .catch(err => console.error(err));
+    const data = await getAllHotelsAssociatedToAUser(partnerId);
+    return data.data.allHotelsAssociatedToAPartner;
+  };
+
+  const getAllHotels = async () => {
+    const data = await getListHotelForUserDialog();
+    setHotels(data.data.hotels);
+    const tempAssociatedHotels = await getAllHotelsAssociatedToCurrentPartner();
+    setAssociatedHotelsId(tempAssociatedHotels.map(({_id}) => _id));
+    
   };
 
   useEffect(() => {
+    getAllHotels();
     if (!userDetails && !JSON.parse(localStorage.getItem('user_details'))) {
       navigate('/login');
       return;
     }
     fetchData();
-    getAllHotelsAssociatedToCurrentPartner();
     setIsUserAdminOrSuperAdmin(JSON
       .parse(localStorage.getItem('user_details'))
       ?.data
@@ -174,7 +186,7 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights, setLocati
   };
 
   const formIsValid = (newUser) => {
-    const errorsTemp = { ...errors, email: '', backup_email: '', user_access_rights: '' };
+    const errorsTemp = { ...errors, email: '', backup_email: '', user_access_rights: '', other: '' };
     const isValid =
       newUser.first_name &&
       newUser.last_name &&
@@ -194,7 +206,7 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights, setLocati
   const formatPayloadToSend = () => {
     const payload = {
       isPartner: true,
-      _id: userId,
+      _id: userId || localStorage.getItem('partner_id'),
       nom: user.last_name,
       prenom: user.first_name,
       email: user.email,
@@ -205,39 +217,30 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights, setLocati
     };
     return payload;
   };
-  const addAccessRights = async(idUser , accessRightsList) => {
-    const newAccessRights = accessRightsList.filter(elem => !initialAccessRights.includes(elem) )
-    const addedAccessRights = newAccessRights.map(async(elem)=>{
-      const res = await addAccessRight({
-        idUser,
-        idDroitAcces: elem
-      })
-      return res
-    })
-    return Promise.all(addedAccessRights)
-  }
+
   const modifyUser = () => {
     validate(user);
     if (formIsValid(user)) {
       context.showLoader(true);
-      const payloadToSend = formatPayloadToSend()
+      const payloadToSend = formatPayloadToSend();
       updateUser(payloadToSend)
         .then(async(result) => {
+          console.log(result);
           if (result.data.status === 200) {
-            await addAccessRights(user?.id, user?.user_access_rights)
+            console.log(result.data);
             setOpen(false);
-            reload();
+            if (reload) reload();
             context.changeResultSuccessMessage('Modification effectuée');
             context.showResultSuccess(true);
           } else {
-            context.changeResultErrorMessage('Une erreur est servenue lors de la modification des données');
+            context.changeResultErrorMessage('Une erreur est survenue lors de la modification des données');
             context.showResultError(true);
             setErrors({ ...getClearedErrors(), ...result.data.errors });
           }
         })
         .catch((e) => {
           console.log(e)
-          context.changeResultErrorMessage('Une erreur est servunue lors de la modification des données');
+          context.changeResultErrorMessage('Une erreur est survenue lors de la modification des données');
           context.showResultError(true);
         })
         .finally(() => {
@@ -294,7 +297,7 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights, setLocati
     <>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <CustomizedTitle text={`Modifier l'utilisateur ${user?.first_name} ${user?.last_name}`} size={20} />
-        <CustomizedButton onClick={handleClose} text='retour' component={RouterLink} to="#" />
+        { userId && <CustomizedButton onClick={handleClose} text='retour' component={RouterLink} to="#" /> }
       </Stack>
       <CustomizedPaperOutside sx={{ ...lightBackgroundToTop, background: '#E3EDF7', p: 5, minHeight: '100vh',width:0.8,margin:'auto' }}>
         <Stack spacing={1}>
