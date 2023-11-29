@@ -136,7 +136,7 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights, setLocati
     
   };
 
-  useEffect(() => {
+  const loadContent = () => {
     getAllHotels();
     if (!userDetails && !JSON.parse(localStorage.getItem('user_details'))) {
       navigate('/login');
@@ -151,6 +151,10 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights, setLocati
         || accessRight._id === 'superAdmin'
       ));
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  };
+
+  useEffect(() => {
+    loadContent();
   }, []);
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -200,12 +204,17 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights, setLocati
     setOpen(true);
   };
   const handleClose = () => {
-    setLocation('list');
+    if (setLocation) {
+      setLocation('list');
+    } else {
+      loadContent();
+    }
   };
 
   const formatPayloadToSend = () => {
     const payload = {
       isPartner: true,
+      modifier_id: localStorage.getItem('partner_id'),
       _id: userId || localStorage.getItem('partner_id'),
       nom: user.last_name,
       prenom: user.first_name,
@@ -227,7 +236,6 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights, setLocati
         .then(async(result) => {
           console.log(result);
           if (result.data.status === 200) {
-            console.log(result.data);
             setOpen(false);
             if (reload) reload();
             context.changeResultSuccessMessage('Modification effectuée');
@@ -269,12 +277,19 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights, setLocati
   };
 
   const handleModifyAccessRight = (idAccessRight) => {
+    const {atribAR} = JSON.parse(localStorage.getItem("user_details")).data;
+    if (!atribAR.some(({_id}) => _id === 'superAdmin' || _id === 'admin' || _id === 'assocPartnerWithAR' || _id === 'disocPartnerWithAR')) return;
+
     const tempUser = { ...user };
     const tempUserAccessRights = tempUser?.user_access_rights;
     let newAccessRights = tempUserAccessRights.filter((accessRight) => accessRight !== idAccessRight);
-    if (newAccessRights.length === tempUserAccessRights.length) {
+    if (!accessRights) {
+      accessRights = [];
+    }
+    if (newAccessRights.length === tempUserAccessRights.length && atribAR.some(({_id}) => _id === 'superAdmin' || _id === 'admin' || _id === 'assocPartnerWithAR')) {// add access right
       if (idAccessRight === 'superAdmin' || idAccessRight === 'admin') {
         for (let i = 0; i < accessRights.length; i += 1) {
+          // eslint-disable-next-line no-loop-func
           const accessRightAlreadyChecked = newAccessRights.some(newAccessRight => 
             accessRights[i]._id === newAccessRight 
             || accessRights[i]._id === idAccessRight);
@@ -286,6 +301,8 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights, setLocati
         newAccessRights = newAccessRights.filter(newAccessRight => newAccessRight !== exception);
       }
       newAccessRights.push(idAccessRight);
+    } else if (newAccessRights.length !== tempUserAccessRights.length && !atribAR.some(({_id}) => _id === 'superAdmin' || _id === 'admin' || _id === 'disocPartnerWithAR')) {// access right has been removed but lack the power to do so
+      return;
     }
     setUser({
       ...tempUser,

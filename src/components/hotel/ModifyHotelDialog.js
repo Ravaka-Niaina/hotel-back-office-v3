@@ -55,7 +55,6 @@ const ModifyHotelDialog = () => {
     temp[name] = value;
     setHotel({ ...temp });
     validate({ [name]: value });
-    // console.log(hotel);
   };
   const validate = (fieldValues) => {
     const temp = { ...errors };
@@ -207,7 +206,6 @@ const ModifyHotelDialog = () => {
         )
     )
     Promise.all(files).then((result)=>{
-      console.log();
       const temp = {
         target: {
           files: result,
@@ -250,9 +248,7 @@ const ModifyHotelDialog = () => {
     context.showLoader(true);
     getHotelDetails()
       .then((response) => {
-        console.log(response.data);
         const hotelTemp = response.data.hotel;
-        console.log(hotelTemp);
         setHotel({
           _id: hotelTemp._id,
           name: hotelTemp.name,
@@ -760,7 +756,9 @@ const ModifyHotelDialog = () => {
                 />
               </Stack>
             </Stack>
-            <CustomizedButton text="Enregistrer" component={RouterLink} onClick={modifyHotel} to="#" />
+            { JSON.parse(localStorage.getItem("user_details")).data.atribAR.some(({_id}) => _id === 'superAdmin' || _id === 'admin') && 
+              <CustomizedButton text="Enregistrer" component={RouterLink} onClick={modifyHotel} to="#" />
+            }
           </Stack>
         </CustomizedPaperOutside>
     </>
