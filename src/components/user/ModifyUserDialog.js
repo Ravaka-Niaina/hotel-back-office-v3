@@ -123,7 +123,7 @@ const ModifyUserDialog = ({ userDetails, userId, reload, accessRights, setLocati
   });
 
   const getAllHotelsAssociatedToCurrentPartner = async () => {
-    const partnerId = JSON.parse(localStorage.getItem('user_details'))?.data.user._id;
+    const partnerId = userId || JSON.parse(localStorage.getItem('user_details'))?.data.user._id;
     const data = await getAllHotelsAssociatedToAUser(partnerId);
     return data.data.allHotelsAssociatedToAPartner;
   };
