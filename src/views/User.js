@@ -188,7 +188,8 @@ export default function User() {
   const reload = () => {
     getAllUser();
     getAccessRights();
-    setLocation('list')
+    setLocation('list');
+    setPage(1);
   };
 
   useEffect(() => {
