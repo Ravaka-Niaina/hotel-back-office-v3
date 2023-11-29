@@ -77,13 +77,13 @@ const Wrapper = ({ children }) => {
   };
 
   const getUserDetails = async () => {
-    const savedUserDetails = localStorage.getItem("user_details");
-    if(savedUserDetails !== null)
-    {
-      return new Promise((resolve, reject) => {
-          resolve(JSON.parse(savedUserDetails));
-      });
-    }
+    // const savedUserDetails = localStorage.getItem("user_details");
+    // if(savedUserDetails !== null)
+    // {
+    //   return new Promise((resolve, reject) => {
+    //       resolve(JSON.parse(savedUserDetails));
+    //   });
+    // }
     const payloadFromToken = getPayloadFromToken(jwtDecode, getIdToken());
     const partnerId = payloadFromToken?.partner_id;
     const details = getUserDetailsById(partnerId, getIdToken());

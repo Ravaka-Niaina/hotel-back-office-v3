@@ -16,17 +16,20 @@ import {
 import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
 import { UserListHead, UserListToolbar } from '../components/table';
-import UserMoreMenu from '../components/user/UserMoreMenu';
-import CustomizedCheckbox from '../components/CustomizedComponents/CustomizedCheckbox';
 import CustomizedTitle from '../components/CustomizedComponents/CustomizedTitle';
+import CustomizedIconButton from '../components/CustomizedComponents/CustomizedIconButton';
 import TableCellStyled from '../components/CustomizedComponents/CustomizedTableCell';
 import AddUserDialog from '../components/user/AddUserDialog';
+import ModifyUserDialog from '../components/user/ModifyUserDialog';
+import DeleteUserDialog from '../components/user/DeleteUserDialog';
 import { ThemeContext } from '../components/context/Wrapper';
 import { getUserList } from '../services/User';
 import { getAccessRightList } from '../services/AccessRight';
 import CustomizedPaperOutside from '../components/CustomizedComponents/CustomizedPaperOutside';
 import CustomizedLinearProgress from '../components/CustomizedComponents/CustomizedLinearProgress';
 import { lightBackgroundToTop } from '../components/CustomizedComponents/NeumorphismTheme';
+import CustomizedButton from '../components/CustomizedComponents/CustomizedButton';
+import Iconify from '../components/Iconify';
 // mock
 
 // ----------------------------------------------------------------------
@@ -63,6 +66,12 @@ export default function User() {
   const [loadingGetAccessRights, setLoadingGetAccessRights] = useState(false);
 
   const [filterName, setFilterName] = useState('');
+
+  const [location , setLocation] = useState('list');
+
+  const [userDetails, setUserDetails] = useState(null);
+
+  const [userId, setUserId] = useState(null);
   
   const handleChangePage = (e, p, row = rowsPerPage) => {
     fetchFilter(p + 1, row);
@@ -179,6 +188,7 @@ export default function User() {
   const reload = () => {
     getAllUser();
     getAccessRights();
+    setLocation('list')
   };
 
   useEffect(() => {
@@ -192,112 +202,127 @@ export default function User() {
     delaySearchRef = setTimeout(() => getAllUser(), 2000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterName]);
+
+  const handleClickOpenModifyUser = (userDetails, userId) => {
+    setUserDetails(userDetails);
+    setUserId(userId);
+    setLocation('update');
+  };
   
   return (
     <Page title="AIOLIA | Utilisateurs">
       <Container sx={{maxWidth: '100%!important'}}>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <CustomizedTitle size={20} text='Utilisateur'/>
-          <AddUserDialog accessRights={accessRights} reload={reload} />
-        </Stack>
+      { location === 'addUser' &&
+        <AddUserDialog reload={reload} setLocation={setLocation} />
+      }
+      { location === 'update' && 
+      <ModifyUserDialog accessRights={accessRights} userDetails={userDetails} userId={userId} reload={reload} setLocation={setLocation} />
+      }
+      { location === 'list' &&
+        <>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+            <CustomizedTitle size={20} text='Utilisateur'/>
+            <CustomizedButton text={`Ajouter`} to="#" onClick={() => setLocation('addUser')} />
+          </Stack>
 
-        <CustomizedPaperOutside
-          sx={{
-            ...lightBackgroundToTop,
-            minHeight: '100vh',
-            border: '1px white solid',
-            color: 'white',
-            padding: 5,
-          }}
-        >
-          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+          <CustomizedPaperOutside
+            sx={{
+              ...lightBackgroundToTop,
+              minHeight: '100vh',
+              border: '1px white solid',
+              color: 'white',
+              padding: 5,
+            }}
+          >
+            <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
-          <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
-              <Table>
-                <UserListHead
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={userList.length}
-                  numSelected={selected.length}
-                />
-                <TableBody>
-                  {
-                            (loadingGetAllUser || loadingGetAccessRights) && (
+            <Scrollbar>
+              <TableContainer sx={{ minWidth: 800 }}>
+                <Table>
+                  <UserListHead
+                    order={order}
+                    orderBy={orderBy}
+                    headLabel={TABLE_HEAD}
+                    rowCount={userList.length}
+                    numSelected={selected.length}
+                  />
+                  <TableBody>
+                    {
+                              (loadingGetAllUser || loadingGetAccessRights) && (
+                                <TableRow>
+                                  <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={TABLE_HEAD.length + 1}>
+                                    <Box sx={{ margin: 1, textAlign: 'center' }} >
+                                      <CustomizedLinearProgress />
+                                    </Box>
+                                  </TableCell>
+                                </TableRow>
+                              )
+                    }
+                    {!loadingGetAllUser && !loadingGetAccessRights && userList && userList.map((row) => {
+                      const { _id, nom, prenom, telephone, isActive } = row;
+                      const isItemSelected = selected.indexOf(nom) !== -1;
+
+                      return (
+                        <TableRow
+                          hover
+                          key={_id}
+                          tabIndex={-1}
+                          role="checkbox"
+                          selected={isItemSelected}
+                          aria-checked={isItemSelected}
+                        >
+                          <TableCellStyled align="left">{nom}</TableCellStyled>
+                          <TableCellStyled align="left">{prenom}</TableCellStyled>
+                          <TableCellStyled align="left">{telephone}</TableCellStyled>
+                          <TableCellStyled align="left">{isActive ? 'Oui' : 'Non'}</TableCellStyled>
+
+                          <TableCellStyled align="right">
+                            <Stack direction='row' spacing={2} justifyContent='center'>
+                            <CustomizedIconButton variant="contained" onClick={() => handleClickOpenModifyUser(row, _id)}>
+                              <Iconify icon="eva:edit-fill" width={20} height={20} color="rgba(140, 159, 177, 1)" />
+                            </CustomizedIconButton>
+                              <DeleteUserDialog userDetails={row} userId={_id} getAllUser={getAllUser} />
+                            </Stack>
+                          </TableCellStyled>
+                        </TableRow>
+                      );
+                    })}
+                    {
+                            (!loadingGetAllUser && !loadingGetAccessRights) && userList.length < 1 && (
                               <TableRow>
-                                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={TABLE_HEAD.length + 1}>
-                                  <Box sx={{ margin: 1, textAlign: 'center' }} >
-                                    <CustomizedLinearProgress />
-                                  </Box>
+                              <TableCell style={{ textAlign: 'center' }} colSpan={TABLE_HEAD.length + 1}>
+                                  <CustomizedTitle text={`Pas de résultats`} color='#212B36' level={3} />
+                                  <Typography variant="body2" align="center">
+                                    Pas d'utilisateur trouvés &nbsp;
+                                    {/* <strong>
+                                      &quot;
+
+                                      &quot;
+                                    </strong>. */}
+                                  </Typography>
                                 </TableCell>
                               </TableRow>
                             )
-                  }
-                  {!loadingGetAllUser && !loadingGetAccessRights && userList && userList.map((row) => {
-                    const { _id, nom, prenom, telephone, isActive } = row;
-                    const isItemSelected = selected.indexOf(nom) !== -1;
+                    }
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Scrollbar>
 
-                    return (
-                      <TableRow
-                        hover
-                        key={_id}
-                        tabIndex={-1}
-                        role="checkbox"
-                        selected={isItemSelected}
-                        aria-checked={isItemSelected}
-                      >
-                        <TableCellStyled align="left">{nom}</TableCellStyled>
-                        <TableCellStyled align="left">{prenom}</TableCellStyled>
-                        <TableCellStyled align="left">{telephone}</TableCellStyled>
-                        <TableCellStyled align="left">{isActive ? 'Oui' : 'Non'}</TableCellStyled>
-
-                        <TableCellStyled align="right">
-                          {row && <UserMoreMenu 
-                            accessRights={accessRights} 
-                            userDetails={row} 
-                            userId={_id} 
-                            reload={reload}
-                            getAllUser={getAllUser}  
-                          />}
-                        </TableCellStyled>
-                      </TableRow>
-                    );
-                  })}
-                  {
-                          (!loadingGetAllUser && !loadingGetAccessRights) && userList.length < 1 && (
-                            <TableRow>
-                            <TableCell style={{ textAlign: 'center' }} colSpan={TABLE_HEAD.length + 1}>
-                                <CustomizedTitle text={`Pas de résultats`} color='#212B36' level={3} />
-                                <Typography variant="body2" align="center">
-                                  Pas d'utilisateur trouvés &nbsp;
-                                  {/* <strong>
-                                    &quot;
-
-                                    &quot;
-                                  </strong>. */}
-                                </Typography>
-                              </TableCell>
-                            </TableRow>
-                          )
-                  }
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Scrollbar>
-
-          <TablePagination
-                  rowsPerPageOptions={[5, 10, 15]}
-                  component="div"
-                  count={resultCount}
-                  rowsPerPage={rowsPerPage}
-                  page={page - 1}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                  labelRowsPerPage='Lignes par page'
-                  labelDisplayedRows={({ from, to, count, page }) => `Page ${page + 1} :   ${from} - ${to} sur ${count}`}
-          />
-        </CustomizedPaperOutside>
+            <TablePagination
+                    rowsPerPageOptions={[5, 10, 15]}
+                    component="div"
+                    count={resultCount}
+                    rowsPerPage={rowsPerPage}
+                    page={page - 1}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    labelRowsPerPage='Lignes par page'
+                    labelDisplayedRows={({ from, to, count, page }) => `Page ${page + 1} :   ${from} - ${to} sur ${count}`}
+            />
+          </CustomizedPaperOutside>
+        </>
+      }
       </Container>
     </Page>
   );

@@ -10,7 +10,8 @@ const Logout = () => {
     localStorage.removeItem('hotelid');
     localStorage.removeItem('user_attr');
     localStorage.removeItem('user_details');
-    navigate('/login', {replace:true});
+    // navigate('/login', {replace:true});
+    window.location.href = '/login';
   };
   
   return (
