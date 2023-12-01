@@ -189,7 +189,7 @@ const Calendar = () => {
                                 </CustomizedIconButton>
                             </Grid>
                             <Grid item xs>
-                                <div style={{lineHeight:'18px', border: '2px solid red'}}>
+                                <div style={{lineHeight:'18px'}}>
                                    <span
                                         style={{
                                             fontFamily: 'RalewayBold',
