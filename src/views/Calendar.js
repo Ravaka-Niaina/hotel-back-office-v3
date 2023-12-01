@@ -159,7 +159,7 @@ const Calendar = () => {
                     <CustomizedPaperOutside 
                         onClick={()=>setOpen((prev)=>!prev)} 
                         sx={{
-                            width:'325px',
+                            width:'400px',
                             height:'60px',
                             p:1,
                             background:'#E3EDF7',
@@ -189,7 +189,7 @@ const Calendar = () => {
                                 </CustomizedIconButton>
                             </Grid>
                             <Grid item xs>
-                                <div style={{lineHeight:'18px'}}>
+                                <div style={{lineHeight:'18px', border: '2px solid red'}}>
                                    <span
                                         style={{
                                             fontFamily: 'RalewayBold',
