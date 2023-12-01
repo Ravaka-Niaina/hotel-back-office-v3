@@ -28,7 +28,13 @@ const CalendarValueSide = ({list,ratePlanList,roomDetails}) => (
                                     >
                                         <Stack spacing={1}>
                                             {
-                                                <span key={e}>
+                                                <span key={e} style={{
+                                                    fontFamily: 'RalewayBold',
+                                                    fontStyle: 'normal',
+                                                    fontWeight: '700', 
+                                                    // fontSize: '18px',
+                                                    color: '#8B9EB0',
+                                                }}>
                                                     <div>{getFrenchDate(format(e, 'dd MMMM yyyy'))[0]}</div>
                                                     <div>{getFrenchDate(format(e, 'dd MMMM yyyy'))[1]}</div>
                                                     <div>{getFrenchDate(format(e, 'dd MMMM yyyy'))[2]}</div>
