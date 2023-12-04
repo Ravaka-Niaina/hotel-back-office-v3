@@ -206,7 +206,7 @@ const Calendar = () => {
                                    <br/>
                                    <span
                                         style={{
-                                            fontFamily: 'Raleway',
+                                            fontFamily: 'RalewayBold',
                                             fontStyle: 'normal',
                                             fontWeight: '700',
                                             fontSize: '13px',
