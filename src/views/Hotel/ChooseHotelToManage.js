@@ -17,7 +17,6 @@ import Iconify from '../../components/Iconify';
 import config from '../../config/api';
 import DeleteHotelDialog from "../../components/hotel/DeleteHotelDialog";
 
-
 const TABLE_HEAD = [
   { id: 'nom', label: 'Nom', alignRight: false },
   { id: 'adresse', label: 'Adresse', alignRight: false },
@@ -76,6 +75,7 @@ const CreateOrDeleteHotel = () => {
     getHotelList(payload)
       .then((fetch) => {
         fetch.data.status = 200;
+        console.log(fetch.data);
         if (fetch.data.status === 200) {
           setHotelList(fetch.data.list);
         } else {
