@@ -48,6 +48,8 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
     assigned_canceling_politic: [],
   });
 
+  console.log(ratePlan.assigned_room);
+
   const [listRoom, setListRoom] = useState(new Array(0));
   const [listPolitic, setListPolitic] = useState(new Array(0));
   
@@ -165,7 +167,7 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
     
     getRatePlanDetails(ratePlanId)
       .then((result) => {
-        console.log(result.data);
+        console.log('aty jerena', result.data);
         if (result.data.status === 200) {
           const checkedRoom = [];
           const checkedCancelingPolitic = [];
