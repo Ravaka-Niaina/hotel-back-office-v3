@@ -47,6 +47,11 @@ export const getRoomTypeAndCancelingPoliticList = () =>
 export const getRatePlanDetails = (id) =>
     axios.get(`${config.host}/planTarifaire/details/${id}`,{
         timeout: 10000,
+        headers: {
+            Authorization: localStorage.getItem('id_token'),
+            partner_id: localStorage.getItem("partner_id"),
+            hotelid: localStorage.getItem('hotelid'),
+        },
     });
 
 export const switchRatePlanStatus = (payload) =>
