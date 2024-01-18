@@ -249,6 +249,8 @@ const EditorCustomizingDialog = ({chambre , reloadRoom, dateRange, setDateRange,
     const dateRangeEndingElts = getFrenchDate(moment(dateRange[1]).format('DD MMMM YYYY'));
     const dateRangeEnding = `${dateRangeEndingElts[0]} ${dateRangeEndingElts[1]} ${dateRangeEndingElts[2]}`;
 
+    console.log(ratePlans);
+
     return (
         <>
             <CustomizedIconButton onClick={handleClickOpen}>
@@ -382,7 +384,7 @@ const EditorCustomizingDialog = ({chambre , reloadRoom, dateRange, setDateRange,
                                                 />
                                             }
                                             onClick={() => handleChangeRatePlans(index)}
-                                            label={r.nom || r.names.fr}
+                                            label={r.nom || r.names?.fr}
                                         />
                                     ))}
                                 </div>
