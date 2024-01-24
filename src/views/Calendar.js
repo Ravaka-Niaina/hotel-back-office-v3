@@ -89,6 +89,7 @@ const Calendar = () => {
         };
         context.showLoader(true);
         setLoading(true);
+        console.log(payload);
         getTcTarifPrix(payload)
             .then((result) => {
                 if (result.data.status === 200) {
