@@ -38,6 +38,7 @@ const RatePlanStatus = (props) => {
                 context.setPartialLoading({ ...context.partialLoading, 'loading': false, 'identifier': '' });
             })
     };
+    console.log('isActif = ', isActif);
     return (
         <>
             <div style={{padding:'auto'}}> 
