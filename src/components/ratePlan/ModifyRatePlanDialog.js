@@ -8,6 +8,7 @@ import {
   FormLabel,
   Button,
   Stack,
+  FormControl,
 } from '@mui/material';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -46,6 +47,7 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
     is_lead_hour: 'true',
     assigned_room: [],
     assigned_canceling_politic: [],
+    min_stay: 1,
   });
 
   console.log(ratePlan.assigned_room);
@@ -167,7 +169,6 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
     
     getRatePlanDetails(ratePlanId)
       .then((result) => {
-        console.log('aty jerena', result.data);
         if (result.data.status === 200) {
           const checkedRoom = [];
           const checkedCancelingPolitic = [];
@@ -200,6 +201,7 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
               is_lead_hour: result.data.planTarifaire.isLeadHour ? 'true' : 'false',
               assigned_room: checkedRoom,
               assigned_canceling_politic: checkedCancelingPolitic,
+              min_stay: result.data.planTarifaire.sejourMin || 1,
             });
           });
           
@@ -327,6 +329,7 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
       leadMinInfini: ratePlan.no_lead_min,
       reservAToutMoment: ratePlan.booking_all_time === 'true',
       aucunFinDateSejour: ratePlan.no_end_date_of_stay,
+      sejourMin: ratePlan.min_stay,
     };
     return payloadToSend;
   };
@@ -369,6 +372,15 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
   useEffect(() => {
     getItems();
   },[]);
+
+  const handleChangeMinStay = (value) => {
+    setRatePlan({...ratePlan, min_stay: value});
+    if (value === '' || Number.parseInt(value, 10) <= 0) {
+      setErrors({...errors, min_stay: "Séjour minimum doit être un nombre strictement positif"});
+    } else {
+      setErrors({...errors, min_stay: null});
+    }
+  };
 
   return (
     <>
@@ -445,6 +457,30 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
               })}
             />
           </Stack>
+
+          <CustomizedTitle text='Séjour minimum' size={16} />
+            <FormControl>
+              <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
+                Combien de temps les clients doivent-ils séjourner dans votre établissement pour bénéficier de ce plan tarifaire ?
+              </FormLabel>
+              <Stack sx={{ p: 2 }} direction="row" spacing={3} alignItems="center">
+                <CustomizedInput
+                  name="min_stay"
+                  value={ratePlan.min_stay}
+                  onChange={(e) => handleChangeMinStay(e.target.value)}
+                  type="number"
+                  id="outlined-basic"
+                  label="min"
+                  variant="outlined"
+                  {...(errors.min_stay && {
+                    error: true,
+                    helpertext: errors.min_stay,
+                  })}
+                />
+                <p>nuits ou plus</p>
+              </Stack>
+            </FormControl>
+
           <CustomizedTitle text="Date de réservation" size={16} />
           <Stack  direction="column" spacing={3}>
             <FormGroup>
