@@ -2,9 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Box, Table, Stack, TableRow, TableBody, Container, Typography, TableCell, TableContainer, TablePagination } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { getHistoricModifRoomType } from '../../services/HistoricModifRoomType';
-import AddRatePlanDialog from '../../components/ratePlan/AddRatePlanDialog';
-import ModifyRatePlanDialog from '../../components/ratePlan/ModifyRatePlanDialog';
-import RatePlanMoreMenu from '../../components/ratePlan/RatePlanMoreMenu';
 import TableCellStyled from '../../components/CustomizedComponents/CustomizedTableCell';
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
@@ -12,11 +9,8 @@ import { ThemeContext } from '../../components/context/Wrapper';
 import { UserListHead, UserListToolbar } from '../../components/table';
 import CustomizedTitle from '../../components/CustomizedComponents/CustomizedTitle';
 import CustomizedPaperOutside from '../../components/CustomizedComponents/CustomizedPaperOutside';
-import CustomizedButton from '../../components/CustomizedComponents/CustomizedButton';
 import CustomizedLinearProgress from '../../components/CustomizedComponents/CustomizedLinearProgress';
 import { lightBackgroundToTop } from '../../components/CustomizedComponents/NeumorphismTheme';
-import CustomizedIconButton from '../../components/CustomizedComponents/CustomizedIconButton';
-import Iconify from '../../components/Iconify';
 
 const TABLE_HEAD = [
   { id: 'roomTypeName', label: 'nom type chambre', alignleft: true },
