@@ -149,7 +149,7 @@ const RatePlan = () => {
       });
   };
 
-  const reload = (noLoading = false) => {
+  const reload = () => {
     fetchFilter(1, rowsPerPage);
   };
 
@@ -180,6 +180,8 @@ const RatePlan = () => {
     delaySearchRef = setTimeout(() => fetchFilter(1, rowsPerPage), 2000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterName]);
+
+  console.log(ratePlanList);
 
   return (
     <Page title="AIOLIA | Plans tarifaires">
@@ -229,9 +231,8 @@ const RatePlan = () => {
                             )
                           }
                           {!loading && ratePlanList.map((row) => {
-                            const { _id, names, isActif,chambresAtrb,politiqueAnnulAtrb } = row;
+                            const { _id, names, isActif, chambresAtrb,politiqueAnnulAtrb } = row;
                             const isItemSelected = selected.indexOf(names?.fr) !== -1;
-                            console.log(row);
                             return (
                               <TableRow
                                 hover

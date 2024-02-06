@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 import {
+  FormControl,
   FormControlLabel,
   RadioGroup,
   FormGroup,
@@ -45,6 +46,7 @@ const AddRatePlanDialog = ({ reload , navigate}) => {
     is_lead_hour: 'true',
     assigned_room: [],
     assigned_canceling_politic: [],
+    min_stay: 1,
   });
 
   const [listRoom, setListRoom] = useState(new Array(0));
@@ -207,6 +209,7 @@ const AddRatePlanDialog = ({ reload , navigate}) => {
       leadMinInfini: ratePlan.no_lead_min,
       reservAToutMoment: ratePlan.booking_all_time === 'true',
       aucunFinDateSejour: ratePlan.no_end_date_of_stay,
+      sejourMin: ratePlan.min_stay,
     };
     return payloadToSend;
   };
@@ -253,7 +256,6 @@ const AddRatePlanDialog = ({ reload , navigate}) => {
       if (formIsValid(ratePlan)) {
         const idToken = localStorage.getItem('id_token')
         context.showLoader(true);
-        console.log(formatPayloadToSend());
         createRatePlan(formatPayloadToSend())
           .then((result) => {
             console.log(result.data);
@@ -300,6 +302,15 @@ const AddRatePlanDialog = ({ reload , navigate}) => {
   const handleChangeLanguage = (event: React.SyntheticEvent, newValue: number) => {
     setTabDescriptionValue(newValue);
     setChoosedDescriptionLanguageAbbrev(Object.keys(ratePlan.descriptions)[newValue]);
+  };
+
+  const handleChangeMinStay = (value) => {
+    setRatePlan({...ratePlan, min_stay: value});
+    if (value === '' || Number.parseInt(value, 10) <= 0) {
+      setErrors({...errors, min_stay: "Séjour minimum doit être un nombre strictement positif"});
+    } else {
+      setErrors({...errors, min_stay: null});
+    }
   };
 
   return (
@@ -377,6 +388,29 @@ const AddRatePlanDialog = ({ reload , navigate}) => {
                 })}
               />
             </Stack>
+            
+            <CustomizedTitle text='Séjour minimum' size={16} />
+            <FormControl>
+              <FormLabel sx={{ maxWidth: 600 }} id="demo-controlled-radio-buttons-group">
+                Combien de temps les clients doivent-ils séjourner dans votre établissement pour bénéficier de ce plan tarifaire ?
+              </FormLabel>
+              <Stack sx={{ p: 2 }} direction="row" spacing={3} alignItems="center">
+                <CustomizedInput
+                  name="min_stay"
+                  onChange={(e) => handleChangeMinStay(e.target.value)}
+                  type="number"
+                  id="outlined-basic"
+                  label="min"
+                  variant="outlined"
+                  {...(errors.min_stay && {
+                    error: true,
+                    helpertext: errors.min_stay,
+                  })}
+                />
+                <p>nuits ou plus</p>
+              </Stack>
+            </FormControl>
+
             <CustomizedTitle text="Date de réservation" size={16} />
             <Stack  direction="column" spacing={3}>
               <FormGroup>
