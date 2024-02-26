@@ -181,8 +181,6 @@ const RatePlan = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterName]);
 
-  console.log(ratePlanList);
-
   return (
     <Page title="AIOLIA | Plans tarifaires">
       <Container sx={{maxWidth: '100%!important'}}>

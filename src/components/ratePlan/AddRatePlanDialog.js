@@ -258,7 +258,6 @@ const AddRatePlanDialog = ({ reload , navigate}) => {
         context.showLoader(true);
         createRatePlan(formatPayloadToSend())
           .then((result) => {
-            console.log(result.data);
             if (result.data.status === 200) {
               handleClose();
               reload();
@@ -309,7 +308,7 @@ const AddRatePlanDialog = ({ reload , navigate}) => {
     if (value === '' || Number.parseInt(value, 10) <= 0) {
       setErrors({...errors, min_stay: "Séjour minimum doit être un nombre strictement positif"});
     } else {
-      setErrors({...errors, min_stay: null});
+      setErrors({...errors, min_stay: ''});
     }
   };
 
