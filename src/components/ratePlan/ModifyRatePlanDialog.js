@@ -378,7 +378,7 @@ const ModifyRatePlanDialog = ({ reload, ratePlanId , navigate }) => {
     if (value === '' || Number.parseInt(value, 10) <= 0) {
       setErrors({...errors, min_stay: "Séjour minimum doit être un nombre strictement positif"});
     } else {
-      setErrors({...errors, min_stay: null});
+      setErrors({...errors, min_stay: ''});
     }
   };
 
